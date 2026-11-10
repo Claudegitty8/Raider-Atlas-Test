@@ -60,7 +60,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   --neon2:#2CE6FF; --neon2-rgb:44,230,255;
   --on-neon:#1B0612;
   /* Bedeutung im Modell */
-  --loot:#f4d44d; --core:#ff7b33; --hydra:#ff5468; --reclaim:#5fd3e0; --hazard:#8f8cff; --key:#ffcf5a;
+  --loot:#f4d44d; --core:#ff7b33; --hydra:#ff5468; --reclaim:#5fd3e0; --hazard:#8f8cff; --key:#ffcf5a; --exit:#2ce6ff; --wcase:#8be04e; --slock:#f3e9d2; --pack:#e0a458;
   --ann:#F2C14E; --ann-bg:rgba(242,193,78,.09); --warn:#FF8A7A; --ok:#34C759;
   /* Schrift */
   --display:"Jost","Avenir Next","Futura",-apple-system,system-ui,sans-serif;
@@ -1846,7 +1846,20 @@ const INFO = {
     <h4>Gut zu wissen</h4><ul>
     <li>Kartenbedingung «ARC Frigate», rotiert über den Tag u. a. durch Pendola Pass, Dam, Buried City, Spaceport und Blue Gate (OP.GG Event-Timer). <span class="annt">Annahme</span> Erscheint 30–60 s nach Raid-Start.</li>
     <li>Raider Hatches sind deaktiviert (Wiki, AOEAH). Die Hebel-Rätsel brauchen drei Raider (AOEAH).</li></ul>
-    <h4>Zum Modell</h4><p><span class="annt">Annahme</span> Form des Schiffs und Lage der Stationen sind eine eigene Skizze nach Guide-Beschreibungen. Die Guides widersprechen sich teils, etwa bei der Zahl der Container im Cargo. Jede Station zeigt, welche Quellen sie belegen und was Annahme ist (Prüfung vom 06.11.2026).</p>` +
+    <h4>Ausgänge</h4><ul>
+    <li>Cyan-Feld mit Pfeil: frei zugänglicher Ausgang. Lifte auf Dam, Spaceport und Riven Tides, Metro-Stationen auf Buried City und Stella Montis, Airshafts auf Blue Gate und Stella Montis, auf Pendola Pass die Gondel per Transceiver (allthings.how, Beebom).</li>
+    <li>Diese Ausgänge schliessen einzeln, wenn ihr Timer auf der Karte abläuft, und der Ruf löst einen lauten Alarm aus (allthings.how, ARC Raiders Wiki). Nicht jede Metro-Station und nicht jeder Transceiver ist in jeder Runde offen (allthings.how).</li>
+    <li>Ring mit Pfeil: Raider Hatch. Sie braucht einen Raider Hatch Key, der dabei verbraucht wird, ist leise und hat keinen Timer (allthings.how, Beebom). Shani verkauft den Schlüssel für 9000 Coins (allthings.how).</li>
+    <li>Raider Hatches sind laut allthings.how deaktiviert bei ARC Frigate, Electromagnetic Storm, Hidden Bunker, Locked Gate und Night Raid.</li>
+    <li>Offiziell nennt Embark keine Liste der Ausgänge. Die Patchnotes bestätigen aber den Seed-Vault-Ausgang auf Stella Montis und die Ballistic Gondola auf Pendola Pass (Hotfix 2.4.1, Live Update 2.3.0).</li>
+    <li>Kleine Ringe auf Buried City: Eingänge zur Metro (Arc Raiders Hub). Nah herangezoomt steht der Name am Ausgang.</li></ul>
+    <h4>Top-Loot</h4><ul>
+    <li>Grün: mögliche Fundorte von Waffenkisten (Arc Raiders Hub). Die Orte decken sich mit der Liste von Destructoid für Dam, Buried City, Spaceport und Blue Gate.</li>
+    <li>Hell: Security-Spinde. Sie lassen sich nur mit dem Skill Security Breach öffnen, der 36 Punkte im Survival-Baum braucht (allthings.how, AltChar).</li>
+    <li>Orange: Rucksäcke (Arc Raiders Hub, nur 1 Quelle).</li>
+    <li>Alle Marker sind mögliche Fundorte. Laut Insider Gaming ist kein Spawn garantiert.</li>
+    <li>Versteckte Stellen laut Insider Gaming: auf Dam unter der East Broken Bridge, die zwei Ruinen in den Red Lakes und die Plattform des Strommasts in den Formicai Hills. Auf Buried City die Marano Station (bis zu fünf Waffenkisten) und die unterste Ebene des Parkhauses. Auf Spaceport oben auf dem North Trench Tower. Auf Blue Gate der Maintenance Wing (drei Waffenkisten).</li></ul>
+    <h4>Zum Modell</h4><p>Die Lage der Orte, Ausgänge und Loot-Marker ist an der interaktiven Karte von Arc Raiders Hub abgemessen (10.11.2026), auf rund 1 bis 2 Einheiten genau. <span class="annt">Annahme</span> Gebäude sind als gerade Rechtecke vereinfacht, Höhen und Gelände geschätzt. Das ist keine Kopie der offiziellen Karte. Gold markiert den Schlüsselraum im richtigen Stockwerk, soweit die Quellen es angeben. Für die exakte Lage kannst du deinen eigenen Screenshot unterlegen. Alle Texturen (Sand, Schnee, Wasser, Fassaden usw.) werden direkt im Code erzeugt, es sind keine fremden Bilder eingebunden.</p>` +
     SRC([['ARC Raiders Wiki: ARC Frigate','https://arcraiders.wiki/wiki/ARC_Frigate'],
       ['AOEAH: Frigate Complete Guide','https://www.aoeah.com/news/4876--arc-raiders-frigate-loot-board-puzzle--complete-guide'],
       ['Arc Raiders Hub: Frigate Guide','https://arcraidershub.com/guides/frigate-guide'],
@@ -1880,7 +1893,20 @@ const INFO = {
     <li>Drinnen einen Türblocker setzen, damit niemand nachkommt (PC Gamer, allthings.how).</li></ul>
     <h4>Eigene Karte</h4><p>Über den Chip «Eigene Karte» legst du einen Screenshot deiner In-Game-Karte unter das Modell, richtest ihn aus und ziehst die Gebäude an die richtige Stelle. Das Bild bleibt in deinem Browser.</p>
     <h4>Zum Modell</h4><p><span class="annt">Annahme</span> Eine eigene schematische Zeichnung: Orte, Viertel und Gelände (Küste, Seen, Fluss, Wald, Berge) habe ich aus den Beschreibungen der Guides gesetzt, also nach Himmelsrichtung und den genannten Entfernungen zwischen Orten. Das ist keine Kopie der offiziellen Karte und nicht massstabsgetreu. Gold markiert den Schlüsselraum im richtigen Stockwerk, soweit die Quellen es angeben. Für die exakte Lage kannst du deinen eigenen Screenshot unterlegen. Alle Texturen (Sand, Schnee, Wasser, Fassaden usw.) werden direkt im Code erzeugt, es sind keine fremden Bilder eingebunden.</p>` +
-    SRC([['KeenGamer: All Keys and Key Room Locations','https://www.keengamer.com/articles/guides/arc-raiders-how-to-get-all-keys-and-key-room-locations/'],
+    SRC([['Embark: Hotfix 2.4.1 (offiziell)','https://arcraiders.com/news/hotfix-2-4-1'],
+      ['Embark: Live Update 2.3.0 (offiziell)','https://arcraiders.com/news/live-update-2-3-0'],
+      ['Arc Raiders Hub: interaktive Karten','https://arcraidershub.com/maps'],
+      ['allthings.how: Lifte','https://allthings.how/arc-raiders/map/elevators/'],
+      ['allthings.how: Raider Hatches','https://allthings.how/arc-raiders/map/raider-hatches/'],
+      ['allthings.how: Metro-Stationen','https://allthings.how/arc-raiders/map/metro-stations/'],
+      ['allthings.how: Ausgänge und Timer','https://allthings.how/arc-raiders-extraction-elevators-hatches-and-timers-explained/'],
+      ['ARC Raiders Wiki: Extraction Points','https://arcraiders.wiki/wiki/Extraction_Points'],
+      ['Beebom: How to Extract','https://beebom.com/how-to-extract-in-arc-raiders'],
+      ['Destructoid: Weapon Case Locations','https://www.destructoid.com/all-weapon-case-locations-in-arc-raiders/'],
+      ['Insider Gaming: 7 Secret Loot Spots','https://insider-gaming.com/7-secret-loot-spots-you-need-to-know-in-arc-raiders/'],
+      ['allthings.how: Security Lockers','https://allthings.how/arc-raiders-security-lockers-security-breach-skill-explained'],
+      ['AltChar: Security Lockers','https://www.altchar.com/guides/arc-raiders-how-to-open-security-lockers-with-security-breach-aVWvC1F5gJhP'],
+      ['KeenGamer: All Keys and Key Room Locations','https://www.keengamer.com/articles/guides/arc-raiders-how-to-get-all-keys-and-key-room-locations/'],
       ['PC Gamer: Dam Battlegrounds key locations','https://www.pcgamer.com/games/third-person-shooter/arc-raiders-dam-battlegrounds-key-locations'],
       ['Prima Games: Locked Rooms Dam','https://primagames.com/tips/all-locked-rooms-and-keys-in-dam-battlegrounds-map-arc-raiders'],
       ['Mein-MMO: Alle Schlüssel und Türen','https://mein-mmo.de/arc-raiders-alle-schluessel-tueren-fundort/'],
@@ -1970,10 +1996,11 @@ CHECK.rooms.dam = {
 CHECK.maps.dam = {
   "intro": "Sechs Räume: vier mit Schlüssel, einer mit Power Rod und die Controlled Access Zone. Laut gggamer hat der Power-Rod-Raum die höchste Lootdichte, Staff Room und Kontrollturm folgen. Ruby Residence und Research & Administration gelten als gute Orte, um Schlüssel zu finden (KeenGamer, Timesaver).",
   "tags": [
+    "Ausgänge: 4 Lifte, 4 Raider Hatches",
     "6 Räume",
     "Night Raid erhöht laut KeenGamer die Chance auf Schlüssel"
   ],
-  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
     "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
     "Gelände (Damm-Mauer, Red Lakes, Swamp, Hügel): Form nach Kartenbild, Höhen geschätzt"
@@ -2032,11 +2059,13 @@ CHECK.rooms.buried = {
 CHECK.maps.buried = {
   "intro": "Vier Schlüsselräume (AltChar). Laut AltChar ist das Rathaus der beste.",
   "tags": [
+    "Ausgänge: 4 Metro-Stationen, 4 Raider Hatches",
     "4 Räume",
     "Türblocker mitnehmen (PC Gamer, allthings.how)"
   ],
-  "src": "Lage der Orte und Viertel: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
+  "src": "Lage der Orte und Viertel: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
+    "Metro-Stationen West und Süd: Name nicht belegt. Northern Station, Eastern Station und Train Station Hatch nach ihrer Lage zugeordnet",
     "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
     "Brücke: Verlauf nach Kartenbild, Höhe geschätzt"
   ]
@@ -2111,11 +2140,13 @@ CHECK.rooms.spaceport = {
 CHECK.maps.spaceport = {
   "intro": "Fünf Schlüssel, sechs Türen. Laut AltChar sind Control Tower und Shipping Warehouse die besten Räume.",
   "tags": [
+    "Ausgänge: 4 Lifte, 4 Raider Hatches",
     "5 Schlüssel",
     "Night Raid erhöht laut KeenGamer die Chance auf Schlüssel"
   ],
-  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
+    "Departures Hatch und Control Hatch liegen beide bei Control Tower A6. Welche welche ist, ist nicht belegt",
     "Gebäude sind als Rechtecke vereinfacht und nicht gedreht (die Anlage steht im Spiel schräg)",
     "Bunker in den Alberi Hills und West Container Yard: Lage nicht auf der Karte gefunden",
     "Hügel: Höhen geschätzt",
@@ -2192,11 +2223,13 @@ CHECK.rooms.bluegate = {
 CHECK.maps.bluegate = {
   "intro": "Vier Schlüssel plus Streifenwagen und ein Raum mit Knopf-Rätsel. Der Cellar Key passt an mehreren Stellen (AltChar). Pilgrim's Peak liegt im Nordosten (PC Gamer).",
   "tags": [
+    "Ausgänge: 4 Airshafts, 4 Raider Hatches",
     "4 Schlüssel",
     "Night Raid erhöht laut KeenGamer die Chance auf Schlüssel"
   ],
-  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
+    "Reinforced Hatch: Name nach Ausschlussverfahren zugeordnet. Namen der Airshafts nicht erfasst",
     "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
     "Traffic Tunnel, Adorned Wreckage und Broken Earth: Lage nicht auf der Karte gefunden",
     "Berge und Hügel: Höhen geschätzt",
@@ -2243,10 +2276,13 @@ CHECK.rooms.stella = {
 CHECK.maps.stella = {
   "intro": "Ein Innenkomplex auf zwei Ebenen (Shacknews) mit vier Schlüsselräumen (AltChar). Dazu kommen mehrere Türen, die eine Fuel Cell brauchen (Lobby, Cafeteria, Medical Research, Seed Vault), und die Sandbox mit Access Capacitor (Sportskeeda).",
   "tags": [
+    "Ausgänge: 2 Metro-Stationen, 1 Airshaft, 3 Raider Hatches",
     "4 Schlüssel"
   ],
-  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte, beide Ebenen (abgemessen am 10.11.2026)",
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte, beide Ebenen (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
+    "Assembly Hatch: Lage nicht abgelesen, bei den Assembly Workshops geschätzt",
+    "Ausgänge und Top-Loot ohne Angabe der Ebene. Top-Loot im Westteil der oberen Ebene fehlt noch",
     "Räume sind als Rechtecke vereinfacht, beide Ebenen liegen in einem Plan",
     "Storage Room: laut Karte im Osten der oberen Ebene, im Modell abgesenkt gezeichnet",
     "sehr PvP-lastig"
@@ -2339,11 +2375,12 @@ CHECK.rooms.riven = {
 CHECK.maps.riven = {
   "intro": "Zehn Keycards: sieben Zimmer im Hotel Panorama Azzurro, zwei Räume in der Port Authority und die Kranhaus-Kabine im Stacking Yard (Timesaver).",
   "tags": [
+    "Ausgänge: 2 Lifte, 3 Raider Hatches",
     "10 Keycards",
     "Keycards sind Einweg (Timesaver)"
   ],
   "warn": "",
-  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
     "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
     "Hotel und Strand liegen am Westrand des abgemessenen Bilds, ihre Lage ist ungenauer",
@@ -2392,10 +2429,12 @@ CHECK.rooms.pendola = {
 CHECK.maps.pendola = {
   "intro": "Vier normale Schlüsselräume plus der Emperor-Dungeon, der den Gateway Conduit braucht (GamesHorizon, UMA). Der Fallen Emperor liegt im Westen (Dot Esports, allthings.how), Old Town im Westen und das Railyard im Osten (allthings.how), das Observatorium im Nordosten (Techbloat).",
   "tags": [
+    "Ausgänge: 4 Transceiver (Gondel), keine Raider Hatch",
     "4 Schlüssel + Emperor"
   ],
-  "src": "Lage der beschrifteten Orte und Gebiete: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
+  "src": "Lage der beschrifteten Orte und Gebiete: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
+    "Ausgänge und Top-Loot: Lage ungenauer (2 bis 4 Einheiten), weil das Modell die Ortsmitte vergrössert zeigt",
     "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
     "Nicht beschriftet und darum geschätzt: Piazza della Rupe, Porta Benvenuti, Northern Tracks, Dispatch Tower, Researcher Lodgings, Weather Station, Freight Terminal, Controlled Receiving Facility, Transit Tunnel, Truck Stop, Electrical Substation",
     "Frozen River und Berge: Form nach Kartenbild, Höhen geschätzt",
@@ -2848,7 +2887,7 @@ function loft(st, o){
   face(S[0].slice(), o.side, add(cen(S[0]), [1,0,0]));
   face(S[S.length-1].slice(), o.side, add(cen(S[S.length-1]), [-1,0,0]));
 }
-const SP = (k,p) => sprites.push({k,p});
+const SP = (k,p,o) => sprites.push(Object.assign({k,p}, o || {}));
 const both = (k,arr) => arr.forEach(p => { SP(k,p); SP(k,[p[0],p[1],-p[2]]); });
 const LAB = (t,p,extra) => labels.push(Object.assign({t,p}, extra || {}));
 
@@ -3186,6 +3225,12 @@ function buildMap(m, id){
       plateFloorLines({x:b.x,z:b.z,w:t.w,d:t.d}, y1-3.2, ty1); top = ty1; }
     LAB(b.name, [b.x, top + 2.4, b.z], { land, pri: land ? 2 : 1 });
   }
+  /* Ausgänge und Top-Loot (app/karten/ausgaenge-loot.js): Marker am Boden, je Ebene ein- und ausblendbar */
+  const ex = MAP_EXTRA[id];
+  if (ex){
+    for (const [t, n, x, z] of ex.ex) SP('exit', [x, 1.4, z], { t, n });
+    for (const [k, key] of [['wcase','w'],['slock','s'],['pack','b']]) for (const [x, z, c] of ex[key]) SP(k, [x, 1.1, z], { c });
+  }
   m.steps = [{ phase:'Übersicht', title:m.name + ': alle Schlüsselräume', text:m.intro, tags:m.tags, warn:m.warn, ann:m.ann, src:m.src, cam:{ t:[0,0,2], yaw:.35, pitch:.95, dist:128, ov:true, mob:1.0 } }];
   for (const r of m.r){
     const b = B[r.b], y0 = roomY(b, r), x = b.x + (r.dx || 0), z = b.z + (r.dz || 0);
@@ -3517,6 +3562,42 @@ MAPS.pendola = { name:'Pendola Pass', short:'Pendola Pass', ground:'#27313b',
         text:'Der Dungeon im gefallenen Emperor. Die ganze Route mit allen Räumen findest du oben unter «Emperor».',
         tags:['Emperor Modulator','Amp-Module']}
     ]};
+/* @datei app/karten/ausgaenge-loot.js */
+/* Ausgänge und Top-Loot pro Karte. Lage am 10.11.2026 an den sichtbaren Markern der Karte von arcraidershub.com abgelesen
+   (Genauigkeit rund 1 bis 2 Einheiten, Pendola Pass und Stella Montis ungenauer). Namen und Anzahl der Ausgänge mit allthings.how abgeglichen.
+   ex: [Art, Name, x, z]  Art: lift, metro, schacht, gondel, hatch (braucht Raider Hatch Key), zugang (Metro-Eingang)
+   w: Waffenkisten, s: Security-Spinde, b: Rucksäcke, je [x, z] oder [x, z, Anzahl am selben Fleck]. Alles mögliche Fundorte, kein sicherer Loot.
+   Erzeugt mit dem Messprotokoll in docs/KARTEN-ABGLEICH.md, nicht von Hand ändern ohne neue Messung. */
+const MAP_EXTRA = {
+  dam:{ ex:[["lift","North Complex Elevator",15.0,-38.5],["lift","Central Swamp Lift",-30.5,-12.0],["lift","Water Treatment Elevator",-20.0,8.5],["lift","Red Lakes Balcony Lift",21.0,23.5],["hatch","Sunroof Hatch",-36.0,-30.0],["hatch","Pump House Hatch",40.0,-15.5],["hatch","Red Lakes Hatch",24.5,8.5],["hatch","Good Old Baron's Hatch",-44.0,20.5]],
+    w:[[25.0,-35.5],[31.0,-31.5],[24.5,-30.5],[30.0,-30.0],[41.0,-29.5],[9.5,-27.0],[18.0,-24.0],[18.0,-22.0],[11.0,-22.0],[8.0,-20.5],[-4.5,-23.5],[-8.0,-22.5],[-18.0,-21.5],[-16.0,-20.0],[-15.5,-18.0],[-35.5,-17.0],[-15.0,-9.5],[-13.5,-4.5],[7.0,-9.5],[5.5,-5.0,2],[2.5,-4.5],[22.5,-7.5],[2.5,2.0],[-26.5,4.5],[-22.5,6.5],[3.5,6.5],[5.5,7.0],[5.0,9.0],[2.0,11.0],[6.5,14.0,2],[6.5,21.0],[-40.5,27.0],[-35.5,30.0],[-41.0,31.5],[-26.5,37.5],[-6.5,33.0],[-12.0,40.5],[-6.5,51.0,2],[33.0,37.5]],
+    s:[[23.0,-30.5],[-6.5,-22.0],[2.5,2.5],[2.0,7.5],[4.5,7.5],[0.0,8.5],[21.0,26.0],[18.5,28.5]],
+    b:[[-27.0,-42.5],[-10.0,-41.5],[27.0,-28.5],[7.5,-7.0],[5.5,-4.5],[5.5,-2.5],[-28.0,0.5],[4.5,6.5],[7.0,21.5],[3.0,28.0],[-14.0,31.5],[-22.5,33.5],[-6.5,33.0],[0.0,37.0],[22.5,-7.5]] },
+  buried:{ ex:[["metro","Northern Station",2.5,-24.0],["metro","Metro-Station West",-16.5,5.5],["metro","Eastern Station",25.0,28.0],["metro","Metro-Station Süd",7.5,48.0],["hatch","Collapsed Supermarket Hatch",12.5,-46.5],["hatch","Train Station Hatch",-27.5,-18.5],["hatch","Highway Overpass Hatch",19.5,12.5],["hatch","Old Town Hatch",-17.0,36.5],["zugang","Metro-Eingang",5.5,-41.0],["zugang","Metro-Eingang",-2.5,-37.0],["zugang","Metro-Eingang",-0.5,-20.0],["zugang","Metro-Eingang",17.0,-16.5],["zugang","Metro-Eingang",-14.0,-2.0],["zugang","Metro-Eingang",0.0,0.5],["zugang","Metro-Eingang",-12.0,13.5],["zugang","Metro-Eingang",21.5,18.0],["zugang","Metro-Eingang",40.0,23.5],["zugang","Metro-Eingang",17.5,35.0],["zugang","Metro-Eingang",27.0,40.0]],
+    w:[[-14.0,-36.5],[-26.5,-29.5],[-7.0,-29.5],[-13.0,-25.0],[7.0,-37.0],[-17.5,-16.5],[15.0,-19.5],[15.0,-12.0],[3.0,-9.0],[-6.5,5.0],[-20.5,7.5],[-31.0,8.5],[-20.0,10.0],[-5.0,8.0],[-7.0,11.0],[-5.5,16.0],[29.5,16.5],[-27.5,23.5],[-31.0,26.5],[-28.0,26.0],[-2.5,28.5],[4.5,30.5],[12.5,28.5],[36.5,29.5],[-12.5,34.0],[12.5,36.0],[-35.0,36.5],[23.0,37.5],[-6.5,40.0],[-16.5,42.0],[46.0,33.0]],
+    s:[[9.0,-34.0],[20.5,-11.5],[11.0,11.0],[-6.0,7.5],[-31.0,28.0],[42.5,22.5],[44.5,25.5],[2.5,33.0],[4.5,33.5],[23.5,39.5],[15.0,46.5]],
+    b:[[-1.5,-52.0],[35.0,-32.5],[11.5,-28.0,2],[-12.5,-10.5],[15.0,-3.5],[-38.0,3.0],[1.0,25.0],[7.0,30.0],[9.5,29.5],[-14.5,41.0],[-6.0,51.5],[9.0,53.0],[23.5,53.0],[49.0,53.0],[-6.0,53.0]] },
+  spaceport:{ ex:[["lift","Central Elevator",-3.5,-35.5],["lift","West Elevator",-34.5,-18.5],["lift","South Elevator",-7.0,2.0],["lift","East Elevator",35.5,1.0],["hatch","Trench Hatch West",4.0,-53.0],["hatch","Trench Hatch East",34.5,-30.5],["hatch","Departures / Control Hatch",10.0,-12.5],["hatch","Departures / Control Hatch",4.5,-5.0]],
+    w:[[14.0,-51.0],[8.5,-48.0],[-18.5,-41.5],[-20.0,-40.0],[-22.5,-39.0],[-20.5,-35.0],[-27.0,-31.0],[-19.0,-23.5],[2.0,-23.0],[-0.5,-21.5],[2.5,-21.5],[34.0,-27.5],[29.5,-16.5],[10.0,-18.0],[-16.5,-17.0],[-25.0,-17.0],[-35.5,-7.5],[-33.5,-4.0],[-32.0,-3.0],[4.0,-5.0],[-22.5,2.5],[-14.5,2.5],[6.5,13.5],[13.0,26.0],[21.5,28.0],[-15.5,30.0]],
+    s:[[-12.5,-42.5],[1.0,-42.0],[-27.5,-30.5],[-22.5,-27.5],[18.5,-22.5],[-23.0,-14.5],[3.5,1.5],[-14.0,3.0],[13.5,27.0]],
+    b:[[-19.5,-53.0],[-9.5,-52.5],[-8.0,-51.5],[25.5,-39.5],[32.0,-40.5],[38.0,-23.5],[-15.5,-23.5],[-2.5,-8.5],[53.0,-10.5],[47.0,34.5],[18.0,48.5],[29.5,45.0]] },
+  bluegate:{ ex:[["schacht","Airshaft",-13.0,-23.5],["schacht","Airshaft",33.5,-15.0],["schacht","Airshaft",-38.0,11.0],["schacht","Airshaft",17.0,13.0],["hatch","Lucky Hatch",-7.0,-38.5],["hatch","Reinforced Hatch",-45.5,-11.5],["hatch","Prefab Hatch",53.0,-13.5],["hatch","Fragrant Hatch",-15.0,18.5]],
+    w:[[-31.0,-43.5],[-16.0,-39.5],[53.0,-41.0],[53.0,-40.0],[27.0,-36.0],[23.0,-34.0],[28.5,-33.5],[25.5,-33.0],[1.5,-29.5],[-34.5,-28.0],[-35.0,-26.5],[13.5,-27.5],[-31.5,-22.5],[-27.0,-22.5],[19.0,-25.5],[28.5,-25.0],[26.0,-22.5],[3.0,-19.5],[20.0,-19.5],[-36.0,-12.5],[24.0,-12.0],[6.0,-11.5],[-46.0,-6.5],[10.5,-8.0],[1.0,-4.0],[-15.0,-3.5],[-8.0,0.5],[14.5,2.5],[32.0,0.5],[0.0,11.0],[33.0,16.0],[-29.5,21.0],[7.5,45.0]],
+    s:[[53.0,-39.5],[29.0,-29.5],[-35.5,-24.0],[13.5,18.5],[-15.0,35.0]],
+    b:[[-37.5,-44.5],[-32.5,-44.5],[-18.0,-43.0],[-15.5,-39.5],[-5.0,-38.5],[0.0,-42.0],[3.5,-33.5],[21.5,-16.5],[-16.0,0.5],[-37.5,23.5],[-14.5,39.0],[7.5,49.5]] },
+  stella:{ ex:[["metro","Lobby Metro Station",12.0,-23.5],["metro","Loading Bay Metro Station",-24.5,18.5],["schacht","Seed Vault Airshaft",18.0,34.5],["hatch","Eastern Tunnel Hatch",33.0,21.0],["hatch","Sandbox Hatch",-3.5,32.0],["hatch","Assembly Hatch (Lage geschätzt)",-27.5,-27.0]],
+    w:[[5.5,-14.5],[17.0,-15.0],[23.0,-16.5],[24.0,-12.5],[29.5,1.0],[2.0,13.5],[-18.5,25.0],[29.0,35.5]],
+    s:[[-14.5,-17.5],[-0.5,-10.5],[-13.0,-7.0],[20.5,-13.0],[-10.0,5.5],[-2.0,15.0]],
+    b:[[6.0,-22.5],[11.5,-17.0],[9.5,-4.0],[-30.5,1.0]] },
+  riven:{ ex:[["lift","Seaside Elevator",1.5,-7.5],["lift","Customs Elevator",9.0,31.0],["hatch","Saltswept Hatch",-20.0,-8.0],["hatch","Hilltop Hatch",7.5,5.0],["hatch","Weighbridge Hatch",42.5,15.0]],
+    w:[[-6.5,-25.5],[22.0,-13.0],[41.0,-12.0],[38.0,-5.0],[41.5,-2.0],[52.5,-3.5],[8.0,4.5],[-29.5,6.5],[24.0,12.0],[43.5,7.5],[12.0,23.0],[15.5,28.0],[-40.5,-19.0],[-30.5,3.5],[-45.0,7.5]],
+    s:[[-2.0,-30.0],[4.0,-28.5],[19.5,-13.0],[34.5,-13.0],[47.0,-14.0],[41.5,-2.0],[49.0,6.5],[-27.5,10.0],[12.0,26.5],[18.5,32.0]],
+    b:[[48.0,-42.0],[39.0,-37.0],[53.0,-32.5],[22.0,-16.0],[0.0,-14.0],[23.0,-12.0],[21.5,5.0],[23.0,4.0],[-26.5,6.5],[-14.5,15.5],[10.5,22.5],[-5.0,31.5],[-0.5,37.5],[-7.5,43.0],[-44.5,6.0]] },
+  pendola:{ ex:[["gondel","Transceiver (Gondel)",6.5,-30.0],["gondel","Transceiver (Gondel)",2.0,-6.5],["gondel","Transceiver (Gondel)",-23.0,-1.5],["gondel","Transceiver (Gondel)",15.0,22.5]],
+    w:[[3.5,-53.0],[2.0,-53.0],[8.5,-52.5],[-2.5,-43.5],[-11.0,-40.5],[35.5,-43.0],[-5.5,-38.0],[31.5,-33.5],[-17.0,-32.5],[-9.5,-31.5],[5.5,-30.5],[29.5,-30.0],[34.5,-28.5],[27.0,-24.5],[-14.0,-23.5],[-0.5,-24.0],[13.5,-21.0],[10.0,-18.0],[34.0,-10.0],[-3.0,-7.5],[-2.0,-5.5],[11.0,-5.5],[-26.5,-3.0],[-6.5,-3.0],[22.0,-2.5],[0.0,-2.0],[-3.5,0.5],[14.0,0.5],[31.0,-0.5],[-32.5,2.5],[-3.5,2.5],[-10.0,6.0],[-41.5,9.0],[-38.5,10.5],[17.0,11.0],[24.5,8.0],[25.5,11.0],[-35.0,13.5],[-28.0,14.0],[22.5,13.5],[-14.0,17.0],[19.0,19.5],[13.5,20.0],[-26.5,22.5],[5.5,21.5],[12.5,26.0],[32.5,25.5],[26.5,29.0],[32.5,29.0],[9.0,32.0],[23.5,52.0],[28.0,53.0]],
+    s:[[-5.5,-37.0],[35.0,-34.0],[-13.5,-22.5],[13.5,-21.5],[-34.0,-0.5],[-3.5,-0.5],[13.5,-2.0],[-30.5,10.5],[-25.5,12.0],[16.5,10.0],[3.0,13.5],[18.0,17.0],[10.0,47.0],[35.5,45.0],[24.5,51.5]],
+    b:[[-1.0,-53.0],[4.5,-53.0],[14.5,-53.0],[13.5,-53.0],[4.5,-53.0],[-10.5,-48.5],[2.0,-47.5],[0.0,-44.5],[-13.5,-36.0],[15.5,-38.5],[9.5,-27.5],[-18.5,-23.0],[-13.0,-17.0],[-12.5,-13.5],[5.5,-17.5],[17.5,-17.5],[-14.5,-5.0],[-22.0,-4.5],[-22.5,6.0],[-3.0,6.0],[5.5,7.0],[10.5,7.5],[23.0,1.0],[-33.0,22.0],[-2.0,19.5],[10.5,37.0],[36.5,32.5],[18.5,46.5],[41.5,39.5],[21.5,53.0],[-1.5,-9.0]] },
+};
 /* @datei app/kern/pruefstand-anwenden.js */
 // Prüfstand auf Karten und Guides anwenden.
 for (const id in CHECK.rooms){ const m = MAPS[id]; if (!m) continue;
@@ -3536,13 +3617,13 @@ const VIEWS = {
 for (const id of MAP_ORDER){
   const m = MAPS[id];
   VIEWS[id] = { group:'keys', mapId:id, title:'Schlüsselräume · ' + m.name, build:() => buildMap(m, id), get steps(){ return m.steps; }, route:false,
-    ground:Object.assign({x0:-52,x1:52,z0:-52,z1:52,col:m.ground || '#1a222c'}, BASE_TEX[id]), layers:[['key','Schlüsselräume'],['lab','Labels']], info:INFO.keys };
+    ground:Object.assign({x0:-52,x1:52,z0:-52,z1:52,col:m.ground || '#1a222c'}, BASE_TEX[id]), layers:[['key','Schlüsselräume'],['exit','Ausgänge'],['wcase','Waffenkisten'],['slock','Security-Spinde'],['pack','Rucksäcke'],['lab','Labels']], info:INFO.keys };
 }
 
 let viewId = 'fregatte', view = VIEWS.fregatte, mode = 'squad', cur = 0;
 const lastMap = { id:'dam' };
 const steps = () => view.modes ? view.modes[mode] : view.steps;
-const layers = { loot:true, core:true, hydra:true, hazard:true, lab:true, key:true };
+const layers = { loot:true, core:true, hydra:true, hazard:true, lab:true, key:true, exit:true, wcase:true, slock:true, pack:true };
 /* @datei app/kern/kamera.js */
 /* ================= Kamera ================= */
 const cam = { tx:0, ty:13, tz:0, yaw:.6, pitch:.42, dist:110 };
@@ -3675,6 +3756,21 @@ function drawFace(it){
   }
   if (f.s > 0){ ctx.strokeStyle = `rgba(205,222,238,${f.s})`; ctx.lineWidth = .7; ctx.stroke(); }
 }
+/* Ausgang: frei zugängliche (Lift, Metro, Airshaft, Gondel) als gefülltes Feld mit Pfeil, Raider Hatch als Ring mit Pfeil (braucht Schlüssel), Metro-Eingang als kleiner Ring */
+const EXIT_ART = { lift:'Lift', metro:'Metro', schacht:'Airshaft', gondel:'Gondel', hatch:'Hatch · Schlüssel nötig' };
+function drawExit(x, y, r0, s, nah){
+  if (s.t === 'zugang'){ ctx.beginPath(); ctx.arc(x, y, r0*.7, 0, Math.PI*2); ctx.fillStyle = 'rgba(10,12,16,.7)'; ctx.fill(); ctx.strokeStyle = '#2ce6ff'; ctx.lineWidth = 1.4; ctx.stroke(); return; }
+  const r = r0*1.75, hatch = s.t === 'hatch';
+  ctx.save(); ctx.shadowColor = 'rgba(44,230,255,.8)'; ctx.shadowBlur = 8; ctx.beginPath();
+  if (hatch) ctx.arc(x, y, r, 0, Math.PI*2); else ctx.rect(x-r, y-r, 2*r, 2*r);
+  ctx.fillStyle = hatch ? '#12202a' : '#2ce6ff'; ctx.fill(); ctx.restore();
+  ctx.lineWidth = hatch ? 2 : 1.2; ctx.strokeStyle = hatch ? '#2ce6ff' : 'rgba(10,12,16,.85)'; ctx.stroke();
+  ctx.beginPath(); ctx.strokeStyle = hatch ? '#2ce6ff' : '#0a0c10'; ctx.lineWidth = Math.max(1.4, r*.22); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.moveTo(x, y-r*.55); ctx.lineTo(x, y+r*.45); ctx.moveTo(x-r*.42, y+.05*r); ctx.lineTo(x, y+r*.5); ctx.lineTo(x+r*.42, y+.05*r); ctx.stroke(); ctx.lineCap = 'butt';
+  if (nah > 4.4 && layers.lab){ const t = s.n + ' · ' + EXIT_ART[s.t];
+    ctx.font = '600 11px "Barlow", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(10,12,16,.9)'; ctx.strokeText(t, x, y+r+4); ctx.fillStyle = '#bff6ff'; ctx.fillText(t, x, y+r+4); ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic'; }
+}
 function drawSprite(it){
   const q = it.q, x = sx(q), y = sy(q), r = clamp(C.f*.42/q[2], 2.6, 7.5), k = it.s.k;
   ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(10,12,16,.85)';
@@ -3684,6 +3780,10 @@ function drawSprite(it){
     ctx.save(); ctx.shadowColor='rgba(255,123,51,.9)'; ctx.shadowBlur=8; ctx.fillStyle='#ff7b33'; ctx.fill(); ctx.restore(); ctx.stroke(); }
   else if (k === 'hazard'){ ctx.arc(x,y,r*1.05,0,Math.PI*2); ctx.fillStyle='#8f8cff'; ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.strokeStyle='rgba(143,140,255,.55)'; ctx.lineWidth=1; ctx.arc(x,y,r*1.9,0,Math.PI*2); ctx.stroke(); }
+  else if (k === 'exit'){ drawExit(x, y, r, it.s, C.f*.42/q[2]); }
+  else if (k === 'wcase'){ const w = r*1.5, h = r*.75; ctx.moveTo(x-w+h, y-h); ctx.lineTo(x+w-h, y-h); ctx.arc(x+w-h, y, h, -Math.PI/2, Math.PI/2); ctx.lineTo(x-w+h, y+h); ctx.arc(x-w+h, y, h, Math.PI/2, Math.PI*1.5); ctx.closePath(); ctx.fillStyle = '#8be04e'; ctx.fill(); ctx.stroke(); }
+  else if (k === 'slock'){ ctx.rect(x-r*.85, y-r, r*1.7, 2*r); ctx.fillStyle = '#f3e9d2'; ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y-r); ctx.lineTo(x, y+r); ctx.moveTo(x-r*.4, y-r*.1); ctx.lineTo(x-r*.4, y+r*.3); ctx.moveTo(x+r*.4, y-r*.1); ctx.lineTo(x+r*.4, y+r*.3); ctx.stroke(); }
+  else if (k === 'pack'){ ctx.arc(x, y+r*.15, r*.95, 0, Math.PI*2); ctx.fillStyle = '#e0a458'; ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y-r*.75, r*.45, Math.PI, 0); ctx.stroke(); }
   else { ctx.moveTo(x,y-r*1.3); ctx.lineTo(x+r*1.2,y+r*.9); ctx.lineTo(x-r*1.2,y+r*.9); ctx.closePath(); ctx.fillStyle='#ff5468'; ctx.fill(); ctx.stroke(); }
 }
 function draw(t){
@@ -4421,7 +4521,7 @@ function renderRunMini(){ const b = $('#btnRunMini'); if (!b) return;
 
 // ---------- Ebenen ----------
 function renderLayers(){
-  const SW = { loot:'var(--loot)', core:'var(--core)', hydra:'var(--hydra)', hazard:'var(--hazard)', lab:'var(--muted)', key:'var(--key)' };
+  const SW = { loot:'var(--loot)', core:'var(--core)', hydra:'var(--hydra)', hazard:'var(--hazard)', lab:'var(--muted)', key:'var(--key)', exit:'var(--exit)', wcase:'var(--wcase)', slock:'var(--slock)', pack:'var(--pack)' };
   $('#layerMenu').innerHTML = view.layers.map(([k, label]) => `<button type="button" role="menuitemcheckbox" aria-checked="${layers[k]}" data-layer="${k}"><span class="mk">${layers[k] ? '✓' : ''}</span><span class="sw" style="background:${SW[k]}"></span>${escH(label)}</button>`).join('')
     + '<button type="button" role="menuitem" data-act="cal"><span class="mk"></span>Eigene Karte …</button><button type="button" role="menuitem" data-act="info"><span class="mk"></span>Infos zur Ansicht …</button>';
 }
@@ -5864,6 +5964,10 @@ function drawMini(){
   if (ROUTE && ROUTE.view === viewId) ROUTE.stops.forEach((s, i) => { const [x, y] = P(s.x, s.z); g.beginPath(); g.arc(x, y, i === ROUTE.i ? 6 : 4.5, 0, Math.PI*2); g.fillStyle = i === ROUTE.i ? '#2CE6FF' : '#FF3EA5'; g.fill(); });
   else if (view.group === 'keys' && layers.key){ const R = steps(); for (let i = 1; i < R.length; i++){ const p = R[i].pos; if (!p) continue; const [x, y] = P(p[0], p[2]); g.beginPath(); g.arc(x, y, i === cur ? 6 : 4, 0, Math.PI*2); g.fillStyle = i === cur ? '#2CE6FF' : '#FFCF5A'; g.fill(); } }
   else if (view.route && cur > 0 && steps()[cur].pos){ const p = steps()[cur].pos, [x, y] = P(p[0], p[2]); g.beginPath(); g.arc(x, y, 6, 0, Math.PI*2); g.fillStyle = '#2CE6FF'; g.fill(); }
+  // Ausgänge
+  if (layers.exit && MAP_EXTRA[viewId]) for (const [t, , x0, z0] of MAP_EXTRA[viewId].ex){ if (t === 'zugang') continue; const [x, y] = P(x0, z0); g.beginPath();
+    if (t === 'hatch'){ g.arc(x, y, 3.6, 0, Math.PI*2); g.fillStyle = '#12202a'; g.fill(); g.strokeStyle = '#2ce6ff'; g.lineWidth = 1.6; g.stroke(); }
+    else { g.rect(x-3.6, y-3.6, 7.2, 7.2); g.fillStyle = '#2ce6ff'; g.fill(); } }
   // Ausschnitt der Kamera
   const fp = miniFootprint();
   if (fp){ g.beginPath(); fp.forEach((p, i) => { const [x, y] = P(p[0], p[1]); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.closePath();
