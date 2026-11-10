@@ -621,6 +621,14 @@ li.qd .row .t1{color:var(--muted)}
 .snack span{flex:1 1 auto}
 .snack button{flex:0 0 auto;min-height:44px;padding:0 14px;border:0;border-radius:10px;background:transparent;color:#2CE6FF;font:700 15px/1 var(--body);cursor:pointer}
 @media (min-width:860px){ .snack{bottom:20px} }
+
+
+.nkurz{display:none}
+.badge{white-space:nowrap}
+@media (min-width:860px){ #naviMaps .nlang{display:none} #naviMaps .nkurz{display:inline} }
+
+
+.app[data-pick="1"] .hud,.app[data-pick="1"] #miniWrap{display:none}
 /* @ende-dateien */
 </style>
 </head>
@@ -1182,7 +1190,7 @@ Mini Centrifuge|R||X||
 Mod Components|R||S|S|
 Moss|R||N||n:An feuchten Stellen.
 Motor|R|M|M|ME|n:Auch in Autos, Bussen und Frachtcontainern.
-Mushroom|U|N|N||s:dam/Hydroponic Dome Complex/pg;s:spaceport/Little Hangar/gU;n:An Bäumen und in feuchten Ecken durch Ernten.
+Mushroom|U|N|N||s:dam/Hydroponic Dome Complex/pg;s:spaceport/Little Hangar/gU;n:An Bäumen und in feuchten Ecken, geerntet wird direkt an der Pflanze.
 Music Album|R||RC|RC|
 Music Box|R||OCR|RC|
 Number Plate|U||M||n:An Autos.
@@ -1894,7 +1902,7 @@ const INFO = {
     <li><b>Frigate Inductor</b>: Legendär, gebraucht für die Research Station Stufe 4.</li>
     <li><b>ARC Data Module</b> und <b>Thermal Shaker</b>: <span class="annt">Annahme</span> werden ebenfalls für Upgrades gebraucht (je 3).</li>
     <li><b>Frigate Diagnostic Node</b>: kommt im Cargo häufiger vor.</li>
-    <li>Hydra: ohne eigenes Spezialteil nur leichte Munition, ARC-Energiezelle, ARC-Legierung und Turret Debris. Details im Tab ARC.</li></ul>
+    <li>Hydra: ohne eigenes Spezialteil. Sie droppt nur leichte Munition, ARC-Energiezelle, ARC-Legierung und Turret Debris. Details im Tab ARC.</li></ul>
     <h4>Loadout</h4><p class="fine">Empfehlungen aus der Community, nicht einzeln nachgeprüft.</p><ul>
     <li>Custom Loadout mit Safe Pocket. Free Loadouts gibt es mit der Fregatte nicht.</li>
     <li>Grappling Hook oder Snap Hook, Rauchgranaten, Schild plus Ersatz, viel Heilung.</li>
@@ -1992,12 +2000,12 @@ const FAQ_GRUNDLAGE = [
 /* @datei wissen/faq-funktionen.js */
 
 const FAQ_FUNKTIONEN = [
-{"t":"Karten","b":[{"k":"p","x":"Jede Map gibt es als 3D-Modell und als 2D-Plan, mit Markern, die sich einzeln filtern lassen. Norden ist wie im Spiel fest oben."},{"k":"ul","i":[["Marker","Ausgänge (Lift, Raider-Luke), Waffenkisten, Security-Spinde, Rucksäcke, Startpunkte, Orte und Questziele."],["Ebenen","oben und unten getrennt, wo eine Map mehrere Stockwerke hat."],["Suche","Orte, Items und Quests direkt auf der Karte finden."],["Mini-Karte","kleine Karte mit Position und Route, auch während eines Runs."],["Ausrichtung","Der Kompass-Knopf wechselt zwischen drei Modi. «Norden oben» bleibt starr, zoomt auf das nächste Ziel und wandert mit; Ziehen verschiebt die Karte. «Folgen» dreht die Karte, damit dein Weg nach oben zeigt. «Frei drehen» dreht und neigt die Karte mit einem Finger, verschoben wird mit zwei Fingern."],["Gebäude und Gelände","Alle Maps sind nach dem Kartenbild grob nachgebaut: Gebäude so gedreht wie im Spiel, Hügel und Täler. Die Höhen sind geschätzt. Stella Montis ist eine Innenanlage und bleibt ein flacher Plan."],["Eigene Karte","einen eigenen Screenshot als Unterlage unter die Marker legen."],["Annahmen markiert","Was nicht belegt ist, steht als «Annahme» beim Marker oder Raum."]]}]},
-{"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps), Restzeit eingeben, auch beim Einstieg in eine laufende Runde."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus der Materialsuche wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig»."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","5 Bedingungen mit Erklärung (ARC Frigate, Night Raid, Redirection, Close Scrutiny, EM-Sturm), unten in «Run planen». Im Navi wählst du die aktuelle Bedingung; sind Raider-Luken gesperrt, plant es einen anderen Ausgang."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
+{"t":"Karten","b":[{"k":"p","x":"Jede Map gibt es als 3D-Modell und als 2D-Plan, mit Markern, die sich einzeln filtern lassen. Norden ist wie im Spiel fest oben."},{"k":"ul","i":[["Marker","Ausgänge (Lift, Raider-Luke), Waffenkisten, Security-Spinde, Rucksäcke, Startpunkte, Orte und Questziele."],["Ebenen","oben und unten getrennt, wo eine Map mehrere Stockwerke hat."],["Suche","Orte, Items und Quests direkt auf der Karte finden."],["Mini-Karte","kleine Karte mit Position und Route, auch während eines Runs."],["Ausrichtung","Der Kompass-Knopf wechselt zwischen drei Modi. «Norden oben» bleibt starr, zoomt auf das nächste Ziel und wandert mit; Ziehen verschiebt die Karte. «Folgen» dreht die Karte, damit dein Weg nach oben zeigt. «Frei drehen» dreht und neigt die Karte mit einem Finger, verschoben wird mit zwei Fingern."],["Gebäude und Gelände","Alle Maps sind nach dem Kartenbild grob nachgebaut: Gebäude so gedreht wie im Spiel, Hügel und Täler. Die Höhen sind geschätzt. Stella Montis ist eine Innenanlage und bleibt ein flacher Plan."],["Eigene Karte","einen eigenen Screenshot als Unterlage unter die Marker legen."],["Annahmen markiert","Was nicht belegt ist, steht als «Annahme» beim Marker oder Raum."],["3D-Grafik bleibt","Verliert der Browser die 3D-Grafik (zum Beispiel das iPhone im Hintergrund), zeichnet die App einfach weiter und baut die 3D-Ansicht neu auf, sobald es geht."]]}]},
+{"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Run» und die Mini-Karte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus der Materialsuche wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Run steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","5 Bedingungen mit Erklärung (ARC Frigate, Night Raid, Redirection, Close Scrutiny, EM-Sturm), unten in «Run planen». Im Navi wählst du die aktuelle Bedingung; sind Raider-Luken gesperrt, plant es einen anderen Ausgang."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
 {"t":"Materialsuche","b":[{"k":"p","x":"Du suchst ein Material und die App zeigt, wo es vorkommt, und baut daraus eine Sammelroute."},{"k":"ul","i":[["Suche","192 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie und Seltenheit."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten. Daneben steht das FAQ."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen, alle davor werden abgehakt."],["Suche und Filter","nach Name, Ort, Händler oder Material."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."],["FAQ","dritter Reiter neben Quests und Projekte. Erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."]]}]},
 {"t":"ARC","b":[{"k":"p","x":"Der ARC-Bereich zeigt 32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen."},{"k":"ul","i":[["Steckbrief","antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr","Balken von grün (niedrig) bis rot (extrem)."],["Gruppen","Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme)."],["Im Navi","die Gefahr bestimmt die eingeplante Kampfzeit von 0,5 bis 5 Minuten."]]}]},
-{"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
+{"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
 {"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
 {"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."]]}]}
 ];
@@ -2389,7 +2397,7 @@ CHECK.rooms.riven = {
     ]
   },
   "Hotel, Zimmer 205": {
-    "text": "Zimmer 205 hohe Stufe, etwa 90 Sekunden nach dem Ausschalten eines Turrets.",
+    "text": "Zimmer 205: hohe Stufe, etwa 90 Sekunden nach dem Ausschalten eines Turrets.",
     "src":'',
     "ann": [
       "Stockwerk",
@@ -4305,7 +4313,7 @@ c=mix(vec3(l),c,1.2);c=c*c*(3.-2.*c)*.25+c*.75;c=pow(clamp(c,0.,1.),vec3(1./2.2)
 /* @datei grafik/renderer-3d.js */
 
 let LIGHT_EVE = false; try { LIGHT_EVE = localStorage.getItem('raider-atlas:eve') === '1'; } catch(_){}
-const G3 = (() => {
+function makeG3(){
   const c3 = document.getElementById('gl3d'); if (!c3) return null;
   let gl = null;
   try { gl = c3.getContext('webgl2', { antialias:false, alpha:false, depth:true, powerPreference:'low-power' }); } catch(_){}
@@ -4567,7 +4575,7 @@ const G3 = (() => {
     gl.drawArrays(gl.TRIANGLES, 0, 3); gl.activeTexture(gl.TEXTURE0);
   }
   let lost = false, activeKey = null, cusKey = false;
-  c3.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; api.ok = false; dirty = true; });
+  c3.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; api.ok = false; dirty = true; }, { once:true });
   function frame(){
     if (lost) return;
     const R = steps(), st = R && R[cur];
@@ -4585,7 +4593,14 @@ const G3 = (() => {
   }
   const api = { ok:true, frame, relight(){ shDirty = true; sig = ''; }, info:HDR ? 'WebGL 2' : 'WebGL 2 (ohne HDR)' };
   return api;
-})();
+}
+let G3 = null;
+try { G3 = makeG3(); } catch(_){ G3 = null; }
+{ const c3 = document.getElementById('gl3d');
+  if (c3 && G3) c3.addEventListener('webglcontextrestored', () => {
+    let neu = null; try { neu = makeG3(); } catch(_){}
+    if (neu){ G3 = neu; dirty = true; if (typeof wake === 'function') wake(); }
+  }); }
 /* @datei app/kern/schleife.js */
 function loop(t){
   if (anim){
@@ -4695,11 +4710,12 @@ function openView(id, opts){
 }
 function backTarget(){ return viewId === 'emperor' && UI.from === 'pendola' ? 'pendola' : null; }
 function renderMapBar(){
+  if (typeof pickSync === 'function' && typeof ROUTE !== 'undefined') pickSync();   
   const isF = viewId === 'fregatte', isE = viewId === 'emperor', m = view.mapId ? MAPS[view.mapId] : null;
   const rOn = typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId;
   $('#mapTitle').textContent = isF ? 'ARC Frigate' : isE ? 'Emperor-Dungeon' : m.name;
   const nSt = rOn ? ROUTE.stops.filter(s => !s.exit).length : 0;
-  $('#mapSub').textContent = rOn && ROUTE.navi ? (ROUTE.pick ? 'Navi · Startpunkt wählen' : 'Navi · ' + ROUTE.stops.filter(s => !s.start && !s.exit).length + ' Stopps · ca. ' + Math.round(ROUTE.min) + ' min')
+  $('#mapSub').textContent = rOn && ROUTE.navi ? (ROUTE.pick ? 'Navi · Startpunkt wählen' : 'Navi · ' + naviStopTxt(ROUTE.stops.filter(s => !s.start && !s.exit)) + ' · ca. ' + fmin(ROUTE.min) + ' min')
     : rOn ? (ROUTE.focus ? 'Fundort' : 'Route · ' + nSt + (nSt === 1 ? ' Stopp' : ' Stopps') + (ROUTE.min ? ' · ca. ' + Math.round(ROUTE.min) + ' min' : ''))
     : isE ? 'im Fallen Emperor · Pendola Pass' : isF ? (mode === 'solo' ? 'Solo-Run' : 'Squad-Run') : m.r.length + ' Schlüsselräume';
   const bt = backTarget();
@@ -4742,7 +4758,7 @@ function renderCard(){
   an.hidden = !al.length;
   
   $('#srcl').hidden = true;
-  $('#prev').disabled = cur === 0;
+  $('#prev').disabled = cur === 0; $('#next').disabled = false;
   const nl = cur === 0 ? (view.route ? 'Route starten' : 'Erster Raum') : cur === n ? 'Von vorne' : 'Weiter';
   $('#next').setAttribute('aria-label', nl);
   const nb = $('#nextBig'); nb.textContent = nl; nb.parentElement.hidden = cur !== 0;
@@ -4800,8 +4816,10 @@ function setView(id, opts){
   if (!(opts && opts.noHash) && location.hash !== '#' + id){ try { history.replaceState(null, '', '#' + id); } catch(_) { location.hash = id; } }
 }
 function setMode(m){ mode = m; cur = 0; renderCard(); renderMapBar(); flyTo(steps()[0].cam); }
-const stepPrev = () => (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId) ? selectStop(Math.max(0, ROUTE.i - 1)) : goStep(cur - 1);
-const stepNext = () => (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId) ? selectStop((ROUTE.i + 1) % ROUTE.stops.length) : goStep(cur === steps().length - 1 ? 0 : cur + 1);
+
+const stepPick = () => typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId && ROUTE.pick;
+const stepPrev = () => stepPick() ? null : (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId) ? selectStop(Math.max(0, ROUTE.i - 1)) : goStep(cur - 1);
+const stepNext = () => stepPick() ? null : (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId) ? selectStop((ROUTE.i + 1) % ROUTE.stops.length) : goStep(cur === steps().length - 1 ? 0 : cur + 1);
 $('#prev').addEventListener('click', stepPrev);
 $('#next').addEventListener('click', stepNext);
 $('#nextBig').addEventListener('click', () => { goStep(1); revealSheet(); });
@@ -4842,7 +4860,14 @@ $('#setClose').addEventListener('click', () => closeModal(setDlg));
 setDlg.addEventListener('click', e => { if (e.target === setDlg) closeModal(setDlg); });
 document.addEventListener('keydown', e => {
   const open = [...document.querySelectorAll('.dlg')].find(d => !d.hidden);
-  if (open){ if (e.key === 'Escape'){ const c = open.querySelector('#runCancel, #askLater, #naviAskCancel, #qiNo, #nxLater, .tbtn.b'); if (c) c.click(); } return; }
+  if (open){
+    if (e.key === 'Escape'){
+
+      if (open.id === 'qiDlg'){ closeModal(open); return; }
+      const c = open.querySelector('#runCancel, #stCancel, #askLater, #naviAskCancel, #nxLater') || open.querySelector('.tbtn.b'); if (c) c.click();
+    }
+    return;
+  }
   if (!$('#layerMenu').hidden && e.key === 'Escape'){ closeLayers(); $('#btnLayers').focus(); return; }
   if (e.target.closest && e.target.closest('input, textarea')) { if (e.key === 'Escape' && typeof backToList === 'function' && !$('#sDetail').hidden) backToList(); return; }
   if (e.key === '/'){ e.preventDefault(); openSearch(false); return; }
@@ -4912,6 +4937,8 @@ function pan(dx, dy){ if (!C) return; const s = cam.dist / C.f, s2 = s / Math.ma
 cv.addEventListener('contextmenu', e => e.preventDefault());
 cv.addEventListener('pointerdown', e => {
   try { cv.setPointerCapture(e.pointerId); } catch(_){}
+
+  if (e.isPrimary && ptrs.size){ ptrs.clear(); pinch = null; down = null; dragB = null; }
   ptrs.set(e.pointerId, { x:e.clientX, y:e.clientY });
   if (ptrs.size === 1) down = { x:e.clientX, y:e.clientY, moved:false };
   if (ptrs.size === 1 && calOpen && moveMode && handles.length){
@@ -4966,6 +4993,8 @@ function up(e){
 }
 cv.addEventListener('pointerup', up);
 cv.addEventListener('pointercancel', up);
+cv.addEventListener('lostpointercapture', e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (!ptrs.size) down = null; });
+window.addEventListener('blur', () => { ptrs.clear(); pinch = null; down = null; });
 cv.addEventListener('wheel', e => { e.preventDefault(); anim = null; cam.dist = clamp(cam.dist*Math.exp(e.deltaY*.0012), 10, 200); dirty = true; }, { passive:false });
 /* @datei app/kern/eigene-karte.js */
 
@@ -5110,7 +5139,6 @@ for (const id of MAP_ORDER){
 
 KEYS['Raider Hatch Key'] = { kind:'key', n:'Raider Hatch Key', rooms:[], extra:'Öffnet eine Raider Hatch für die Extraktion. Ein seltener Zufallsfund auf allen Maps, und du kannst ihn vor dem Raid selbst craften.', xs:'B' };
 for (const k in KEYS){ const inf = KEY_INFO[k] || {}; KEYS[k].r = inf.r || ''; KEYS[k].q = inf.q; KEYS[k].qs = inf.qs; KEYS[k].ann = inf.ann; ITEMS.push(KEYS[k]); }
-function rarCode(t){ return { 'Gewöhnlich':'C', 'Ungewöhnlich':'U', 'Selten':'R', 'Episch':'E', 'Legendär':'L' }[t] || ''; }
 ITEMS.sort((a,b) => a.n.localeCompare(b.n));
 
 function itemCatList(it){
@@ -5653,7 +5681,13 @@ function planRoute(m, stops, cut){
 function startRoute(m, R, src){
   openView(m, { from:['karten', 'run', 'raids'].includes(UI.tab) ? UI.tab : 'mat' });
   ROUTE = Object.assign({ view:m, i:0, src }, R);
-  renderCard(); renderMapBar(); if (isWide()) revealSheet(); else setDetent('mini'); fitRoute(); dirty = true; wake();
+  renderCard(); renderMapBar(); if (isWide()) revealSheet(); else setDetent('mini'); pickSync(); fitRoute(); dirty = true; wake();
+}
+
+function pickSync(){
+  const on = !!(ROUTE && ROUTE.pick && ROUTE.view === viewId);   
+  if ((appEl.dataset.pick === '1') === on) return;
+  appEl.dataset.pick = on ? '1' : '0'; measureTop();
 }
 function openRoute(m){
   startRoute(m, Object.assign(stopsFor(m), { focus:false, label:'' }), { k:'route', m });
@@ -5676,7 +5710,7 @@ function fitRoute(){
   
   const hMax = Math.max(0, ...ROUTE.stops.map(s => s.h || 0));
 
-  if (ROUTE.pick){ const f = Math.min(W, H)*1.12, hw = Math.max(60, (W - leftW)/2 - 34), hh = Math.max(60, (H - topH - botH)/2 - 40);
+  if (ROUTE.pick){ const f = Math.min(W, H)*1.12, hw = Math.max(60, (W - leftW)/2 - (isWide() ? 34 : 60)), hh = Math.max(60, (H - topH - botH)/2 - 40);
     const ex = Math.max(...xs) - Math.min(...xs), ez = Math.max(...zs) - Math.min(...zs);
     flyTo({ t:[cx, 0, cz], yaw:0, pitch:1.5, dist:clamp(Math.max(ex/2*f/hw, ez/2*f/hh) + 4, 30, 200) }); return; }
   flyTo({ t:[cx, Math.max(2, hMax * .45), cz], yaw:0, pitch:.98, dist:clamp(ext*1.45 + 34 + hMax * .3, 52, 160) });
@@ -5693,7 +5727,7 @@ function selectStop(i, quiet){
   ROUTE.i = clamp(i, 0, ROUTE.stops.length - 1); const s = ROUTE.stops[ROUTE.i];
   flyTo(stopCam(ROUTE.i)); renderRoutePanel(); if (!quiet) revealSheet(); dirty = true;
 }
-function clearRoute(silent){ ROUTE = null; routePins = []; dirty = true; if (!silent){ renderCard(); renderMapBar(); flyTo(steps()[0].cam); } }
+function clearRoute(silent){ ROUTE = null; routePins = []; dirty = true; pickSync(); if (!silent){ renderCard(); renderMapBar(); flyTo(steps()[0].cam); } }
 function renderRoutePanel(){
   const R = ROUTE, n = R.stops.length, nl = R.stops.filter(s => !s.exit).length;
   $('#cardView').hidden = true; if (!calOpen) $('#routeView').hidden = false;
@@ -5703,7 +5737,7 @@ function renderRoutePanel(){
   $('#phase').textContent = R.focus ? 'Fundort' : 'Route · ' + nl + (nl === 1 ? ' Stopp' : ' Stopps') + ' · ' + R.stops.reduce((a, s) => a + s.items.length, 0) + ' Materialien' + (R.min ? ' · ca. ' + Math.round(R.min) + ' min' : '');
   
   $('#title').textContent = R.focus ? R.label + (n === 1 ? ': ' + R.stops[0].name : ' auf ' + MAPS[R.view].short) : n ? R.stops[R.i].name : 'Route auf ' + MAPS[R.view].short;
-  $('#prev').disabled = R.i === 0; $('#next').setAttribute('aria-label', 'Nächster Stopp');
+  $('#prev').disabled = R.i === 0; $('#next').disabled = false; $('#next').setAttribute('aria-label', 'Nächster Stopp');
   $('#stopList').innerHTML = R.stops.map((s, i) => s.exit ? `<li><button type="button" class="row" data-stop="${i}"><span class="num ex${i === R.i ? ' on' : ''}">${MARK_IMG[s.exit] ? `<img src="${MARK_IMG[s.exit].src}" alt="">` : ''}</span><span class="rt"><span class="t1">Ausgang: ${esc(s.name)}</span><span class="t2">${esc(EXIT_ART[s.exit])}${s.alt ? ' · falls schon zu: ' + esc(s.alt) : ''}</span></span></button></li>` : `<li><button type="button" class="row" data-stop="${i}"><span class="num${i === R.i ? ' on' : ''}">${i + 1}</span><span class="rt"><span class="t1">${esc(s.name)}</span><span class="t2">${s.items.map(x => `<span class="ri${x.r && RAR[x.r] ? ' r' + x.r : ''}"${x.r && RAR[x.r] ? ` title="${RAR[x.r]}"` : ''}>${esc(x.label)}${x.r && RAR[x.r] ? `<span class="vh"> (${RAR[x.r]})</span>` : ''}</span>${x.spot ? '' : ' (Loot-Symbol)'}`).join(', ')}</span></span></button></li>`).join('');
   const miss = [];
   if (!R.focus && R.min){
@@ -5845,7 +5879,12 @@ function setLang(l){
   sLang = l; try { localStorage.setItem('raider-atlas:lang', l); } catch(_){}
   sLangBox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.l === l));
   renderList(); shopRender(); qRender(); if (matView === 'detail' && sLast) showDetail(sLast); if (matView === 'vorschlag') rankRender();
-  if (ROUTE && !ROUTE.focus){ const v = ROUTE.view, i = ROUTE.i; ROUTE = Object.assign({ view:v, i, focus:false, label:'', src:{ k:'route', m:v } }, stopsFor(v)); renderCard(); }
+  
+  if (UI.tab === 'quests' && qCur && !$('#qDetail').hidden){ if (qCur.t === 'q') questOpen(qCur.i); else projOpen(qCur.id); }
+  if (UI.tab === 'arc' && arcCur && !$('#arcDetail').hidden) arcOpen(arcCur.n, arcBack);
+
+  if (ROUTE && ROUTE.navi){ if (!ROUTE.pick) naviRoute(ROUTE.view, true); }
+  else if (ROUTE && !ROUTE.focus){ const v = ROUTE.view, i = ROUTE.i; ROUTE = Object.assign({ view:v, i, focus:false, label:'', src:{ k:'route', m:v } }, stopsFor(v)); renderCard(); }
 }
 sLangBox.querySelectorAll('button').forEach(b => { b.setAttribute('aria-pressed', b.dataset.l === sLang); b.addEventListener('click', () => setLang(b.dataset.l)); });
 renderList(); shopRender();
@@ -6303,6 +6342,11 @@ function naviOrder(A, S, E){
 }
 const pathOf = (A, o, E) => pathLen([A, ...o, E].filter(Boolean));
 const stopMin = s => s.items.reduce((a, x) => a + (x.t || 0), 0) + (s.items.some(x => x.kind === 'm') ? RZ.stopp + Math.max(0, s.items.filter(x => x.kind === 'm').length - 1) * RZ.item : 0);
+
+function naviStopTxt(S, lang){
+  const n = S.length, l = S.filter(s => s.loot).length;
+  return n + (n === 1 ? ' Stopp' : ' Stopps') + (lang && l ? ', davon ' + l + ' Top-Loot' : '');
+}
 function naviExits(m){
   const ex = (typeof MAP_EXTRA !== 'undefined' && MAP_EXTRA[m] ? MAP_EXTRA[m].ex : []).map(e => ({ t:e[0], name:e[1], x:e[2], z:e[3] }));
   const hatchOk = NAVI.key && !HATCH_ZU[NAVI.cond];
@@ -6417,7 +6461,7 @@ function naviMapRow(v, top, here){
   parts.push(v.q ? v.q + (v.q === 1 ? ' Quest' : ' Quests') + (v.qt ? ' (' + v.qt + ' verfolgt)' : '') : 'keine Quest');
   parts.push(v.n ? v.n + (v.n === 1 ? ' Material' : ' Materialien') : 'kein Material');
   if (NAVI.start[v.m] != null) parts.push('Start gewählt');
-  return `<li><button type="button" class="row" data-navi="${v.m}"><span class="thumb">${thumbSVG(v.m)}</span><span class="rt"><span class="t1">${esc(MAPS[v.m].name)}${v.score && v.score === top ? '<span class="badge">Lohnt sich</span>' : ''}</span><span class="t2">${esc(parts.join(' · '))}</span></span>${CHEV}</button></li>`;
+  return `<li><button type="button" class="row" data-navi="${v.m}"><span class="thumb">${thumbSVG(v.m)}</span><span class="rt"><span class="t1"><span class="nlang">${esc(MAPS[v.m].name)}</span><span class="nkurz">${esc(MAPS[v.m].short)}</span>${v.score && v.score === top ? '<span class="badge"><span class="nlang">Lohnt sich</span><span class="nkurz">Top</span></span>' : ''}</span><span class="t2">${esc(parts.join(' · '))}</span></span>${CHEV}</button></li>`;
 }
 function naviMapsRender(){
   const L = MAP_ORDER.map(naviMapValue), top = Math.max(...L.map(v => v.score));
@@ -6455,6 +6499,7 @@ $('#naviAskDlg').addEventListener('click', e => { if (e.target === e.currentTarg
 
 let naviPlanCache = null;
 function naviOpen(m, opts){
+  snackHide();   
   if (UI.tab !== 'run') setTab('run');
   if (!isWide()) setScreen('list');
   NAVI.m = m; saveNavi();
@@ -6487,7 +6532,7 @@ function naviRender(){
   const pct = Math.min(100, Math.round(P.T / Math.max(1, P.budget) * 100));
   let h = `<div class="subnav"><button type="button" class="back" id="naviBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Run planen</button></div>`
     + `<h3 class="dn">Run auf ${esc(MAPS[m].short)}</h3>`
-    + `<p class="dalt">Geplant: ca. ${fmin(P.T)} von ${fmin(P.budget)} Minuten · ${P.stops.filter(s => !s.loot).length} Stopps${P.stops.some(s => s.loot) ? ' · ' + P.stops.filter(s => s.loot).length + ' Top-Loot' : ''}</p>`
+    + `<p class="dalt">Geplant: ca. ${fmin(P.T)} von ${fmin(P.budget)} Minuten · ${naviStopTxt(P.stops, true)}</p>`
     + `<div class="sb"><span class="bar navbar"><i style="width:${pct}%"></i></span></div>`
     + (st ? '<div class="btncol"><button type="button" class="bp" id="naviGo">Route auf der Karte</button></div>'
       : '<div class="btncol"><button type="button" class="bp" data-npick="1">Startpunkt auf der Karte wählen</button><p class="fine">Die Karte zeigt von oben alle Startpunkte. Tippe auf deinen.</p></div>');
@@ -6599,17 +6644,17 @@ function renderNaviPanel(){
   const R = ROUTE, m = R.view, box = $('#naviBox');
   if (R.pick){
     $('#num').textContent = 'Start'; $('#phase').textContent = 'Navi · ' + MAPS[m].short;
-    $('#title').textContent = 'Startpunkt wählen';
+    $('#title').textContent = 'Startpunkt wählen'; $('#prev').disabled = true; $('#next').disabled = true;
     box.innerHTML = '<p class="sub2">Tippe auf der Karte auf den gelben Punkt, an dem du ins Spiel kommst, oder wähle ihn in der Liste. Die Nummern sind dieselben wie in der Planung.</p>';
     $('#stopList').innerHTML = R.stops.map((s, i) => `<li><button type="button" class="row" data-stop="${i}"><span class="num start">${s.si + 1}</span><span class="rt"><span class="t1">${esc(s.name.replace(/^\d+ · /, ''))}</span><span class="t2">${esc(SRC_TXT[startsOf(m)[s.si][2]])}</span></span></button></li>`).join('');
     $('#routeMiss').hidden = true; $('#altWrap').hidden = true; $('#btnRunR').hidden = true; renderRunMini(); return;
   }
-  const P = R.plan, run = NAVI.run && NAVI.run.m === m ? NAVI.run : null, nStops = R.stops.filter(s => !s.start && !s.exit).length;
+  const P = R.plan, run = NAVI.run && NAVI.run.m === m ? NAVI.run : null;
   $('#num').textContent = R.stops.length ? `${String(R.i + 1).padStart(2, '0')} / ${String(R.stops.length).padStart(2, '0')}` : '00';
-  $('#phase').textContent = 'Navi · ' + nStops + (nStops === 1 ? ' Stopp' : ' Stopps') + ' · ca. ' + fmin(P.T) + ' min';
+  $('#phase').textContent = 'Navi · ' + naviStopTxt(R.stops.filter(s => !s.start && !s.exit)) + ' · ca. ' + fmin(P.T) + ' min';
   const cs = R.stops[R.i];
   $('#title').textContent = cs ? (cs.start ? 'Start ' + (cs.si + 1) + ': ' : cs.exit ? 'Ausgang: ' : '') + cs.name : 'Run auf ' + MAPS[m].short;
-  $('#prev').disabled = R.i === 0;
+  $('#prev').disabled = R.i === 0; $('#next').disabled = false;
   let h = '';
   if (!P.st) h += '<div class="warn">Kein Startpunkt gewählt. Die Route beginnt beim ersten Stopp.</div>';
   if (P.T > P.budget + .01) h += `<div class="warn">Auch ohne weitere Stopps ca. ${fmin(P.T)} min bis zum Ausgang. Geh direkt raus.</div>`;
@@ -6722,7 +6767,10 @@ function naviRunSave(){
   naviLastNavi = !!NAVI.run || !!(ROUTE && ROUTE.navi);
   if (NAVI.run){ NAVI.run = null; saveNavi(); }
   qRender(); hudRender();
-  setTimeout(() => { naviMapsRender(); if (ROUTE && ROUTE.navi && !ROUTE.pick) naviRoute(ROUTE.view, true); if (!$('#naviDetail').hidden) naviRender(); }, 0);
+  
+  setTimeout(() => { naviMapsRender();
+    if (ROUTE && ROUTE.navi && !ROUTE.pick){ ROUTE.i = 0; naviRoute(ROUTE.view, true); flyTo(stopCam(0)); }
+    if (!$('#naviDetail').hidden) naviRender(); }, 0);
 }
 
 const nxDlg = $('#nxDlg');
@@ -7012,7 +7060,7 @@ requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
 window.__atlas = { track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
   navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
-  kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
+  marker:() => markers, g3:() => G3, zeiger:() => ptrs.size, ruhig:() => !anim && !dirty, kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
 })();
 </script>
