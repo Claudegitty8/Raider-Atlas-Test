@@ -260,9 +260,10 @@ svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-l
 /* Ausrichtung: Kompassnadel = Norden oben, Pfeil = folgt der Laufrichtung */
 .camb svg path{fill:none;stroke:currentColor;stroke-linejoin:round}
 .camb svg .nf{fill:var(--accent);stroke:var(--accent)}
-.camb .i-folgen{display:none}
-.camb[aria-pressed="true"] .i-nord{display:none}
-.camb[aria-pressed="true"] .i-folgen{display:block}
+.camb .i-folgen,.camb .i-frei{display:none}
+.camb[data-mode="folgen"] .i-nord,.camb[data-mode="frei"] .i-nord{display:none}
+.camb[data-mode="folgen"] .i-folgen,.camb[data-mode="frei"] .i-frei{display:block}
+.camb[data-mode="frei"]{color:var(--accent)}
 
 /* ================= Infobereich (Sheet) ================= */
 .sheet{position:absolute;left:8px;right:8px;bottom:calc(var(--tabh) + 8px);height:84px;z-index:4;display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:var(--sheet);box-shadow:0 10px 34px rgba(0,0,0,.45),0 0 0 .5px var(--line);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);transition:height .28s cubic-bezier(.2,.8,.2,1)}
@@ -371,6 +372,11 @@ svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-l
 .alertbtns button{flex:1 1 0;min-height:46px;border:0;background:transparent;color:var(--accent);font:400 17px/1 var(--body);cursor:pointer}
 .alertbtns button + button{box-shadow:inset .5px 0 0 var(--line)}
 .alertbtns .b{font-weight:700}
+/* Drei Möglichkeiten: untereinander wie bei iOS */
+.alertbtns.col{flex-direction:column}
+.alertbtns.col button + button{box-shadow:inset 0 .5px 0 var(--line)}
+/* Nur im schmalen Fenster (iPhone): dort ersetzt «Run planen» den Tab Raids */
+@media (min-width:860px){ .nurklein{display:none} }
 
 /* ================= Item-Detail ================= */
 .sdet{padding:0 0 20px}
@@ -623,6 +629,7 @@ li.qd .row .t1{color:var(--muted)}
     <nav class="sidenav" aria-label="Bereiche">
       <button type="button" class="sn" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM15.5 15.5L20 20M8 10.5h5M10.5 8v5"/></svg><span>Materialsuche</span></button>
       <button type="button" class="sn" data-tab="karten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5zM9 4v13.5M15 6.5V20"/></svg><span>Karten</span></button>
+      <button type="button" class="sn" data-tab="run"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg><span>Run planen</span></button>
       <button type="button" class="sn" data-tab="raids"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Raids</span></button>
       <button type="button" class="sn" data-tab="arc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.4"/><path d="M12 5.8v2.8M12 15.4v2.8"/></svg><span>ARC</span></button>
       <button type="button" class="sn" data-tab="quests"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15l-3-2-3 2-3-2-3 2V5A1.5 1.5 0 0 1 7 3.5zM9 8.5h6M9 12h6"/></svg><span>Quests</span></button>
@@ -673,19 +680,31 @@ li.qd .row .t1{color:var(--muted)}
         <div class="sdet" id="sDetail" hidden></div>
       </section>
 
+      <section class="page" id="pgRun" data-page="run" aria-labelledby="hRun" hidden>
+        <div id="runRoot">
+        <header class="lt"><h1 id="hRun">Run planen</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+        <p class="foot">Wähle die Map für deinen nächsten Run. Das Navi plant deine Quests, die Einkaufsliste und Top-Loot in der Nähe, vom Startpunkt bis zum Ausgang, in höchstens 29 Minuten.</p>
+        <ul class="group" id="naviMaps"></ul>
+        <!-- Auf dem iPhone ersetzt «Run planen» den Tab Raids: Geführte Runs und Kartenbedingungen stehen dann hier -->
+        <div class="nurklein">
+          <h3 class="gh">Geführte Runs</h3>
+          <ul class="group" id="runListK"></ul>
+          <h3 class="gh">Kartenbedingungen</h3>
+          <div class="group" id="condListK"></div>
+        </div>
+        </div>
+        <div class="sdet" id="naviDetail" hidden></div>
+      </section>
+
       <section class="page" id="pgRaids" data-page="raids" aria-labelledby="hRaids" hidden>
         <div id="raidsRoot">
         <header class="lt"><h1 id="hRaids">Raids</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
-        <h3 class="gh">Run planen</h3>
-        <ul class="group" id="naviMaps"></ul>
-        <p class="foot">Das Navi plant deinen Run auf einer Map: deine Quests, die Einkaufsliste und Top-Loot in der Nähe, vom Startpunkt bis zum Ausgang, in höchstens 29 Minuten.</p>
         <h3 class="gh">Geführte Runs</h3>
         <ul class="group" id="runList"></ul>
         <h3 class="gh">Kartenbedingungen</h3>
         <div class="group" id="condList"></div>
         <p class="foot">Weitere Kategorien lassen sich als neue Bereiche ergänzen.</p>
         </div>
-        <div class="sdet" id="naviDetail" hidden></div>
       </section>
 
       <section class="page" id="pgQuests" data-page="quests" aria-labelledby="hQuests" hidden>
@@ -759,7 +778,7 @@ li.qd .row .t1{color:var(--muted)}
     <div class="ctl" role="group" aria-label="Kartensteuerung">
       <button type="button" id="zIn" aria-label="Hineinzoomen">+</button>
       <button type="button" id="zOut" aria-label="Herauszoomen">−</button>
-      <button type="button" id="btnCam" class="camb" aria-pressed="false" aria-label="Ausrichtung: Norden oben. Tippen: der Laufrichtung folgen"><svg class="i-nord" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l4.5 10h-9z" class="nf"/><path d="M7.5 13h9L12 21z"/></svg><svg class="i-folgen" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z" class="nf"/></svg></button>
+      <button type="button" id="btnCam" class="camb" aria-pressed="false" aria-label="Ausrichtung: Norden oben. Tippen: der Laufrichtung folgen"><svg class="i-nord" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l4.5 10h-9z" class="nf"/><path d="M7.5 13h9L12 21z"/></svg><svg class="i-folgen" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z" class="nf"/></svg><svg class="i-frei" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6"/><path d="M17.7 3v3.6h-3.6M6.3 21v-3.6h3.6"/></svg></button>
       <button type="button" id="btnReset" aria-label="Ganze Karte zeigen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
     </div>
   </main>
@@ -834,7 +853,7 @@ li.qd .row .t1{color:var(--muted)}
   <nav class="tabbar" id="tabbar" aria-label="Bereiche">
     <button type="button" class="tb" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM15.5 15.5L20 20M8 10.5h5M10.5 8v5"/></svg><span>Materialsuche</span></button>
     <button type="button" class="tb" data-tab="karten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5zM9 4v13.5M15 6.5V20"/></svg><span>Karten</span></button>
-    <button type="button" class="tb" data-tab="raids"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><span>Raids</span></button>
+    <button type="button" class="tb" data-tab="run"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg><span>Run planen</span></button>
     <button type="button" class="tb" data-tab="arc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.4"/><path d="M12 5.8v2.8M12 15.4v2.8"/></svg><span>ARC</span></button>
     <button type="button" class="tb" data-tab="quests"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15l-3-2-3 2-3-2-3 2V5A1.5 1.5 0 0 1 7 3.5zM9 8.5h6M9 12h6"/></svg><span>Quests</span></button>
   </nav>
@@ -921,6 +940,22 @@ li.qd .row .t1{color:var(--muted)}
       <ul class="group in" id="naviAskList"></ul>
       <p class="foot">Danach wählst du Startpunkt und Restzeit, dann startet das Navi.</p>
     </div>
+  </div>
+</div>
+
+<!-- Navi: Quest-Items mitnehmen? -->
+<div class="dlg center" id="qiDlg" hidden>
+  <div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="qiTitle" aria-describedby="qiText">
+    <div class="alertbody"><h3 id="qiTitle">Quest-Items mitnehmen?</h3><p id="qiText"></p></div>
+    <div class="alertbtns"><button type="button" id="qiNo">Nein</button><button type="button" class="b" id="qiYes">Ja, einplanen</button></div>
+  </div>
+</div>
+
+<!-- Nach dem Run: nochmal oder neu planen -->
+<div class="dlg center" id="nxDlg" hidden>
+  <div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="nxTitle" aria-describedby="nxText">
+    <div class="alertbody"><h3 id="nxTitle">Run gespeichert</h3><p id="nxText"></p></div>
+    <div class="alertbtns col"><button type="button" class="b" id="nxSame">Nochmal</button><button type="button" id="nxNew">Neuen Run planen</button><button type="button" id="nxLater">Fertig</button></div>
   </div>
 </div>
 
@@ -1881,7 +1916,7 @@ const PROJ_ITEMS = [
   { n:'Insulation Roll', r:'E', rs:'5', notes:[] }
 ];
 /* @datei wissen/kartenbedingungen.js */
-/* ================= Kartenbedingungen (Tab Raids) =================
+/* ================= Kartenbedingungen (Bereich Raids, auf dem iPhone in «Run planen») =================
    t: Name, x: Text, s: Quellen, a: Knopftext, go: geführter Run */
 const CONDS = [
   { t:'ARC Frigate', x:'Rotiert über den Tag unter anderem durch Pendola Pass, Dam, Buried City, Spaceport und Blue Gate. Mit der Fregatte sind Raider Hatches deaktiviert.', s:'Quellen: OP.GG Event-Timer, ARC Raiders Wiki, AOEAH', a:'Fregatte-Run öffnen', go:'squad' },
@@ -1954,7 +1989,8 @@ const INFO = {
     <li>Laufen: Sprint rund 6,3 m/s für etwa 24,5 s, danach Jog rund 3,65 m/s, bis die Ausdauer nach etwa 22,6 s wieder voll ist (allthings.how). Der Lift fährt 90 s nach dem Ruf ab (8bittoast).</li>
     <li><span class="annt">Annahme</span> Für die Zeit rechnet die App mit im Mittel 5 m/s, 30 % Umweg, 1,5 Minuten Anlauf vom Spawn, 1,5 Minuten pro Stopp plus 0,5 Minuten pro weiteres Material und 2 Minuten am Ausgang (Raider Hatch 0,5 Minuten). Den Massstab der Karte habe ich nur für Dam (rund 11 m pro Einheit) und Spaceport (rund 12,5 m) aus Distanzen bei allthings.how abgeleitet, für die übrigen Karten ist er geschätzt.</li></ul>
     <h4>Navi und Startpunkte</h4><ul>
-    <li>Das Navi (Bereich Raids, «Run planen») plant vom Startpunkt bis zum Ausgang: verfolgte Quests, pro Händler die nächste offene Quest, die Einkaufsliste und Top-Loot in der Nähe. Alles lässt sich einzeln abwählen.</li>
+    <li>Das Navi (Bereich «Run planen», auch über den Knopf im Kasten «Mein Run») plant vom Startpunkt bis zum Ausgang: verfolgte Quests, pro Händler die nächste offene Quest, die Einkaufsliste und Top-Loot in der Nähe. Material für deine Quests kommt nur dazu, wenn du die Frage beim Planen bejahst. Alles lässt sich einzeln abwählen.</li>
+    <li>Nach dem Run trägst du ein, was du gefunden und erledigt hast. Dann wählst du: denselben Run nochmal (nur der Startpunkt ist neu) oder einen neuen Run (Auswahl und eigene Materialien zurück, der Bedarf deiner Quests bleibt).</li>
     <li>Gelbe Punkte mit Nummer: mögliche Startpunkte. Abgelesen an den Karten von Arc Raiders Hub (Ebene «Raider Spawn») und Wand (Ebene «Spieler-Spawn»), am 10.11.2026. Die beiden Karten zeigen nicht dieselben Punkte: Die App nimmt beide, gleiche Punkte (höchstens 6 Einheiten auseinander) nur einmal. Pendola Pass gibt es nur bei Arc Raiders Hub. Die offizielle Seite nennt keine Startpunkte.</li>
     <li>Startpunkte am Kartenrand liegen teils ausserhalb des 3D-Modells. Das Navi zeichnet sie am Rand und rechnet mit der echten Distanz.</li>
     <li>Steigst du in eine laufende Runde ein, trägst du die Restzeit aus dem Spiel ein. Das Navi plant 1 Minute Reserve. Die Uhr im Run ist freiwillig und lässt sich jederzeit anpassen.</li>
@@ -3824,11 +3860,12 @@ function path3(pts){ for (let i=1;i<pts.length;i++) seg3(pts[i-1], pts[i]); }
 /* Ausrichtung wie die Karte im Spiel (Entscheid des Nutzers, 10.11.2026): Norden (-z) fest oben, nicht von Hand drehbar.
    Knopf in der Kartensteuerung: «nord» = starr nordweisend, zoomt aufs Wesentliche und wandert mit den Aufgaben;
    «folgen» = fokussiert und dreht in Laufrichtung (vom letzten Punkt zum Ziel zeigt nach oben, c.head).
-   Fregatte und Emperor-Dungeon haben keine Himmelsrichtung: dort bleibt der Blickwinkel der Station. */
+   «frei» = mit einem Finger drehen und neigen wie früher. Fregatte und Emperor-Dungeon haben keine Himmelsrichtung: dort bleibt der Blickwinkel der Station. */
 let CAM_MODE = 'nord';
-try { if (localStorage.getItem('raider-atlas:cam') === 'folgen') CAM_MODE = 'folgen'; } catch(_){}
+try { const v = localStorage.getItem('raider-atlas:cam'); if (v === 'folgen' || v === 'frei') CAM_MODE = v; } catch(_){}
 const camFree = () => viewId === 'fregatte' || viewId === 'emperor';
-const camYaw = c => camFree() ? c.yaw : CAM_MODE === 'folgen' && c.head != null ? c.head : 0;
+// «frei» (dritter Modus, Wunsch vom 10.11.2026): von Hand drehen wie früher, die Kamera behält beim Springen die gewählte Richtung
+const camYaw = c => camFree() ? c.yaw : CAM_MODE === 'frei' ? cam.yaw : CAM_MODE === 'folgen' && c.head != null ? c.head : 0;
 // Blickrichtung, in der der Weg von a nach b auf dem Bildschirm nach oben zeigt
 const headTo = (a, b) => (!a || !b || Math.hypot(b[0] - a[0], b[1] - a[1]) < 1) ? null : Math.atan2(-(b[0] - a[0]), -(b[1] - a[1]));
 function fitCam(c){
@@ -4614,7 +4651,9 @@ function setTab(k){
   if (UI.tab === k && typeof matReset === 'function' && k === 'mat' && (isWide() || UI.screen === 'list')) matReset();
   if (UI.tab === k && k === 'arc' && (isWide() || UI.screen === 'list')) arcReset();
   if (UI.tab === k && k === 'quests' && (isWide() || UI.screen === 'list')) qReset();
-  if (UI.tab === k && k === 'raids' && (isWide() || UI.screen === 'list') && typeof naviClose === 'function') naviClose();
+  // iPhone: «Run planen» ersetzt den Tab Raids (Entscheid vom 10.11.2026), seine Inhalte stehen dort unten
+  if (k === 'raids' && !isWide()) k = 'run';
+  if (UI.tab === k && k === 'run' && (isWide() || UI.screen === 'list') && typeof naviClose === 'function') naviClose();
   UI.tab = k; appEl.dataset.tab = k;
   document.querySelectorAll('.page').forEach(p => p.hidden = p.dataset.page !== k);
   document.querySelectorAll('.tb, .sn').forEach(b => b.setAttribute('aria-current', b.dataset.tab === k ? 'page' : 'false'));
@@ -4673,12 +4712,14 @@ const RUNS = [
   { id:'solo', title:'Fregatte · Solo', sub:'6 Stationen · ohne Puzzle' },
   { id:'emperor', title:'Emperor-Dungeon', sub:'11 Stationen · im Fallen Emperor auf Pendola Pass' }
 ];
-function openRun(g){ if (g === 'emperor') openView('emperor', { from:'raids' }); else { openView('fregatte', { from:'raids' }); setMode(g); } }
+function openRun(g){ if (g === 'emperor') openView('emperor', { from:UI.tab }); else { openView('fregatte', { from:UI.tab }); setMode(g); } }
 function renderRaids(){
-  $('#runList').innerHTML = RUNS.map(r => `<li><button type="button" class="row" data-run="${r.id}"><span class="rt"><span class="t1">${escH(r.title)}</span><span class="t2">${escH(r.sub)}</span></span>${CHEV}</button></li>`).join('');
-  $('#condList').innerHTML = CONDS.map(c => `<details class="cond"><summary>${escH(c.t)}</summary><div class="cb"><p>${escH(c.x)}</p>${c.s ? `<p class="cs">${escH(c.s)}</p>` : ''}${c.go ? `<p><button type="button" class="pill" data-run="${c.go}">${escH(c.a)}</button></p>` : ''}</div></details>`).join('');
+  const runs = RUNS.map(r => `<li><button type="button" class="row" data-run="${r.id}"><span class="rt"><span class="t1">${escH(r.title)}</span><span class="t2">${escH(r.sub)}</span></span>${CHEV}</button></li>`).join('');
+  const conds = CONDS.map(c => `<details class="cond"><summary>${escH(c.t)}</summary><div class="cb"><p>${escH(c.x)}</p>${c.s ? `<p class="cs">${escH(c.s)}</p>` : ''}${c.go ? `<p><button type="button" class="pill" data-run="${c.go}">${escH(c.a)}</button></p>` : ''}</div></details>`).join('');
+  // Raids (Fenster) und unten in «Run planen» (iPhone)
+  $('#runList').innerHTML = $('#runListK').innerHTML = runs; $('#condList').innerHTML = $('#condListK').innerHTML = conds;
 }
-$('#pgRaids').addEventListener('click', e => { const b = e.target.closest('[data-run]'); if (b) openRun(b.dataset.run); });
+['#pgRaids', '#pgRun'].forEach(s => $(s).addEventListener('click', e => { const b = e.target.closest('[data-run]'); if (b) openRun(b.dataset.run); }));
 
 // ---------- Karte öffnen ----------
 function openView(id, opts){
@@ -4698,7 +4739,7 @@ function renderMapBar(){
     : rOn ? (ROUTE.focus ? 'Fundort' : 'Route · ' + nSt + (nSt === 1 ? ' Stopp' : ' Stopps') + (ROUTE.min ? ' · ca. ' + Math.round(ROUTE.min) + ' min' : ''))
     : isE ? 'im Fallen Emperor · Pendola Pass' : isF ? (mode === 'solo' ? 'Solo-Run' : 'Squad-Run') : m.r.length + ' Schlüsselräume';
   const bt = backTarget();
-  $('#mapBackL').textContent = bt ? 'Pendola Pass' : { mat:'Materialsuche', raids:'Raids', arc:'ARC', quests:'Quests' }[UI.tab] || 'Karten';
+  $('#mapBackL').textContent = bt ? 'Pendola Pass' : { mat:'Materialsuche', run:'Run planen', raids:'Raids', arc:'ARC', quests:'Quests' }[UI.tab] || 'Karten';
   $('#mapBack').classList.toggle('show', !!bt);
   requestAnimationFrame(fitMapTitle);
 }
@@ -4806,17 +4847,18 @@ $('#mSquad').addEventListener('click', () => setMode('squad'));
 $('#mSolo').addEventListener('click', () => setMode('solo'));
 $('#btnReset').addEventListener('click', () => { if (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId) fitRoute(); else flyTo(steps()[0].cam); });
 // Ausrichtung umschalten (kamera.js): Norden oben oder der Laufrichtung folgen; danach den Fokus neu setzen
-function camBtnSync(){ const f = CAM_MODE === 'folgen', b = $('#btnCam');
-  b.setAttribute('aria-pressed', String(f));
-  b.setAttribute('aria-label', f ? 'Ausrichtung: folgt der Laufrichtung. Tippen: Norden oben' : 'Ausrichtung: Norden oben. Tippen: der Laufrichtung folgen'); }
+const CAM_TXT = { nord:'Norden oben', folgen:'folgt der Laufrichtung', frei:'frei drehen' }, CAM_NEXT = { nord:'folgen', folgen:'frei', frei:'nord' };
+function camBtnSync(){ const b = $('#btnCam'); b.dataset.mode = CAM_MODE; b.setAttribute('aria-pressed', String(CAM_MODE !== 'nord'));
+  b.setAttribute('aria-label', 'Ausrichtung: ' + CAM_TXT[CAM_MODE] + '. Tippen: ' + CAM_TXT[CAM_NEXT[CAM_MODE]]); b.title = 'Ausrichtung: ' + CAM_TXT[CAM_MODE]; }
 function camRefocus(){
   if (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId){ if (ROUTE.pick) fitRoute(); else flyTo(stopCam(ROUTE.i)); }
   else flyTo({ t:[cam.tx, cam.ty, cam.tz], yaw:0, pitch:cam.pitch, dist:cam.dist });
 }
 $('#btnCam').addEventListener('click', () => {
-  CAM_MODE = CAM_MODE === 'folgen' ? 'nord' : 'folgen';
+  // Reihenfolge: Norden oben -> Folgen -> Frei drehen -> Norden oben
+  CAM_MODE = CAM_NEXT[CAM_MODE];
   try { localStorage.setItem('raider-atlas:cam', CAM_MODE); } catch(_){}
-  camBtnSync(); camRefocus();
+  camBtnSync(); if (CAM_MODE !== 'frei') camRefocus();
 });
 camBtnSync();
 $('#zIn').addEventListener('click', () => { anim = null; cam.dist = clamp(cam.dist*.72, 10, 200); dirty = true; wake(); });
@@ -4839,7 +4881,7 @@ $('#setClose').addEventListener('click', () => closeModal(setDlg));
 setDlg.addEventListener('click', e => { if (e.target === setDlg) closeModal(setDlg); });
 document.addEventListener('keydown', e => {
   const open = [...document.querySelectorAll('.dlg')].find(d => !d.hidden);
-  if (open){ if (e.key === 'Escape'){ const c = open.querySelector('#runCancel, #askLater, #naviAskCancel, .tbtn.b'); if (c) c.click(); } return; }
+  if (open){ if (e.key === 'Escape'){ const c = open.querySelector('#runCancel, #askLater, #naviAskCancel, #qiNo, #nxLater, .tbtn.b'); if (c) c.click(); } return; }
   if (!$('#layerMenu').hidden && e.key === 'Escape'){ closeLayers(); $('#btnLayers').focus(); return; }
   if (e.target.closest && e.target.closest('input, textarea')) { if (e.key === 'Escape' && typeof backToList === 'function' && !$('#sDetail').hidden) backToList(); return; }
   if (e.key === '/'){ e.preventDefault(); openSearch(false); return; }
@@ -4936,8 +4978,8 @@ cv.addEventListener('pointermove', e => {
   if (ptrs.size === 1 && down){
     if (Math.hypot(p.x-down.x, p.y-down.y) > 6) down.moved = true;
     if (down.moved){ const dx = p.x-prev.x, dy = p.y-prev.y;
-      // Maps: Ziehen verschiebt, Drehen gibt es nicht (Norden bleibt oben). Fregatte und Emperor: drehen wie bisher.
-      if (!camFree() || e.shiftKey || (e.buttons & 2)) pan(dx, dy);
+      // Maps: Ziehen verschiebt, Norden bleibt oben. Modus «frei», Fregatte und Emperor: Ziehen dreht und neigt (Verschieben mit zwei Fingern).
+      if ((!camFree() && CAM_MODE !== 'frei') || e.shiftKey || (e.buttons & 2)) pan(dx, dy);
       else { cam.yaw -= dx*.008; cam.pitch += dy*.006; dirty = true; } }
   } else if (ptrs.size === 2){
     const s = pinchState();
@@ -5697,7 +5739,7 @@ function planRoute(m, stops, cut){
 }
 // src: woher die Route kommt, damit die App sie beim nächsten Öffnen wiederherstellen kann
 function startRoute(m, R, src){
-  openView(m, { from:['karten', 'raids'].includes(UI.tab) ? UI.tab : 'mat' });
+  openView(m, { from:['karten', 'run', 'raids'].includes(UI.tab) ? UI.tab : 'mat' });
   ROUTE = Object.assign({ view:m, i:0, src }, R);
   renderCard(); renderMapBar(); if (isWide()) revealSheet(); else setDetent('mini'); fitRoute(); dirty = true; wake();
 }
@@ -5867,7 +5909,9 @@ $('#runSave').addEventListener('click', () => {
   naviRunSave();
   saveList(); closeModal(runDlg); shopRender();
   if (openItems().length){ if (RUN){ RUN.at = Date.now(); saveRun(); } } else { RUN = null; saveRun(); }
-  if (ROUTE && !ROUTE.focus){ const v = ROUTE.view; ROUTE = Object.assign({ view:v, i:0, focus:false, label:'', src:{ k:'route', m:v } }, stopsFor(v)); renderCard(); renderMapBar(); }
+  if (ROUTE && !ROUTE.focus && !ROUTE.navi){ const v = ROUTE.view; ROUTE = Object.assign({ view:v, i:0, focus:false, label:'', src:{ k:'route', m:v } }, stopsFor(v)); renderCard(); renderMapBar(); }
+  // Danach fragen: denselben Run nochmal oder einen neuen planen (navi.js)
+  naviAfterRun();
 });
 ['#btnRunL', '#btnRunR'].forEach(s => $(s).addEventListener('click', openRunDlg));
 $('#btnRunMini').addEventListener('click', () => { if (ROUTE && ROUTE.navi) naviMini(); else openRunDlg(); });
@@ -6279,9 +6323,9 @@ HUD_OK = true;
    Im Run: optionale Uhr (Restzeit aus dem Spiel eingebbar), nächstes Ziel mit Richtung und Distanz, Vorschläge bei Rückstand.
    Zeiten sind Schätzungen (Annahme), siehe NZ und RZ (materialsuche.js). Startpunkte: app/karten/startpunkte.js. */
 const NAVI_KEY = 'raider-atlas:navi';
-let NAVI = { m:null, start:{}, exit:{}, rest:'30:00', cond:'normal', puffer:1, key:false, sb:false, uhr:false, sel:{}, run:null };
+let NAVI = { m:null, start:{}, exit:{}, rest:'30:00', cond:'normal', puffer:1, key:false, sb:false, uhr:false, sel:{}, qi:{}, run:null };
 try { const s = JSON.parse(localStorage.getItem(NAVI_KEY) || 'null'); if (s && typeof s === 'object') Object.assign(NAVI, s); } catch(_){}
-['start', 'exit', 'sel'].forEach(k => { if (!NAVI[k] || typeof NAVI[k] !== 'object') NAVI[k] = {}; });
+['start', 'exit', 'sel', 'qi'].forEach(k => { if (!NAVI[k] || typeof NAVI[k] !== 'object') NAVI[k] = {}; });
 const saveNavi = () => { try { localStorage.setItem(NAVI_KEY, JSON.stringify(NAVI)); } catch(_){} naviHudSync(); };
 
 /* Zeiten in Minuten (Annahme, nicht belegt): Anlauf vom bekannten Startpunkt, Quest-Aufgabe an einem Ort, Quest ohne Ort,
@@ -6387,16 +6431,25 @@ function naviExits(m){
 }
 const exitMin = E => E ? (E.t === 'hatch' ? RZ.hatch : RZ.aus) : 0;
 
+// Eintrag der Einkaufsliste mit Bedarf aus verfolgten Quests (by), und welche Quest das ist
+const naviIsQ = x => !!(x && x.by && Object.values(x.by).some(v => v > 0));
+function naviQuestOf(x){ const k = Object.keys(x.by || {}).find(k => x.by[k] > 0); const q = k && QUESTS.find(q => qTrackSrc(q) === k); return q ? qName(q) : 'Quest'; }
 function naviPlan(m){
   const budget = naviBudget(), st = naviStart(m), A = st ? { x:st.x, z:st.z } : null;
   const on = (key, def) => NAVI.sel[key] === undefined ? def : !!NAVI.sel[key];
   // Quests
   const QC = naviQuests(m);
   for (const c of QC) c.on = on(c.key, true);
-  // Materialien: offene Einkaufsliste plus Materialien der gewählten Quests, die noch nicht auf der Liste stehen
-  const its = openItems().map(x => itemByName(x.n)).filter(Boolean);
-  const qOf = new Map();
-  for (const c of QC) if (c.on) for (const it of c.mats){ if (!its.includes(it) && !inList(it.n)) its.push(it); if (!qOf.has(it.n)) qOf.set(it.n, qName(c.q)); }
+  /* Materialien (Wunsch vom 10.11.2026): eigene Materialien der Einkaufsliste immer; Quest-Items (Bedarf verfolgter Quests und der
+     gewählten Quests) nur, wenn beim Planen «Quest-Items mitnehmen» bejaht wurde (NAVI.qi[m]). Der Quest-Bedarf bleibt immer gespeichert. */
+  const qiOn = NAVI.qi[m] === true, open = openItems();
+  const qOf = new Map(), qItems = [];
+  for (const x of open) if (naviIsQ(x)){ qOf.set(x.n, naviQuestOf(x)); const it = itemByName(x.n); if (it) qItems.push(it); }
+  for (const c of QC) if (c.on) for (const it of c.mats){ if (!qItems.includes(it) && !(inList(it.n) && !naviIsQ(LIST.find(y => y.n === it.n)))) qItems.push(it); if (!qOf.has(it.n)) qOf.set(it.n, qName(c.q)); }
+  const its = open.filter(x => !naviIsQ(x) || (x.m || 0) > 0).map(x => itemByName(x.n)).filter(Boolean);
+  if (qiOn) for (const it of qItems) if (!its.includes(it)) its.push(it);
+  // Quest-Items, die auf dieser Map gut zu finden sind (für die Frage beim Planen)
+  const qiHere = qItems.length ? matStopsOf(m, qItems).stops.reduce((a, s) => a.concat(s.items.map(x => x.label)), []) : [];
   const MS = matStopsOf(m, its);
   const MC = [];
   for (const s of MS.stops) for (const x of s.items) MC.push({ n:x.n, label:x.label, r:x.r, spot:x.spot, place:s.name, key:'m:' + x.n, quest:qOf.get(x.n) || '', on:on('m:' + x.n, true) });
@@ -6472,16 +6525,16 @@ function naviPlan(m){
   // Ersatz-Ausgang vom letzten Stopp aus
   const last = fin.length ? fin[fin.length - 1] : A;
   const alt = E && last ? naviExits(m).filter(e => e.name !== E.name && EXIT_FREI[e.t]).sort((a, b) => dist2(a, last) - dist2(b, last))[0] : null;
-  return { m, st, A, stops:fin, E, alt, T, budget, L, fights:extra(), cut, quests, mats:MC, loot:LC, missing:MS.missing, other:MS.other, exits };
+  return { m, st, A, stops:fin, E, alt, T, budget, L, fights:extra(), cut, quests, mats:MC, loot:LC, missing:MS.missing, other:MS.other, exits, qiOn, qiHere:[...new Set(qiHere)] };
 }
 
-// ---------- Bereich «Raids»: Maps zur Auswahl ----------
+// ---------- Bereich «Run planen»: Maps zur Auswahl ----------
 function naviMapValue(m){
   const qs = naviQuests(m), its = openItems().map(x => itemByName(x.n)).filter(Boolean);
   const n = matStopsOf(m, its).stops.reduce((a, s) => a + s.items.length, 0);
   return { m, q:qs.length, qt:qs.filter(c => c.prio === 4).length, n, score:qs.reduce((a, c) => a + (c.prio === 4 ? 3 : 2), 0) + n };
 }
-// Eine Zeile pro Map: Raids-Liste und Auswahl aus «Mein Run» (hier = die Map, die gerade auf der Karte offen ist)
+// Eine Zeile pro Map: Liste in «Run planen» und Auswahl aus «Mein Run» (hier = die Map, die gerade auf der Karte offen ist)
 function naviMapRow(v, top, here){
   const parts = [];
   if (here) parts.push('Hier bist du gerade');
@@ -6494,7 +6547,7 @@ function naviMapsRender(){
   const L = MAP_ORDER.map(naviMapValue), top = Math.max(...L.map(v => v.score));
   $('#naviMaps').innerHTML = L.map(v => naviMapRow(v, top, false)).join('');
 }
-$('#naviMaps').addEventListener('click', e => { const b = e.target.closest('[data-navi]'); if (b) naviOpen(b.dataset.navi); });
+$('#naviMaps').addEventListener('click', e => { const b = e.target.closest('[data-navi]'); if (b) naviOpen(b.dataset.navi, { ask:true }); });
 
 // ---------- Knopf «Run planen» im Kasten «Mein Run» auf der Karte ----------
 // Fragt nach der Map; an erster Stelle steht die Map, die gerade offen ist (Wunsch des Nutzers, 10.11.2026).
@@ -6523,27 +6576,39 @@ $('#hudPlan').addEventListener('click', () => {
   }
   naviAsk();
 });
-$('#naviAskList').addEventListener('click', e => { const b = e.target.closest('[data-navi]'); if (!b) return; closeModal($('#naviAskDlg')); naviOpen(b.dataset.navi); });
+$('#naviAskList').addEventListener('click', e => { const b = e.target.closest('[data-navi]'); if (!b) return; closeModal($('#naviAskDlg')); naviOpen(b.dataset.navi, { ask:true }); });
 $('#naviAskCancel').addEventListener('click', () => closeModal($('#naviAskDlg')));
 $('#naviAskDlg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal($('#naviAskDlg')); });
 
 // ---------- Planungsseite ----------
 let naviPlanCache = null;
-function naviOpen(m){
-  if (UI.tab !== 'raids') setTab('raids');
+function naviOpen(m, opts){
+  if (UI.tab !== 'run') setTab('run');
   if (!isWide()) setScreen('list');
   NAVI.m = m; saveNavi();
-  $('#raidsRoot').hidden = true; $('#naviDetail').hidden = false;
+  $('#runRoot').hidden = true; $('#naviDetail').hidden = false;
   naviRender(); $('#pages').scrollTop = 0; const b = $('#naviBack'); if (b) b.focus();
+  if (opts && opts.ask) naviAskQi(m);
 }
-function naviClose(){ $('#naviDetail').hidden = true; $('#raidsRoot').hidden = false; naviMapsRender(); }
+// Beim Planen fragen, ob Quest-Items mit eingesammelt werden sollen (einmal pro Map und Planung; danach Schalter auf der Seite)
+const qiDlg = $('#qiDlg');
+function naviAskQi(m){
+  const P = naviPlanCache; if (!P || P.m !== m || NAVI.qi[m] !== undefined || !P.qiHere.length) return;
+  const L = P.qiHere;
+  $('#qiText').textContent = 'Auf ' + MAPS[m].short + ' findest du Material für deine Quests: ' + L.slice(0, 4).join(', ') + (L.length > 4 ? ' und ' + (L.length - 4) + ' weitere' : '') + '. Soll das Navi es in die Route einplanen?';
+  openModal(qiDlg, '#qiYes');
+}
+const naviQiAnswer = yes => { closeModal(qiDlg); naviSet(() => { NAVI.qi[NAVI.m] = yes; }); };
+$('#qiYes').addEventListener('click', () => naviQiAnswer(true));
+$('#qiNo').addEventListener('click', () => naviQiAnswer(false));
+function naviClose(){ $('#naviDetail').hidden = true; $('#runRoot').hidden = false; naviMapsRender(); }
 const chk = (on, attr, label) => `<button type="button" class="check" ${attr} aria-pressed="${on}" aria-label="${esc(label)}">${CHECK_SVG}</button>`;
 const STATE_TXT = { plan:'', cut:'passt nicht mehr in die Zeit', aus:'abgewählt', zeit:'passt nicht mehr in die Zeit', weit:'zu weit weg' };
 function naviRender(){
   const m = NAVI.m; if (!m || !MAPS[m]) return;
   const P = naviPlanCache = naviPlan(m), st = P.st, starts = startsOf(m);
   const pct = Math.min(100, Math.round(P.T / Math.max(1, P.budget) * 100));
-  let h = `<div class="subnav"><button type="button" class="back" id="naviBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Raids</button></div>`
+  let h = `<div class="subnav"><button type="button" class="back" id="naviBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Run planen</button></div>`
     + `<h3 class="dn">Run auf ${esc(MAPS[m].short)}</h3>`
     + `<p class="dalt">Geplant: ca. ${fmin(P.T)} von ${fmin(P.budget)} Minuten · ${P.stops.filter(s => !s.loot).length} Stopps${P.stops.some(s => s.loot) ? ' · ' + P.stops.filter(s => s.loot).length + ' Top-Loot' : ''}</p>`
     + `<div class="sb"><span class="bar navbar"><i style="width:${pct}%"></i></span></div>`
@@ -6569,12 +6634,14 @@ function naviRender(){
       const sub = [c.prio === 4 ? 'Verfolgt' : 'Nächste bei ' + QUEST_TRADER[c.q.h], where + tm, STATE_TXT[c.state]].filter(Boolean).join(' · ');
       return `<li${c.state === 'plan' ? '' : ' class="qd"'}><div class="row static">${chk(c.on, `data-nsel="${esc(c.key)}"`, (c.on ? 'Abwählen: ' : 'Mitnehmen: ') + qName(c.q))}<span class="rt"><span class="t1">${esc(qName(c.q))}</span><span class="t2">${esc(sub)}</span></span></div></li>`; }).join('') + '</ul>';
   } else h += '<p class="fine">Keine verfolgte und keine nächste Quest geht auf dieser Map. Tipp: Im Bereich Quests eine Quest verfolgen.</p>';
-  // Einkaufsliste
-  h += '<h4>Einkaufsliste</h4>';
+  // Materialien: Quest-Items (auf Nachfrage) und eigene Einkaufsliste
+  h += '<h4>Materialien</h4>';
+  if (P.qiHere.length) h += `<ul class="group"><li class="srow"><label for="naviQi">Quest-Items mitnehmen</label><input type="checkbox" class="switch" id="naviQi" role="switch"${P.qiOn ? ' checked' : ''}></li></ul>`
+    + `<p class="fine">Für deine Quests auf dieser Map zu finden: ${esc(P.qiHere.slice(0, 5).join(', '))}${P.qiHere.length > 5 ? ' und ' + (P.qiHere.length - 5) + ' weitere' : ''}.</p>`;
   if (P.mats.length){
     const liCls = (r, off) => { const c = [r && RAR[r] ? 'rr r' + r : '', off ? 'qd' : ''].filter(Boolean).join(' '); return c ? ` class="${c}"` : ''; };
     h += '<ul class="group">' + P.mats.map(c => `<li${liCls(c.r, !(c.on && !c.cut))}><div class="row static">${chk(c.on, `data-nsel="${esc(c.key)}"`, (c.on ? 'Abwählen: ' : 'Mitnehmen: ') + c.label)}<span class="rt"><span class="t1">${esc(c.label)}</span><span class="t2">${esc(['bei ' + c.place + (c.spot ? '' : ' (Loot-Symbol)'), c.quest ? 'für ' + c.quest : '', !c.on ? 'abgewählt' : c.cut ? 'passt nicht mehr in die Zeit' : ''].filter(Boolean).join(' · '))}</span></span></div></li>`).join('') + '</ul>';
-  } else h += '<p class="fine">Nichts auf der Einkaufsliste, das auf dieser Map gut zu finden ist.</p>';
+  } else h += '<p class="fine">Keine Materialien, die auf dieser Map gut zu finden sind.</p>';
   if (P.missing.length) h += `<p class="fine">Auf dieser Map nicht gut zu finden: ${esc(P.missing.join(', '))}.</p>`;
   // Top-Loot
   const near = P.loot.filter(l => l.state === 'plan' || l.sel !== undefined || (l.state === 'zeit' && l.dmin <= NZ.nah)).sort((a, b) => (a.dmin || 0) - (b.dmin || 0));
@@ -6610,6 +6677,7 @@ $('#naviDetail').addEventListener('change', e => {
   if (t.id === 'naviCond') naviSet(() => { NAVI.cond = t.value; });
   if (t.id === 'naviKey') naviSet(() => { NAVI.key = t.checked; });
   if (t.id === 'naviSb') naviSet(() => { NAVI.sb = t.checked; });
+  if (t.id === 'naviQi') naviSet(() => { NAVI.qi[NAVI.m] = t.checked; });
   if (t.id === 'naviUhr'){ NAVI.uhr = t.checked; saveNavi(); }
   if (t.id === 'naviRest'){ const v = parseRest(t.value); if (v) naviSet(() => { NAVI.rest = mmss(v); }); else { t.value = NAVI.rest; } }
 });
@@ -6774,12 +6842,41 @@ function naviRunRender(){
   return L.length;
 }
 $('#runQList').addEventListener('click', e => { const b = e.target.closest('[data-nrq]'); if (b){ naviRunQ[b.dataset.nrq] = !naviRunQ[b.dataset.nrq]; renderRun(); } });
+let naviLastMap = null;
 function naviRunSave(){
   for (const en in naviRunQ) if (naviRunQ[en]){ const q = QUESTS.find(x => x.en === en); if (q) qSetDone(q, true); }
+  naviLastMap = NAVI.run ? NAVI.run.m : ROUTE && MAPS[ROUTE.view] ? ROUTE.view : RUN && MAPS[RUN.m] ? RUN.m : MAPS[NAVI.m] ? NAVI.m : null;
   if (NAVI.run){ NAVI.run = null; saveNavi(); }
   qRender(); hudRender();
   setTimeout(() => { naviMapsRender(); if (ROUTE && ROUTE.navi && !ROUTE.pick) naviRoute(ROUTE.view, true); if (!$('#naviDetail').hidden) naviRender(); }, 0);
 }
+
+// ---------- Nach dem Run: nochmal oder neu planen (Wunsch vom 10.11.2026) ----------
+// Nochmal: gleiche Map, Restzeit und Häkchen bleiben, nur der Startpunkt wird neu angetippt (der Spawn wechselt im Spiel).
+// Neu: Häkchen, Startpunkte, Ausgänge und Antworten zu Quest-Items zurück, von Hand gesetzte Materialien weg; der Quest-Bedarf bleibt.
+const nxDlg = $('#nxDlg');
+function naviAfterRun(){
+  const m = naviLastMap;
+  $('#nxText').textContent = m ? 'Willst du denselben Run auf ' + MAPS[m].short + ' nochmal machen oder einen neuen planen?' : 'Willst du einen neuen Run planen?';
+  $('#nxSame').hidden = !m; if (m) $('#nxSame').textContent = 'Nochmal auf ' + MAPS[m].short;
+  openModal(nxDlg, m ? '#nxSame' : '#nxNew');
+}
+function naviAgain(m){
+  NAVI.m = m; delete NAVI.start[m]; NAVI.run = null; saveNavi();
+  naviPick(m);
+}
+function naviResetNew(){
+  NAVI.sel = {}; NAVI.start = {}; NAVI.exit = {}; NAVI.qi = {}; NAVI.rest = '30:00'; NAVI.m = null; NAVI.run = null; saveNavi();
+  LIST = LIST.filter(x => { if (!naviIsQ(x)) return false; x.m = 0; listFix(x); return true; });
+  saveList(); shopRender(); hudRender();
+  RUN = null; saveRun();
+  if (ROUTE) clearRoute(true);
+  renderCard(); renderMapBar();
+  setTab('run'); naviClose(); $('#pages').scrollTop = 0;
+}
+$('#nxSame').addEventListener('click', () => { closeModal(nxDlg); if (naviLastMap) naviAgain(naviLastMap); });
+$('#nxNew').addEventListener('click', () => { closeModal(nxDlg); naviResetNew(); });
+$('#nxLater').addEventListener('click', () => closeModal(nxDlg));
 naviMapsRender(); naviHudSync();
 /* @datei app/kern/minikarte.js */
 /* ================= Mini-Karte oben rechts =================
@@ -6924,7 +7021,7 @@ function uiSubKey(){
   if (UI.tab === 'mat') return 'mat:' + matView + (matView === 'detail' && sLast ? ':' + sLast.n : '');
   if (UI.tab === 'quests') return 'quests:' + qView + (qCur ? ':' + (qCur.t === 'q' ? qCur.i : qCur.id) : '');
   if (UI.tab === 'arc') return 'arc:' + (arcCur ? arcCur.n : '');
-  if (UI.tab === 'raids') return 'raids:' + ($('#naviDetail').hidden ? '' : NAVI.m);
+  if (UI.tab === 'run') return 'run:' + ($('#naviDetail').hidden ? '' : NAVI.m);
   return UI.tab;
 }
 function uiSnap(){
@@ -6966,7 +7063,7 @@ function uiRestore(hashId, lastId){
   });
   tryIt(() => { if (s.arc && s.arc.cur && ARC_BY.has(s.arc.cur)) arcOpen(s.arc.cur); });
   tryIt(() => { if (s.navi && MAPS[s.navi]) naviOpen(s.navi); });
-  tryIt(() => { const tab = ['mat', 'karten', 'raids', 'arc', 'quests'].includes(s.tab) ? s.tab : 'karten'; if (UI.tab !== tab) setTab(tab); });
+  tryIt(() => { const tab = ['mat', 'karten', 'run', 'raids', 'arc', 'quests'].includes(s.tab) ? s.tab : 'karten'; if (UI.tab !== tab) setTab(tab); });
   // Karte, Station, Modus, Ebenen
   tryIt(() => { if (s.layers) for (const k in layers) if (typeof s.layers[k] === 'boolean') layers[k] = s.layers[k]; });
   const vid = hashView ? hashId : VIEWS[s.view] ? s.view : VIEWS[lastId] ? lastId : 'dam';
