@@ -532,11 +532,17 @@ li.qd .t1,.prow.qd b{color:var(--muted);text-decoration:line-through;text-decora
 .hud{position:absolute;left:12px;top:calc(var(--toph) + 14px);width:320px;max-height:calc(100% - var(--toph) - 28px);z-index:3;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;background:rgba(13,10,7,.86);color:#F3E9D2;box-shadow:0 10px 28px rgba(0,0,0,.5),inset 0 0 0 1px rgba(44,230,255,.4);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .hud.zu{width:auto;max-width:320px}
 .app[data-hud="oben"] .hud{left:8px;right:8px;width:auto;max-height:min(40%, var(--hudmax,40%))}
-.app[data-hud="oben"] .hud.zu{right:auto;max-width:calc(100% - 156px)}
+/* Eingeklappt bleibt der Kasten im schmalen Bereich volle Breite, damit «Run planen» neben dem Titel Platz hat; die Mini-Karte rückt darunter */
+.app[data-hud="oben"] .hud.zu{max-width:none}
 .hudn .kurz{display:none}
 .app[data-hud="oben"] .hud.zu .hudn .lang{display:none}
 .app[data-hud="oben"] .hud.zu .hudn .kurz{display:inline;font:400 19px/1 var(--lcd);color:#F6C453;letter-spacing:.02em}
 .hudhd{flex:none;width:100%;min-height:44px;display:flex;align-items:center;gap:8px;padding:0 10px 0 12px;border:0;background:transparent;color:inherit;cursor:pointer;text-align:left}
+.hudrow{flex:none;display:flex;align-items:center;gap:2px;padding-right:8px}
+.hudrow .hudhd{flex:1 1 auto;width:auto;min-width:0}
+.hudgo{flex:none;min-height:32px;display:flex;align-items:center;gap:6px;padding:0 12px 0 10px;border:0;border-radius:16px;background:#F08A3C;color:#1B1006;font:600 14px/1 var(--display);white-space:nowrap;cursor:pointer;position:relative;box-shadow:0 0 12px rgba(240,138,60,.45)}
+.hudgo::after{content:"";position:absolute;left:-4px;right:-4px;top:-6px;bottom:-6px}
+.hudgo svg{width:14px;height:14px;fill:currentColor;stroke:none}
 .hudt{flex:none;font:400 21px/1 var(--lcd);color:#2CE6FF;text-transform:uppercase;letter-spacing:.04em}
 .hudn{flex:1 1 auto;min-width:0;font:600 13px/1.2 var(--body);color:#C3B194;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hudchev{flex:none;width:16px;height:16px;stroke-width:2.6;color:#C3B194;transition:transform .2s}
@@ -738,7 +744,10 @@ li.qd .row .t1{color:var(--muted)}
     </div>
     <!-- Mein Run: verfolgte Quests und Einkaufsliste, immer auf der Karte -->
     <section class="hud" id="hud" aria-label="Mein Run">
-      <button type="button" class="hudhd" id="hudTog" aria-expanded="true" aria-controls="hudBody"><span class="hudt">Mein Run</span><span class="hudn" id="hudN"></span><svg class="hudchev" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7"/></svg></button>
+      <div class="hudrow">
+        <button type="button" class="hudhd" id="hudTog" aria-expanded="true" aria-controls="hudBody"><span class="hudt">Mein Run</span><span class="hudn" id="hudN"></span><svg class="hudchev" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7"/></svg></button>
+        <button type="button" class="hudgo" id="hudPlan" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg><span id="hudPlanL">Run planen</span></button>
+      </div>
       <div class="hudbody" id="hudBody"></div>
     </section>
     <div class="ctl" role="group" aria-label="Kartensteuerung">
@@ -893,6 +902,17 @@ li.qd .row .t1{color:var(--muted)}
       <p class="foot">Trag pro Material ein, wie viele du in diesem Run gefunden hast, oder hake es ganz ab.</p>
       <ul class="group in" id="runList2"></ul>
       <p class="foot" id="runEmpty" hidden>Alles auf deiner Liste ist erledigt.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Run planen: Map wählen (aus «Mein Run» auf der Karte) -->
+<div class="dlg sheetdlg" id="naviAskDlg" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="naviAskTitle">
+    <header><button type="button" class="tbtn" id="naviAskCancel">Abbrechen</button><h3 id="naviAskTitle">Auf welcher Map?</h3><span></span></header>
+    <div class="cardbody">
+      <ul class="group in" id="naviAskList"></ul>
+      <p class="foot">Danach wählst du Startpunkt und Restzeit, dann startet das Navi.</p>
     </div>
   </div>
 </div>
@@ -4704,7 +4724,7 @@ $('#setClose').addEventListener('click', () => closeModal(setDlg));
 setDlg.addEventListener('click', e => { if (e.target === setDlg) closeModal(setDlg); });
 document.addEventListener('keydown', e => {
   const open = [...document.querySelectorAll('.dlg')].find(d => !d.hidden);
-  if (open){ if (e.key === 'Escape'){ const c = open.querySelector('#runCancel, #askLater, .tbtn.b'); if (c) c.click(); } return; }
+  if (open){ if (e.key === 'Escape'){ const c = open.querySelector('#runCancel, #askLater, #naviAskCancel, .tbtn.b'); if (c) c.click(); } return; }
   if (!$('#layerMenu').hidden && e.key === 'Escape'){ closeLayers(); $('#btnLayers').focus(); return; }
   if (e.target.closest && e.target.closest('input, textarea')) { if (e.key === 'Escape' && typeof backToList === 'function' && !$('#sDetail').hidden) backToList(); return; }
   if (e.key === '/'){ e.preventDefault(); openSearch(false); return; }
@@ -6094,7 +6114,7 @@ function hudSpace(){
   hudSync();
   // Höchsthöhe im schmalen Bereich: mindestens 200 px Karte über dem kleinen Infobereich frei lassen
   appEl.style.setProperty('--hudmax', Math.max(120, Math.round(st.height - topH - botH - 200)) + 'px');
-  const hl = r ? Math.round(r.bottom - st.top) : 0, oben = appEl.dataset.hud === 'oben' && hudShown() && r;
+  const hl = r ? Math.round(r.bottom - st.top) : 0, oben = appEl.dataset.hud === 'oben' && r;
   appEl.style.setProperty('--hudl', (r ? Math.round(r.height) + 8 : 0) + 'px');
   appEl.style.setProperty('--hudr', (oben ? Math.round(r.height) + 8 : 0) + 'px');
   return { r, st, hl, oben, seite:!!r && appEl.dataset.hud === 'seite' && hudShown() };
@@ -6126,7 +6146,7 @@ const NAVI_KEY = 'raider-atlas:navi';
 let NAVI = { m:null, start:{}, exit:{}, rest:'30:00', cond:'normal', puffer:1, key:false, sb:false, uhr:false, sel:{}, run:null };
 try { const s = JSON.parse(localStorage.getItem(NAVI_KEY) || 'null'); if (s && typeof s === 'object') Object.assign(NAVI, s); } catch(_){}
 ['start', 'exit', 'sel'].forEach(k => { if (!NAVI[k] || typeof NAVI[k] !== 'object') NAVI[k] = {}; });
-const saveNavi = () => { try { localStorage.setItem(NAVI_KEY, JSON.stringify(NAVI)); } catch(_){} };
+const saveNavi = () => { try { localStorage.setItem(NAVI_KEY, JSON.stringify(NAVI)); } catch(_){} naviHudSync(); };
 
 /* Zeiten in Minuten (Annahme, nicht belegt): Anlauf vom bekannten Startpunkt, Quest-Aufgabe an einem Ort, Quest ohne Ort,
    Waffenkiste und Security-Spind öffnen, Rucksack durchsuchen, «in der Nähe» = höchstens 1 Minute Umweg, höchstens 6 Loot-Stopps.
@@ -6325,15 +6345,51 @@ function naviMapValue(m){
   const n = matStopsOf(m, its).stops.reduce((a, s) => a + s.items.length, 0);
   return { m, q:qs.length, qt:qs.filter(c => c.prio === 4).length, n, score:qs.reduce((a, c) => a + (c.prio === 4 ? 3 : 2), 0) + n };
 }
+// Eine Zeile pro Map: Raids-Liste und Auswahl aus «Mein Run» (hier = die Map, die gerade auf der Karte offen ist)
+function naviMapRow(v, top, here){
+  const parts = [];
+  if (here) parts.push('Hier bist du gerade');
+  parts.push(v.q ? v.q + (v.q === 1 ? ' Quest' : ' Quests') + (v.qt ? ' (' + v.qt + ' verfolgt)' : '') : 'keine Quest');
+  parts.push(v.n ? v.n + (v.n === 1 ? ' Material' : ' Materialien') : 'kein Material');
+  if (NAVI.start[v.m] != null) parts.push('Start gewählt');
+  return `<li><button type="button" class="row" data-navi="${v.m}"><span class="thumb">${thumbSVG(v.m)}</span><span class="rt"><span class="t1">${esc(MAPS[v.m].name)}${v.score && v.score === top ? '<span class="badge">Lohnt sich</span>' : ''}</span><span class="t2">${esc(parts.join(' · '))}</span></span>${CHEV}</button></li>`;
+}
 function naviMapsRender(){
   const L = MAP_ORDER.map(naviMapValue), top = Math.max(...L.map(v => v.score));
-  $('#naviMaps').innerHTML = L.map(v => { const parts = [];
-    parts.push(v.q ? v.q + (v.q === 1 ? ' Quest' : ' Quests') + (v.qt ? ' (' + v.qt + ' verfolgt)' : '') : 'keine Quest');
-    parts.push(v.n ? v.n + (v.n === 1 ? ' Material' : ' Materialien') : 'kein Material');
-    if (NAVI.start[v.m] != null) parts.push('Start gewählt');
-    return `<li><button type="button" class="row" data-navi="${v.m}"><span class="thumb">${thumbSVG(v.m)}</span><span class="rt"><span class="t1">${esc(MAPS[v.m].name)}${v.score && v.score === top ? '<span class="badge">Lohnt sich</span>' : ''}</span><span class="t2">${esc(parts.join(' · '))}</span></span>${CHEV}</button></li>`; }).join('');
+  $('#naviMaps').innerHTML = L.map(v => naviMapRow(v, top, false)).join('');
 }
 $('#naviMaps').addEventListener('click', e => { const b = e.target.closest('[data-navi]'); if (b) naviOpen(b.dataset.navi); });
+
+// ---------- Knopf «Run planen» im Kasten «Mein Run» auf der Karte ----------
+// Fragt nach der Map; an erster Stelle steht die Map, die gerade offen ist (Wunsch des Nutzers, 10.11.2026).
+// Läuft schon ein Run, führt der Knopf zurück zu diesem Run.
+const naviHere = () => (typeof view !== 'undefined' && view && view.mapId && MAP_ORDER.includes(view.mapId)) ? view.mapId : null;
+function naviHudSync(){
+  const l = document.getElementById('hudPlanL'); if (!l) return;
+  const run = NAVI.run && MAPS[NAVI.run.m];
+  l.textContent = run ? 'Zum Run' : 'Run planen';
+  $('#hudPlan').setAttribute('aria-label', run ? 'Zum laufenden Run auf ' + MAPS[NAVI.run.m].short : 'Run planen: Map wählen');
+  $('#hudPlan').setAttribute('aria-haspopup', run ? 'false' : 'dialog');
+}
+function naviAsk(){
+  const here = naviHere(), L = MAP_ORDER.map(naviMapValue), top = Math.max(...L.map(v => v.score));
+  if (here) L.sort((a, b) => (b.m === here) - (a.m === here));
+  $('#naviAskList').innerHTML = L.map(v => naviMapRow(v, top, v.m === here)).join('');
+  openModal($('#naviAskDlg'), '#naviAskList .row');
+}
+$('#hudPlan').addEventListener('click', () => {
+  if (NAVI.run && MAPS[NAVI.run.m]){
+    const m = NAVI.run.m;
+    if (!isWide()) setScreen('map');
+    if (ROUTE && ROUTE.navi && !ROUTE.pick && ROUTE.view === m){ const t = naviTarget(); if (t >= 0) selectStop(t, true); }
+    else naviRoute(m);
+    return;
+  }
+  naviAsk();
+});
+$('#naviAskList').addEventListener('click', e => { const b = e.target.closest('[data-navi]'); if (!b) return; closeModal($('#naviAskDlg')); naviOpen(b.dataset.navi); });
+$('#naviAskCancel').addEventListener('click', () => closeModal($('#naviAskDlg')));
+$('#naviAskDlg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal($('#naviAskDlg')); });
 
 // ---------- Planungsseite ----------
 let naviPlanCache = null;
@@ -6590,7 +6646,7 @@ function naviRunSave(){
   qRender(); hudRender();
   setTimeout(() => { naviMapsRender(); if (ROUTE && ROUTE.navi && !ROUTE.pick) naviRoute(ROUTE.view, true); if (!$('#naviDetail').hidden) naviRender(); }, 0);
 }
-naviMapsRender();
+naviMapsRender(); naviHudSync();
 /* @datei app/kern/minikarte.js */
 /* ================= Mini-Karte oben rechts =================
    Zeigt die Map von oben (aus den Kartendaten) und darüber den Ausschnitt, den die Kamera gerade zeigt.
