@@ -2081,10 +2081,10 @@ CHECK.maps.dam = {
     "6 Räume",
     "Night Raid erhöht laut KeenGamer die Chance auf Schlüssel"
   ],
-  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026). Gebäudeformen und Hügel: am Kartenbild derselben Karte grob nachgezeichnet (10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
-    "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
-    "Gelände (Damm-Mauer, Red Lakes, Swamp, Hügel): Form nach Kartenbild, Höhen geschätzt"
+    "Gebäude grob als gedrehte Blöcke nachgezeichnet, Höhen geschätzt",
+    "Hügel und Täler: Lage nach Kartenbild, Höhen geschätzt"
   ]
 };
 /* @datei wissen/pruefung/buried.js */
@@ -2866,7 +2866,22 @@ const MATPPU = { concrete:20, plaster:20, metal:20, slab:14, roof:12, hull:9, ro
 /* @datei grafik/szene-bausteine.js */
 /* ================= Szene-Bausteine ================= */
 let faces = [], sprites = [], labels = [], lines = [], groundShapes = [], keyGlows = [], shadows = [], terrainImg = null, terrainGL = null, terrainMask = null, treeList = [];
-function clearScene(){ faces = []; sprites = []; labels = []; lines = []; groundShapes = []; keyGlows = []; shadows = []; treeList = []; }
+function clearScene(){ faces = []; sprites = []; labels = []; lines = []; groundShapes = []; keyGlows = []; shadows = []; treeList = []; HILLS = null; }
+/* Gelände (Karten-Daten m.hills): weiche Kuppen [x, z, Höhe, Radius], grob nach dem Kartenbild, Höhen geschätzt (Annahme).
+   hAt liefert die Bodenhöhe an einer Stelle; ohne Hügel ist der Boden flach (0). */
+let HILLS = null;
+function hAt(x, z){ if (!HILLS) return 0; let h = 0;
+  for (const q of HILLS){ const dx = x - q[0], dz = z - q[1], d2 = (dx*dx + dz*dz)/(q[3]*q[3]); if (d2 < 9) h += q[2]*Math.exp(-d2); }
+  return h; }
+// Gedrehte Gebäude: neu erzeugte Flächen und Linien um (cx, cz) drehen (Grad, im Uhrzeigersinn von Norden aus gesehen wie die Karte)
+function rotGeom(f0, l0, cx, cz, deg){
+  const a = deg*Math.PI/180, c = Math.cos(a), s = Math.sin(a);
+  const R = p => [cx + (p[0]-cx)*c - (p[2]-cz)*s, p[1], cz + (p[0]-cx)*s + (p[2]-cz)*c];
+  const Rn = n => [n[0]*c - n[2]*s, n[1], n[0]*s + n[2]*c];
+  for (let i = f0; i < faces.length; i++){ const f = faces[i]; f.p = f.p.map(R); f.n = Rn(f.n); f.c = R(f.c); }
+  for (let i = l0; i < lines.length; i++){ const l = lines[i]; l.a = R(l.a); l.b = R(l.b); }
+}
+const rotXZ = (dx, dz, deg) => { if (!deg) return [dx, dz]; const a = deg*Math.PI/180; return [dx*Math.cos(a) - dz*Math.sin(a), dx*Math.sin(a) + dz*Math.cos(a)]; };
 const ZONE_TEX = { 'Red Lakes':'redwater', 'Swamp':'swamp', 'Wüste':'sand', 'Victory Ridge':'rock', 'The Trench':'rock', 'Alberi Hills':'grass',
   'East Plains':'dirt', 'West Container Yard':'asphalt', 'The Forest':'forest', 'The Mountains':'rock', 'Farmlands':'farm',
   'Meer':'water', 'Hafenbecken':'water', 'Strand':'sand', 'Frozen River':'ice' };
@@ -2892,6 +2907,11 @@ function buildTerrain(){
       else { g.strokeStyle = 'rgba(0,0,0,.18)'; g.lineWidth = 2; g.stroke(); } }
     else { g.fillStyle = sh.col; g.fill(); }
   }
+  // Hügel: ab rund 1,2 Einheiten Höhe Fels, je höher desto deckender
+  if (HILLS && TEX.rock){ g.save(); const rp = pat('rock');
+    for (let x = gr.x0; x < gr.x1; x += 1) for (let z = gr.z0; z < gr.z1; z += 1){ const h = hAt(x + .5, z + .5); if (h < 1.2) continue;
+      g.globalAlpha = Math.min(.85, (h - 1.2)/5); g.fillStyle = rp; const [px, py] = P(x, z); g.fillRect(px, py, k + 1, k + 1); }
+    g.restore(); }
   terrainGL = document.createElement('canvas'); terrainGL.width = c.width; terrainGL.height = c.height; terrainGL.getContext('2d').drawImage(c, 0, 0);
   terrainMask = document.createElement('canvas'); terrainMask.width = c.width >> 1; terrainMask.height = c.height >> 1;
   { const mg = terrainMask.getContext('2d'); mg.fillStyle = '#000'; mg.fillRect(0, 0, terrainMask.width, terrainMask.height);
@@ -2903,6 +2923,7 @@ function buildTerrain(){
     const ox = -L[0]/L[1]*.6, oz = -L[2]/L[1]*.6;
     for (const s of shadows){
       if (s.e){ const [x,y] = P(s.e[0] + ox*s.h, s.e[1] + oz*s.h); g.beginPath(); g.ellipse(x, y, s.e[2]*k, s.e[3]*k, 0, 0, Math.PI*2); g.fill(); continue; }
+      if (s.rot){ for (let t=0; t<=1.001; t+=.2){ const [x,y] = P(s.x + ox*s.h*t, s.z + oz*s.h*t); g.save(); g.translate(x, y); g.rotate(s.rot*Math.PI/180); g.fillRect(-s.w*k/2, -s.d*k/2, s.w*k, s.d*k); g.restore(); } continue; }
       for (let t=0; t<=1.001; t+=.2){ const [x,y] = P(s.x - s.w/2 + ox*s.h*t, s.z - s.d/2 + oz*s.h*t); g.fillRect(x, y, s.w*k, s.d*k); }
     }
     g.restore();
@@ -3257,21 +3278,23 @@ function roomY(b, r){
 }
 let mapBuildings = [];
 function buildMap(m, id){
-  for (const [t,p] of [['N',[0,.5,-56]],['S',[0,.5,56]],['O',[56,.5,0]],['W',[-56,.5,0]]]) LAB(t,p,{compass:true, pri:0});
+  HILLS = m.hills || null;
+  for (const [t,p] of [['N',[0,.5,-56]],['S',[0,.5,56]],['O',[56,.5,0]],['W',[-56,.5,0]]]) LAB(t,[p[0], p[1] + hAt(p[0], p[2]), p[2]],{compass:true, pri:0});
   for (const zn of (m.zones || [])){
     groundShapes.push({ p:zn.p, col:zn.col, tex:ZONE_TEX[zn.n] });
-    if (zn.n){ const c = zn.p.reduce((s,q) => [s[0]+q[0]/zn.p.length, s[1]+q[1]/zn.p.length], [0,0]); LAB(zn.n, [c[0], .3, c[1]], { zone:true, pri:3 }); }
+    if (zn.n){ const c = zn.p.reduce((s,q) => [s[0]+q[0]/zn.p.length, s[1]+q[1]/zn.p.length], [0,0]); LAB(zn.n, [c[0], .3 + hAt(c[0], c[1]), c[1]], { zone:true, pri:3 }); }
   }
   for (const rd of (m.ridges || [])) ridge(...rd);
   /* Bäume: ein Feld oder mehrere ({box:[x0,z0,x1,z1], n, seed}). Bäume, die in einem Gebäude landen würden, entfallen. */
   const frei = (x, z) => !m.b.some(q => Math.abs(x-q.x) < q.w/2+1 && Math.abs(z-q.z) < q.d/2+1)
-    && !(m.places || []).some(q => Math.abs(x-q[1]) < (q[4]||5)/2+1 && Math.abs(z-q[2]) < (q[5]||5)/2+1);
+    && !(m.places || []).some(q => Math.abs(x-q[1]) < (q[4]||5)/2+1 && Math.abs(z-q[2]) < (q[5]||5)/2+1)
+    && !(m.blocks || []).some(q => Math.hypot(x - q.x, z - q.z) < Math.max(q.w, q.d)/2 + 1);
   for (const tr0 of [].concat(m.trees || [])){
     const [x0,z0,x1,z1] = tr0.box; let sd = tr0.seed;
     const rnd = () => (sd = (sd*9301 + 49297) % 233280)/233280;
     for (let i=0;i<tr0.n;i++){ const x = x0+rnd()*(x1-x0), z = z0+rnd()*(z1-z0), h = 2+rnd()*2.2;
       const tr = .8+rnd()*.5; if (!frei(x, z)) continue;
-      cyl([x,h/2,z], tr, h, 6, 'y', {col:[52,96,66], s:.12, k:'tree'}); treeList.push([x, z, h, tr]); }
+      cyl([x,hAt(x, z)+h/2,z], tr, h, 6, 'y', {col:[52,96,66], s:.12, k:'tree'}); treeList.push([x, z, h, tr]); }
   }
   for (const d of (m.deco || [])){
     if (d.t === 'box'){ box(...d.b, {col:d.col, s:.25, mat: d.col[0] === 150 || d.col[0] === 120 ? 'slab' : undefined}); shadows.push({x:(d.b[0]+d.b[1])/2, z:(d.b[4]+d.b[5])/2, w:d.b[1]-d.b[0], d:d.b[5]-d.b[4], h:d.b[3]}); }
@@ -3287,35 +3310,47 @@ function buildMap(m, id){
   }
   const B = {}, moved = cusOf(id).moved;
   mapBuildings = [];
-  const allB = m.b.concat((m.places || []).map(([n,x,z,fl=1,w=5,d=5]) => ({ id:'pl:'+n, name:n, x, z, w, d, fl, kind:'land' })));
+  const allB = m.b.concat((m.places || []).map(([n,x,z,fl=1,w=5,d=5,rot]) => ({ id:'pl:'+n, name:n, x, z, w, d, fl, rot, kind:'land' })));
   for (const b0 of allB){
     const mv = moved[b0.id];
     const b = mv ? Object.assign({}, b0, { x:mv[0], z:mv[1] }) : b0;
     B[b.id] = b; mapBuildings.push(b);
+    // Ort ohne eigenen Bau (fl 0): nur der Name, der Bau steckt in einem Block (m.blocks)
+    if (b.fl === 0){ LAB(b.name, [b.x, hAt(b.x, b.z) + 2.4, b.z], { land:true, pri:2 }); continue; }
     const land = b.kind === 'land', col = land ? LAND : STEEL;
     const under = b.fl < 0;
-    const y0 = under ? b.fl*3.2 : 0, y1 = under ? .2 : b.fl*3.2;
+    // Gebäude stehen auf dem Gelände (Fuss = Bodenhöhe in der Mitte); unterirdische Räume bleiben unter null
+    const base = under ? 0 : hAt(b.x, b.z), f0 = faces.length, l0 = lines.length;
+    const y0 = under ? b.fl*3.2 : base, y1 = under ? .2 : base + b.fl*3.2;
     const mat = under ? undefined : (MAT_OVR[b.id] || MAP_MAT[id]);
     box(b.x-b.w/2, b.x+b.w/2, y0, y1, b.z-b.d/2, b.z+b.d/2, {col: under ? [70,84,104] : col, a: under ? .3 : land ? .86 : .55, s: .3, cull:false, mat, bid:b.id});
-    if (!under) shadows.push({ x:b.x, z:b.z, w:b.w, d:b.d, h:y1 + (b.tower ? b.tower.fl*3.2*.6 : 0) });
-    if (!under) plateFloorLines(b, 0, y1);
+    if (!under) shadows.push({ x:b.x, z:b.z, w:b.w, d:b.d, h:y1 - base + (b.tower ? b.tower.fl*3.2*.6 : 0), rot:b.rot });
+    if (!under) plateFloorLines(b, base, y1);
     let top = y1;
     if (b.tower){ const t = b.tower; const ty1 = y1 + t.fl*3.2;
       box(b.x-t.w/2, b.x+t.w/2, y1, ty1, b.z-t.d/2, b.z+t.d/2, {col, a:.55, s:.3, cull:false, mat:(MAT_OVR[b.id] || MAP_MAT[id]), bid:b.id});
       plateFloorLines({x:b.x,z:b.z,w:t.w,d:t.d}, y1-3.2, ty1); top = ty1; }
+    if (b.rot) rotGeom(f0, l0, b.x, b.z, b.rot);
     LAB(b.name, [b.x, top + 2.4, b.z], { land, pri: land ? 2 : 1 });
+  }
+  /* Weitere Bauten ohne Namen (m.blocks): grobe, gedrehte Blöcke nach dem Kartenbild, Höhe geschätzt (Annahme) */
+  for (const q of (m.blocks || [])){
+    const base = hAt(q.x, q.z), f0 = faces.length, l0 = lines.length;
+    box(q.x-q.w/2, q.x+q.w/2, base, base + q.h, q.z-q.d/2, q.z+q.d/2, {col:STEEL, a:1, s:.3, mat:q.mat || MAP_MAT[id], bid:'blk:' + Math.round(q.x*10) + ':' + Math.round(q.z*10)});
+    if (q.rot) rotGeom(f0, l0, q.x, q.z, q.rot);
+    shadows.push({ x:q.x, z:q.z, w:q.w, d:q.d, h:q.h, rot:q.rot });
   }
   /* Ausgänge und Top-Loot (app/karten/ausgaenge-loot.js): Marker am Boden, je Ebene ein- und ausblendbar */
   const ex = MAP_EXTRA[id];
   if (ex){
-    for (const [t, n, x, z] of ex.ex) SP('exit', [x, 1.4, z], { t, n });
-    for (const [k, key] of [['wcase','w'],['slock','s'],['pack','b']]) for (const [x, z, c] of ex[key]) SP(k, [x, 1.1, z], { c });
+    for (const [t, n, x, z] of ex.ex) SP('exit', [x, 1.4 + hAt(x, z), z], { t, n });
+    for (const [k, key] of [['wcase','w'],['slock','s'],['pack','b']]) for (const [x, z, c] of ex[key]) SP(k, [x, 1.1 + hAt(x, z), z], { c });
   }
   /* Startpunkte (app/karten/startpunkte.js): gelbe Punkte mit Nummer, Ebene «Startpunkte» (aus beim ersten Öffnen) */
-  if (typeof MAP_START !== 'undefined' && MAP_START[id]) MAP_START[id].forEach((s, i) => SP('start', [clamp(s[0], -55, 55), 1.2, clamp(s[1], -55, 55)], { n:i + 1 }));
+  if (typeof MAP_START !== 'undefined' && MAP_START[id]) MAP_START[id].forEach((s, i) => { const x = clamp(s[0], -55, 55), z = clamp(s[1], -55, 55); SP('start', [x, 1.2 + hAt(x, z), z], { n:i + 1 }); });
   m.steps = [{ phase:'Übersicht', title:m.name + ': alle Schlüsselräume', text:m.intro, tags:m.tags, warn:m.warn, ann:m.ann, src:m.src, cam:{ t:[0,0,2], yaw:.35, pitch:.95, dist:128, ov:true, mob:1.0 } }];
   for (const r of m.r){
-    const b = B[r.b], y0 = roomY(b, r), x = b.x + (r.dx || 0), z = b.z + (r.dz || 0);
+    const b = B[r.b], [rdx, rdz] = rotXZ(r.dx || 0, r.dz || 0, b.rot), y0 = roomY(b, r) + (b.fl < 0 ? 0 : hAt(b.x, b.z)), x = b.x + rdx, z = b.z + rdz;
     box(x-1.5, x+1.5, y0+.2, y0+2.8, z-1.5, z+1.5, {col: r.puzzle ? [160,140,255] : GOLD, em:.55, a:.92, s:.4, k:'room'});
     keyGlows.push([x, y0+1.5, z]);
     const pos = [x, y0 + 1.5, z];
@@ -3336,32 +3371,61 @@ MAPS.dam = { name:'Dam Battlegrounds', short:'Dam', ground:'#1b231f',
     intro:'Sechs Räume: vier mit Schlüssel, einer mit Power Rod und die Controlled Access Zone. Die besten laut Guides: Kontrollturm oben und Staff Room. Die Ruby Residence im Nordwesten gilt als guter Ort, um Schlüssel zu finden.',
     tags:['6 Räume','Night Raid und EM-Sturm lohnen sich'],
     /* Lage und Grösse: am 10.11.2026 an der interaktiven Karte von arcraidershub.com abgemessen (Ortsnamen und Gebietsumrisse).
-       Massstab: 1 Einheit = 1/100 der Kartenbreite, Mitte bei den Floodgates, Norden = -z. Gebäude als Rechtecke vereinfacht.
-       Gelände (Damm-Mauer, Becken, Hügel): Form nach Kartenbild, Höhen geschätzt (Annahme). */
+       Massstab: 1 Einheit = 1/100 der Kartenbreite, Mitte bei den Floodgates, Norden = -z.
+       Gebäudeformen (Probe Dam, 10.11.2026): am Kartenbild von arcraidershub.com grob nachgezeichnet. Der Hauptkomplex vom Power
+       Generation Complex über die Staumauer bis zum Kontrollturm liegt auf einem um 27° gedrehten Raster. Bauten als gedrehte Blöcke,
+       Höhen geschätzt (Annahme). Gelände: Hügel als weiche Kuppen am Kartenrand und vereinzelt innen, Lage nach Kartenbild, Höhen geschätzt (Annahme). */
     zones:[
       {n:'Red Lakes', col:'rgba(170,74,60,.34)', p:[[12,-13],[36,-12],[44,4],[38,21],[20,22],[9,3]]},
       {n:'Swamp', col:'rgba(84,118,72,.32)', p:[[-52,-19],[-20,-17],[-11,-5],[-17,15],[-52,15]]},
       {n:'Victory Ridge', col:'rgba(120,130,140,.12)', p:[[-40,-58],[44,-58],[44,-54],[-40,-54]]}
     ],
-    ridges:[[-40,-57,-8,-58,7,6],[14,-58,46,-53,7,6],[50,-12,53,18,8,7],[53,18,47,44,8,6],[-34,48,-14,52,9,6],[2,53,32,47,9,7]],
+    hills:[[-52,-55,10,9],[-38,-58,12,8],[-25,-58,10,7],[-13,-59,9,7],[17,-59,10,7],[28,-56,11,8],[40,-55,12,8],[52,-46,9,7],
+      [-57,-42,8,8],[-58,-26,6,7],[-58,-9,5,7],[-58,8,5,7],[-57,26,6,8],[-56,42,6,8],
+      [-22,-49,4,6],[36,38,4,7],[8,45,3,6],
+      [49,-5,6,8],[50,11,6,8],[48,27,5,8],
+      [-46,53,6,8],[-33,55,5,7],[-21,56,4,6],[10,56,5,7],[24,53,6,7],[38,51,6,8],[51,52,7,8]],
     trees:[{ box:[-50,-17,-13,13], n:30, seed:3 }, { box:[-20,-13,1,2], n:10, seed:7 }, { box:[-14,18,13,35], n:14, seed:11 }],
+    // Kuppeln des Hydroponic Dome Complex
     deco:[
-      {t:'wall', a:[11,-21.5], b:[9.1,-18.1], w:4, h:7, col:[150,158,168]},
-      {t:'wall', a:[6.1,-12.8], b:[3.5,-8.1], w:4, h:7, col:[150,158,168], n:'The Dam'},
-      {t:'wall', a:[.5,-2.8], b:[-1.7,1.2], w:4, h:7, col:[150,158,168]}
+      {t:'cyl', c:[-12.4,.8,-28.7], r:1.1, h:1.6, col:[205,210,216]},
+      {t:'cyl', c:[-7.4,.8,-29.3], r:1.1, h:1.6, col:[205,210,216]},
+      {t:'cyl', c:[-16.2,.8,-18.5], r:1.2, h:1.6, col:[205,210,216]}
+    ],
+    // Bauten ohne eigenen Namen: grob nachgezeichnet, gedreht wie das Raster des Komplexes (Höhen geschätzt)
+    blocks:[
+      {x:18.1, z:-39.6, w:24.4, d:1.8, h:2.5, rot:27, mat:'metal'},
+      {x:24.6, z:-32.8, w:4.4, d:3.8, h:3.5, rot:27, mat:'metal'},
+      {x:31.5, z:-28.4, w:9.5, d:5.8, h:3, rot:27, mat:'metal'},
+      {x:19.7, z:-35.5, w:2.5, d:2.8, h:4, rot:27},
+      {x:12.4, z:-30.0, w:5.1, d:5.2, h:5, rot:27},
+      {x:19.3, z:-26.6, w:10.2, d:5.2, h:3, rot:27},
+      {x:14.0, z:-23.7, w:17.0, d:4.4, h:5, rot:27},
+      {x:9.8, z:-20.7, w:10.0, d:4.2, h:4, rot:27},
+      {x:11.2, z:-14.4, w:3.6, d:2.5, h:3, rot:27},
+      {x:1.3, z:-4.4, w:8.3, d:15, h:6, rot:27},
+      {x:5.3, z:-14.7, w:4, d:7, h:4, rot:27},
+      {x:9.7, z:-13.0, w:4.5, d:4, h:3, rot:27},
+      {x:-6.2, z:3.5, w:7.7, d:7.2, h:6, rot:27},
+      {x:-17.3, z:3.0, w:11.2, d:3, h:5, rot:27},
+      {x:20.4, z:21.7, w:16.4, d:3.6, h:3, rot:27},
+      {x:-34.1, z:-42.6, w:3.4, d:3.4, h:5, rot:20},
+      {x:-30.1, z:-46.4, w:5, d:3, h:5, rot:20},
+      {x:-36.1, z:-29.8, w:4.6, d:4, h:3, rot:20},
+      {x:-7, z:-22, w:4.2, d:2.1, h:3, rot:15}
     ],
     b:[
-      {id:'ct', name:'Kontrollturm / Research & Admin', x:3, z:10.5, w:9, d:13, fl:3, tower:{w:5,d:5,fl:7}},
-      {id:'wtc', name:'Water Treatment Control', x:-27, z:3, w:7, d:10, fl:2},
-      {id:'ta', name:'Testing Annex', x:19, z:28.5, w:9, d:10, fl:2},
-      {id:'pgc', name:'Power Generation Complex', x:26.5, z:-33, w:17, d:8, fl:3},
+      {id:'ct', name:'Kontrollturm / Research & Admin', x:1.3, z:7.4, w:9, d:7, fl:2, rot:27, tower:{w:3,d:3,fl:5}},
+      {id:'wtc', name:'Water Treatment Control', x:-27, z:3, w:7, d:10, fl:2, rot:27},
+      {id:'ta', name:'Testing Annex', x:18.9, z:28.1, w:5.9, d:8.1, fl:2, rot:30},
+      {id:'pgc', name:'Power Generation Complex', x:17.2, z:-33.2, w:20.2, d:4.2, fl:2, rot:27},
       {id:'caz', name:'Controlled Access Zone', x:11.5, z:-26, w:9, d:8, fl:-1},
-      {id:'ruby', name:'Ruby Residence', x:-27, z:-42, w:8, d:8, fl:5, kind:'land'}
+      {id:'ruby', name:'Ruby Residence', x:-27.6, z:-41.6, w:3.8, d:3.4, fl:2, rot:20}
     ],
-    places:[['Pale Apartments',-44.5,-33.5,4],['West Broken Bridge',1.5,-51,1,8,3],['East Broken Bridge',46,-23,1,8,3],['Raider Outpost East',38.5,-35,2],
-      ['Pipeline Tower',19,-21,5,3,3],['Generator Hall',15,-36,2,6,6],['Floodgates',2,-5.5,1],['The Breach',7.5,-15.5,1],
-      ['South Swamp Outpost',-46,4.5,1],['Old Battleground',-46,-12.5,1],['Electrical Substation',-28,22.5,2],['Water Towers',-38.5,29,4,3,3],['Hydroponic Dome Complex',-11.5,-23.5,1,16,18],['Primary Facility',-6.3,5.2,2,9,7],
-      ['Pattern House',16,-47,2],['Red Lakes Balcony',15,18,1],['Scrap Yard',-8,37.5,1,7,6],['Wreckage',3,36,1],['Formicai Outpost',-7,51.5,2]],
+    places:[['Pale Apartments',-42.5,-35,3,4.8,3.9,20],['West Broken Bridge',1.5,-51,1,8,3],['East Broken Bridge',46,-23,1,8,3],['Raider Outpost East',38.5,-35,2],
+      ['Pipeline Tower',19,-21,0],['Generator Hall',15,-36,0],['Floodgates',2,-5.5,0],['The Breach',7.5,-15.5,0],
+      ['South Swamp Outpost',-46,4.5,1],['Old Battleground',-46,-12.5,1],['Electrical Substation',-28,22.5,2],['Water Towers',-38.5,29,4,3,3],['Hydroponic Dome Complex',-11.5,-23.5,0],['Primary Facility',-6.3,5.2,0],
+      ['Pattern House',16,-47,2],['Red Lakes Balcony',15,18,0],['Scrap Yard',-8,37.5,1,7,6],['Wreckage',3,36,1],['Formicai Outpost',-7,51.5,2]],
     r:[
       {b:'ct', fl:'top', n:'Kontrollturm, oberster Raum', key:'Dam Control Tower Key', rar:'Episch', floor:'oberster Stock',
         text:'Ganz oben im Kontrollturm in der Kartenmitte. Im Gebäude links die verbarrikadierte Tür aufbrechen, dann geht es durch den Liftschacht per Seil bzw. Zipline nach oben. Oben die Treppe hoch, dort ist die Tür.',
@@ -3369,7 +3433,7 @@ MAPS.dam = { name:'Dam Battlegrounds', short:'Dam', ground:'#1b231f',
       {b:'ct', fl:1, dx:3, dz:2, n:'Staff Room', key:'Dam Staff Room Key', rar:'Ungewöhnlich', floor:'Erdgeschoss',
         text:'Im Erdgeschoss des Komplexes beim Kontrollturm, nahe beim Eingang: an der Rezeption vorbei und rechts halten, die Tür liegt auf der Ostseite.',
         tags:['rote Spinde','Munitionskisten','Crafting-Material'], warn:'Manche Guides nennen den Bau Kontrollturm, andere Research & Administration. Beide meinen den Komplex in der Kartenmitte.'},
-      {b:'ta', fl:1, dx:-3, n:'Testing Annex (2 Türen)', key:'Dam Testing Annex Key', rar:'Selten', floor:'Erdgeschoss',
+      {b:'ta', fl:1, dx:-1.5, n:'Testing Annex (2 Türen)', key:'Dam Testing Annex Key', rar:'Selten', floor:'Erdgeschoss',
         text:'Im Süden bzw. Südosten der Map, nahe den Red Lakes. Im Erdgeschoss geradeaus, die erste Tür liegt am Ende des Gangs. Es gibt zwei verschlossene Türen, jeder Schlüssel öffnet nur eine davon.',
         tags:['2 Türen, 1 Schlüssel pro Tür','linker Raum laut PC Gamer etwas besser']},
       {b:'wtc', fl:1, dx:2, dz:2, n:'Überwachungsraum', key:'Dam Surveillance Key', rar:'Ungewöhnlich', floor:'Erdgeschoss',
@@ -3815,7 +3879,7 @@ function labelObstacles(R){
   // Startpunkt wählen: Ortsnamen haben Vorrang (Orientierung), die Pins liegen darüber
   if (ROUTE && ROUTE.view === viewId && ROUTE.pick){ /* keine Pins als Hindernis */ }
   else if (ROUTE && ROUTE.view === viewId){
-    ROUTE.stops.forEach((s, i) => { const sel = i === ROUTE.i && !ROUTE.pick, r = ROUTE.pick ? 16 : sel ? 13 : 10.5, q = toCam([s.x, s.h + (sel ? 6 : 4), s.z]); if (q[2] < NEAR) return;
+    ROUTE.stops.forEach((s, i) => { const sel = i === ROUTE.i && !ROUTE.pick, r = ROUTE.pick ? 16 : sel ? 13 : 10.5, q = toCam([s.x, s.h + hAt(s.x, s.z) + (sel ? 6 : 4), s.z]); if (q[2] < NEAR) return;
       const x = sx(q), y = sy(q); out.push([x - r - 4, y - 2*r - 3, 2*r + 8, 2*r + (sel ? 14 : 10) + 6]);
       if (sel){ ctx.font = '600 12px "Barlow", system-ui, sans-serif'; const w = Math.max(ctx.measureText(s.name).width + 14, 130); out.push([x - w/2, y - 2*r - 48, w, 44]); } });
   } else if (view.group !== 'keys' || layers.key){
@@ -4290,10 +4354,10 @@ const G3 = (() => {
       const P = (i,j) => { const th=i/SG*Math.PI*2, ph=j/RG*Math.PI-Math.PI/2, k=.85+.3*hs(cx*7+i*3.1+j*1.7); return [cx+Math.cos(th)*Math.cos(ph)*r*k, y0+Math.sin(ph)*r*(sq||1)*k, cz+Math.sin(th)*Math.cos(ph)*r*k]; };
       for (let j=0;j<RG;j++) for (let i=0;i<SG;i++){ const a=P(i,j), b=P(i+1,j), c=P(i+1,j+1), d=P(i,j+1);
         const nn = n3([(a[0]+c[0])/2-cx, ((a[1]+c[1])/2-y0)/(sq||1), (a[2]+c[2])/2-cz]); poly([a,b,c,d], nn, col, 1, e, [O,S]); } }
-    function tree(x, z, s, kind, snowy){ const tc = [.33,.24,.17]; cone(x, 0, z, .18*s, 1.6*s, 6, tc, 5, .12*s);
+    function tree(x, z, s, kind, snowy){ const tc = [.33,.24,.17], y = hAt(x, z); cone(x, y, z, .18*s, 1.6*s, 6, tc, 5, .12*s);
       const r = hs(x*13.7+z), g = snowy ? [.10+.04*r,.17+.05*r,.12+.03*r] : [.08+.05*r,.15+.06*r,.06+.03*r];
-      if (kind) blob(x, 1.4*s+1.3*s, z, 1.5*s, g, 4, 1.05);
-      else { cone(x, 1.2*s, z, 1.7*s, 2.6*s, 9, g, 4, .05); cone(x, 2.6*s, z, 1.3*s, 2.3*s, 9, g.map(v=>v*1.08), 4, .04); cone(x, 3.8*s, z, .9*s, 2*s, 9, g.map(v=>v*1.15), 4); } }
+      if (kind) blob(x, y+1.4*s+1.3*s, z, 1.5*s, g, 4, 1.05);
+      else { cone(x, y+1.2*s, z, 1.7*s, 2.6*s, 9, g, 4, .05); cone(x, y+2.6*s, z, 1.3*s, 2.3*s, 9, g.map(v=>v*1.08), 4, .04); cone(x, y+3.8*s, z, .9*s, 2*s, 9, g.map(v=>v*1.15), 4); } }
 
     // 1) Flächen der App
     nRects = 0;
@@ -4321,7 +4385,7 @@ const G3 = (() => {
     if (view.group === 'keys'){
       for (const b of mapBuildings){
         if (nRects < 40){ rects.set([b.x, b.z, b.w/2, b.d/2], nRects*4); nRects++; }
-        if (b.fl < 1 || b.w < 4 || b.d < 4) continue;
+        if (b.fl < 1 || b.w < 4 || b.d < 4 || b.rot || hAt(b.x, b.z) > .3) continue;   // gedrehte Bauten und Bauten am Hang ohne Dachrand
         const top = b.fl*3.2 + (b.tower ? 0 : 0), mat = MAT_OVR[b.id] || MAP_MAT[view.mapId];
         const pc = (ALB[mat] || ALB.concrete).map(v => v*.8);
         const t = .35, ph = .7;
@@ -4363,7 +4427,22 @@ const G3 = (() => {
     // Boden: grosse Fläche um die Karte
     const g0 = view.ground, cx = (g0.x0+g0.x1)/2, cz = (g0.z0+g0.z1)/2, R = 900;
     const gv = new Float32Array([cx-R,0,cz-R, 0,1,0, 1,1,1,1, 0,0,0,0,  cx+R,0,cz-R, 0,1,0, 1,1,1,1, 0,0,0,0,  cx+R,0,cz+R, 0,1,0, 1,1,1,1, 0,0,0,0,  cx-R,0,cz+R, 0,1,0, 1,1,1,1, 0,0,0,0]);
-    if (groundVao) freeMesh(groundVao); groundVao = mkVao(gv, new Uint32Array([0,2,1, 0,3,2]));
+    // Gelände: Hügel als Gitter über der Karte, gleiche Bodentextur (Material 0), Normalen aus der Steigung
+    let GV = gv, GI = [0,2,1, 0,3,2];
+    // (Gitter 20 Einheiten über den Kartenrand hinaus, damit die Randhügel auslaufen statt abzubrechen)
+    if (HILLS){ const st = 1.25, ox = g0.x0 - 20, oz = g0.z0 - 20, nx = Math.ceil((g0.x1-g0.x0+40)/st), nz = Math.ceil((g0.z1-g0.z0+40)/st), V = Array.from(gv), I = GI.slice();
+      const H = []; for (let j=0;j<=nz;j++){ const row = []; for (let i=0;i<=nx;i++) row.push(hAt(ox+i*st, oz+j*st)); H.push(row); }
+      const id = new Int32Array((nx+1)*(nz+1)).fill(-1);
+      const vi = (i, j) => { const k = j*(nx+1)+i; if (id[k] >= 0) return id[k];
+        const x = ox+i*st, z = oz+j*st, h = H[j][i];
+        const hx = H[j][Math.min(nx,i+1)] - H[j][Math.max(0,i-1)], hz = H[Math.min(nz,j+1)][i] - H[Math.max(0,j-1)][i];
+        const n = n3([-hx/(2*st), 1, -hz/(2*st)]);
+        V.push(x, h+.03, z, n[0], n[1], n[2], 1,1,1,1, 0,0,0,0); return id[k] = V.length/VSZ - 1; };
+      for (let j=0;j<nz;j++) for (let i=0;i<nx;i++){
+        if (Math.max(H[j][i], H[j][i+1], H[j+1][i], H[j+1][i+1]) < .06) continue;
+        const a = vi(i,j), b = vi(i+1,j), c = vi(i+1,j+1), d = vi(i,j+1); I.push(a,c,b, a,d,c); }
+      GV = new Float32Array(V); GI = I; }
+    if (groundVao) freeMesh(groundVao); groundVao = Object.assign(mkVao(GV, new Uint32Array(GI)), { n:GI.length });
     sceneVer++; shDirty = true;
   }
 
@@ -4448,7 +4527,7 @@ const G3 = (() => {
     gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, tGround); gl.uniform1i(u.uGround, 1);
     gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, tMask); gl.uniform1i(u.uMask, 2);
     gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, tCus); gl.uniform1i(u.uCus, 3);
-    gl.bindVertexArray(groundVao.vao); gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_INT, 0);
+    gl.bindVertexArray(groundVao.vao); gl.drawElements(gl.TRIANGLES, groundVao.n, gl.UNSIGNED_INT, 0);
     gl.bindVertexArray(mesh.vao); drawRange(mesh.O);
     // durchsichtige Flächen: Rückseiten zuerst, dann Vorderseiten
     gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false); gl.enable(gl.CULL_FACE);
@@ -4461,7 +4540,7 @@ const G3 = (() => {
     gl.disable(gl.DEPTH_TEST); gl.bindVertexArray(null);
     if (!eco){
       gl.bindFramebuffer(gl.FRAMEBUFFER, aoFB); gl.viewport(0,0,a1.w,a1.h); gl.clear(gl.DEPTH_BUFFER_BIT); gl.enable(gl.DEPTH_TEST); gl.useProgram(PS.p); gl.uniformMatrix4fv(PS.u.uLVP, false, M.VP);
-      gl.bindVertexArray(groundVao.vao); gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_INT, 0); gl.bindVertexArray(mesh.vao); drawRange(mesh.O);
+      gl.bindVertexArray(groundVao.vao); gl.drawElements(gl.TRIANGLES, groundVao.n, gl.UNSIGNED_INT, 0); gl.bindVertexArray(mesh.vao); drawRange(mesh.O);
       gl.disable(gl.DEPTH_TEST); gl.bindVertexArray(null);
       gl.bindFramebuffer(gl.FRAMEBUFFER, a1.f); gl.useProgram(PA.p); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, aoD); gl.uniform1i(PA.u.uD, 0);
       gl.uniformMatrix4fv(PA.u.uP, false, M.P); gl.uniformMatrix4fv(PA.u.uIP, false, m4inv(M.P)); gl.uniform1f(PA.u.uRad, 1.6); gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -5653,7 +5732,7 @@ function fitRoute(){
 // Im Modus «Folgen» zeigt der Weg vom Punkt davor zum Stopp nach oben.
 function stopCam(i){
   const S = ROUTE.stops, s = S[i], p = i > 0 ? S[i - 1] : null;
-  const c = { t:[s.x, (s.h || 0)*.5 + 2, s.z], yaw:0, pitch:.9, dist:44, head:p ? headTo([p.x, p.z], [s.x, s.z]) : null };
+  const c = { t:[s.x, (s.h || 0)*.5 + 2 + hAt(s.x, s.z), s.z], yaw:0, pitch:.9, dist:44, head:p ? headTo([p.x, p.z], [s.x, s.z]) : null };
   return camOn(c, c.t, p ? [[p.x, 0, p.z]] : []);
 }
 function selectStop(i, quiet){
@@ -5706,14 +5785,17 @@ function drawRoute(t){
   const S = ROUTE.stops, ph = reduce || eco ? .4 : (t % 2000)/2000;
   ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   if (S.length > 1 && !ROUTE.focus){
-    const pts = S.map(s => [s.x, .3, s.z]);
+    // Weg folgt dem Gelände: alle rund 2 Einheiten ein Punkt in Bodenhöhe
+    const pts = []; S.forEach((a, i) => { if (i){ const b0 = S[i-1], n = Math.max(1, Math.ceil(Math.hypot(a.x - b0.x, a.z - b0.z)/2));
+      for (let j = 1; j < n; j++){ const x = b0.x + (a.x - b0.x)*j/n, z = b0.z + (a.z - b0.z)*j/n; pts.push([x, .3 + hAt(x, z), z]); } }
+      pts.push([a.x, .3 + hAt(a.x, a.z), a.z]); });
     ctx.beginPath(); path3(pts); ctx.setLineDash([]); ctx.strokeStyle = 'rgba(10,6,8,.75)'; ctx.lineWidth = 8; ctx.stroke();
     ctx.beginPath(); path3(pts); ctx.setLineDash([10,7]); ctx.lineDashOffset = reduce || eco ? 0 : -t/40;
     ctx.strokeStyle = '#FF3EA5'; ctx.shadowColor = 'rgba(255,62,165,.95)'; ctx.shadowBlur = 12; ctx.lineWidth = 3.6; ctx.stroke();
     ctx.shadowBlur = 0; ctx.setLineDash([]);
   }
-  const ring = (s, rad) => { ctx.beginPath(); let first = true;
-    for (let i=0;i<=40;i++){ const a = i/40*Math.PI*2, q = toCam([s.x + Math.cos(a)*rad, .08, s.z + Math.sin(a)*rad]); if (q[2] < NEAR){ first = true; continue; }
+  const ring = (s, rad) => { ctx.beginPath(); let first = true; const gy = hAt(s.x, s.z) + .08;
+    for (let i=0;i<=40;i++){ const a = i/40*Math.PI*2, q = toCam([s.x + Math.cos(a)*rad, gy, s.z + Math.sin(a)*rad]); if (q[2] < NEAR){ first = true; continue; }
       if (first){ ctx.moveTo(sx(q), sy(q)); first = false; } else ctx.lineTo(sx(q), sy(q)); } };
   const order = S.map((s, i) => i).sort((a, b) => (a === ROUTE.i) - (b === ROUTE.i));
   for (const i of order){
@@ -5721,7 +5803,7 @@ function drawRoute(t){
     ctx.globalAlpha = s.done ? .4 : 1;
     ring(s, R0); ctx.setLineDash([6,5]); ctx.strokeStyle = sel ? 'rgba(44,230,255,.95)' : 'rgba(255,62,165,.55)'; ctx.lineWidth = sel ? 2.4 : 1.6; ctx.stroke(); ctx.setLineDash([]);
     if (sel){ ring(s, R0 + ph*6); ctx.strokeStyle = `rgba(44,230,255,${.7*(1-ph)})`; ctx.lineWidth = 2; ctx.stroke(); }
-    const qt = toCam([s.x, s.h + (sel ? 6 : 4), s.z]); if (qt[2] < NEAR) continue;
+    const qt = toCam([s.x, s.h + hAt(s.x, s.z) + (sel ? 6 : 4), s.z]); if (qt[2] < NEAR) continue;
     const x1 = sx(qt), y1 = sy(qt);
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1, y1 + (sel ? 14 : 10)); ctx.strokeStyle = sel ? 'rgba(44,230,255,.95)' : 'rgba(255,62,165,.8)'; ctx.lineWidth = 2; ctx.stroke();
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -6718,9 +6800,16 @@ function miniBuildBg(id){
     for (const z of (m.zones || [])) poly(z.p, z.col.replace(/[\d.]+\)$/, a => Math.min(.75, parseFloat(a) * 1.6) + ')'));
     g.lineCap = 'round';
     for (const r of (m.ridges || [])){ const [ax, ay] = P(r[0], r[1]), [bx, by] = P(r[2], r[3]); g.strokeStyle = 'rgba(150,160,170,.5)'; g.lineWidth = r[4]*k; g.beginPath(); g.moveTo(ax, ay); g.lineTo(bx, by); g.stroke(); }
-    const rect = (x, z, w, d, fill, dash) => { const [px, py] = P(x - w/2, z - d/2); if (dash){ g.setLineDash([3, 2]); g.strokeStyle = fill; g.lineWidth = 1.2; g.strokeRect(px, py, w*k, d*k); g.setLineDash([]); } else { g.fillStyle = fill; g.fillRect(px, py, w*k, d*k); } };
-    for (const p of (m.places || [])) rect(p[1], p[2], p[4] || 5, p[5] || 5, 'rgba(205,214,226,.34)');
-    for (const bd of m.b) rect(bd.x, bd.z, bd.w, bd.d, bd.fl < 0 ? 'rgba(205,214,226,.6)' : bd.kind === 'land' ? 'rgba(205,214,226,.45)' : 'rgba(236,240,245,.82)', bd.fl < 0);
+    const rect = (x, z, w, d, fill, dash, rot) => { if (rot){ const [cx, cy] = P(x, z); g.save(); g.translate(cx, cy); g.rotate(rot*Math.PI/180);
+        if (dash){ g.setLineDash([3, 2]); g.strokeStyle = fill; g.lineWidth = 1.2; g.strokeRect(-w*k/2, -d*k/2, w*k, d*k); g.setLineDash([]); } else { g.fillStyle = fill; g.fillRect(-w*k/2, -d*k/2, w*k, d*k); }
+        g.restore(); return; }
+      const [px, py] = P(x - w/2, z - d/2); if (dash){ g.setLineDash([3, 2]); g.strokeStyle = fill; g.lineWidth = 1.2; g.strokeRect(px, py, w*k, d*k); g.setLineDash([]); } else { g.fillStyle = fill; g.fillRect(px, py, w*k, d*k); } };
+    // Hügel: dunkler Schatten nach Höhe (Annahme, grob)
+    for (const hq of (m.hills || [])){ const [cx, cy] = P(hq[0], hq[1]), rr = hq[3]*1.6*k, gg = g.createRadialGradient(cx, cy, 0, cx, cy, rr);
+      gg.addColorStop(0, `rgba(150,160,170,${Math.min(.5, hq[2]*.05)})`); gg.addColorStop(1, 'rgba(150,160,170,0)'); g.fillStyle = gg; g.fillRect(cx - rr, cy - rr, rr*2, rr*2); }
+    for (const p of (m.places || [])) if (p[3] !== 0) rect(p[1], p[2], p[4] || 5, p[5] || 5, 'rgba(205,214,226,.34)', false, p[6]);
+    for (const q of (m.blocks || [])) rect(q.x, q.z, q.w, q.d, 'rgba(225,230,238,.7)', false, q.rot);
+    for (const bd of m.b) rect(bd.x, bd.z, bd.w, bd.d, bd.fl < 0 ? 'rgba(205,214,226,.6)' : bd.kind === 'land' ? 'rgba(205,214,226,.45)' : 'rgba(236,240,245,.82)', bd.fl < 0, bd.rot);
     if (id === 'emperor'){ const e = m.b.find(q => q.id === 'emp'); if (e){ const [px, py] = P(e.x - e.w/2 - 3, e.z - e.d/2 - 3);
       g.save(); g.shadowColor = 'rgba(255,62,165,.95)'; g.shadowBlur = 10; g.strokeStyle = '#FF3EA5'; g.lineWidth = 3; g.strokeRect(px, py, (e.w + 6)*k, (e.d + 6)*k); g.restore(); } }
   } else if (id === 'fregatte'){
@@ -6946,7 +7035,7 @@ requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
 window.__atlas = { track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
   navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
-  kam:() => cam, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
+  kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
 })();
 </script>
