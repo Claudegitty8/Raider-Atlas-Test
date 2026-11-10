@@ -567,6 +567,15 @@ li.qd .t1,.prow.qd b{color:var(--muted);text-decoration:line-through;text-decora
 .rowin{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:0;text-align:left;cursor:pointer;color:var(--ink);min-height:44px}
 .row.static .rt{flex:1 1 auto}
 li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
+
+/* ================= Quests: Stand einrichten ================= */
+.qhint{margin:0 16px 12px;padding:12px 14px;border-radius:12px;background:linear-gradient(90deg,rgba(var(--neon2-rgb),.16),rgba(var(--neon2-rgb),.04));box-shadow:inset 0 0 0 1px rgba(var(--neon2-rgb),.45)}
+.qhint p{margin:0 0 10px;font-size:15px;line-height:1.4}
+.qhint .btnrow{margin:0}
+.qhint .bp,.qhint .bs{min-height:44px}
+.strow label{flex:none;max-width:42%}
+.stsel{flex:1 1 auto;min-width:0;max-width:62%;min-height:44px;padding:0 10px;border:0;border-radius:10px;background:var(--cell2);color:var(--ink);font:400 16px/1.2 var(--body);text-overflow:ellipsis}
+#stDlg .card header{grid-template-columns:minmax(96px,124px) minmax(0,1fr) minmax(96px,124px)}
 /* @ende-dateien */
 </style>
 </head>
@@ -652,9 +661,13 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
             <input id="qInput" type="search" placeholder="Quest suchen" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Quests durchsuchen: Name, Ort, Händler oder Material" enterkeyhint="search"></div>
             <button type="button" class="fbtn" id="qFilBtn" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg><span>Filter</span><span class="fnum" id="qFilN" hidden></span></button></div>
           <div class="ftok" id="qTok" role="group" aria-label="Aktive Filter" hidden></div>
+          <div class="qhint" id="qHint" hidden>
+            <p><b>Wo stehst du im Spiel?</b> Wähle einmal pro Händler deine aktuelle Quest. Alle Quests davor hakt die App für dich ab.</p>
+            <div class="btnrow"><button type="button" class="bp" id="qHintGo">Einrichten</button><button type="button" class="bs" id="qHintNo">Später</button></div>
+          </div>
           <p class="foot" id="qCount" role="status"></p>
           <ul class="group" id="qList"></ul>
-          <div class="btncol"><button type="button" class="bs" id="qDoneBtn">Erledigte zeigen</button></div>
+          <div class="btncol"><button type="button" class="bs" id="qDoneBtn">Erledigte zeigen</button><button type="button" class="bs" id="qSetupBtn">Meinen Stand einrichten</button></div>
           <p class="foot">Kreis antippen: als erledigt abhaken. Zielscheibe: verfolgen, dann steht die Quest in «Mein Run» auf der Karte und ihre Materialien kommen auf die Einkaufsliste. Zeile antippen: Ziel, Ort und Materialien. Angaben aus den verlinkten Guides, nicht im Spiel getestet.</p>
         </div>
         <div id="qvProj" hidden>
@@ -740,7 +753,7 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
         <ul class="group in" id="stopList"></ul>
         <p class="sub2" id="routeMiss" hidden></p>
         <div id="altWrap" hidden><p class="sub2">Andere Map wählen</p><div class="chipsrow wrap" id="altMaps"></div></div>
-        <div class="annbox"><b>Annahme:</b> Reihenfolge und Weg sind ein Vorschlag (Luftlinie zwischen den Orten, ohne echte Wege). Lage der Orte im Modell: eigene Skizze.</div>
+        <div class="annbox"><b>Annahme:</b> Reihenfolge und Weg sind ein Vorschlag (Luftlinie zwischen den Orten, ohne echte Wege). Die Lage der Orte ist an der Karte von Arc Raiders Hub abgemessen, Gebäude sind vereinfacht.</div>
         <div class="btncol">
           <button type="button" class="bp" id="btnRunR">Run beendet: Gefundenes eintragen</button>
           <button type="button" class="bs" id="btnRouteEnd">Route ausblenden</button>
@@ -819,6 +832,20 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="filTitle">
     <header><button type="button" class="tbtn" id="filReset">Zurücksetzen</button><h3 id="filTitle">Filter</h3><button type="button" class="tbtn b" id="filClose">Fertig</button></header>
     <div class="cardbody" id="filBody"></div>
+  </div>
+</div>
+
+<!-- Quests: Stand einrichten -->
+<div class="dlg sheetdlg" id="stDlg" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="stTitle">
+    <header><button type="button" class="tbtn" id="stCancel">Abbrechen</button><h3 id="stTitle">Mein Stand</h3><button type="button" class="tbtn b" id="stSave">Sichern</button></header>
+    <div class="cardbody">
+      <p class="foot">Wähle pro Händler die Quest, an der du gerade bist. Alle Quests davor werden abgehakt. Die gewählte Quest und alle danach gelten als offen.</p>
+      <ul class="group in" id="stRows"></ul>
+      <ul class="group in"><li class="srow"><label for="stTrack">Aktuelle Quests verfolgen</label><input type="checkbox" class="switch" id="stTrack" role="switch" checked></li></ul>
+      <p class="foot" id="stInfo" role="status"></p>
+      <div class="annbox"><b>Annahme:</b> Die Reihenfolge pro Händler folgt den Listen in den Quellen. Weicht sie im Spiel ab, kannst du einzelne Quests danach von Hand abhaken.</div>
+    </div>
   </div>
 </div>
 
@@ -2007,9 +2034,10 @@ CHECK.maps.buried = {
     "4 Räume",
     "Türblocker mitnehmen (PC Gamer, allthings.how)"
   ],
+  "src": "Lage der Orte und Viertel: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
   "ann": [
-    "Lage, Form und Grösse der Gebäude im Modell: eigene Skizze nach Textbeschreibungen, nicht nach echten Koordinaten",
-    "Einteilung der Stadt in Outskirts, New District, West Village und Old Town"
+    "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
+    "Brücke: Verlauf nach Kartenbild, Höhe geschätzt"
   ]
 };
 /* @datei wissen/pruefung/spaceport.js */
@@ -2085,10 +2113,12 @@ CHECK.maps.spaceport = {
     "5 Schlüssel",
     "Night Raid erhöht laut KeenGamer die Chance auf Schlüssel"
   ],
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
   "ann": [
-    "Lage, Form und Grösse der Gebäude im Modell: eigene Skizze nach Textbeschreibungen, nicht nach echten Koordinaten",
-    "Hidden Bunker lohnt sich",
-    "Orientierung: Launch Towers im Norden, The Trench im Nordosten, Alberi Hills im Südwesten"
+    "Gebäude sind als Rechtecke vereinfacht und nicht gedreht (die Anlage steht im Spiel schräg)",
+    "Bunker in den Alberi Hills und West Container Yard: Lage nicht auf der Karte gefunden",
+    "Hügel: Höhen geschätzt",
+    "Hidden Bunker lohnt sich"
   ]
 };
 /* @datei wissen/pruefung/bluegate.js */
@@ -2164,10 +2194,12 @@ CHECK.maps.bluegate = {
     "4 Schlüssel",
     "Night Raid erhöht laut KeenGamer die Chance auf Schlüssel"
   ],
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
   "ann": [
-    "Lage, Form und Grösse der Gebäude im Modell: eigene Skizze nach Textbeschreibungen, nicht nach echten Koordinaten",
-    "Locked Gate lohnt sich",
-    "Wald und Trapper's Glade im Nordwesten, Dorf im Westen, Felder im Süden"
+    "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
+    "Traffic Tunnel, Adorned Wreckage und Broken Earth: Lage nicht auf der Karte gefunden",
+    "Berge und Hügel: Höhen geschätzt",
+    "Locked Gate lohnt sich"
   ]
 };
 /* @datei wissen/pruefung/stella.js */
@@ -2212,10 +2244,11 @@ CHECK.maps.stella = {
   "tags": [
     "4 Schlüssel"
   ],
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte, beide Ebenen (abgemessen am 10.11.2026)",
   "ann": [
-    "Lage, Form und Grösse der Gebäude im Modell: eigene Skizze nach Textbeschreibungen, nicht nach echten Koordinaten",
-    "sehr PvP-lastig",
-    "Aufteilung: Medical Research und Assembly im Westen, Lobby in der Mitte, Business Center und Cafeteria im Osten"
+    "Räume sind als Rechtecke vereinfacht, beide Ebenen liegen in einem Plan",
+    "Storage Room: laut Karte im Osten der oberen Ebene, im Modell abgesenkt gezeichnet",
+    "sehr PvP-lastig"
   ]
 };
 /* @datei wissen/pruefung/riven.js */
@@ -2309,10 +2342,12 @@ CHECK.maps.riven = {
     "Keycards sind Einweg (Timesaver)"
   ],
   "warn": "",
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
   "ann": [
-    "Lage, Form und Grösse der Gebäude im Modell: eigene Skizze nach Textbeschreibungen, nicht nach echten Koordinaten",
-    "Stockwerke der Hotelzimmer: Die erste Ziffer der Zimmernummer passt vermutlich zum Stockwerk",
-    "Lage: Hotel an der Westküste, Port Authority am Hafen im Norden"
+    "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
+    "Hotel und Strand liegen am Westrand des abgemessenen Bilds, ihre Lage ist ungenauer",
+    "Dried Riverbed: nach dem Kartenbild zugeordnet, ohne Beschriftung",
+    "Stockwerke der Hotelzimmer: Die erste Ziffer der Zimmernummer passt vermutlich zum Stockwerk"
   ]
 };
 /* @datei wissen/pruefung/pendola.js */
@@ -2358,9 +2393,11 @@ CHECK.maps.pendola = {
   "tags": [
     "4 Schlüssel + Emperor"
   ],
+  "src": "Lage der beschrifteten Orte und Gebiete: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
   "ann": [
-    "Lage, Form und Grösse der Gebäude im Modell: eigene Skizze nach Textbeschreibungen, nicht nach echten Koordinaten",
-    "zugefrorener Fluss in der Mitte, Southern Pass im Süden",
+    "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
+    "Nicht beschriftet und darum geschätzt: Piazza della Rupe, Porta Benvenuti, Northern Tracks, Dispatch Tower, Researcher Lodgings, Weather Station, Freight Terminal, Controlled Receiving Facility, Transit Tunnel, Truck Stop, Electrical Substation",
+    "Frozen River und Berge: Form nach Kartenbild, Höhen geschätzt",
     "Türen können einfrieren"
   ]
 };
@@ -3106,11 +3143,15 @@ function buildMap(m, id){
     if (zn.n){ const c = zn.p.reduce((s,q) => [s[0]+q[0]/zn.p.length, s[1]+q[1]/zn.p.length], [0,0]); LAB(zn.n, [c[0], .3, c[1]], { zone:true, pri:3 }); }
   }
   for (const rd of (m.ridges || [])) ridge(...rd);
-  if (m.trees){
-    const [x0,z0,x1,z1] = m.trees.box; let sd = m.trees.seed;
+  /* Bäume: ein Feld oder mehrere ({box:[x0,z0,x1,z1], n, seed}). Bäume, die in einem Gebäude landen würden, entfallen. */
+  const frei = (x, z) => !m.b.some(q => Math.abs(x-q.x) < q.w/2+1 && Math.abs(z-q.z) < q.d/2+1)
+    && !(m.places || []).some(q => Math.abs(x-q[1]) < (q[4]||5)/2+1 && Math.abs(z-q[2]) < (q[5]||5)/2+1);
+  for (const tr0 of [].concat(m.trees || [])){
+    const [x0,z0,x1,z1] = tr0.box; let sd = tr0.seed;
     const rnd = () => (sd = (sd*9301 + 49297) % 233280)/233280;
-    for (let i=0;i<m.trees.n;i++){ const x = x0+rnd()*(x1-x0), z = z0+rnd()*(z1-z0), h = 2+rnd()*2.2;
-      const tr = .8+rnd()*.5; cyl([x,h/2,z], tr, h, 6, 'y', {col:[52,96,66], s:.12, k:'tree'}); treeList.push([x, z, h, tr]); }
+    for (let i=0;i<tr0.n;i++){ const x = x0+rnd()*(x1-x0), z = z0+rnd()*(z1-z0), h = 2+rnd()*2.2;
+      const tr = .8+rnd()*.5; if (!frei(x, z)) continue;
+      cyl([x,h/2,z], tr, h, 6, 'y', {col:[52,96,66], s:.12, k:'tree'}); treeList.push([x, z, h, tr]); }
   }
   for (const d of (m.deco || [])){
     if (d.t === 'box'){ box(...d.b, {col:d.col, s:.25, mat: d.col[0] === 150 || d.col[0] === 120 ? 'slab' : undefined}); shadows.push({x:(d.b[0]+d.b[1])/2, z:(d.b[4]+d.b[5])/2, w:d.b[1]-d.b[0], d:d.b[5]-d.b[4], h:d.b[3]}); }
@@ -3175,7 +3216,7 @@ MAPS.dam = { name:'Dam Battlegrounds', short:'Dam', ground:'#1b231f',
       {n:'Victory Ridge', col:'rgba(120,130,140,.12)', p:[[-40,-58],[44,-58],[44,-54],[-40,-54]]}
     ],
     ridges:[[-40,-57,-8,-58,7,6],[14,-58,46,-53,7,6],[50,-12,53,18,8,7],[53,18,47,44,8,6],[-34,48,-14,52,9,6],[2,53,32,47,9,7]],
-    trees:{ box:[-50,-17,-13,13], n:30, seed:3 },
+    trees:[{ box:[-50,-17,-13,13], n:30, seed:3 }, { box:[-20,-13,1,2], n:10, seed:7 }, { box:[-14,18,13,35], n:14, seed:11 }],
     deco:[
       {t:'wall', a:[11,-21.5], b:[9.1,-18.1], w:4, h:7, col:[150,158,168]},
       {t:'wall', a:[6.1,-12.8], b:[3.5,-8.1], w:4, h:7, col:[150,158,168], n:'The Dam'},
@@ -3200,10 +3241,10 @@ MAPS.dam = { name:'Dam Battlegrounds', short:'Dam', ground:'#1b231f',
       {b:'ct', fl:1, dx:3, dz:2, n:'Staff Room', key:'Dam Staff Room Key', rar:'Ungewöhnlich', floor:'Erdgeschoss',
         text:'Im Erdgeschoss des Komplexes beim Kontrollturm, nahe beim Eingang: an der Rezeption vorbei und rechts halten, die Tür liegt auf der Ostseite.',
         tags:['rote Spinde','Munitionskisten','Crafting-Material'], warn:'Manche Guides nennen den Bau Kontrollturm, andere Research & Administration. Beide meinen den Komplex in der Kartenmitte.'},
-      {b:'ta', fl:1, dx:-3.5, n:'Testing Annex (2 Türen)', key:'Dam Testing Annex Key', rar:'Selten', floor:'Erdgeschoss',
+      {b:'ta', fl:1, dx:-3, n:'Testing Annex (2 Türen)', key:'Dam Testing Annex Key', rar:'Selten', floor:'Erdgeschoss',
         text:'Im Süden bzw. Südosten der Map, nahe den Red Lakes. Im Erdgeschoss geradeaus, die erste Tür liegt am Ende des Gangs. Es gibt zwei verschlossene Türen, jeder Schlüssel öffnet nur eine davon.',
         tags:['2 Türen, 1 Schlüssel pro Tür','linker Raum laut PC Gamer etwas besser']},
-      {b:'wtc', fl:1, dx:3, dz:2, n:'Überwachungsraum', key:'Dam Surveillance Key', rar:'Ungewöhnlich', floor:'Erdgeschoss',
+      {b:'wtc', fl:1, dx:2, dz:2, n:'Überwachungsraum', key:'Dam Surveillance Key', rar:'Ungewöhnlich', floor:'Erdgeschoss',
         text:'Im Gebäude Water Treatment Control Richtung Kartenmitte. Am Empfang vorbei, erste Tür rechts in einen dunklen Raum, dann rechts halten: Die Tür ist in der nächsten Ecke.',
         warn:'Oft zielt ein Turret oder eine Kamera auf den Raum. Erst zerstören, dann looten.'},
       {b:'pgc', fl:2, dx:6, n:'Power-Rod-Raum', key:'Power Rod (statt Schlüssel)', rar:'Episch', floor:'Ostseite',
@@ -3217,28 +3258,37 @@ MAPS.dam = { name:'Dam Battlegrounds', short:'Dam', ground:'#1b231f',
 MAPS.buried = { name:'Buried City', short:'Buried City', ground:'#2a2419',
     intro:'Vier Schlüsselräume. Das Rathaus gilt als bester Raum der Map. Die Stadt teilt sich in vier Viertel: Outskirts (NW), New District (NO), West Village (SW) und Old Town (SO, südlich der Brücke).',
     tags:['4 Räume','Türblocker mitnehmen'],
+    /* Lage und Grösse: am 10.11.2026 an der interaktiven Karte von arcraidershub.com abgemessen (Ortsnamen, Gebietsumrisse, Viertel).
+       1 Einheit = 0,5 % der Kartenbreite, Norden = -z. Gebäude als Rechtecke vereinfacht. Brücke: Verlauf nach Kartenbild, Höhe geschätzt (Annahme). */
     zones:[
-      {n:'Outskirts', col:'rgba(150,120,80,.14)', p:[[-52,-52],[-3,-52],[-3,-5],[-52,-5]]},
-      {n:'New District', col:'rgba(120,130,150,.16)', p:[[-3,-52],[52,-52],[52,-5],[-3,-5]]},
-      {n:'West Village', col:'rgba(170,140,90,.13)', p:[[-52,-5],[-3,-5],[-3,29],[-52,29]]},
-      {n:'Old Town', col:'rgba(200,170,110,.2)', p:[[-3,-5],[52,-5],[52,52],[-40,52],[-40,33],[-3,33]]}
+      {n:'Outskirts', col:'rgba(150,120,80,.14)', p:[[-54,-54],[-10,-54],[-16,-28],[-42,-16],[-54,-20]]},
+      {n:'New District', col:'rgba(120,130,150,.16)', p:[[-2,-46],[42,-46],[48,-2],[2,2],[-13,-18]]},
+      {n:'West Village', col:'rgba(170,140,90,.13)', p:[[-46,-6],[-6,2],[-3,22],[-20,52],[-46,46]]},
+      {n:'Old Town', col:'rgba(200,170,110,.2)', p:[[4,22],[48,18],[46,54],[-16,54],[-2,26]]}
     ],
-    deco:[{t:'box', b:[-44,24,2.5,3.6,30,33], col:[150,140,120], n:'Brücke'}],
+    trees:[{ box:[-50,-50,-12,-26], n:16, seed:5 }, { box:[-4,-10,10,4], n:8, seed:9 }, { box:[-50,-4,-34,26], n:10, seed:13 }, { box:[30,26,52,52], n:12, seed:17 }],
+    deco:[
+      {t:'wall', a:[-24,42], b:[-11,32], w:3, h:3.4, col:[150,140,120]},
+      {t:'wall', a:[-11,32], b:[2,23.5], w:3, h:3.4, col:[150,140,120], n:'Brücke'},
+      {t:'wall', a:[2,23.5], b:[27,18.5], w:3, h:3.4, col:[150,140,120]},
+      {t:'wall', a:[27,18.5], b:[54,13.5], w:3, h:3.4, col:[150,140,120]}
+    ],
     b:[
-      {id:'th', name:'Rathaus (Town Hall)', x:4, z:8, w:16, d:12, fl:3},
-      {id:'hos', name:'Krankenhaus', x:-6, z:-33, w:16, d:10, fl:4},
-      {id:'gar', name:'Parkhaus', x:-2, z:-23, w:10, d:6, fl:3, kind:'land'},
-      {id:'st', name:'Space Travel (J Kozma Ventures)', x:8, z:-13, w:9, d:9, fl:7},
-      {id:'gra', name:'Grandioso Apartments', x:-24, z:22, w:10, d:12, fl:5},
-      {id:'wv', name:'West Village', x:-36, z:6, w:8, d:8, fl:2, kind:'land'}
+      {id:'th', name:'Rathaus (Town Hall)', x:15, z:11, w:21, d:9, fl:3},
+      {id:'hos', name:'Krankenhaus', x:8, z:-33, w:7, d:15, fl:4},
+      {id:'gar', name:'Parkhaus', x:13.5, z:-19, w:8, d:7, fl:3, kind:'land'},
+      {id:'st', name:'Space Travel (J Kozma Ventures)', x:22.5, z:-8.5, w:6, d:10, fl:7},
+      {id:'gra', name:'Grandioso Apartments', x:-30.5, z:32, w:7, d:16, fl:5},
+      {id:'wv', name:'West Village', x:-21.5, z:14, w:8, d:8, fl:2, kind:'land'}
     ],
-    places:[['Market Ruins',12,-41,1],['Dune’s End',22,-48,1],['Su Durante Warehouses',-22,-42,2,10,6],['Piazza Arbusto',38,-2,1,8,8],
-      ['Plaza Rosa',8,41,1,8,8],['Red Tower',38,38,6,4,4],['Galleria',30,-28,2,8,6],['Library',-8,-46,2,8,6],['Marano Park',-15,-17,1,8,8],['Santa Maria Houses',-14,37,2,8,6]],
+    places:[['Market Ruins',17.5,-38,1],['Dune’s End',34,-34,1],['Su Durante Warehouses',-19,-51,2,10,6],['Piazza Arbusto',37.5,23,1,8,8],
+      ['Plaza Rosa',8,48.5,1,8,8],['Red Tower',23.5,45.5,6,4,4],['Galleria',29.5,-19,2,8,6],['Library',-6.5,-22,2,14,11],['Marano Park',4,-2.5,1,8,8],['Santa Maria Houses',6,35,2,8,6],
+      ['Research',15.5,-6.5,3,6,10],['Piazza Roma',-16,3,1,6,6],['Buried Properties',44,5.5,2],['Abandoned Highway Camp',-28,47,1],['Warehouse',-49.5,-8.5,2,6,6]],
     r:[
-      {b:'th', fl:1, dz:-4, n:'Rathaus', key:'Buried City Town Hall Key', floor:'Nordseite',
+      {b:'th', fl:1, dz:-3, n:'Rathaus', key:'Buried City Town Hall Key', floor:'Nordseite',
         text:'Das grosse Gebäude im Zentrum, kaum zu verfehlen. Der Raum liegt auf der Nordseite, mit Tresoren und einer Waffenkiste. AltChar beschreibt den Bereich sogar über fast drei Etagen.',
         tags:['oft 40–70k Lootwert','bester Raum der Map'], warn:'Sofort einen Türblocker oder eine Mine an die Tür, sonst räumen andere mit aus.'},
-      {b:'hos', fl:3, dx:-5, dz:-2, n:'Krankenhaus, 3. Stock', key:'Buried City Hospital Key', floor:'3. Stock, Nordwestteil',
+      {b:'hos', fl:3, dx:-1.5, dz:-5, n:'Krankenhaus, 3. Stock', key:'Buried City Hospital Key', floor:'3. Stock, Nordwestteil',
         text:'Das Krankenhaus liegt im Norden der Stadt. Im Erdgeschoss nahe der Northern Metro Station rein, Treppe in den 3. Stock: Die Tür geht vom Gang beim Umkleideraum ab, im Nordwestteil des Gebäudes.',
         tags:['Medizin','Baupläne möglich','Waffen']},
       {b:'st', fl:4, n:'JKV-Büro', key:'Buried City JKV Employee Access Card', floor:'4. Stock',
@@ -3252,34 +3302,38 @@ MAPS.buried = { name:'Buried City', short:'Buried City', ground:'#2a2419',
 MAPS.spaceport = { name:'Spaceport', short:'Spaceport', ground:'#1d2228',
     intro:'Fünf Schlüssel, sechs Türen: Control Tower A6 und Shipping Warehouse gelten als die besten. Die zwei Trench Towers im Norden nehmen denselben Schlüsseltyp. Orientierung: Launch Towers im Norden, The Trench im Nordosten, Alberi Hills im Südwesten.',
     tags:['5 Schlüssel','Hidden Bunker und Night Raid lohnen sich'],
+    /* Lage und Grösse: am 10.11.2026 an der interaktiven Karte von arcraidershub.com abgemessen (Ortsnamen und Gebietsumrisse).
+       Norden = -z. Die Anlage steht im Spiel um rund 45 Grad gedreht, im Modell sind die Gebäude gerade Rechtecke.
+       Bunker in den Alberi Hills und West Container Yard: Lage nicht auf der Karte gefunden (Annahme). Hügel: Höhen geschätzt. */
     zones:[
-      {n:'The Trench', col:'rgba(40,46,56,.7)', p:[[17,-46],[31,-46],[31,-30],[17,-30]]},
-      {n:'Alberi Hills', col:'rgba(96,120,86,.22)', p:[[-52,24],[-18,26],[-16,52],[-52,52]]},
-      {n:'East Plains', col:'rgba(150,140,100,.14)', p:[[30,14],[52,10],[52,40],[30,40]]},
-      {n:'West Container Yard', col:'rgba(120,96,70,.22)', p:[[-9,-42],[1,-42],[1,-34],[-9,-34]]}
+      {n:'The Trench', col:'rgba(40,46,56,.7)', p:[[10.5,-43.5],[14.5,-41.5],[2.5,-19],[-1.5,-21]]},
+      {n:'Alberi Hills', col:'rgba(96,120,86,.22)', p:[[-54,-16],[-43,-12],[-43,20],[-37,40],[-10,54],[-54,54]]},
+      {n:'East Plains', col:'rgba(150,140,100,.14)', p:[[41,-24],[54,-28],[54,28],[39,24],[34,0]]},
+      {n:'West Container Yard', col:'rgba(120,96,70,.22)', p:[[-18,-43],[-6,-43],[-6,-37],[-18,-37]]}
     ],
-    ridges:[[-50,40,-30,34,8,5],[-30,46,-18,40,7,4]],
-    deco:[{t:'cyl', c:[-7,15,-27], r:1.6, h:30, col:[170,176,186]},{t:'cyl', c:[-1,13,-27], r:1.6, h:26, col:[170,176,186], n:'Launch Towers'},
-      {t:'cyl', c:[46,7,18], r:.8, h:14, col:[150,156,166], n:'Communications Tower'}],
+    ridges:[[-53,-6,-49,22,8,6],[-49,22,-32,48,9,6]],
+    deco:[{t:'cyl', c:[-3,15,-22.5], r:1.6, h:30, col:[170,176,186]},{t:'cyl', c:[2.5,13,-20], r:1.6, h:26, col:[170,176,186], n:'Launch Towers'},
+      {t:'cyl', c:[50,7,14.5], r:.8, h:14, col:[150,156,166], n:'Communications Tower'}],
     b:[
-      {id:'a6', name:'Control Tower A6', x:0, z:2, w:8, d:8, fl:3, tower:{w:5,d:5,fl:8}},
-      {id:'sw', name:'Shipping Warehouse', x:-15, z:-35, w:14, d:9, fl:2},
-      {id:'cs', name:'Container Storage', x:12, z:15, w:12, d:8, fl:2},
-      {id:'vm', name:'Vehicle Maintenance', x:15, z:3, w:10, d:7, fl:2, kind:'land'},
-      {id:'ntt', name:'North Trench Tower', x:12, z:-42, w:5, d:5, fl:3},
-      {id:'stt', name:'South Trench Tower', x:11, z:-35, w:5, d:5, fl:3},
-      {id:'bun', name:'Outskirts Bunker (Alberi Hills)', x:-34, z:32, w:6, d:6, fl:-1},
-      {id:'dep', name:'Departure Building', x:-22, z:6, w:12, d:9, fl:4, kind:'land'}
+      {id:'a6', name:'Control Tower A6', x:5.5, z:1, w:12, d:6, fl:3, tower:{w:5,d:5,fl:8}},
+      {id:'sw', name:'Shipping Warehouse', x:-9.5, z:-47, w:9, d:6, fl:2},
+      {id:'cs', name:'Container Storage', x:21, z:7.5, w:8, d:12, fl:2},
+      {id:'vm', name:'Vehicle Maintenance', x:6, z:13.5, w:8, d:8, fl:2, kind:'land'},
+      {id:'ntt', name:'North Trench Tower', x:13, z:-49.5, w:3.5, d:3.5, fl:3},
+      {id:'stt', name:'South Trench Tower', x:9, z:-45, w:3.5, d:3.5, fl:3},
+      {id:'bun', name:'Outskirts Bunker (Alberi Hills)', x:-46, z:30, w:6, d:6, fl:-1},
+      {id:'dep', name:'Departure Building', x:-21.5, z:-16, w:11, d:11, fl:4, kind:'land'}
     ],
-    places:[['Arrival Building',-35,-22,3,10,8],['Car Park',-31,-31,1,7,5],['Jiangsu Warehouse',-46,-34,2,8,6],['Fuel Depot',-42,-46,1],
-      ['West Hangar',0,-47,2,10,6],['East Hangar',36,-45,2,10,6],['Fuel Control',30,-24,2],['Little Hangar',40,-32,2,6,5],
-      ['East Container Yard',40,-14,1,8,6],['Rocket Assembly',40,4,3,8,6],['Fuel Lines',-22,22,1,10,3],['Fuel Processing',-45,4,2],
-      ['La Chiesa',-8,38,3,5,7],['Maintenance Hangar',-2,42,2,8,5]],
+    places:[['Arrival Building',-20.5,-34.5,3,8,8],['Car Park',-25.5,-43,1,7,5],['Jiangsu Warehouse',-37,-41.5,2,8,6],['Water Towers',-50.5,-22.5,4,3,3],
+      ['West Hangar',-1,-53,2,8,4],['East Hangar',23,-51,2,10,6],['Fuel Control',21,-27,2],['Little Hangar',37,-36,2,6,5],
+      ['East Container Yard',36,-26,1,8,6],['Rocket Assembly',27.5,-18,3,10,10],['Fuel Lines',-23.5,4.5,1,10,3],['Fuel Processing',-35.5,4.5,2],
+      ['La Chiesa',-13,25,3,5,7],['Maintenance Hangar',-4.5,32.5,2,8,5],
+      ['East Plains Warehouses',49,-17,2,8,6],['Fuel Storage',-30,33,1,8,6],['Staff Parking',14.5,38.5,1,8,5],['Service Buildings',49,36,2,6,6],['Security Checkpoint',27,46,1,6,5],['Electrical Substation',16.5,52,2]],
     r:[
       {b:'a6', fl:'top', n:'Control Tower A6, oben', key:'Spaceport Control Tower Key', rar:'Selten', floor:'oberster Stock',
         text:'Control Tower A6 steht genau in der Mitte. Die Tür für den Schlüssel ist unten im Turm, danach geht es per Seil und Treppe nach oben in den kompakten Raum im obersten Stock.',
         tags:['Top-Waffen und Baupläne','Quest Lost in Transmission gibt einen Schlüssel'], warn:'Der umkämpfteste Bau der Map, und ARC bewachen die Zone.', pitch:.4, dist:46},
-      {b:'sw', fl:2, dx:4, n:'Shipping Warehouse', key:'Spaceport Warehouse Key', rar:'Ungewöhnlich', floor:'1. Stock',
+      {b:'sw', fl:2, dx:3, n:'Shipping Warehouse', key:'Spaceport Warehouse Key', rar:'Ungewöhnlich', floor:'1. Stock',
         text:'Shipping Warehouse im Norden bzw. Nordwesten, gleich neben dem West Container Yard. Im Lager die Treppe in den ersten Stock nehmen und dem Weg bis zur verschlossenen Tür folgen.',
         tags:['hochwertige Waffen und Baupläne möglich']},
       {b:'cs', fl:2, n:'Container Storage', key:'Spaceport Container Storage Key', rar:'Selten', floor:'oberer Laufsteg',
@@ -3296,25 +3350,29 @@ MAPS.spaceport = { name:'Spaceport', short:'Spaceport', ground:'#1d2228',
 MAPS.bluegate = { name:'The Blue Gate', short:'Blue Gate', ground:'#1c2229',
     intro:'Vier Schlüssel plus Streifenwagen und ein Puzzle-Raum. Der Cellar Key passt an mehrere Kellerluken. Orientierung: Pilgrim\'s Peak mit Funkturm ganz im Nordosten, Wald und Trapper\'s Glade im Nordwesten, Dorf im Westen, Felder im Süden.',
     tags:['4 Schlüssel','Locked Gate und Night Raid lohnen sich'],
+    /* Lage und Grösse: am 10.11.2026 an der interaktiven Karte von arcraidershub.com abgemessen (Ortsnamen und Gebietsumrisse).
+       Norden = -z. Gebäude als Rechtecke vereinfacht. Nicht auf der Karte gefunden und darum geschätzt (Annahme):
+       Traffic Tunnel (unterirdisch), Adorned Wreckage, Broken Earth. Berge und Hügel: Höhen geschätzt. */
     zones:[
-      {n:'The Forest', col:'rgba(56,104,68,.34)', p:[[-40,-36],[-14,-34],[-12,-12],[-38,-12]]},
-      {n:'The Mountains', col:'rgba(120,130,140,.12)', p:[[-6,-52],[46,-52],[46,-42],[-6,-42]]},
-      {n:'Farmlands', col:'rgba(150,150,80,.2)', p:[[-12,18],[18,18],[18,36],[-12,36]]},
-      {n:'Traffic Tunnel (unterirdisch)', col:'rgba(60,70,90,.4)', p:[[-16,8],[8,8],[8,13],[-16,13]]}
+      {n:'The Forest', col:'rgba(56,104,68,.34)', p:[[-54,-37],[-28,-33],[-23,-8],[-40,4],[-54,0]]},
+      {n:'The Mountains', col:'rgba(120,130,140,.12)', p:[[-30,-58],[54,-58],[54,-47],[30,-46],[-8,-49]]},
+      {n:'Farmlands', col:'rgba(150,150,80,.2)', p:[[-22,17],[14,19],[20,36],[-6,47],[-26,34]]},
+      {n:'Traffic Tunnel (unterirdisch)', col:'rgba(60,70,90,.4)', p:[[-11,-9.5],[13,-9.5],[13,-4.5],[-11,-4.5]]}
     ],
-    ridges:[[-6,-49,14,-50,8,8],[14,-50,30,-50,8,9],[38,-46,50,-40,7,7],[-52,-48,-40,-46,6,6]],
-    trees:{ box:[-38,-34,-14,-13], n:22, seed:7 },
+    ridges:[[-30,-55,0,-53,9,9],[0,-53,30,-55,9,10],[36,1,51,10,7,7],[-30,51,10,55,8,6]],
+    trees:[{ box:[-52,-33,-25,2], n:26, seed:7 }, { box:[-16,19,-5,30], n:6, seed:4 }, { box:[-10,-2,2,6], n:6, seed:8 }],
     b:[
-      {id:'pp', name:"Pilgrim's Peak (Funkturm)", x:32, z:-36, w:9, d:8, fl:2, tower:{w:3,d:3,fl:10}},
-      {id:'vil', name:'Village', x:-36, z:-4, w:12, d:10, fl:2},
-      {id:'rr', name:'Reinforced Reception', x:-12, z:2, w:10, d:8, fl:2, kind:'land'},
-      {id:'tun', name:'Traffic Tunnel', x:-4, z:10.5, w:22, d:4, fl:-1},
-      {id:'tg', name:"Trapper's Glade", x:-33, z:-29, w:6, d:6, fl:1},
-      {id:'ref', name:"Raider's Refuge", x:-20, z:-18, w:8, d:6, fl:2},
-      {id:'rh', name:'Ruined Homestead', x:0, z:31, w:8, d:6, fl:1}
+      {id:'pp', name:"Pilgrim's Peak (Funkturm)", x:47, z:-36.5, w:10, d:8, fl:2, tower:{w:3,d:3,fl:10}},
+      {id:'vil', name:'Village', x:-20, z:-40, w:14, d:10, fl:2},
+      {id:'rr', name:'Reinforced Reception', x:4.5, z:-30, w:10, d:8, fl:2, kind:'land'},
+      {id:'tun', name:'Traffic Tunnel', x:1, z:-7, w:22, d:4, fl:-1},
+      {id:'tg', name:"Trapper's Glade", x:-33.5, z:-15, w:6, d:6, fl:1},
+      {id:'ref', name:"Raider's Refuge", x:-31.5, z:-25, w:6, d:5, fl:2},
+      {id:'rh', name:'Ruined Homestead', x:-2.5, z:29, w:8, d:6, fl:1}
     ],
-    places:[['Olive Grove',-8,25,1,6,6],['Abandoned Housing Project',22,-16,3,8,8],['Warehouse Complex',-2,-38,2,10,6],['Barren Clearing',-6,-27,1],
-      ['Maintenance Bunker',14,40,1],['Broken Earth',-6,42,1],['Adorned Wreckage',3,-19,1,8,5],['Checkpoint',9,-4,1,6,5]],
+    places:[['Olive Grove',-10.5,23,1,6,6],['Abandoned Housing Project',48.5,-8,3,8,8],['Warehouse Complex',24,-13.5,2,11,9],['Barren Clearing',-49,-30,1],
+      ['Maintenance Bunker',11.5,15.5,1],['Broken Earth',-6,44,1],['Adorned Wreckage',-8,-20,1,8,5],['Checkpoint',-5,1.5,1,10,8],
+      ['Data Vault',24.5,-35.5,2],['Headhouse',17,-25.5,2,6,6],['Outer Gates',7.5,-14.5,1,6,4],['Gate Control Room',17.5,-6,2,5,4],['Ridgeline',43.5,5.5,1,4,4],['Highway Collapse',-28,21,1,8,4],['Ancient Fort',9,40.5,2,6,6]],
     r:[
       {b:'pp', fl:0, n:'Funkturm-Keller', key:'Blue Gate Communication Tower Key', rar:'Selten', floor:'Untergeschoss',
         text:'Pilgrim\'s Peak ganz im Nordosten, der hohe Funkturm ist dein Orientierungspunkt. Der Raum ist nicht oben, sondern im Untergeschoss: in die untere Anlage, dann im rechten bzw. östlichen Gang zur Metalltür.',
@@ -3325,7 +3383,7 @@ MAPS.bluegate = { name:'The Blue Gate', short:'Blue Gate', ground:'#1c2229',
       {b:'vil', fl:1, dx:-4, n:'Dorf-Gebäude', key:'Blue Gate Village Key', floor:'Erdgeschoss',
         text:'Die vergitterte Tür an einem Gebäude im Dorf im Westen der Map. Achte auf den Hinweis «Blue Gate Village Key», wenn du davorstehst.',
         warn:'Die Guides widersprechen sich: allthings.how nennt die Westseite des Dorfs, Mein-MMO die Ostseite bei einem kaputten Gewächshaus.'},
-      {b:'rh', fl:0, dx:-3, n:'Kellerluke bei Olive Grove', key:'Blue Gate Cellar Key', floor:'Keller',
+      {b:'rh', fl:0, dx:-2.5, n:'Kellerluke bei Olive Grove', key:'Blue Gate Cellar Key', floor:'Keller',
         text:'Die einfachste Kellerluke: südlich von Olive Grove nahe Ruined Homestead. Such das kleine Nebengebäude mit Bienen, die Luke liegt westlich davon an einer Steinmauer. Mit dem Key erscheint eine Leiter nach unten.',
         tags:['jede Nutzung verbraucht einen Schlüssel'], pitch:.45},
       {b:'tg', fl:0, n:"Kellerluke in Trapper's Glade", key:'Blue Gate Cellar Key', floor:'Keller',
@@ -3339,24 +3397,29 @@ MAPS.bluegate = { name:'The Blue Gate', short:'Blue Gate', ground:'#1c2229',
 MAPS.stella = { name:'Stella Montis', short:'Stella Montis', ground:'#1b2129',
     intro:'Ein Innenkomplex auf zwei Ebenen mit vier Schlüsselräumen. Westlich liegen Medical Research und Assembly, in der Mitte die Lobby, östlich Business Center und Cafeteria. Dazu kommen mehrere Türen, die eine Fuel Cell brauchen (Lobby, Cafeteria, Medical Research, Seed Vault), und die Sandbox mit Access Capacitor.',
     tags:['4 Schlüssel','sehr PvP-lastig'],
-    warn:'Die Positionen im Modell sind grob, weil die Guides die Wege meist nur von der Lobby aus beschreiben.',
+    warn:'Im Modell liegen beide Ebenen in einem Plan: Orte der unteren Ebene sind abgesenkt gezeichnet.',
+    /* Lage und Grösse: am 10.11.2026 an der interaktiven Karte von arcraidershub.com abgemessen (Ortsnamen, obere und untere Ebene).
+       Norden = -z. Räume als Rechtecke vereinfacht. Orte der unteren Ebene sind als flache, abgesenkte Flächen gezeichnet (fl -1).
+       Storage Room: laut Karte ganz im Osten der oberen Ebene, laut Guides über einen Tunnel erreichbar. */
     zones:[
-      {n:'', col:'rgba(120,130,150,.12)', p:[[-42,-26],[40,-26],[40,28],[-42,28]]},
-      {n:'Central Corridor', col:'rgba(150,160,180,.22)', p:[[-26,-2],[24,-2],[24,2],[-26,2]]}
+      {n:'', col:'rgba(120,130,150,.12)', p:[[-56,-32],[56,-32],[56,32],[-56,32]]},
+      {n:'Central Corridor', col:'rgba(150,160,180,.22)', p:[[-34,-10],[6,-10],[6,-6.5],[-34,-6.5]]}
     ],
     b:[
-      {id:'lob', name:'Lobby', x:0, z:0, w:14, d:12, fl:2},
-      {id:'sec', name:'Security Checkpoint', x:15, z:-6, w:8, d:8, fl:2},
-      {id:'asm', name:'Assembly', x:-14, z:-15, w:12, d:10, fl:2},
-      {id:'med', name:'Medical Research', x:-31, z:4, w:12, d:14, fl:2},
-      {id:'sto', name:'Storage Room (Tunnel)', x:12, z:17, w:8, d:6, fl:-1}
+      {id:'lob', name:'Lobby', x:14, z:-10.5, w:14, d:12, fl:2},
+      {id:'sec', name:'Security Checkpoint', x:14.5, z:-20, w:8, d:5, fl:2},
+      {id:'asm', name:'Assembly', x:-28.5, z:-14.5, w:12, d:8, fl:2},
+      {id:'med', name:'Medical Research', x:-41.5, z:12, w:14, d:14, fl:2},
+      {id:'sto', name:'Storage Room (Tunnel)', x:51, z:-2.5, w:8, d:6, fl:-1}
     ],
-    places:[['Business Center',30,-8,2,10,10],['Cafeteria',29,10,1,10,8],['Lobby Metro',2,13,1,6,4],['Assembly Workshops',-24,-23,2,10,6],['Western Tunnel',-8,-23,1,8,3],['Eastern Tunnel',37,3,1,4,8],['Communications',23,-18,2,6,6]],
+    places:[['Business Center',29.5,-4.5,2,8,6],['Cafeteria',3.5,15.5,1,10,8],['Lobby Metro',13,-28,-1,6,4],['Assembly Workshops',-27.5,-27,2,10,6],['Western Tunnel',-14,-17,-1,8,3],['Eastern Tunnel',46,13,-1,4,8],['Communications',16,9,2,6,6],
+      ['Atrium',12.5,19,1,8,6],['Auditorium',26.5,2,2,6,5],['Business Lounge',36.5,3.5,1,6,4],['Cultural Archives',35.5,12.5,2,12,10],['Loading Bay',-18.5,4.5,1,4,6],['Cargo Dock A',-24,8.5,1,4,20],['Cargo Dock B',-13,13.5,1,4,20],
+      ['Assembly Line',-38.5,-20,1,8,3],['Viewing Deck',-52,17,1,4,6],['Sandbox',-4,-2,-1,8,8],['Control Room',-5,26.5,-1,6,4]],
     r:[
       {b:'sec', fl:2, n:'Security Checkpoint', key:'Stella Montis Security Checkpoint Key', floor:'Obergeschoss',
         text:'Beim Security Bridge im Obergeschoss. Von der Lobby am Haupt-Checkpoint vorbei, in den kleinen Raum hinter der Security, am Ende links und dann rechts: Die erste Tür rechts ist der Checkpoint-Raum.',
         tags:['laut AltChar bester Raum der Map','Augment-Baupläne möglich']},
-      {b:'asm', fl:2, dx:4, dz:3, n:'Assembly Admin', key:'Stella Montis Assembly Admin Key', rar:'Ungewöhnlich', floor:'Obergeschoss, Südostseite',
+      {b:'asm', fl:2, dx:4, dz:2, n:'Assembly Admin', key:'Stella Montis Assembly Admin Key', rar:'Ungewöhnlich', floor:'Obergeschoss, Südostseite',
         text:'Im Obergeschoss an der Südostseite des Assembly-Bereichs. Der Admin-Gang liegt westlich der Lobby.'},
       {b:'med', fl:1, dx:-3, dz:3, n:'Medical Storage', key:'Stella Montis Medical Storage Key', rar:'Ungewöhnlich', floor:'Erdgeschoss',
         text:'In Medical Research auf der Westseite. Vom Südteil des Bereichs geradeaus, der Raum liegt dann links.'},
@@ -3368,25 +3431,30 @@ MAPS.riven = { name:'Riven Tides', short:'Riven Tides', ground:'#1d2624',
     intro:'Zehn Keycards in drei Clustern: sieben Zimmer im Hotel Panorama Azzurro an der Westküste, zwei Räume in der Port Authority am Hafen im Norden und die Kranhaus-Kabine im Stacking Yard. Die Hotelzimmer gelten als die besten Key-Räume überhaupt.',
     tags:['10 Keycards','Augment-Baupläne möglich'],
     warn:'Die erste Ziffer der Zimmernummer passt vermutlich zum Stockwerk. Offiziell bestätigt ist das nicht, das Modell setzt sie so.',
+    /* Lage und Grösse: am 10.11.2026 an der interaktiven Karte von arcraidershub.com abgemessen (Ortsnamen und Gebietsumrisse).
+       Norden = -z. Gebäude als Rechtecke vereinfacht. Das Hotel und die Orte am Strand liegen westlich des gemessenen Hauptbilds,
+       ihre Lage ist darum ungenauer. Dried Riverbed: nach dem Kartenbild zugeordnet, ohne Beschriftung (Annahme). */
     zones:[
-      {n:'Meer', col:'rgba(56,120,170,.42)', p:[[-52,-52],[-40,-52],[-42,-30],[-44,-8],[-47,20],[-46,52],[-52,52]]},
-      {n:'Hafenbecken', col:'rgba(56,120,170,.42)', p:[[-40,-52],[-22,-52],[-22,-42],[-42,-42]]},
-      {n:'Strand', col:'rgba(214,190,130,.3)', p:[[-44,-8],[-38,-8],[-36,44],[-46,44],[-47,20]]}
+      {n:'Meer', col:'rgba(56,120,170,.42)', p:[[-54,-58],[54,-58],[54,-48],[20,-44],[-10,-50],[-54,-46]]},
+      {n:'', col:'rgba(56,120,170,.42)', p:[[-54,-44],[-22,-40],[-25,-27],[-54,-25]]},
+      {n:'Hafenbecken', col:'rgba(56,120,170,.42)', p:[[-17,-35],[-9.5,-35],[-9,-19],[-17,-17]]},
+      {n:'Strand', col:'rgba(214,190,130,.3)', p:[[-49,-24],[-28,-24],[-26,-11],[-47,-9]]}
     ],
-    deco:[{t:'box', b:[0,16,0,3,-24,-19], col:[150,110,80]},{t:'box', b:[2,12,3,5.5,-24,-20], col:[90,120,150]},{t:'box', b:[2,16,0,2.6,-14,-10], col:[120,140,110]}],
+    trees:[{ box:[-52,17,-12,50], n:24, seed:5 }, { box:[-50,-8,-24,0], n:8, seed:9 }, { box:[8,36,40,52], n:14, seed:13 }],
     b:[
-      {id:'hot', name:'Hotel Panorama Azzurro', x:-27, z:8, w:14, d:18, fl:5},
-      {id:'pa', name:'Port Authority', x:-14, z:-34, w:12, d:10, fl:4},
-      {id:'sy', name:'Stacking Yard (Kräne)', x:8, z:-16, w:10, d:8, fl:1, tower:{w:3,d:3,fl:7}},
-      {id:'bb', name:'Beach Bar', x:-39, z:22, w:5, d:5, fl:1, kind:'land'}
+      {id:'hot', name:'Hotel Panorama Azzurro', x:-34, z:9, w:22, d:14, fl:5},
+      {id:'pa', name:'Port Authority', x:-1, z:-27, w:14, d:10, fl:4},
+      {id:'sy', name:'Stacking Yard (Kräne)', x:37, z:-5.5, w:10, d:8, fl:1, tower:{w:3,d:3,fl:7}},
+      {id:'bb', name:'Beach Bar', x:-38, z:-2.5, w:5, d:5, fl:1, kind:'land'}
     ],
-    places:[['Poolside',-30,27,1,7,5],['Azzurro Beach',-40,34,1,4,4],['Wharf',-40,6,1,4,8],['Customs House',2,-32,3,8,7],['Dried Riverbed',-20,42,1,8,4],['Weighing Checkpoint',40,40,1,6,4],['Wreckage',-37,-22,1,6,4]],
+    places:[['Poolside',-50,6,1,6,5],['Azzurro Beach',-37.5,-18,1,4,4],['Wharf',-20.5,-13.5,1,4,8],['Customs House',9.5,28,3,12,14],['Dried Riverbed',-4,8,1,8,4],['Weighing Checkpoint',32.5,18.5,1,6,4],['Wreckage',14,-23,1,6,4],
+      ['Wavebreaker',34.5,-37,1,8,3],['Railyard',27,11,1,8,5],['Special Handling Tunnel',21.5,25,1,5,4],['Transfer Depot',51,11.5,2,5,6]],
     r:[
       {b:'hot', fl:1, dx:-4, dz:-5, n:'Hotel, Zimmer 102', key:'Riven Tides Hotel Keycard No. 102', floor:'vermutlich 1. Ebene',
         text:'Zimmer 102 im Hotel Panorama Azzurro an der Westküste. Laut Timesaver eines der schwächeren Einzelzimmer, dafür schnell erledigt.', yaw:-.6},
       {b:'hot', fl:1, dx:0, dz:2, n:'Hotel, Zimmer 107', key:'Riven Tides Hotel Keycard No. 107', floor:'vermutlich 1. Ebene',
         text:'Die Keycard 107 gibt es über eine Riven-Tides-Questreihe. Laut Timesaver ist 107 und danach 208 eine der stärksten Hotel-Kombis.', yaw:-.6},
-      {b:'hot', fl:1, dx:4, dz:6, n:'Hotel, Zimmer 113', key:'Riven Tides Hotel Keycard No. 113', floor:'vermutlich 1. Ebene',
+      {b:'hot', fl:1, dx:4, dz:5, n:'Hotel, Zimmer 113', key:'Riven Tides Hotel Keycard No. 113', floor:'vermutlich 1. Ebene',
         text:'Zimmer 113 im Hotel. Keycards findest du in Containern, Schubladen und Spinden, am häufigsten im Hotel und in der Port Authority selbst.', yaw:-.6},
       {b:'hot', fl:2, dx:-3, dz:-3, n:'Hotel, Zimmer 205', key:'Riven Tides Hotel Keycard No. 205', floor:'vermutlich 2. Ebene',
         text:'Zimmer 205 im mehrstöckigen Hotel. Das Hotel ist vertikal und eng, rechne mit Kämpfen im Treppenhaus.', yaw:-.6},
@@ -3408,24 +3476,29 @@ MAPS.riven = { name:'Riven Tides', short:'Riven Tides', ground:'#1d2624',
 MAPS.pendola = { name:'Pendola Pass', short:'Pendola Pass', ground:'#27313b',
     intro:'Vier normale Schlüsselräume plus der Emperor-Dungeon, der den Gateway Conduit braucht. Orientierung: Almatera Village mit dem Fallen Emperor im Westen, der zugefrorene Fluss in der Mitte, Railyard und Freight Terminal im Osten, das Observatorium im Nordosten, der Southern Pass im Süden.',
     tags:['4 Schlüssel + Emperor','Türen können einfrieren'],
+    /* Lage und Grösse: am 10.11.2026 an der interaktiven Karte von arcraidershub.com abgemessen (Ortsnamen und Gebietsumrisse).
+       Norden = -z. Gebäude als Rechtecke vereinfacht. Auf der Karte beschriftet und abgemessen: Fallen Emperor, Almatera Station,
+       Old Town, Commissary Supermarket, Railroad Junction, Railyard, Loading Platforms, Observatory, Deep-Space Telescope, Old Hamlet
+       und die vier Gebiete. Alle anderen Orte: nicht beschriftet, Lage geschätzt (Annahme). Fluss und Berge: Form nach Kartenbild, Höhen geschätzt. */
     zones:[
-      {n:'Almatera Village', col:'rgba(160,170,185,.12)', p:[[-52,-24],[-16,-24],[-16,30],[-52,30]]},
-      {n:'Frozen River', col:'rgba(170,214,240,.38)', p:[[3,-52],[9,-52],[11,-20],[7,10],[11,52],[5,52],[1,10],[5,-20]]},
-      {n:'Southern Pass', col:'rgba(140,150,160,.12)', p:[[-24,40],[36,40],[36,52],[-24,52]]}
+      {n:'Almatera Village', col:'rgba(160,170,185,.12)', p:[[-52,-18],[-19,-22],[-15,6],[-22,22],[-50,18]]},
+      {n:'Frozen River', col:'rgba(170,214,240,.38)', p:[[-36,-56],[-28,-56],[-15,-37],[-13,-30],[-19,-30],[-25,-40]]},
+      {n:'Southern Pass', col:'rgba(140,150,160,.12)', p:[[10,38],[40,36],[42,54],[8,54]]}
     ],
-    ridges:[[-40,-50,-26,-44,9,10],[-26,-44,-12,-50,9,8],[-52,44,-28,46,7,7],[30,46,52,42,7,7]],
+    ridges:[[-54,-30,-45,-52,8,9],[12,-55,26,-52,8,9],[50,-8,52,30,8,9],[-54,26,-40,44,8,8],[-36,49,-6,53,9,8]],
+    trees:[{ box:[-10,26,8,48], n:12, seed:6 }, { box:[36,-20,50,30], n:12, seed:10 }, { box:[-50,22,-34,46], n:8, seed:14 }],
     b:[
-      {id:'emp', name:'Fallen Emperor (schematisch)', x:-30, z:-10, w:14, d:9, fl:4},
-      {id:'sta', name:'Almatera Station', x:-8, z:-2, w:14, d:8, fl:2},
-      {id:'old', name:'Old Town (Hotel Pensione)', x:-36, z:18, w:8, d:8, fl:3},
-      {id:'ry', name:'Railyard', x:28, z:6, w:14, d:10, fl:2},
-      {id:'obs', name:'Cielo Sereno Observatory', x:28, z:-32, w:10, d:10, fl:3},
-      {id:'com', name:'Commissary Supermarket', x:-2, z:22, w:10, d:8, fl:1, kind:'land'}
+      {id:'emp', name:'Fallen Emperor (schematisch)', x:-40.5, z:-9.5, w:22, d:12, fl:4},
+      {id:'sta', name:'Almatera Station', x:-11, z:-21.5, w:12, d:13, fl:2},
+      {id:'old', name:'Old Town (Hotel Pensione)', x:-28, z:11.5, w:8, d:8, fl:3},
+      {id:'ry', name:'Railyard', x:20.5, z:8.5, w:12, d:20, fl:2},
+      {id:'obs', name:'Cielo Sereno Observatory', x:34.5, z:-31, w:12, d:8, fl:3},
+      {id:'com', name:'Commissary Supermarket', x:-.5, z:-.5, w:8, d:12, fl:1, kind:'land'}
     ],
-    places:[['Piazza della Rupe',-24,6,1,6,6],['Porta Benvenuti',-47,-4,2,4,6],['Northern Tracks',-6,-46,1,10,3],['Dispatch Tower',-1,-40,5,3,3],
-      ['Researcher Lodgings',-16,-34,2],['Deep-Space Telescope',-26,-46,3,4,4],['Railroad Junction',24,-14,1,8,4],['Weather Station',44,-6,3,3,3],
-      ['Freight Terminal',33,14,2,8,6],['Controlled Receiving Facility',45,22,2],['Transit Tunnel',20,24,1,8,3],['Loading Platforms',40,34,1,8,5],
-      ['Old Hamlet',22,46,2],['Truck Stop',-6,45,1,6,4],['Electrical Substation',-18,44,2]],
+    places:[['Piazza della Rupe',-20,2,1,6,6],['Porta Benvenuti',-50,8,2,4,6],['Northern Tracks',3,-41,1,10,3],['Dispatch Tower',10,-35,5,3,3],
+      ['Researcher Lodgings',23,-39,2],['Deep-Space Telescope',34.5,-44,3,4,4],['Railroad Junction',13.5,-20.5,1,8,4],['Weather Station',47,-18,3,3,3],
+      ['Freight Terminal',31.5,12,2,8,6],['Controlled Receiving Facility',45,18,2],['Transit Tunnel',8,24,1,8,3],['Loading Platforms',31.5,26,1,8,5],
+      ['Old Hamlet',24.5,50,2],['Truck Stop',-6,44,1,6,4],['Electrical Substation',-20,40,2]],
     r:[
       {b:'sta', fl:1, dx:-4, n:'Bahnhof Almatera', key:'Pendola Pass Train Station Key', rar:'Selten', floor:'Erdgeschoss, Rezeption',
         text:'Almatera Station, der Bahnhof östlich vom Fallen Emperor. Von Westen rein zur Rezeption: Die Tür liegt links hinter dem Empfangstresen, erkennbar am rot leuchtenden Licht darüber.',
@@ -5611,6 +5684,57 @@ $('#qDetail').addEventListener('click', e => {
 });
 
 qRender(); pRender(); qSeason();
+/* @datei app/kern/queststand.js */
+/* ================= Quests: Stand einrichten =================
+   Einmalige Einrichtung: Pro Händler wählt man die Quest, an der man gerade ist. Alle Quests davor werden abgehakt,
+   die gewählte und alle danach gelten als offen. Auf Wunsch wird bei jedem Händler, dessen Auswahl man ändert, die gewählte Quest verfolgt («Mein Run»).
+   Annahme: Die Reihenfolge pro Händler entspricht der Reihenfolge in wissen/quests.js (so, wie die Quellen sie auflisten). */
+const stDlg = $('#stDlg');
+const ST_TR = Object.keys(QUEST_TRADER).filter(h => QUESTS.some(q => q.h === h));
+const stList = h => QUESTS.filter(q => q.h === h);
+/* Aktueller Stand eines Händlers: Index der ersten offenen Quest, wenn alle davor erledigt und alle danach offen sind. Sonst -1 (gemischt). */
+function stNow(h){
+  const L = stList(h), k = L.findIndex(q => !qDone(q)), n = k < 0 ? L.length : k;
+  return L.every((q, i) => qDone(q) === (i < n)) ? n : -1;
+}
+function stRender(){
+  $('#stRows').innerHTML = ST_TR.map(h => { const L = stList(h), now = stNow(h);
+    const opt = (v, t, sel) => `<option value="${v}"${sel ? ' selected' : ''}>${esc(t)}</option>`;
+    return `<li class="srow strow"><label for="st_${h}">${esc(QUEST_TRADER[h])}</label><select class="stsel" id="st_${h}" data-h="${h}" data-von="${now < 0 ? 'keep' : now}">`
+      + (now < 0 ? opt('keep', 'Nichts ändern', true) : '')
+      + L.map((q, i) => opt(i, (i + 1) + '. ' + qName(q), i === now)).join('')
+      + opt(L.length, 'Alle erledigt', now === L.length) + '</select></li>'; }).join('');
+  stInfo();
+}
+function stPlan(){
+  const plan = [];
+  stDlg.querySelectorAll('.stsel').forEach(s => { if (s.value === 'keep') return; const L = stList(s.dataset.h), k = +s.value;
+    const neu = s.value !== s.dataset.von;   // nur Händler, bei denen wirklich etwas gewählt wurde, ändern die Verfolgung
+    L.forEach((q, i) => plan.push({ q, done:i < k, cur:neu && i === k, neu })); });
+  return plan;
+}
+function stInfo(){
+  const p = stPlan(), ab = p.filter(x => x.done && !qDone(x.q)).length, auf = p.filter(x => !x.done && qDone(x.q)).length;
+  $('#stInfo').textContent = (ab || auf) ? `${ab} ${ab === 1 ? 'Quest wird' : 'Quests werden'} abgehakt` + (auf ? `, ${auf} wieder geöffnet` : '') + '.' : 'Keine Änderung an den Haken.';
+}
+function stOpen(){ stRender(); openModal(stDlg, '#stSave'); }
+function stApply(){
+  const p = stPlan(), verfolgen = $('#stTrack').checked;
+  for (const x of p){ if (x.done !== qDone(x.q)) qSetDone(x.q, x.done); }
+  if (verfolgen) for (const x of p){ if (x.neu && !x.cur && qTracked(x.q)) qTrack(x.q, false); }
+  if (verfolgen) for (const x of p){ if (x.cur && !qTracked(x.q)) qTrack(x.q, true); }
+  QS.s = 1; saveQS(); closeModal(stDlg); qRender(); hudRender(); stHint();
+}
+/* Hinweis oben in der Quest-Liste, solange noch nichts eingerichtet und nichts abgehakt ist */
+function stHint(){ $('#qHint').hidden = !!QS.s || QUESTS.some(qDone); }
+stDlg.addEventListener('change', e => { if (e.target.closest('.stsel')) stInfo(); });
+$('#stSave').addEventListener('click', stApply);
+$('#stCancel').addEventListener('click', () => closeModal(stDlg));
+stDlg.addEventListener('click', e => { if (e.target === stDlg) closeModal(stDlg); });
+$('#qSetupBtn').addEventListener('click', stOpen);
+$('#qHintGo').addEventListener('click', stOpen);
+$('#qHintNo').addEventListener('click', () => { QS.s = 1; saveQS(); stHint(); });
+stHint();
 /* @datei app/kern/meinrun.js */
 /* ================= Mein Run: Tracker auf der Karte =================
    Wie der Quest-Tracker im Spiel: verfolgte Quests mit Fortschritt der Materialien und die offene Einkaufsliste.
