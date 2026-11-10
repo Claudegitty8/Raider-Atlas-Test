@@ -576,6 +576,29 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
 .strow label{flex:none;max-width:42%}
 .stsel{flex:1 1 auto;min-width:0;max-width:62%;min-height:44px;padding:0 10px;border:0;border-radius:10px;background:var(--cell2);color:var(--ink);font:400 16px/1.2 var(--body);text-overflow:ellipsis}
 #stDlg .card header{grid-template-columns:minmax(96px,124px) minmax(0,1fr) minmax(96px,124px)}
+
+/* ================= Navi (Run planen und führen) ================= */
+.num.start{background:#F6C453;color:#1B1006}
+.num.start.on{background:var(--neon2);color:#06151a}
+.num.lootic{background:#12202a;box-shadow:inset 0 0 0 1.5px rgba(243,233,210,.35)}
+.num.lootic img{width:22px;height:22px}
+.navibox{display:flex;flex-direction:column;gap:10px}
+.navibox:empty{display:none}
+.navibox .btnrow{margin:0}
+.navibox .bp,.navibox .bs{min-height:46px}
+.navclock{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#0d0a07;box-shadow:inset 0 0 0 1px rgba(var(--neon2-rgb),.35)}
+.navclock .sub2{color:#C3B194}
+.lcd.big{font-size:38px;padding:4px 10px 2px;letter-spacing:.06em}
+.navnext{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:12px;background:var(--fill);box-shadow:inset 3px 0 0 var(--neon2)}
+.navnext b{font:600 19px/1.25 var(--display)}
+.navtime{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:15px}
+.navin{width:92px;min-height:40px;padding:0 10px;border:0;border-radius:10px;background:var(--cell2);color:var(--ink);font:400 22px/1 var(--lcd);text-align:center}
+.navbar{flex:1 1 auto;height:6px;border-radius:3px}
+.navbar i{height:6px}
+#naviDetail .group{margin:0 16px}
+#naviDetail .warn{margin:12px 16px 0}
+#naviDetail .srow select.stsel{max-width:62%}
+li.qd .row .t1{color:var(--muted)}
 /* @ende-dateien */
 </style>
 </head>
@@ -639,12 +662,18 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
       </section>
 
       <section class="page" id="pgRaids" data-page="raids" aria-labelledby="hRaids" hidden>
+        <div id="raidsRoot">
         <header class="lt"><h1 id="hRaids">Raids</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+        <h3 class="gh">Run planen</h3>
+        <ul class="group" id="naviMaps"></ul>
+        <p class="foot">Das Navi plant deinen Run auf einer Map: deine Quests, die Einkaufsliste und Top-Loot in der Nähe, vom Startpunkt bis zum Ausgang, in höchstens 29 Minuten.</p>
         <h3 class="gh">Geführte Runs</h3>
         <ul class="group" id="runList"></ul>
         <h3 class="gh">Kartenbedingungen</h3>
         <div class="group" id="condList"></div>
         <p class="foot">Weitere Kategorien lassen sich als neue Bereiche ergänzen.</p>
+        </div>
+        <div class="sdet" id="naviDetail" hidden></div>
       </section>
 
       <section class="page" id="pgQuests" data-page="quests" aria-labelledby="hQuests" hidden>
@@ -750,6 +779,7 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
         <p class="nextline"><button type="button" class="pill" id="nextBig"></button></p>
       </div>
       <div class="view" id="routeView" hidden>
+        <div class="navibox" id="naviBox" hidden></div>
         <ul class="group in" id="stopList"></ul>
         <p class="sub2" id="routeMiss" hidden></p>
         <div id="altWrap" hidden><p class="sub2">Andere Map wählen</p><div class="chipsrow wrap" id="altMaps"></div></div>
@@ -857,6 +887,9 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="runTitle">
     <header><button type="button" class="tbtn" id="runCancel">Abbrechen</button><h3 id="runTitle">Was hast du gefunden?</h3><button type="button" class="tbtn b" id="runSave">Sichern</button></header>
     <div class="cardbody">
+      <p class="foot" id="runQFoot" hidden>Hake die Quests ab, die du in diesem Run erledigt hast.</p>
+      <ul class="group in" id="runQList" hidden></ul>
+      <h3 class="gh" id="runMH" hidden>Materialien</h3>
       <p class="foot">Trag pro Material ein, wie viele du in diesem Run gefunden hast, oder hake es ganz ab.</p>
       <ul class="group in" id="runList2"></ul>
       <p class="foot" id="runEmpty" hidden>Alles auf deiner Liste ist erledigt.</p>
@@ -1893,6 +1926,12 @@ const INFO = {
     <li>Ein Raid dauert 30 Minuten (allthings.how). Die App plant höchstens 29 Minuten. Dauert es länger, fallen die Stopps mit den wenigsten Materialien weg, und die App sagt, welche.</li>
     <li>Laufen: Sprint rund 6,3 m/s für etwa 24,5 s, danach Jog rund 3,65 m/s, bis die Ausdauer nach etwa 22,6 s wieder voll ist (allthings.how). Der Lift fährt 90 s nach dem Ruf ab (8bittoast).</li>
     <li><span class="annt">Annahme</span> Für die Zeit rechnet die App mit im Mittel 5 m/s, 30 % Umweg, 1,5 Minuten Anlauf vom Spawn, 1,5 Minuten pro Stopp plus 0,5 Minuten pro weiteres Material und 2 Minuten am Ausgang (Raider Hatch 0,5 Minuten). Den Massstab der Karte habe ich nur für Dam (rund 11 m pro Einheit) und Spaceport (rund 12,5 m) aus Distanzen bei allthings.how abgeleitet, für die übrigen Karten ist er geschätzt.</li></ul>
+    <h4>Navi und Startpunkte</h4><ul>
+    <li>Das Navi (Bereich Raids, «Run planen») plant vom Startpunkt bis zum Ausgang: verfolgte Quests, pro Händler die nächste offene Quest, die Einkaufsliste und Top-Loot in der Nähe. Alles lässt sich einzeln abwählen.</li>
+    <li>Gelbe Punkte mit Nummer: mögliche Startpunkte. Abgelesen an den Karten von Arc Raiders Hub (Ebene «Raider Spawn») und Wand (Ebene «Spieler-Spawn»), am 10.11.2026. Die beiden Karten zeigen nicht dieselben Punkte: Die App nimmt beide, gleiche Punkte (höchstens 6 Einheiten auseinander) nur einmal. Pendola Pass gibt es nur bei Arc Raiders Hub. Die offizielle Seite nennt keine Startpunkte.</li>
+    <li>Startpunkte am Kartenrand liegen teils ausserhalb des 3D-Modells. Das Navi zeichnet sie am Rand und rechnet mit der echten Distanz.</li>
+    <li>Steigst du in eine laufende Runde ein, trägst du die Restzeit aus dem Spiel ein. Das Navi plant 1 Minute Reserve. Die Uhr im Run ist freiwillig und lässt sich jederzeit anpassen.</li>
+    <li><span class="annt">Annahme</span> Zeiten: Quest-Aufgabe an einem Ort 2 Minuten, Quest ohne Ort 1 Minute, Waffenkiste und Security-Spind 1 Minute, Rucksack 0,5 Minuten, Kampf pro ARC nach Gefahrenstufe (Beebom) 0,5 bis 5 Minuten, dazu ein wählbarer Puffer für ungeplante Kämpfe (0, 3 oder 6 Minuten). «In der Nähe» heisst höchstens 1 Minute Umweg. Reicht die Zeit nicht, fällt zuerst Top-Loot weg, dann Material, dann die nächsten Quests, zuletzt verfolgte Quests.</li></ul>
     <h4>Top-Loot</h4><ul>
     <li>Grüne Kiste: mögliche Fundorte von Waffenkisten (Arc Raiders Hub). Im Spiel sind sie grün, lang und haben gelbe Pfeile auf dem Deckel (Sportskeeda). Die Orte decken sich mit der Liste von Destructoid für Dam, Buried City, Spaceport und Blue Gate.</li>
     <li>Spind mit blauem Schloss: Security-Spinde, laut studio-asv Metallspinde mit schwachem blauem Leuchten (1 Quelle). Sie lassen sich nur mit dem Skill Security Breach öffnen, der 36 Punkte im Survival-Baum braucht (allthings.how, AltChar).</li>
@@ -1904,6 +1943,8 @@ const INFO = {
     SRC([['Embark: Hotfix 2.4.1 (offiziell)','https://arcraiders.com/news/hotfix-2-4-1'],
       ['Embark: Live Update 2.3.0 (offiziell)','https://arcraiders.com/news/live-update-2-3-0'],
       ['Arc Raiders Hub: interaktive Karten','https://arcraidershub.com/maps'],
+      ['Wand: interaktive Karten (Spieler-Spawns)','https://wand.com/maps/arc-raiders/dam-batlegrounds'],
+      ['Beebom: Alle ARC-Gegner (Gefahrenstufen)','https://beebom.com/all-arc-enemies-in-arc-raiders/'],
       ['allthings.how: Lifte','https://allthings.how/arc-raiders/map/elevators/'],
       ['allthings.how: Raider Hatches','https://allthings.how/arc-raiders/map/raider-hatches/'],
       ['allthings.how: Metro-Stationen','https://allthings.how/arc-raiders/map/metro-stations/'],
@@ -2292,10 +2333,9 @@ CHECK.maps.stella = {
     "Ausgänge: 2 Metro-Stationen, 1 Airshaft, 3 Raider Hatches",
     "4 Schlüssel"
   ],
-  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte, beide Ebenen (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte, beide Ebenen (abgemessen am 10.11.2026). Ausgänge und Top-Loot: Marker derselben Karte abgelesen (10.11.2026), Namen und Anzahl der Ausgänge mit allthings.how abgeglichen. Assembly Hatch auf der oberen Ebene abgelesen, Lage von Wand bestätigt (10.11.2026). Loot-Marker sind mögliche Fundorte, kein sicherer Loot",
   "ann": [
-    "Assembly Hatch: Lage nicht abgelesen. Laut Shacknews in der östlichen Ecke von Assembly, dort geschätzt gesetzt",
-    "Ausgänge und Top-Loot ohne Angabe der Ebene. Top-Loot im Westteil der oberen Ebene fehlt noch",
+        "Ausgänge und Top-Loot ohne Angabe der Ebene. Top-Loot im Westteil der oberen Ebene fehlt noch",
     "Räume sind als Rechtecke vereinfacht, beide Ebenen liegen in einem Plan",
     "Storage Room: laut Karte im Osten der oberen Ebene, im Modell abgesenkt gezeichnet",
     "sehr PvP-lastig"
@@ -3244,6 +3284,8 @@ function buildMap(m, id){
     for (const [t, n, x, z] of ex.ex) SP('exit', [x, 1.4, z], { t, n });
     for (const [k, key] of [['wcase','w'],['slock','s'],['pack','b']]) for (const [x, z, c] of ex[key]) SP(k, [x, 1.1, z], { c });
   }
+  /* Startpunkte (app/karten/startpunkte.js): gelbe Punkte mit Nummer, Ebene «Startpunkte» (aus beim ersten Öffnen) */
+  if (typeof MAP_START !== 'undefined' && MAP_START[id]) MAP_START[id].forEach((s, i) => SP('start', [clamp(s[0], -55, 55), 1.2, clamp(s[1], -55, 55)], { n:i + 1 }));
   m.steps = [{ phase:'Übersicht', title:m.name + ': alle Schlüsselräume', text:m.intro, tags:m.tags, warn:m.warn, ann:m.ann, src:m.src, cam:{ t:[0,0,2], yaw:.35, pitch:.95, dist:128, ov:true, mob:1.0 } }];
   for (const r of m.r){
     const b = B[r.b], y0 = roomY(b, r), x = b.x + (r.dx || 0), z = b.z + (r.dz || 0);
@@ -3598,7 +3640,7 @@ const MAP_EXTRA = {
     w:[[-31.0,-43.5],[-16.0,-39.5],[53.0,-41.0],[53.0,-40.0],[27.0,-36.0],[23.0,-34.0],[28.5,-33.5],[25.5,-33.0],[1.5,-29.5],[-34.5,-28.0],[-35.0,-26.5],[13.5,-27.5],[-31.5,-22.5],[-27.0,-22.5],[19.0,-25.5],[28.5,-25.0],[26.0,-22.5],[3.0,-19.5],[20.0,-19.5],[-36.0,-12.5],[24.0,-12.0],[6.0,-11.5],[-46.0,-6.5],[10.5,-8.0],[1.0,-4.0],[-15.0,-3.5],[-8.0,0.5],[14.5,2.5],[32.0,0.5],[0.0,11.0],[33.0,16.0],[-29.5,21.0],[7.5,45.0]],
     s:[[53.0,-39.5],[29.0,-29.5],[-35.5,-24.0],[13.5,18.5],[-15.0,35.0]],
     b:[[-37.5,-44.5],[-32.5,-44.5],[-18.0,-43.0],[-15.5,-39.5],[-5.0,-38.5],[0.0,-42.0],[3.5,-33.5],[21.5,-16.5],[-16.0,0.5],[-37.5,23.5],[-14.5,39.0],[7.5,49.5]] },
-  stella:{ ex:[["metro","Lobby Metro Station",12.0,-23.5],["metro","Loading Bay Metro Station",-24.5,18.5],["schacht","Seed Vault Airshaft",18.0,34.5],["hatch","Eastern Tunnel Hatch",33.0,21.0],["hatch","Sandbox Hatch",-3.5,32.0],["hatch","Assembly Hatch (Lage geschätzt)",-22.0,-14.5]],
+  stella:{ ex:[["metro","Lobby Metro Station",12.0,-23.5],["metro","Loading Bay Metro Station",-24.5,18.5],["schacht","Seed Vault Airshaft",18.0,34.5],["hatch","Eastern Tunnel Hatch",33.0,21.0],["hatch","Sandbox Hatch",-3.5,32.0],["hatch","Assembly Hatch",-16.0,-25.5]],
     w:[[5.5,-14.5],[17.0,-15.0],[23.0,-16.5],[24.0,-12.5],[29.5,1.0],[2.0,13.5],[-18.5,25.0],[29.0,35.5]],
     s:[[-14.5,-17.5],[-0.5,-10.5],[-13.0,-7.0],[20.5,-13.0],[-10.0,5.5],[-2.0,15.0]],
     b:[[6.0,-22.5],[11.5,-17.0],[9.5,-4.0],[-30.5,1.0]] },
@@ -3610,6 +3652,23 @@ const MAP_EXTRA = {
     w:[[3.5,-53.0],[2.0,-53.0],[8.5,-52.5],[-2.5,-43.5],[-11.0,-40.5],[35.5,-43.0],[-5.5,-38.0],[31.5,-33.5],[-17.0,-32.5],[-9.5,-31.5],[5.5,-30.5],[29.5,-30.0],[34.5,-28.5],[27.0,-24.5],[-14.0,-23.5],[-0.5,-24.0],[13.5,-21.0],[10.0,-18.0],[34.0,-10.0],[-3.0,-7.5],[-2.0,-5.5],[11.0,-5.5],[-26.5,-3.0],[-6.5,-3.0],[22.0,-2.5],[0.0,-2.0],[-3.5,0.5],[14.0,0.5],[31.0,-0.5],[-32.5,2.5],[-3.5,2.5],[-10.0,6.0],[-41.5,9.0],[-38.5,10.5],[17.0,11.0],[24.5,8.0],[25.5,11.0],[-35.0,13.5],[-28.0,14.0],[22.5,13.5],[-14.0,17.0],[19.0,19.5],[13.5,20.0],[-26.5,22.5],[5.5,21.5],[12.5,26.0],[32.5,25.5],[26.5,29.0],[32.5,29.0],[9.0,32.0],[23.5,52.0],[28.0,53.0]],
     s:[[-5.5,-37.0],[35.0,-34.0],[-13.5,-22.5],[13.5,-21.5],[-34.0,-0.5],[-3.5,-0.5],[13.5,-2.0],[-30.5,10.5],[-25.5,12.0],[16.5,10.0],[3.0,13.5],[18.0,17.0],[10.0,47.0],[35.5,45.0],[24.5,51.5]],
     b:[[-1.0,-53.0],[4.5,-53.0],[14.5,-53.0],[13.5,-53.0],[4.5,-53.0],[-10.5,-48.5],[2.0,-47.5],[0.0,-44.5],[-13.5,-36.0],[15.5,-38.5],[9.5,-27.5],[-18.5,-23.0],[-13.0,-17.0],[-12.5,-13.5],[5.5,-17.5],[17.5,-17.5],[-14.5,-5.0],[-22.0,-4.5],[-22.5,6.0],[-3.0,6.0],[5.5,7.0],[10.5,7.5],[23.0,1.0],[-33.0,22.0],[-2.0,19.5],[10.5,37.0],[36.5,32.5],[18.5,46.5],[41.5,39.5],[21.5,53.0],[-1.5,-9.0]] },
+};
+/* @datei app/karten/startpunkte.js */
+/* Startpunkte (Raider Spawns) pro Karte, für das Navi. Am 10.11.2026 an den sichtbaren Markern zweier Karten abgelesen
+   und über die Ausgänge (bekannte Lage) in Modell-Einheiten umgerechnet: Arc Raiders Hub (Ebene «Raider Spawn») und
+   Wand (Ebene «Spieler-Spawn»). Punkte, die beide Karten zeigen (höchstens 6 Einheiten auseinander), stehen einmal da,
+   mit der Lage von Arc Raiders Hub. Pendola Pass gibt es bei Wand nicht.
+   [x, z, Quelle, Ebene]  Quelle: hw beide, h nur Arc Raiders Hub, w nur Wand. Ebene (nur Stella Montis): o oben, u unten.
+   Werte über ±54 liegen ausserhalb des 3D-Modells (am Kartenrand); das Navi rechnet mit der echten Lage.
+   Erzeugt mit dem Messprotokoll in docs/KARTEN-ABGLEICH.md, nicht von Hand ändern ohne neue Messung. */
+const MAP_START = {
+  dam:[[0.5,-54.5,"hw"],[15.5,-50.5,"hw"],[-32.5,-47.0,"hw"],[-13.5,-46.0,"hw"],[26.0,-41.5,"hw"],[-46.0,-36.0,"hw"],[37.0,-35.0,"hw"],[18.5,-22.0,"hw"],[37.0,-15.5,"hw"],[-55.5,-15.0,"hw"],[-1.0,2.5,"hw"],[-55.5,4.0,"hw"],[1.0,4.5,"hw"],[35.0,18.5,"w"],[-46.0,19.0,"hw"],[-15.5,24.0,"hw"],[33.0,28.0,"hw"],[-39.0,30.5,"hw"],[-28.0,40.5,"hw"],[26.5,42.5,"hw"],[9.0,43.5,"hw"],[-15.5,44.0,"hw"]],
+  buried:[[4.5,-62.5,"hw"],[-17.5,-55.5,"hw"],[32.5,-48.5,"w"],[52.0,-38.0,"hw"],[-6.5,-28.5,"w"],[27.5,-27.5,"w"],[44.5,-14.0,"h"],[-55.0,-5.5,"hw"],[-17.0,-3.0,"w"],[21.5,5.5,"hw"],[21.0,19.5,"h"],[55.0,21.5,"h"],[79.0,21.5,"hw"],[-15.5,25.5,"w"],[1.5,25.5,"w"],[-61.5,29.0,"hw"],[34.0,35.0,"hw"],[-39.5,42.5,"w"],[37.0,50.0,"w"],[-7.5,54.0,"w"],[59.0,55.5,"hw"],[23.0,71.0,"w"]],
+  spaceport:[[-39.5,-70.5,"hw"],[2.5,-64.5,"hw"],[-21.5,-62.0,"w"],[-57.0,-55.5,"w"],[32.0,-38.0,"hw"],[-48.0,-37.5,"hw"],[-7.5,-37.5,"hw"],[-56.0,-29.0,"w"],[22.5,-28.0,"hw"],[57.5,-17.0,"hw"],[12.0,-13.0,"h"],[-44.0,-1.0,"w"],[55.5,0.5,"hw"],[52.5,12.0,"w"],[-42.5,16.5,"hw"],[-19.5,21.5,"hw"],[-34.5,34.5,"hw"],[53.0,37.5,"w"],[12.0,44.5,"hw"],[-10.5,45.5,"w"],[29.0,55.5,"w"]],
+  bluegate:[[-39.5,-51.0,"hw"],[-24.5,-50.0,"hw"],[34.5,-46.5,"w"],[0.0,-44.0,"hw"],[18.0,-43.0,"hw"],[-6.5,-41.0,"hw"],[30.0,-39.5,"h"],[-46.5,-38.5,"hw"],[-21.0,-38.5,"hw"],[52.5,-20.5,"hw"],[-60.0,-14.0,"hw"],[-36.0,-11.0,"hw"],[52.5,-7.0,"h"],[-34.5,0.0,"hw"],[-56.0,5.5,"hw"],[12.5,16.0,"w"],[-39.0,20.0,"h"],[-45.5,20.5,"hw"],[-34.0,25.0,"w"],[48.0,25.5,"hw"],[24.5,29.5,"hw"],[-20.0,30.0,"hw"],[-21.0,43.5,"h"],[0.5,58.0,"hw"]],
+  stella:[[22.0,-32.0,"h","o"],[0.0,-22.0,"h","o"],[37.5,-13.5,"w"],[48.5,-5.5,"h","o"],[-7.5,-3.0,"w"],[16.0,-1.5,"h","u"],[-34.0,7.0,"w"],[-54.5,8.5,"h","o"],[-4.0,19.0,"h","o"],[31.5,25.0,"w"],[-26.0,26.0,"hw","o"]],
+  riven:[[36.5,-43.0,"hw"],[81.5,-29.5,"hw"],[-25.5,-12.5,"w"],[-51.0,-7.0,"hw"],[72.0,-6.0,"hw"],[0.0,9.5,"h"],[2.5,16.5,"w"],[67.5,16.5,"h"],[-63.5,17.5,"hw"],[-54.0,26.5,"hw"],[-4.5,32.0,"h"],[56.5,32.0,"w"],[-38.5,35.0,"w"],[44.5,37.0,"w"],[-24.5,42.0,"w"],[1.5,44.5,"hw"],[-14.5,45.0,"w"]],
+  pendola:[[-2.0,-75.5,"h"],[10.0,-70.0,"h"],[21.5,-69.0,"h"],[37.5,-55.0,"h"],[-10.0,-48.0,"h"],[16.0,-39.0,"h"],[50.5,-38.5,"h"],[-20.5,-32.5,"h"],[55.5,-16.5,"h"],[34.0,-9.0,"h"],[14.5,13.0,"h"],[2.5,14.0,"h"],[-48.5,16.0,"h"],[-30.0,28.5,"h"],[10.5,36.0,"h"],[52.5,37.0,"h"],[48.5,46.5,"h"],[42.0,62.0,"h"],[6.5,64.5,"h"],[35.0,71.0,"h"],[17.5,72.5,"h"]],
 };
 /* @datei app/kern/pruefstand-anwenden.js */
 // Prüfstand auf Karten und Guides anwenden.
@@ -3630,13 +3689,13 @@ const VIEWS = {
 for (const id of MAP_ORDER){
   const m = MAPS[id];
   VIEWS[id] = { group:'keys', mapId:id, title:'Schlüsselräume · ' + m.name, build:() => buildMap(m, id), get steps(){ return m.steps; }, route:false,
-    ground:Object.assign({x0:-52,x1:52,z0:-52,z1:52,col:m.ground || '#1a222c'}, BASE_TEX[id]), layers:[['key','Schlüsselräume'],['exit','Ausgänge'],['wcase','Waffenkisten'],['slock','Security-Spinde'],['pack','Rucksäcke'],['lab','Labels']], info:INFO.keys };
+    ground:Object.assign({x0:-52,x1:52,z0:-52,z1:52,col:m.ground || '#1a222c'}, BASE_TEX[id]), layers:[['key','Schlüsselräume'],['exit','Ausgänge'],['start','Startpunkte'],['wcase','Waffenkisten'],['slock','Security-Spinde'],['pack','Rucksäcke'],['lab','Labels']], info:INFO.keys };
 }
 
 let viewId = 'fregatte', view = VIEWS.fregatte, mode = 'squad', cur = 0;
 const lastMap = { id:'dam' };
 const steps = () => view.modes ? view.modes[mode] : view.steps;
-const layers = { loot:true, core:true, hydra:true, hazard:true, lab:true, key:true, exit:true, wcase:true, slock:true, pack:true };
+const layers = { loot:true, core:true, hydra:true, hazard:true, lab:true, key:true, exit:true, wcase:true, slock:true, pack:true, start:false };
 /* @datei app/kern/kamera.js */
 /* ================= Kamera ================= */
 const cam = { tx:0, ty:13, tz:0, yaw:.6, pitch:.42, dist:110 };
@@ -3797,6 +3856,8 @@ function drawSprite(it){
   else if (k === 'wcase'){ const w = r*1.5, h = r*.75; ctx.moveTo(x-w+h, y-h); ctx.lineTo(x+w-h, y-h); ctx.arc(x+w-h, y, h, -Math.PI/2, Math.PI/2); ctx.lineTo(x-w+h, y+h); ctx.arc(x-w+h, y, h, Math.PI/2, Math.PI*1.5); ctx.closePath(); ctx.fillStyle = '#8be04e'; ctx.fill(); ctx.stroke(); }
   else if (k === 'slock'){ ctx.rect(x-r*.85, y-r, r*1.7, 2*r); ctx.fillStyle = '#f3e9d2'; ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y-r); ctx.lineTo(x, y+r); ctx.moveTo(x-r*.4, y-r*.1); ctx.lineTo(x-r*.4, y+r*.3); ctx.moveTo(x+r*.4, y-r*.1); ctx.lineTo(x+r*.4, y+r*.3); ctx.stroke(); }
   else if (k === 'pack'){ ctx.arc(x, y+r*.15, r*.95, 0, Math.PI*2); ctx.fillStyle = '#e0a458'; ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y-r*.75, r*.45, Math.PI, 0); ctx.stroke(); }
+  else if (k === 'start'){ const rr = r*1.25; ctx.arc(x, y, rr, 0, Math.PI*2); ctx.fillStyle = '#F6C453'; ctx.fill(); ctx.stroke();
+    if (rr > 6){ ctx.font = `700 ${Math.round(rr*1.15)}px "Jost", "Avenir Next", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#1B1006'; ctx.fillText(String(it.s.n), x, y + .5); ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic'; } }
   else { ctx.moveTo(x,y-r*1.3); ctx.lineTo(x+r*1.2,y+r*.9); ctx.lineTo(x-r*1.2,y+r*.9); ctx.closePath(); ctx.fillStyle='#ff5468'; ctx.fill(); ctx.stroke(); }
 }
 function draw(t){
@@ -4432,6 +4493,7 @@ function setTab(k){
   if (UI.tab === k && typeof matReset === 'function' && k === 'mat' && (isWide() || UI.screen === 'list')) matReset();
   if (UI.tab === k && k === 'arc' && (isWide() || UI.screen === 'list')) arcReset();
   if (UI.tab === k && k === 'quests' && (isWide() || UI.screen === 'list')) qReset();
+  if (UI.tab === k && k === 'raids' && (isWide() || UI.screen === 'list') && typeof naviClose === 'function') naviClose();
   UI.tab = k; appEl.dataset.tab = k;
   document.querySelectorAll('.page').forEach(p => p.hidden = p.dataset.page !== k);
   document.querySelectorAll('.tb, .sn').forEach(b => b.setAttribute('aria-current', b.dataset.tab === k ? 'page' : 'false'));
@@ -4511,7 +4573,8 @@ function renderMapBar(){
   const rOn = typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId;
   $('#mapTitle').textContent = isF ? 'ARC Frigate' : isE ? 'Emperor-Dungeon' : m.name;
   const nSt = rOn ? ROUTE.stops.filter(s => !s.exit).length : 0;
-  $('#mapSub').textContent = rOn ? (ROUTE.focus ? 'Fundort' : 'Route · ' + nSt + (nSt === 1 ? ' Stopp' : ' Stopps') + (ROUTE.min ? ' · ca. ' + Math.round(ROUTE.min) + ' min' : ''))
+  $('#mapSub').textContent = rOn && ROUTE.navi ? (ROUTE.pick ? 'Navi · Startpunkt wählen' : 'Navi · ' + ROUTE.stops.filter(s => !s.start && !s.exit).length + ' Stopps · ca. ' + Math.round(ROUTE.min) + ' min')
+    : rOn ? (ROUTE.focus ? 'Fundort' : 'Route · ' + nSt + (nSt === 1 ? ' Stopp' : ' Stopps') + (ROUTE.min ? ' · ca. ' + Math.round(ROUTE.min) + ' min' : ''))
     : isE ? 'im Fallen Emperor · Pendola Pass' : isF ? (mode === 'solo' ? 'Solo-Run' : 'Squad-Run') : m.r.length + ' Schlüsselräume';
   const bt = backTarget();
   $('#mapBackL').textContent = bt ? 'Pendola Pass' : { mat:'Materialsuche', raids:'Raids', arc:'ARC', quests:'Quests' }[UI.tab] || 'Karten';
@@ -4571,11 +4634,13 @@ function renderCard(){
 $('#roomList').addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b) goStep(+b.dataset.step); });
 function renderRunMini(){ const b = $('#btnRunMini'); if (!b) return;
   const rOn = typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId && !ROUTE.focus;
-  b.hidden = !(rOn && !isWide() && UI.d === 'mini'); appEl.dataset.runmini = b.hidden ? '0' : '1'; }
+  b.hidden = !(rOn && !isWide() && UI.d === 'mini'); appEl.dataset.runmini = b.hidden ? '0' : '1';
+  // Navi: im kleinen Infobereich direkt «Run starten» bzw. das aktuelle Ziel als erledigt melden
+  b.textContent = rOn && ROUTE.navi ? (typeof naviMiniLabel === 'function' ? naviMiniLabel() : 'Run starten') : 'Run beendet'; }
 
 // ---------- Ebenen ----------
 function renderLayers(){
-  const SW = { loot:'var(--loot)', core:'var(--core)', hydra:'var(--hydra)', hazard:'var(--hazard)', lab:'var(--muted)', key:'var(--key)', exit:'var(--exit)', wcase:'var(--wcase)', slock:'var(--slock)', pack:'var(--pack)' };
+  const SW = { loot:'var(--loot)', core:'var(--core)', hydra:'var(--hydra)', hazard:'var(--hazard)', lab:'var(--muted)', key:'var(--key)', exit:'var(--exit)', wcase:'var(--wcase)', slock:'var(--slock)', pack:'var(--pack)', start:'#F6C453' };
   $('#layerMenu').innerHTML = view.layers.map(([k, label]) => `<button type="button" role="menuitemcheckbox" aria-checked="${layers[k]}" data-layer="${k}"><span class="mk">${layers[k] ? '✓' : ''}</span><span class="sw" style="background:${SW[k]}"></span>${escH(label)}</button>`).join('')
     + '<button type="button" role="menuitem" data-act="cal"><span class="mk"></span>Eigene Karte …</button><button type="button" role="menuitem" data-act="info"><span class="mk"></span>Infos zur Ansicht …</button>';
 }
@@ -5400,10 +5465,11 @@ function mapRank(){
     return { m, cov, n, total:open.length };
   }).sort((a, b) => b.n - a.n || b.cov - a.cov);
 }
-function stopsFor(m){
-  const open = openItems().map(x => itemByName(x.n)).filter(Boolean);
+// Fundorte auf Map m für eine Liste von Materialien: pro Material der beste Ort, Orte mit mehreren Materialien bevorzugt.
+// Auch das Navi (app/kern/navi.js) plant damit.
+function matStopsOf(m, its){
   const stops = [], missing = [], other = [];
-  const rows = open.map(it => { const pl = placesOf(it); return { it, pl, all: pl.length ? Math.max(1, ...pl.map(p => p.score)) : 0 }; }).sort((a, b) => b.all - a.all);
+  const rows = its.map(it => { const pl = placesOf(it); return { it, pl, all: pl.length ? Math.max(1, ...pl.map(p => p.score)) : 0 }; }).sort((a, b) => b.all - a.all);
   for (const { it, pl, all } of rows){
     if (!pl.length){ other.push(dispName(it)); continue; }
     const cand = pl.filter(p => p.m === m && p.pos).sort((a, b) => b.score - a.score);
@@ -5413,8 +5479,12 @@ function stopsFor(m){
     for (const p of cand){ if (p.score < .7 * top) break; st = stops.find(s => s.name === p.n); if (st) break; }
     if (!st){ const p = cand[0]; st = { name:p.n, x:p.pos.x, z:p.pos.z, h:p.pos.h, r:p.pos.r, items:[] }; stops.push(st); }
     const p = cand.find(q => q.n === st.name) || cand[0];
-    st.items.push({ label:dispName(it), spot:!!p.spot, r:it.r || '' });
+    st.items.push({ label:dispName(it), spot:!!p.spot, r:it.r || '', n:it.n });
   }
+  return { stops, missing, other };
+}
+function stopsFor(m){
+  const { stops, missing, other } = matStopsOf(m, openItems().map(x => itemByName(x.n)).filter(Boolean));
   // höchstens 8 Stopps, die mit den meisten Materialien zuerst; der Rest passt nicht mehr in diesen Run
   stops.sort((a, b) => b.items.length - a.items.length);
   const over = stops.splice(8).flatMap(s => s.items.map(x => x.label));
@@ -5486,7 +5556,7 @@ function planRoute(m, stops, cut){
 }
 // src: woher die Route kommt, damit die App sie beim nächsten Öffnen wiederherstellen kann
 function startRoute(m, R, src){
-  openView(m, { from:UI.tab === 'karten' ? 'karten' : 'mat' });
+  openView(m, { from:['karten', 'raids'].includes(UI.tab) ? UI.tab : 'mat' });
   ROUTE = Object.assign({ view:m, i:0, src }, R);
   renderCard(); renderMapBar(); if (isWide()) revealSheet(); else setDetent('mini'); fitRoute(); dirty = true; wake();
 }
@@ -5513,13 +5583,17 @@ function fitRoute(){
   flyTo({ t:[cx, Math.max(2, hMax * .45), cz], yaw:.45, pitch:.98, dist:clamp(ext*1.45 + 34 + hMax * .3, 52, 160) });
 }
 function selectStop(i, quiet){
-  if (!ROUTE) return; ROUTE.i = clamp(i, 0, ROUTE.stops.length - 1); const s = ROUTE.stops[ROUTE.i];
+  if (!ROUTE) return;
+  if (ROUTE.pick){ naviPicked(i); return; }
+  ROUTE.i = clamp(i, 0, ROUTE.stops.length - 1); const s = ROUTE.stops[ROUTE.i];
   flyTo({ t:[s.x, s.h*.5 + 6, s.z], yaw:.45, pitch:.74, dist:60 }); renderRoutePanel(); if (!quiet) revealSheet(); dirty = true;
 }
 function clearRoute(silent){ ROUTE = null; routePins = []; dirty = true; if (!silent){ renderCard(); renderMapBar(); flyTo(steps()[0].cam); } }
 function renderRoutePanel(){
   const R = ROUTE, n = R.stops.length, nl = R.stops.filter(s => !s.exit).length;
   $('#cardView').hidden = true; if (!calOpen) $('#routeView').hidden = false;
+  $('#naviBox').hidden = !R.navi;
+  if (R.navi){ renderNaviPanel(); return; }
   $('#num').textContent = n ? `${String(R.i + 1).padStart(2,'0')} / ${String(n).padStart(2,'0')}` : '00';
   $('#phase').textContent = R.focus ? 'Fundort' : 'Route · ' + nl + (nl === 1 ? ' Stopp' : ' Stopps') + ' · ' + R.stops.reduce((a, s) => a + s.items.length, 0) + ' Materialien' + (R.min ? ' · ca. ' + Math.round(R.min) + ' min' : '');
   // Titel = aktueller Stopp: «Route auf …» steht schon in der Navigationsleiste und wurde im kleinen Sheet abgeschnitten
@@ -5570,6 +5644,7 @@ function drawRoute(t){
   const order = S.map((s, i) => i).sort((a, b) => (a === ROUTE.i) - (b === ROUTE.i));
   for (const i of order){
     const s = S[i], sel = i === ROUTE.i, R0 = s.r || 6;
+    ctx.globalAlpha = s.done ? .4 : 1;
     ring(s, R0); ctx.setLineDash([6,5]); ctx.strokeStyle = sel ? 'rgba(44,230,255,.95)' : 'rgba(255,62,165,.55)'; ctx.lineWidth = sel ? 2.4 : 1.6; ctx.stroke(); ctx.setLineDash([]);
     if (sel){ ring(s, R0 + ph*6); ctx.strokeStyle = `rgba(44,230,255,${.7*(1-ph)})`; ctx.lineWidth = 2; ctx.stroke(); }
     const qt = toCam([s.x, s.h + (sel ? 6 : 4), s.z]); if (qt[2] < NEAR) continue;
@@ -5578,14 +5653,16 @@ function drawRoute(t){
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     const r = sel ? 13 : 10.5;
     ctx.beginPath(); ctx.arc(x1, y1 - r + 1, r, 0, Math.PI*2);
-    ctx.save(); ctx.shadowColor = sel || s.exit ? 'rgba(44,230,255,.9)' : 'rgba(255,62,165,.9)'; ctx.shadowBlur = 12; ctx.fillStyle = sel || s.exit ? '#2CE6FF' : '#FF3EA5'; ctx.fill(); ctx.restore();
+    const amber = s.start && !sel;
+    ctx.save(); ctx.shadowColor = amber ? 'rgba(246,196,83,.9)' : sel || s.exit ? 'rgba(44,230,255,.9)' : 'rgba(255,62,165,.9)'; ctx.shadowBlur = 12; ctx.fillStyle = amber ? '#F6C453' : sel || s.exit ? '#2CE6FF' : '#FF3EA5'; ctx.fill(); ctx.restore();
     ctx.strokeStyle = 'rgba(10,6,8,.85)'; ctx.lineWidth = 1.4; ctx.stroke();
     const im = s.exit && MARK_IMG[s.exit];
     if (im && im.ok){ const g = r * 1.75; ctx.beginPath(); ctx.arc(x1, y1 - r + 1, r - 1.2, 0, Math.PI*2); ctx.fillStyle = '#12202a'; ctx.fill(); ctx.drawImage(im, x1 - g/2, y1 - r + 1 - g/2, g, g); }
-    else { ctx.font = `700 ${sel ? 13 : 11.5}px "Jost", "Avenir Next", sans-serif`; ctx.fillStyle = '#12060C'; ctx.fillText(s.exit ? 'A' : String(i + 1), x1, y1 - r + 1.5); }
+    else { ctx.font = `700 ${sel ? 13 : 11.5}px "Jost", "Avenir Next", sans-serif`; ctx.fillStyle = '#12060C';
+      ctx.fillText(s.pin || (s.start ? 'S' : s.exit ? 'A' : String(i + (S[0].start ? 0 : 1))), x1, y1 - r + 1.5); }
     if (sel){
       ctx.font = '600 12px "Barlow", system-ui, sans-serif';
-      const txt = s.exit ? 'Ausgang: ' + s.name : s.name, w = ctx.measureText(txt).width + 14;
+      const txt = s.exit ? 'Ausgang: ' + s.name : s.start && !ROUTE.pick ? 'Start ' + (s.si + 1) + ': ' + s.name : s.name, w = ctx.measureText(txt).width + 14;
       // Schild über dem Pin; liegt es unter Mini-Karte, Zoom-Tasten oder Leisten: darunter, links oder rechts davon
       const lw = Math.max(w, 130), ov = overlayRects();
       const clash = (bx, by, dn) => { const t = dn ? by : by - 18, b = dn ? by + 40 : by + 20;
@@ -5602,6 +5679,7 @@ function drawRoute(t){
       ctx.font = '500 10.5px "Barlow", system-ui, sans-serif'; ctx.fillStyle = 'rgba(243,233,210,.8)';
       ctx.fillText('Lage im Modell: Annahme', mx, dn ? by + 30 : by - 10);
     }
+    ctx.globalAlpha = 1;
     routePins.push({ idx:i, x:x1, y:y1 - r });
     // Liegt der gewählte Stopp nach dem Kameraflug unter Leiste oder Mini-Karte: einmal direkt hinfliegen
     if (sel && !anim && !ROUTE.adj){ ROUTE.adj = true;
@@ -5614,10 +5692,10 @@ function drawRoute(t){
 // ---------- Run beendet ----------
 const runDlg = $('#runDlg');
 let runFound = {}, runDone = {};
-function openRunDlg(){ runFound = {}; runDone = {}; renderRun(); openModal(runDlg, '#runSave'); }
+function openRunDlg(){ runFound = {}; runDone = {}; naviRunOpen(); renderRun(); openModal(runDlg, '#runSave'); }
 function renderRun(){
-  const op = openItems();
-  $('#runEmpty').hidden = !!op.length; $('#runList2').hidden = !op.length;
+  const op = openItems(), nq = naviRunRender();
+  $('#runEmpty').hidden = !!op.length || nq > 0; $('#runList2').hidden = !op.length; $('#runMH').hidden = !op.length || !nq;
   $('#runList2').innerHTML = op.map(x => { const it = itemByName(x.n), f = runFound[x.n] || 0, dn = !!runDone[x.n], nm = esc(dispName(it)), i = LIST.indexOf(x);
     return `<li${rrCls(it.r)}><div class="row static"><button type="button" class="check done" data-done="${i}" aria-pressed="${dn}" aria-label="${dn ? 'Nicht mehr abgehakt' : 'Abhaken'}: ${nm}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path class="tick" d="M7.5 12.5l3 3 6-6.5"/></svg></button>`
       + `<span class="rt"><span class="t1">${nm}</span><span class="t2">${rTag(it.r)}${dn ? 'Abgehakt' : 'Noch ' + (x.need - x.have) + ' von ' + x.need + (f ? ' · danach noch ' + Math.max(0, x.need - x.have - f) : '')}</span></span>`
@@ -5630,11 +5708,13 @@ $('#runList2').addEventListener('click', e => {
 $('#runCancel').addEventListener('click', () => closeModal(runDlg));
 $('#runSave').addEventListener('click', () => {
   for (const x of LIST){ if (runDone[x.n]) x.have = x.need; else x.have = Math.min(x.need, x.have + (runFound[x.n] || 0)); }
+  naviRunSave();
   saveList(); closeModal(runDlg); shopRender();
   if (openItems().length){ if (RUN){ RUN.at = Date.now(); saveRun(); } } else { RUN = null; saveRun(); }
   if (ROUTE && !ROUTE.focus){ const v = ROUTE.view; ROUTE = Object.assign({ view:v, i:0, focus:false, label:'', src:{ k:'route', m:v } }, stopsFor(v)); renderCard(); renderMapBar(); }
 });
-['#btnRunL', '#btnRunR', '#btnRunMini'].forEach(s => $(s).addEventListener('click', openRunDlg));
+['#btnRunL', '#btnRunR'].forEach(s => $(s).addEventListener('click', openRunDlg));
+$('#btnRunMini').addEventListener('click', () => { if (ROUTE && ROUTE.navi) naviMini(); else openRunDlg(); });
 
 // ---------- Nachfrage nach dem Run ----------
 const askDlg = $('#askDlg');
@@ -6030,6 +6110,487 @@ $('#hudBody').addEventListener('click', e => {
 });
 if (window.ResizeObserver) new ResizeObserver(() => measureTop()).observe(hudEl);
 HUD_OK = true;
+/* @datei app/kern/navi.js */
+/* ================= Navi: Run planen und führen =================
+   Der Nutzer wählt eine Map und seinen Startpunkt. Das Navi stellt zusammen, was sich dort lohnt:
+   - Quests: die verfolgten und pro Händler die nächste offene Quest (Entscheid des Nutzers, 10.11.2026), soweit sie auf dieser Map gehen.
+     Quest mit Ort = fester Stopp. ARC-Ziel = «unterwegs» mit Kampfzeit nach Gefahrenstufe. Ohne Ort = «unterwegs».
+   - Einkaufsliste: offene Materialien und die Materialien der gewählten Quests, je am besten Fundort (wie die Materialsuche).
+   - Top-Loot in der Nähe: Waffenkisten und Rucksäcke, Security-Spinde nur mit «Security Breach», wenn der Umweg klein ist.
+   - Ausgang: frei zugänglich (Lift, Metro, Airshaft, Gondel), mit Raider Hatch Key auch eine Hatch, wenn die Bedingung sie erlaubt.
+   Jede Route beginnt am Startpunkt, endet an einem Ausgang und passt in die Restzeit minus 1 Minute (Vorgabe: höchstens 29 Minuten).
+   Reicht die Zeit nicht, fällt zuerst Top-Loot weg, dann Material, dann die nächsten Quests, zuletzt verfolgte Quests.
+   Im Run: optionale Uhr (Restzeit aus dem Spiel eingebbar), nächstes Ziel mit Richtung und Distanz, Vorschläge bei Rückstand.
+   Zeiten sind Schätzungen (Annahme), siehe NZ und RZ (materialsuche.js). Startpunkte: app/karten/startpunkte.js. */
+const NAVI_KEY = 'raider-atlas:navi';
+let NAVI = { m:null, start:{}, exit:{}, rest:'30:00', cond:'normal', puffer:1, key:false, sb:false, uhr:false, sel:{}, run:null };
+try { const s = JSON.parse(localStorage.getItem(NAVI_KEY) || 'null'); if (s && typeof s === 'object') Object.assign(NAVI, s); } catch(_){}
+['start', 'exit', 'sel'].forEach(k => { if (!NAVI[k] || typeof NAVI[k] !== 'object') NAVI[k] = {}; });
+const saveNavi = () => { try { localStorage.setItem(NAVI_KEY, JSON.stringify(NAVI)); } catch(_){} };
+
+/* Zeiten in Minuten (Annahme, nicht belegt): Anlauf vom bekannten Startpunkt, Quest-Aufgabe an einem Ort, Quest ohne Ort,
+   Waffenkiste und Security-Spind öffnen, Rucksack durchsuchen, «in der Nähe» = höchstens 1 Minute Umweg, höchstens 6 Loot-Stopps.
+   Sicherheit: 1 Minute vor Rundenende draussen sein. Kampf pro ARC nach der Gefahr laut Beebom (0 bis 5). */
+const NZ = { anlauf:.5, anlaufOhne:1.5, quest:2, unterwegs:1, wcase:1, slock:1, pack:.5, nah:1, maxLoot:6, sicher:1, merge:3 };
+const KAMPF = [.5, .5, 1, 2, 3.5, 5];
+const PUFFER = [0, 3, 6];
+const NAVI_COND = [['normal', 'Normal'], ['nightraid', 'Night Raid'], ['emstorm', 'Electromagnetic Storm'], ['frigate', 'ARC Frigate'],
+  ['bunker', 'Hidden Bunker'], ['gate', 'Locked Gate'], ['andere', 'Andere Bedingung']];
+const HATCH_ZU = { nightraid:1, emstorm:1, frigate:1, bunker:1, gate:1 };   // Raider Hatches gesperrt (allthings.how)
+const LOOT_ART = { w:['wcase', 'Waffenkiste', NZ.wcase], b:['pack', 'Rucksack', NZ.pack], s:['slock', 'Security-Spind', NZ.slock] };
+const PRIO_NAME = { 4:'verfolgte Quest', 3:'nächste Quest', 2:'Material', 1:'Top-Loot' };
+const NAVI_SRC = [
+  ['Arc Raiders Hub: interaktive Karten (Startpunkte, Ausgänge)', 'https://arcraidershub.com/maps/dam-battlegrounds'],
+  ['Wand: interaktive Karten (Spieler-Spawns)', 'https://wand.com/maps/arc-raiders/dam-batlegrounds'],
+  ['allthings.how: Laufen und Ausdauer', 'https://allthings.how/?p=3371'],
+  ['8bittoast: Lift fährt 90 s nach dem Ruf', 'https://8bittoast.com/how-to-extract-arc-raiders/'],
+  ['allthings.how: Raider Hatches', 'https://allthings.how/arc-raiders/map/raider-hatches/'],
+  ['Beebom: Alle ARC-Gegner (Gefahrenstufen)', 'https://beebom.com/all-arc-enemies-in-arc-raiders/']
+];
+
+// ---------- Hilfen ----------
+const mmss = s => { const v = Math.max(0, Math.round(s)); return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0'); };
+function parseRest(t){ const m = /^\s*(\d{1,2})(?:[:.,](\d{1,2}))?\s*$/.exec(String(t || '')); if (!m) return null;
+  const s = (+m[1]) * 60 + (+(m[2] || 0)); return s > 0 && s <= 45 * 60 ? s : null; }
+const naviBudget = () => (parseRest(NAVI.rest) || 1800) / 60 - NZ.sicher;
+const fmin = x => (Math.round(x * 2) / 2).toString().replace('.', ',');
+const walkMin = (m, L) => L * (MAP_M[m] || 12) * RZ.umweg / RZ.lauf / 60;
+const meters = (m, d) => Math.round(d * (MAP_M[m] || 12) / 10) * 10;
+const DIR8 = ['Norden', 'Nordosten', 'Osten', 'Südosten', 'Süden', 'Südwesten', 'Westen', 'Nordwesten'];
+const DIR8A = ['nördlich', 'nordöstlich', 'östlich', 'südöstlich', 'südlich', 'südwestlich', 'westlich', 'nordwestlich'];
+const dirIdx = (dx, dz) => ((Math.round(Math.atan2(dx, -dz) / (Math.PI / 4)) % 8) + 8) % 8;   // Norden = -z
+const clampM = v => clamp(v, -55, 55);
+// Benannte Orte einer Map mit Lage im Modell (für Namen der Startpunkte und Top-Loot)
+const NAV_PL = {};
+function namedPlaces(m){
+  if (NAV_PL[m]) return NAV_PL[m];
+  const names = new Set([...(MAPS[m].places || []).map(p => p[0]), ...PLACES.filter(p => p.m === m).map(p => p.n)]);
+  return NAV_PL[m] = [...names].map(n => Object.assign({ n }, placePos(m, n) || {})).filter(p => p.x != null);
+}
+function nearPlace(m, x, z){ let b = null, bd = 1e9; for (const p of namedPlaces(m)){ const d = Math.hypot(p.x - x, p.z - z); if (d < bd){ bd = d; b = p; } } return b ? { p:b, d:bd } : null; }
+function whereText(m, x, z){
+  const np = nearPlace(m, x, z); if (!np) return 'auf der Karte';
+  if (np.d < 4) return 'bei ' + np.p.n;
+  return DIR8A[dirIdx(x - np.p.x, z - np.p.z)] + ' von ' + np.p.n;
+}
+
+// ---------- Startpunkte ----------
+const startsOf = m => (typeof MAP_START !== 'undefined' && MAP_START[m]) || [];
+const SRC_TXT = { hw:'Arc Raiders Hub und Wand', h:'nur Arc Raiders Hub', w:'nur Wand' };
+function startInfo(m, i){
+  const s = startsOf(m)[i]; if (!s) return null;
+  const aus = Math.abs(s[0]) > 54 || Math.abs(s[1]) > 54;
+  const eb = s[3] === 'o' ? ', obere Ebene' : s[3] === 'u' ? ', untere Ebene' : '';
+  const name = whereText(m, clampM(s[0]), clampM(s[1])) + (aus ? ' (Kartenrand)' : '') + eb;
+  return { i, x:s[0], z:s[1], src:s[2], name, label:(i + 1) + ' · ' + name, aus };
+}
+const naviStart = m => { const i = NAVI.start[m]; return i == null ? null : startInfo(m, i); };
+
+// ---------- Quests ----------
+const ARC_RE = ARCS.map(a => ({ a, re:new RegExp('\\b(' + [a.n, a.de].filter(Boolean).map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'i') }));
+function questArcs(q){
+  const txt = q.ziel + ' ' + q.need.map(x => x.n).join(' ');
+  const L = ARC_RE.filter(r => r.re.test(txt)).map(r => r.a);
+  if (!L.length && /zerstör/i.test(q.ziel)){ const n = +((/(\d+)\s+ARC/i.exec(q.ziel) || [])[1] || 1); for (let i = 0; i < Math.min(n, 3); i++) L.push({ n:'ARC', de:'ARC', t:1 }); }
+  return L;
+}
+function naviQuests(m){
+  const out = [], seen = new Set();
+  const add = (q, prio) => { if (seen.has(q.en) || qDone(q) || !(q.maps.includes(m) || q.maps.includes('*'))) return; seen.add(q.en); out.push({ q, prio }); };
+  QUESTS.filter(qTracked).forEach(q => add(q, 4));
+  for (const h of ST_TR){ const nx = stList(h).find(q => !qDone(q)); if (nx) add(nx, 3); }
+  return out.map(c => {
+    const q = c.q, arcs = questArcs(q), orte = q.orte.filter(o => o.m === m && placePos(m, o.n));
+    const fight = arcs.reduce((a, x) => a + KAMPF[x.t || 0], 0);
+    const mats = q.need.filter(x => !x.quest && x.c !== 0 && itemByName(x.n)).map(x => itemByName(x.n))
+      .filter(it => !(it.arc && arcs.some(a => it.arc.includes(a.n))));      // ARC-Teile kommen aus dem Kampf
+    return Object.assign(c, { key:'q:' + q.en, arcs, orte, fight, mats });
+  });
+}
+
+// ---------- Planen ----------
+function naviOrder(A, S, E){
+  if (!S.length) return [];
+  let o = [], r = S.slice(), cur = A || null;
+  if (!cur){ cur = E ? S.slice().sort((a, b) => dist2(b, E) - dist2(a, E))[0] : S[0]; }
+  while (r.length){ let bi = 0; r.forEach((s, i) => { if (dist2(s, cur) < dist2(r[bi], cur)) bi = i; }); cur = r.splice(bi, 1)[0]; o.push(cur); }
+  let better = true, guard = 0;
+  while (better && guard++ < 60){ better = false;
+    for (let i = 0; i < o.length - 1; i++) for (let j = i + 1; j < o.length; j++){
+      const a = i ? o[i - 1] : A, b = o[i], c = o[j], d = j + 1 < o.length ? o[j + 1] : E;
+      const before = (a ? dist2(a, b) : 0) + (d ? dist2(c, d) : 0), after = (a ? dist2(a, c) : 0) + (d ? dist2(b, d) : 0);
+      if (after + 1e-6 < before){ o = o.slice(0, i).concat(o.slice(i, j + 1).reverse(), o.slice(j + 1)); better = true; } } }
+  return o;
+}
+const pathOf = (A, o, E) => pathLen([A, ...o, E].filter(Boolean));
+const stopMin = s => s.items.reduce((a, x) => a + (x.t || 0), 0) + (s.items.some(x => x.kind === 'm') ? RZ.stopp + Math.max(0, s.items.filter(x => x.kind === 'm').length - 1) * RZ.item : 0);
+function naviExits(m){
+  const ex = (typeof MAP_EXTRA !== 'undefined' && MAP_EXTRA[m] ? MAP_EXTRA[m].ex : []).map(e => ({ t:e[0], name:e[1], x:e[2], z:e[3] }));
+  const hatchOk = NAVI.key && !HATCH_ZU[NAVI.cond];
+  return ex.filter(e => EXIT_FREI[e.t] || (e.t === 'hatch' && hatchOk));
+}
+const exitMin = E => E ? (E.t === 'hatch' ? RZ.hatch : RZ.aus) : 0;
+
+function naviPlan(m){
+  const budget = naviBudget(), st = naviStart(m), A = st ? { x:st.x, z:st.z } : null;
+  const on = (key, def) => NAVI.sel[key] === undefined ? def : !!NAVI.sel[key];
+  // Quests
+  const QC = naviQuests(m);
+  for (const c of QC) c.on = on(c.key, true);
+  // Materialien: offene Einkaufsliste plus Materialien der gewählten Quests, die noch nicht auf der Liste stehen
+  const its = openItems().map(x => itemByName(x.n)).filter(Boolean);
+  const qOf = new Map();
+  for (const c of QC) if (c.on) for (const it of c.mats){ if (!its.includes(it) && !inList(it.n)) its.push(it); if (!qOf.has(it.n)) qOf.set(it.n, qName(c.q)); }
+  const MS = matStopsOf(m, its);
+  const MC = [];
+  for (const s of MS.stops) for (const x of s.items) MC.push({ n:x.n, label:x.label, r:x.r, spot:x.spot, place:s.name, key:'m:' + x.n, quest:qOf.get(x.n) || '', on:on('m:' + x.n, true) });
+  // Kern-Stopps: Quest-Orte und Material-Orte, je Ort ein Stopp
+  const stops = [], byName = new Map();
+  const stopAt = (name, pos) => { if (byName.has(name)) return byName.get(name); const s = { name, x:pos.x, z:pos.z, h:pos.h || 0, r:pos.r || 6, items:[] }; byName.set(name, s); stops.push(s); return s; };
+  for (const c of QC){ if (!c.on) continue;
+    for (const o of c.orte){ const s = stopAt(o.n, placePos(m, o.n)); s.items.push({ kind:'q', key:c.key, label:qName(c.q), prio:c.prio, t:NZ.quest }); } }
+  for (const s0 of MS.stops) for (const x of s0.items){ const mc = MC.find(c => c.n === x.n); if (!mc || !mc.on) continue;
+    const s = stopAt(s0.name, s0); s.items.push({ kind:'m', key:mc.key, label:x.label, r:x.r, spot:x.spot, prio:mc.quest && !inList(x.n) ? 3 : 2, t:0 }); }
+  // Top-Loot: alle Fundorte dieser Map; vom Nutzer erzwungene kommen in den Kern
+  const LX = (typeof MAP_EXTRA !== 'undefined' && MAP_EXTRA[m]) || {};
+  const LC = [];
+  for (const k of ['w', 'b', 's']){ if (k === 's' && !NAVI.sb) continue; const [kind, label, t] = LOOT_ART[k];
+    for (const p of (LX[k] || [])){ const key = 'l:' + kind + ':' + p[0] + ',' + p[1], n = p[2] || 1;
+      LC.push({ kind, label:n > 1 ? n + ' ' + (k === 'w' ? 'Waffenkisten' : k === 'b' ? 'Rucksäcke' : 'Security-Spinde') : label, x:p[0], z:p[1], key, t:t * n, sel:NAVI.sel[key], where:whereText(m, p[0], p[1]) }); } }
+  const lootStop = l => ({ name:l.label + ' ' + l.where, x:l.x, z:l.z, h:0, r:3, loot:true, items:[{ kind:'l', key:l.key, label:l.label, prio:1, t:l.t }] });
+  const attach = (l, S) => { const near = S.find(s => !s.loot && Math.hypot(s.x - l.x, s.z - l.z) <= NZ.merge); if (near){ near.items.push({ kind:'l', key:l.key, label:l.label, prio:1, t:l.t }); return true; } return false; };
+  let S = stops.slice();
+  for (const l of LC) if (l.sel === true){ if (!attach(l, S)) S.push(lootStop(l)); }
+  // Quests ohne Stopp: Kampf und «unterwegs»
+  const extra = () => QC.filter(c => c.on && !c.cut).reduce((a, c) => a + (c.fight || 0) + (!c.orte.length && !c.fight ? NZ.unterwegs : 0), 0);
+  // Ausgang: gewählt oder der, der die ganze Route am kürzesten macht
+  const exits = naviExits(m), want = exits.find(e => e.name === NAVI.exit[m]);
+  const total = (S0, E) => { const o = naviOrder(A, S0, E); const L = pathOf(A, o, E);
+    return { o, E, L, T:(A ? NZ.anlauf : NZ.anlaufOhne) + walkMin(m, L) + o.reduce((a, s) => a + stopMin(s), 0) + extra() + exitMin(E) + PUFFER[NAVI.puffer] }; };
+  const best = S0 => { if (want) return total(S0, want); let b = null; for (const E of (exits.length ? exits : [null])){ const r = total(S0, E); if (!b || r.T < b.T) b = r; } return b; };
+  let P = best(S);
+  // Zu lang: nach Priorität streichen (Top-Loot, Material, nächste Quest, verfolgte Quest)
+  const cut = [];
+  const cutQuest = key => { const c = QC.find(x => x.key === key); if (c) c.cut = true; };
+  while (P.T > budget){
+    const cands = [];
+    S.forEach((s, i) => cands.push({ i, prio:Math.max(...s.items.map(x => x.prio)), n:s.items.length }));
+    QC.forEach(c => { if (c.on && !c.cut && !c.orte.length && (c.fight || 1)) cands.push({ q:c, prio:c.prio, n:1 }); });
+    if (!cands.length) break;
+    const minP = Math.min(...cands.map(c => c.prio)), few = cands.filter(c => c.prio === minP);
+    const minN = Math.min(...few.map(c => c.n));
+    let bc = null, bT = 1e9;
+    for (const c of few.filter(x => x.n === minN)){
+      if (c.q){ c.q.cut = true; const r = best(S); c.q.cut = false; if (r.T < bT){ bT = r.T; bc = c; } }
+      else { const r = best(S.filter((_, j) => j !== c.i)); if (r.T < bT){ bT = r.T; bc = c; } }
+    }
+    if (bc.q){ bc.q.cut = true; cut.push(qName(bc.q.q)); }
+    else { const s = S.splice(bc.i, 1)[0]; for (const x of s.items){ cut.push(x.label); if (x.kind === 'q') cutQuest(x.key); x.cut = true; const mc = MC.find(c => c.key === x.key); if (mc) mc.cut = true; const lc = LC.find(c => c.key === x.key); if (lc) lc.cut = true; } }
+    P = best(S);
+  }
+  // Quest-Stopps, die durch Streichen eines anderen Stopps nur teilweise wegfielen, bleiben gültig. Gestrichene Quest-Orte entfernen.
+  for (const s of S) s.items = s.items.filter(x => !(x.kind === 'q' && QC.find(c => c.key === x.key && c.cut)));
+  S = S.filter(s => s.items.length); P = best(S);
+  // Top-Loot in der Nähe dazunehmen, solange die Zeit reicht (höchstens 6 Stopps)
+  const order = P.o.slice(), E = P.E;
+  let T = P.T, nLoot = order.filter(s => s.loot).length;
+  const ins = l => { const pts = [A, ...order, E]; let bi = -1, bd = 1e9;
+    for (let i = 0; i < pts.length - 1; i++){ const a = pts[i], b = pts[i + 1]; if (!a && !b) continue;
+      const d = (a ? dist2(a, l) : 0) + (b ? dist2(l, b) : 0) - (a && b ? dist2(a, b) : 0); if (d < bd){ bd = d; bi = i; } }
+    return { pos:bi, add:walkMin(m, bd) }; };
+  for (const l of LC){ if (l.sel !== undefined) continue;
+    const near = order.find(s => !s.loot && Math.hypot(s.x - l.x, s.z - l.z) <= NZ.merge);
+    l.dmin = near ? 0 : ins(l).add;
+    l.state = l.dmin <= NZ.nah ? 'nah' : 'weit'; }
+  for (const l of LC.filter(x => x.state === 'nah').sort((a, b) => (a.dmin + a.t) - (b.dmin + b.t))){
+    const near = order.find(s => !s.loot && Math.hypot(s.x - l.x, s.z - l.z) <= NZ.merge);
+    if (near){ if (T + l.t > budget) { l.state = 'zeit'; continue; } near.items.push({ kind:'l', key:l.key, label:l.label, prio:1, t:l.t }); T += l.t; l.state = 'plan'; continue; }
+    if (nLoot >= NZ.maxLoot){ l.state = 'zeit'; continue; }
+    const r = ins(l); if (T + r.add + l.t > budget){ l.state = 'zeit'; continue; }
+    order.splice(r.pos, 0, lootStop(l)); T += r.add + l.t; nLoot++; l.state = 'plan'; }
+  for (const l of LC) if (l.sel === true) l.state = l.cut ? 'cut' : 'plan'; else if (l.sel === false) l.state = 'aus';
+  // Feinschliff der Reihenfolge mit allen Stopps
+  const fin = naviOrder(A, order, E), L = pathOf(A, fin, E);
+  T = (A ? NZ.anlauf : NZ.anlaufOhne) + walkMin(m, L) + fin.reduce((a, s) => a + stopMin(s), 0) + extra() + exitMin(E) + PUFFER[NAVI.puffer];
+  const quests = QC.map(c => Object.assign(c, { state:!c.on ? 'aus' : c.cut ? 'cut' : 'plan' }));
+  // Ersatz-Ausgang vom letzten Stopp aus
+  const last = fin.length ? fin[fin.length - 1] : A;
+  const alt = E && last ? naviExits(m).filter(e => e.name !== E.name && EXIT_FREI[e.t]).sort((a, b) => dist2(a, last) - dist2(b, last))[0] : null;
+  return { m, st, A, stops:fin, E, alt, T, budget, L, fights:extra(), cut, quests, mats:MC, loot:LC, missing:MS.missing, other:MS.other, exits };
+}
+
+// ---------- Bereich «Raids»: Maps zur Auswahl ----------
+function naviMapValue(m){
+  const qs = naviQuests(m), its = openItems().map(x => itemByName(x.n)).filter(Boolean);
+  const n = matStopsOf(m, its).stops.reduce((a, s) => a + s.items.length, 0);
+  return { m, q:qs.length, qt:qs.filter(c => c.prio === 4).length, n, score:qs.reduce((a, c) => a + (c.prio === 4 ? 3 : 2), 0) + n };
+}
+function naviMapsRender(){
+  const L = MAP_ORDER.map(naviMapValue), top = Math.max(...L.map(v => v.score));
+  $('#naviMaps').innerHTML = L.map(v => { const parts = [];
+    parts.push(v.q ? v.q + (v.q === 1 ? ' Quest' : ' Quests') + (v.qt ? ' (' + v.qt + ' verfolgt)' : '') : 'keine Quest');
+    parts.push(v.n ? v.n + (v.n === 1 ? ' Material' : ' Materialien') : 'kein Material');
+    if (NAVI.start[v.m] != null) parts.push('Start gewählt');
+    return `<li><button type="button" class="row" data-navi="${v.m}"><span class="thumb">${thumbSVG(v.m)}</span><span class="rt"><span class="t1">${esc(MAPS[v.m].name)}${v.score && v.score === top ? '<span class="badge">Lohnt sich</span>' : ''}</span><span class="t2">${esc(parts.join(' · '))}</span></span>${CHEV}</button></li>`; }).join('');
+}
+$('#naviMaps').addEventListener('click', e => { const b = e.target.closest('[data-navi]'); if (b) naviOpen(b.dataset.navi); });
+
+// ---------- Planungsseite ----------
+let naviPlanCache = null;
+function naviOpen(m){
+  if (UI.tab !== 'raids') setTab('raids');
+  if (!isWide()) setScreen('list');
+  NAVI.m = m; saveNavi();
+  $('#raidsRoot').hidden = true; $('#naviDetail').hidden = false;
+  naviRender(); $('#pages').scrollTop = 0; const b = $('#naviBack'); if (b) b.focus();
+}
+function naviClose(){ $('#naviDetail').hidden = true; $('#raidsRoot').hidden = false; naviMapsRender(); }
+const chk = (on, attr, label) => `<button type="button" class="check" ${attr} aria-pressed="${on}" aria-label="${esc(label)}">${CHECK_SVG}</button>`;
+const STATE_TXT = { plan:'', cut:'passt nicht mehr in die Zeit', aus:'abgewählt', zeit:'passt nicht mehr in die Zeit', weit:'zu weit weg' };
+function naviRender(){
+  const m = NAVI.m; if (!m || !MAPS[m]) return;
+  const P = naviPlanCache = naviPlan(m), st = P.st, starts = startsOf(m);
+  const pct = Math.min(100, Math.round(P.T / Math.max(1, P.budget) * 100));
+  let h = `<div class="subnav"><button type="button" class="back" id="naviBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Raids</button></div>`
+    + `<h3 class="dn">Run auf ${esc(MAPS[m].short)}</h3>`
+    + `<p class="dalt">Geplant: ca. ${fmin(P.T)} von ${fmin(P.budget)} Minuten · ${P.stops.filter(s => !s.loot).length} Stopps${P.stops.some(s => s.loot) ? ' · ' + P.stops.filter(s => s.loot).length + ' Top-Loot' : ''}</p>`
+    + `<div class="sb"><span class="bar navbar"><i style="width:${pct}%"></i></span></div>`
+    + `<div class="btncol"><button type="button" class="bp" id="naviGo"${st ? '' : ' disabled'}>Route auf der Karte</button>${st ? '' : '<p class="fine">Wähle zuerst deinen Startpunkt.</p>'}</div>`;
+  // Start und Zeit
+  h += '<h4>Start und Zeit</h4><ul class="group">'
+    + `<li class="srow"><label for="naviStartSel">Startpunkt</label><select class="stsel" id="naviStartSel"><option value=""${st ? '' : ' selected'}>Bitte wählen</option>`
+    + starts.map((s, i) => `<option value="${i}"${st && st.i === i ? ' selected' : ''}>${esc(startInfo(m, i).label)}</option>`).join('') + '</select></li>'
+    + `<li class="srow"><span>Auf der Karte wählen</span><button type="button" class="pill" id="naviPick">Karte</button></li>`
+    + `<li class="srow"><label for="naviRest">Restzeit im Spiel</label><input class="navin" id="naviRest" type="text" inputmode="numeric" value="${esc(NAVI.rest)}" placeholder="30:00" aria-describedby="naviRestH"></li>`
+    + `<li class="srow"><label for="naviCond">Kartenbedingung</label><select class="stsel" id="naviCond">${NAVI_COND.map(([k, t]) => `<option value="${k}"${NAVI.cond === k ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></li>`
+    + `<li class="srow"><span>Kampf-Puffer (Min.)</span><div class="segc mini" id="naviPuf" role="group" aria-label="Puffer für Kämpfe in Minuten">${['0', '3', '6'].map((t, i) => `<button type="button" data-puf="${i}" aria-pressed="${NAVI.puffer === i}">${t}</button>`).join('')}</div></li>`
+    + `<li class="srow"><label for="naviKey">Raider Hatch Key dabei</label><input type="checkbox" class="switch" id="naviKey" role="switch"${NAVI.key ? ' checked' : ''}></li>`
+    + `<li class="srow"><label for="naviSb">Skill Security Breach</label><input type="checkbox" class="switch" id="naviSb" role="switch"${NAVI.sb ? ' checked' : ''}></li>`
+    + `<li class="srow"><label for="naviUhr">Uhr im Run mitlaufen lassen</label><input type="checkbox" class="switch" id="naviUhr" role="switch"${NAVI.uhr ? ' checked' : ''}></li>`
+    + '</ul>'
+    + `<p class="fine" id="naviRestH">Restzeit: 30:00 für eine neue Runde. Steigst du in eine laufende Runde ein, trag die Zeit ein, die das Spiel zeigt. Das Navi plant 1 Minute Reserve ein.${NAVI.key && HATCH_ZU[NAVI.cond] ? ' Mit dieser Bedingung sind Raider Hatches gesperrt.' : ''}</p>`;
+  // Quests
+  h += '<h4>Quests</h4>';
+  if (P.quests.length){
+    h += '<ul class="group">' + P.quests.map(c => {
+      const where = c.orte.length ? 'Stopp: ' + c.orte.map(o => o.n).join(', ') : c.arcs.length ? 'Unterwegs: ' + c.arcs.map(arcName).filter((v, i, a) => a.indexOf(v) === i).join(', ') + ' zerstören' : 'Unterwegs erledigen';
+      const tm = c.fight ? ', Kampf ca. ' + fmin(c.fight) + ' min' : '';
+      const sub = [c.prio === 4 ? 'Verfolgt' : 'Nächste bei ' + QUEST_TRADER[c.q.h], where + tm, STATE_TXT[c.state]].filter(Boolean).join(' · ');
+      return `<li${c.state === 'plan' ? '' : ' class="qd"'}><div class="row static">${chk(c.on, `data-nsel="${esc(c.key)}"`, (c.on ? 'Abwählen: ' : 'Mitnehmen: ') + qName(c.q))}<span class="rt"><span class="t1">${esc(qName(c.q))}</span><span class="t2">${esc(sub)}</span></span></div></li>`; }).join('') + '</ul>';
+  } else h += '<p class="fine">Keine verfolgte und keine nächste Quest geht auf dieser Map. Tipp: Im Bereich Quests eine Quest verfolgen.</p>';
+  // Einkaufsliste
+  h += '<h4>Einkaufsliste</h4>';
+  if (P.mats.length){
+    const liCls = (r, off) => { const c = [r && RAR[r] ? 'rr r' + r : '', off ? 'qd' : ''].filter(Boolean).join(' '); return c ? ` class="${c}"` : ''; };
+    h += '<ul class="group">' + P.mats.map(c => `<li${liCls(c.r, !(c.on && !c.cut))}><div class="row static">${chk(c.on, `data-nsel="${esc(c.key)}"`, (c.on ? 'Abwählen: ' : 'Mitnehmen: ') + c.label)}<span class="rt"><span class="t1">${esc(c.label)}</span><span class="t2">${esc(['bei ' + c.place + (c.spot ? '' : ' (Loot-Symbol)'), c.quest ? 'für ' + c.quest : '', !c.on ? 'abgewählt' : c.cut ? 'passt nicht mehr in die Zeit' : ''].filter(Boolean).join(' · '))}</span></span></div></li>`).join('') + '</ul>';
+  } else h += '<p class="fine">Nichts auf der Einkaufsliste, das auf dieser Map gut zu finden ist.</p>';
+  if (P.missing.length) h += `<p class="fine">Auf dieser Map nicht gut zu finden: ${esc(P.missing.join(', '))}.</p>`;
+  // Top-Loot
+  const near = P.loot.filter(l => l.state === 'plan' || l.sel !== undefined || (l.state === 'zeit' && l.dmin <= NZ.nah)).sort((a, b) => (a.dmin || 0) - (b.dmin || 0));
+  h += '<h4>Top-Loot in der Nähe</h4>';
+  if (near.length){
+    h += '<ul class="group">' + near.map(l => { const on = l.state === 'plan';
+      const sub = [l.where, l.dmin != null ? (l.dmin < .25 ? 'liegt am Weg' : '+' + fmin(l.dmin + l.t) + ' min') : '', l.sel === true ? 'von dir gewählt' : '', STATE_TXT[l.state]].filter(Boolean).join(' · ');
+      return `<li${on ? '' : ' class="qd"'}><div class="row static">${chk(on, `data-nloot="${esc(l.key)}" data-on="${on}"`, (on ? 'Abwählen: ' : 'Mitnehmen: ') + l.label)}<span class="num ex lootic">${MARK_IMG[l.kind] ? `<img src="${MARK_IMG[l.kind].src}" alt="">` : ''}</span><span class="rt"><span class="t1">${esc(l.label)}</span><span class="t2">${esc(sub)}</span></span></div></li>`; }).join('') + '</ul>';
+  } else h += '<p class="fine">Keine Waffenkiste und kein Rucksack in der Nähe der Route' + (NAVI.sb ? '' : ' (Security-Spinde nur mit Security Breach)') + '.</p>';
+  // Ausgang
+  h += '<h4>Ausgang</h4><ul class="group">' + `<li><button type="button" class="row" data-nexit=""><span class="num${NAVI.exit[m] ? '' : ' on'}">${NAVI.exit[m] ? '' : '✓'}</span><span class="rt"><span class="t1">Automatisch</span><span class="t2">${esc(P.E ? 'Jetzt: ' + P.E.name + ' (' + EXIT_ART[P.E.t] + ')' : 'Kein Ausgang bekannt')}</span></span></button></li>`
+    + P.exits.map(e => `<li><button type="button" class="row" data-nexit="${esc(e.name)}"><span class="num ex${NAVI.exit[m] === e.name ? ' on' : ''}">${MARK_IMG[e.t] ? `<img src="${MARK_IMG[e.t].src}" alt="">` : ''}</span><span class="rt"><span class="t1">${esc(e.name)}</span><span class="t2">${esc(EXIT_ART[e.t] + (NAVI.exit[m] === e.name ? ' · gewählt' : ''))}</span></span></button></li>`).join('') + '</ul>'
+    + (P.alt ? `<p class="fine">Falls der Ausgang schon zu ist: ${esc(P.alt.name)} (${esc(EXIT_ART[P.alt.t])}), ca. ${meters(m, dist2(P.alt, P.E))} m weiter.</p>` : '');
+  if (P.cut.length) h += `<div class="warn">Passt nicht mehr in die Zeit: ${esc(P.cut.join(', '))}.</div>`;
+  if (P.T > P.budget + .01) h += `<div class="warn">Auch ohne weitere Stopps wird es knapp: ca. ${fmin(P.T)} min bis zum Ausgang. Geh direkt raus oder wähle einen anderen Startpunkt.</div>`;
+  h += `<div class="annbox"><b>Annahme:</b> Alle Zeiten sind geschätzt: Laufen im Mittel 5 m/s mit 30 % Umweg (aus Sprint- und Ausdauerwerten von allthings.how), Quest-Aufgabe 2 min, Fundort 1,5 min, Waffenkiste und Spind 1 min, Rucksack 0,5 min, Lift 2 min (fährt 90 s nach dem Ruf), Kampf nach Gefahrenstufe des ARC (Beebom) 0,5 bis 5 min, Quest ohne Ort 1 min. Der Massstab ist nur für Dam und Spaceport aus Quellen abgeleitet. Startpunkte: an den Karten von Arc Raiders Hub und Wand abgelesen, Lage auf 1 bis 2 Einheiten genau.</div>`
+    + '<h4>Quellen</h4><ul class="srcs">' + NAVI_SRC.map(([t, u]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`).join('') + '</ul>';
+  $('#naviDetail').innerHTML = h;
+}
+const naviSet = (fn) => { fn(); saveNavi(); naviRender(); if (ROUTE && ROUTE.navi && !ROUTE.pick && !NAVI.run) naviRoute(ROUTE.view, true); };
+$('#naviDetail').addEventListener('click', e => {
+  const t = e.target;
+  if (t.closest('#naviBack')){ naviClose(); return; }
+  if (t.closest('#naviGo')){ naviRoute(NAVI.m); return; }
+  if (t.closest('#naviPick')){ naviPick(NAVI.m); return; }
+  const s = t.closest('[data-nsel]'); if (s){ const k = s.dataset.nsel, cur = s.getAttribute('aria-pressed') === 'true'; naviSet(() => { NAVI.sel[k] = !cur; }); return; }
+  const l = t.closest('[data-nloot]'); if (l){ const k = l.dataset.nloot, cur = l.dataset.on === 'true'; naviSet(() => { NAVI.sel[k] = !cur; }); return; }
+  const x = t.closest('[data-nexit]'); if (x){ naviSet(() => { NAVI.exit[NAVI.m] = x.dataset.nexit; }); return; }
+  const p = t.closest('[data-puf]'); if (p){ naviSet(() => { NAVI.puffer = +p.dataset.puf; }); return; }
+});
+$('#naviDetail').addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'naviStartSel') naviSet(() => { if (t.value === '') delete NAVI.start[NAVI.m]; else NAVI.start[NAVI.m] = +t.value; });
+  if (t.id === 'naviCond') naviSet(() => { NAVI.cond = t.value; });
+  if (t.id === 'naviKey') naviSet(() => { NAVI.key = t.checked; });
+  if (t.id === 'naviSb') naviSet(() => { NAVI.sb = t.checked; });
+  if (t.id === 'naviUhr'){ NAVI.uhr = t.checked; saveNavi(); }
+  if (t.id === 'naviRest'){ const v = parseRest(t.value); if (v) naviSet(() => { NAVI.rest = mmss(v); }); else { t.value = NAVI.rest; } }
+});
+
+// ---------- Karte: Startpunkt wählen ----------
+function naviPick(m){
+  const starts = startsOf(m).map((_, i) => startInfo(m, i));
+  startRoute(m, { navi:true, pick:true, focus:true, label:'Startpunkt', missing:[], other:[],
+    stops:starts.map(s => ({ name:s.label, x:clampM(s.x), z:clampM(s.z), h:0, r:2.5, items:[], start:true, si:s.i, pin:String(s.i + 1) })) }, { k:'npick', m });
+}
+function naviPicked(i){ const s = ROUTE.stops[i]; if (!s) return; NAVI.start[ROUTE.view] = s.si; saveNavi(); naviRoute(ROUTE.view); }
+
+// ---------- Karte: Route ----------
+function naviRoute(m, keep){
+  const P = naviPlanCache = naviPlan(m), st = P.st;
+  const stops = [];
+  if (st) stops.push({ name:st.name, x:clampM(st.x), z:clampM(st.z), h:0, r:3, items:[], start:true, rx:st.x, rz:st.z, aus:st.aus, si:st.i });
+  const seen = {};
+  for (const s of P.stops){ const k = seen[s.name] = (seen[s.name] || 0) + 1;
+    stops.push(Object.assign({}, s, { key:s.loot ? s.items[0].key : s.name, name:k > 1 ? s.name + ' (' + k + ')' : s.name })); }
+  if (P.E) stops.push({ name:P.E.name, x:P.E.x, z:P.E.z, h:0, r:4, items:[], exit:P.E.t, key:'exit',
+    alt:P.alt ? P.alt.name + ' (' + EXIT_ART[P.alt.t] + '), ca. ' + meters(m, dist2(P.alt, P.E)) + ' m weiter' : '' });
+  const R = { navi:true, focus:false, label:'', stops, min:P.T, cut:P.cut, missing:P.missing, other:P.other, plan:P };
+  if (keep && ROUTE && ROUTE.view === m){ const i = ROUTE.i; Object.assign(ROUTE, R); ROUTE.i = Math.min(i, stops.length - 1); naviMarkDone(); renderCard(); renderMapBar(); dirty = true; return; }
+  startRoute(m, R, { k:'navi', m }); naviMarkDone();
+  if (NAVI.run && NAVI.run.m === m){ const t = naviTarget(); if (t >= 0) selectStop(t, true); }
+}
+// Stopps, die im laufenden Run erledigt oder übersprungen sind
+function naviMarkDone(){ if (!ROUTE || !ROUTE.navi) return; const r = NAVI.run && NAVI.run.m === ROUTE.view ? NAVI.run : null;
+  for (const s of ROUTE.stops) s.done = !!(r && !s.start && (r.done.includes(s.key) || r.skip.includes(s.key))); }
+function naviTarget(){ if (!ROUTE) return -1; return ROUTE.stops.findIndex(s => !s.start && !s.done); }
+function naviPos(){ // letzte bekannte Lage: zuletzt erledigter Stopp oder Startpunkt
+  if (!ROUTE) return null; let p = null;
+  for (const s of ROUTE.stops){ if (s.start) p = { x:s.rx != null ? s.rx : s.x, z:s.rz != null ? s.rz : s.z }; else if (s.done) p = s; else break; }
+  return p;
+}
+function naviRemaining(){ // geschätzte Minuten von der jetzigen Lage bis zum Ausgang
+  const P = ROUTE.plan, m = ROUTE.view, pos = naviPos(), rest = ROUTE.stops.filter(s => !s.start && !s.done && !s.exit), E = ROUTE.stops.find(s => s.exit);
+  const L = pathLen([pos, ...rest, E].filter(Boolean)), all = ROUTE.stops.filter(s => !s.start && !s.exit).length || 1;
+  return walkMin(m, L) + rest.reduce((a, s) => a + stopMin(s), 0) + P.fights * rest.length / all + exitMin(E && { t:E.exit }) + PUFFER[NAVI.puffer] * rest.length / all;
+}
+const naviClock = () => NAVI.run && NAVI.run.uhr ? NAVI.run.rest0 - (Date.now() - NAVI.run.t0) / 1000 : null;
+
+function renderNaviPanel(){
+  const R = ROUTE, m = R.view, box = $('#naviBox');
+  if (R.pick){
+    $('#num').textContent = 'Start'; $('#phase').textContent = 'Navi · ' + MAPS[m].short;
+    $('#title').textContent = 'Startpunkt wählen';
+    box.innerHTML = '<p class="sub2">Tippe auf der Karte auf den gelben Punkt, an dem du ins Spiel kommst, oder wähle ihn in der Liste. Die Nummern sind dieselben wie in der Planung.</p>';
+    $('#stopList').innerHTML = R.stops.map((s, i) => `<li><button type="button" class="row" data-stop="${i}"><span class="num start">${s.si + 1}</span><span class="rt"><span class="t1">${esc(s.name.replace(/^\d+ · /, ''))}</span><span class="t2">${esc('Laut ' + SRC_TXT[startsOf(m)[s.si][2]])}</span></span></button></li>`).join('');
+    $('#routeMiss').hidden = true; $('#altWrap').hidden = true; $('#btnRunR').hidden = true; renderRunMini(); return;
+  }
+  const P = R.plan, run = NAVI.run && NAVI.run.m === m ? NAVI.run : null, nStops = R.stops.filter(s => !s.start && !s.exit).length;
+  $('#num').textContent = R.stops.length ? `${String(R.i + 1).padStart(2, '0')} / ${String(R.stops.length).padStart(2, '0')}` : '00';
+  $('#phase').textContent = 'Navi · ' + nStops + (nStops === 1 ? ' Stopp' : ' Stopps') + ' · ca. ' + fmin(P.T) + ' min';
+  const cs = R.stops[R.i];
+  $('#title').textContent = cs ? (cs.start ? 'Start ' + (cs.si + 1) + ': ' : cs.exit ? 'Ausgang: ' : '') + cs.name : 'Run auf ' + MAPS[m].short;
+  $('#prev').disabled = R.i === 0;
+  let h = '';
+  if (!P.st) h += '<div class="warn">Kein Startpunkt gewählt. Die Route beginnt beim ersten Stopp.</div>';
+  if (P.T > P.budget + .01) h += `<div class="warn">Auch ohne weitere Stopps ca. ${fmin(P.T)} min bis zum Ausgang. Geh direkt raus.</div>`;
+  if (!run){
+    h += `<p class="sub2">Geplant: ca. ${fmin(P.T)} von ${fmin(P.budget)} Minuten, Ausgang ${esc(P.E ? P.E.name : 'unbekannt')}.${P.st && P.st.aus ? ' Der Startpunkt liegt am Kartenrand ausserhalb des Modells, die Distanz ist mitgerechnet.' : ''}</p>`
+      + `<div class="btnrow"><button type="button" class="bp" id="naviStart">Run starten</button><button type="button" class="bs" id="naviEdit">Plan ändern</button></div>`
+      + `<p class="fine">${NAVI.uhr ? 'Mit Uhr: Sie zählt ab ' + esc(NAVI.rest) + ' herunter.' : 'Ohne Uhr. Einschalten unter «Plan ändern».'} Kein GPS: Tippe im Run bei jedem Ziel auf «Erledigt».</p>`;
+  } else {
+    const clk = naviClock(), need = naviRemaining(), t = naviTarget(), tg = t >= 0 ? R.stops[t] : null, pos = naviPos();
+    if (clk != null) $('#num').textContent = mmss(clk);
+    if (clk != null) h += `<div class="navclock"><span class="lcd big" id="naviLcd">${mmss(clk)}</span><span class="sub2">Restzeit · geplant noch ca. ${fmin(need)} min</span></div>`;
+    if (tg){
+      const d = pos ? dist2(pos, tg) : 0, dir = pos && d > .5 ? DIR8[dirIdx(tg.x - pos.x, tg.z - pos.z)] : '';
+      h += `<div class="navnext"><span class="sub2">${tg.exit ? 'Zum Ausgang' : 'Nächstes Ziel'}</span><b>${esc(tg.name)}</b>`
+        + `<span class="sub2">${esc([dir ? 'Richtung ' + dir : '', pos ? 'ca. ' + meters(m, d) + ' m' : '', pos ? 'ca. ' + fmin(walkMin(m, d)) + ' min' : ''].filter(Boolean).join(' · '))}</span>`
+        + (tg.items.length ? `<span class="sub2">${esc(tg.items.map(x => (x.kind === 'q' ? 'Quest: ' : '') + x.label).join(', '))}</span>` : '')
+        + (tg.exit && tg.alt ? `<span class="sub2">Falls schon zu: ${esc(tg.alt)}</span>` : '') + '</div>'
+        + `<div class="btnrow"><button type="button" class="bp" data-ndone="${esc(tg.key)}">${tg.exit ? 'Draussen' : 'Erledigt'}</button>${tg.exit ? '' : `<button type="button" class="bs" data-nskip="${esc(tg.key)}">Überspringen</button>`}</div>`;
+    }
+    // Rückstand: Vorschläge, was wegfallen kann
+    if (clk != null && tg){
+      const E = R.stops.find(s => s.exit), direct = pos && E ? walkMin(m, dist2(pos, E)) + exitMin({ t:E.exit }) : 0;
+      if (clk / 60 < direct + 1) h += `<div class="warn">Jetzt zum Ausgang: ${esc(E.name)}, ca. ${fmin(direct)} min.</div><div class="btncol"><button type="button" class="bp" id="naviGoExit">Direkt zum Ausgang</button></div>`;
+      else if (clk / 60 < need){
+        const rest = R.stops.filter(s => !s.start && !s.done && !s.exit);
+        const prio = s => Math.max(...s.items.map(x => x.prio || 1));
+        const pick = rest.slice().sort((a, b) => prio(a) - prio(b) || stopMin(a) - stopMin(b))[0];
+        h += `<div class="warn">Du liegst ca. ${fmin(need - clk / 60)} min hinter dem Plan.${pick ? ' Vorschlag: ' + esc(pick.name) + ' weglassen (' + esc(PRIO_NAME[prio(pick)] || 'Stopp') + ').' : ''}</div>`
+          + (pick ? `<div class="btncol"><button type="button" class="bs" data-nskip="${esc(pick.key)}">${esc(pick.name)} weglassen</button></div>` : '');
+      }
+    }
+    h += `<div class="btnrow"><button type="button" class="bs" id="naviTime">${clk != null ? 'Zeit anpassen' : 'Uhr starten'}</button><button type="button" class="bs" id="naviStop">Run abbrechen</button></div>`
+      + `<div class="navtime" id="naviTimeBox" hidden><label for="naviTimeIn">Restzeit im Spiel</label><input class="navin" id="naviTimeIn" type="text" inputmode="numeric" placeholder="mm:ss" value="${clk != null ? mmss(clk) : esc(NAVI.rest)}"><button type="button" class="pill tint" id="naviTimeOk">Übernehmen</button></div>`;
+  }
+  box.innerHTML = h;
+  // Stopp-Liste
+  let n = 0;
+  $('#stopList').innerHTML = R.stops.map((s, i) => {
+    const cls = (i === R.i ? ' on' : '');
+    if (s.start) return `<li><button type="button" class="row" data-stop="${i}"><span class="num start${cls}">S</span><span class="rt"><span class="t1">Start ${s.si + 1}: ${esc(s.name)}</span><span class="t2">${s.aus ? 'Am Kartenrand, ausserhalb des Modells' : 'Hier beginnt der Run'}</span></span></button></li>`;
+    if (s.exit) return `<li><button type="button" class="row" data-stop="${i}"><span class="num ex${cls}">${MARK_IMG[s.exit] ? `<img src="${MARK_IMG[s.exit].src}" alt="">` : ''}</span><span class="rt"><span class="t1">Ausgang: ${esc(s.name)}</span><span class="t2">${esc(EXIT_ART[s.exit])}${s.alt ? ' · falls schon zu: ' + esc(s.alt) : ''}</span></span></button></li>`;
+    n++;
+    const items = s.items.map(x => x.kind === 'q' ? `<b>Quest:</b> ${esc(x.label)}` : x.kind === 'l' ? esc(x.label) : `<span class="ri${x.r && RAR[x.r] ? ' r' + x.r : ''}">${esc(x.label)}</span>${x.spot === false ? ' (Loot-Symbol)' : ''}`).join(', ');
+    const lk = s.loot ? s.items[0].key.split(':')[1] : '', im = lk && MARK_IMG[lk];
+    return `<li${s.done ? ' class="qd"' : ''}><button type="button" class="row" data-stop="${i}"><span class="num${im ? ' ex lootic' : ''}${cls}">${im ? `<img src="${im.src}" alt="">` : n}</span><span class="rt"><span class="t1">${esc(s.name)}</span><span class="t2">${items} · ca. ${fmin(stopMin(s))} min</span></span></button></li>`; }).join('');
+  const miss = [];
+  miss.push(`Geschätzt ca. ${fmin(P.T)} von ${fmin(P.budget)} Minuten (Annahme${MAP_M_BELEGT[m] ? '' : ', Massstab dieser Karte geschätzt'}), mit ${PUFFER[NAVI.puffer]} min Puffer für Kämpfe${P.fights ? ' und ca. ' + fmin(P.fights) + ' min für ARC-Ziele und Aufgaben unterwegs' : ''}.`);
+  const unterwegs = P.quests.filter(c => c.state === 'plan' && !c.orte.length);
+  if (unterwegs.length) miss.push('Unterwegs erledigen: ' + unterwegs.map(c => qName(c.q) + (c.arcs.length ? ' (' + c.arcs.map(arcName).filter((v, i, a) => a.indexOf(v) === i).join(', ') + ')' : '')).join('; ') + '.');
+  if (P.cut.length) miss.push('Passt nicht mehr in die Zeit, darum weggelassen: ' + P.cut.join(', ') + '.');
+  if (P.missing.length) miss.push('Auf dieser Map nicht gut zu finden: ' + P.missing.join(', ') + '.');
+  $('#routeMiss').innerHTML = miss.map(t => `<span class="ml">${esc(t)}</span>`).join(''); $('#routeMiss').hidden = false;
+  $('#altWrap').hidden = true; $('#btnRunR').hidden = false;
+  renderRunMini();
+}
+$('#naviBox').addEventListener('click', e => {
+  const t = e.target, m = ROUTE && ROUTE.view;
+  if (!m) return;
+  if (t.closest('#naviStart')){ NAVI.run = { m, t0:Date.now(), rest0:parseRest(NAVI.rest) || 1800, uhr:NAVI.uhr, done:[], skip:[], quests:naviPlanCache ? naviPlanCache.quests.filter(c => c.state === 'plan').map(c => c.q.en) : [] };
+    saveNavi(); RUN = { m, at:Date.now() }; saveRun(); naviMarkDone(); const i = naviTarget(); if (i >= 0) selectStop(i, true); renderCard(); naviTickOn(); return; }
+  if (t.closest('#naviEdit')){ naviOpen(m); return; }
+  const d = t.closest('[data-ndone]'); if (d){ naviDone(d.dataset.ndone, 'done'); return; }
+  const s = t.closest('[data-nskip]'); if (s){ naviDone(s.dataset.nskip, 'skip'); return; }
+  if (t.closest('#naviGoExit')){ for (const st of ROUTE.stops) if (!st.start && !st.exit && !st.done) NAVI.run.skip.push(st.key); saveNavi(); naviMarkDone(); const i = naviTarget(); if (i >= 0) selectStop(i, true); renderCard(); return; }
+  if (t.closest('#naviTime')){ const b = $('#naviTimeBox'); b.hidden = !b.hidden; if (!b.hidden) $('#naviTimeIn').focus(); return; }
+  if (t.closest('#naviTimeOk')){ const v = parseRest($('#naviTimeIn').value); if (!v) { $('#naviTimeIn').value = ''; $('#naviTimeIn').focus(); return; }
+    Object.assign(NAVI.run, { uhr:true, t0:Date.now(), rest0:v }); saveNavi(); renderCard(); naviTickOn(); return; }
+  if (t.closest('#naviStop')){ NAVI.run = null; saveNavi(); naviMarkDone(); renderCard(); return; }
+});
+$('#naviBox').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'naviTimeIn'){ e.preventDefault(); $('#naviTimeOk').click(); } });
+// Knopf im kleinen Infobereich (iPhone): vor dem Run «Run starten», im Run «Erledigt» bzw. «Draussen» für das aktuelle Ziel
+function naviMiniLabel(){ if (!NAVI.run || NAVI.run.m !== ROUTE.view) return 'Run starten'; const t = naviTarget(); return t >= 0 && ROUTE.stops[t].exit ? 'Draussen' : 'Erledigt'; }
+function naviMini(){
+  if (!NAVI.run || NAVI.run.m !== ROUTE.view){ const b = $('#naviStart'); if (b) b.click(); return; }
+  const t = naviTarget(); if (t >= 0) naviDone(ROUTE.stops[t].key, 'done');
+}
+function naviDone(key, how){
+  const r = NAVI.run; if (!r) return;
+  if (key === 'exit'){ naviMarkDone(); openRunDlg(); return; }
+  (how === 'skip' ? r.skip : r.done).push(key); saveNavi(); naviMarkDone();
+  const i = naviTarget(); if (i >= 0) selectStop(i, true); renderCard(); dirty = true; wake();
+}
+// Uhr: jede Sekunde nur die Anzeige, alle 10 Sekunden das ganze Feld (Rückstand)
+let naviTimer = null, naviTicks = 0;
+function naviTickOn(){
+  if (naviTimer) return;
+  naviTimer = setInterval(() => {
+    if (!NAVI.run || !NAVI.run.uhr){ clearInterval(naviTimer); naviTimer = null; return; }
+    if (document.hidden || !ROUTE || !ROUTE.navi || ROUTE.view !== NAVI.run.m) return;
+    const el = $('#naviLcd'), c = naviClock(); if (el){ el.textContent = mmss(c); $('#num').textContent = mmss(c); }
+    if (++naviTicks % 10 === 0 && !(document.activeElement && document.activeElement.id === 'naviTimeIn')) renderCard();
+  }, 1000);
+}
+if (NAVI.run && NAVI.run.uhr) naviTickOn();
+
+// ---------- Run beendet: Quests abhaken ----------
+let naviRunQ = {};
+function naviRunOpen(){ naviRunQ = {}; }
+function naviRunRender(){
+  const r = NAVI.run, L = r ? r.quests.map(en => QUESTS.find(q => q.en === en)).filter(q => q && !qDone(q)) : [];
+  $('#runQList').hidden = $('#runQFoot').hidden = !L.length;
+  $('#runQList').innerHTML = L.map(q => { const on = !!naviRunQ[q.en];
+    return `<li><div class="row static"><button type="button" class="check done" data-nrq="${esc(q.en)}" aria-pressed="${on}" aria-label="${on ? 'Nicht mehr abgehakt' : 'Erledigt'}: ${esc(qName(q))}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path class="tick" d="M7.5 12.5l3 3 6-6.5"/></svg></button><span class="rt"><span class="t1">${esc(qName(q))}</span><span class="t2">${esc(on ? 'Erledigt' : QUEST_TRADER[q.h] + ' · ' + q.ziel)}</span></span></div></li>`; }).join('');
+  return L.length;
+}
+$('#runQList').addEventListener('click', e => { const b = e.target.closest('[data-nrq]'); if (b){ naviRunQ[b.dataset.nrq] = !naviRunQ[b.dataset.nrq]; renderRun(); } });
+function naviRunSave(){
+  for (const en in naviRunQ) if (naviRunQ[en]){ const q = QUESTS.find(x => x.en === en); if (q) qSetDone(q, true); }
+  if (NAVI.run){ NAVI.run = null; saveNavi(); }
+  qRender(); hudRender();
+  setTimeout(() => { naviMapsRender(); if (ROUTE && ROUTE.navi && !ROUTE.pick) naviRoute(ROUTE.view, true); if (!$('#naviDetail').hidden) naviRender(); }, 0);
+}
+naviMapsRender();
 /* @datei app/kern/minikarte.js */
 /* ================= Mini-Karte oben rechts =================
    Zeigt die Map von oben (aus den Kartendaten) und darüber den Ausschnitt, den die Kamera gerade zeigt.
@@ -6166,6 +6727,7 @@ function uiSubKey(){
   if (UI.tab === 'mat') return 'mat:' + matView + (matView === 'detail' && sLast ? ':' + sLast.n : '');
   if (UI.tab === 'quests') return 'quests:' + qView + (qCur ? ':' + (qCur.t === 'q' ? qCur.i : qCur.id) : '');
   if (UI.tab === 'arc') return 'arc:' + (arcCur ? arcCur.n : '');
+  if (UI.tab === 'raids') return 'raids:' + ($('#naviDetail').hidden ? '' : NAVI.m);
   return UI.tab;
 }
 function uiSnap(){
@@ -6175,7 +6737,7 @@ function uiSnap(){
     mat:{ v:matView, q:$('#sInput').value, f:sFilter, item:matView === 'detail' && sLast ? sLast.n : null },
     q:{ v:qView, q:$('#qInput').value, tr:qTrader, map:qMapF, done:qShowDone,
       cur:qCur ? (qCur.t === 'q' ? { t:'q', en:QUESTS[qCur.i].en } : { t:'p', id:qCur.id }) : null },
-    arc:{ cur:arcCur ? arcCur.n : null }, scroll:SCROLL };
+    arc:{ cur:arcCur ? arcCur.n : null }, navi:!$('#naviDetail').hidden ? NAVI.m : null, scroll:SCROLL };
 }
 function uiSave(){ if (!uiReady) return; clearTimeout(uiT); uiT = null; try { localStorage.setItem(UI_KEY, JSON.stringify(uiSnap())); } catch(_){} }
 function uiSoon(){ if (!uiReady) return; clearTimeout(uiT); uiT = setTimeout(uiSave, 300); }
@@ -6206,6 +6768,7 @@ function uiRestore(hashId, lastId){
     else if (s.mat.v === 'liste' || s.mat.v === 'vorschlag') matShow(s.mat.v);
   });
   tryIt(() => { if (s.arc && s.arc.cur && ARC_BY.has(s.arc.cur)) arcOpen(s.arc.cur); });
+  tryIt(() => { if (s.navi && MAPS[s.navi]) naviOpen(s.navi); });
   tryIt(() => { const tab = ['mat', 'karten', 'raids', 'arc', 'quests'].includes(s.tab) ? s.tab : 'karten'; if (UI.tab !== tab) setTab(tab); });
   // Karte, Station, Modus, Ebenen
   tryIt(() => { if (s.layers) for (const k in layers) if (typeof s.layers[k] === 'boolean') layers[k] = s.layers[k]; });
@@ -6220,6 +6783,8 @@ function uiRestore(hashId, lastId){
     if (r.k === 'route' && MAPS[r.m]) startRoute(r.m, Object.assign(stopsFor(r.m), { focus:false, label:'' }), { k:'route', m:r.m });
     else if (r.k === 'focus' && placePos(r.m, r.name)) openFocus(r.m, r.name, r.label);
     else if (r.k === 'item'){ const it = itemByName(r.n); if (it) openItemRoute(it, rankedPlaces(it)); }
+    else if (r.k === 'navi' && MAPS[r.m]) naviRoute(r.m);
+    else if (r.k === 'npick' && MAPS[r.m]) naviPick(r.m);
     if (ROUTE && r.i > 0) selectStop(Math.min(r.i, ROUTE.stops.length - 1), true);
     if (anim) anim.t0 = -1e9;
   });
@@ -6271,7 +6836,8 @@ uiRestore(startId, lastId);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
-window.__atlas = { track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS };
+window.__atlas = { track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
+  navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE };
 /* @ende-dateien */
 })();
 </script>
