@@ -354,6 +354,7 @@ svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-l
 .tbtn{min-height:44px;border:0;background:transparent;color:var(--accent);font:400 17px/1 var(--body);cursor:pointer;padding:0 8px;text-align:left}
 .tbtn.b{font-weight:700;text-align:right}
 .srow{min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 16px;font-size:17px}
+.srow .sval{color:var(--muted);text-align:right}
 .switch{appearance:none;-webkit-appearance:none;flex:none;width:51px;height:31px;margin:0;border-radius:16px;cursor:pointer;background:var(--fill) radial-gradient(circle at 15.5px 15.5px,#fff 0 13px,transparent 13.5px);transition:background .2s;box-shadow:inset 0 0 0 .5px var(--line)}
 .switch:checked{background:var(--ok) radial-gradient(circle at 35.5px 15.5px,#fff 0 13px,transparent 13.5px)}
 .alert{width:280px;border-radius:14px;overflow:hidden;background:var(--sheet);text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.5)}
@@ -588,6 +589,7 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
         <header class="lt"><h1 id="hKarten">Karten</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
         <p class="foot">Wähle eine Map. Schlüsselräume, Orte und Routen siehst du direkt auf der Karte.</p>
         <ul class="group" id="mapList"></ul>
+        <p class="foot" id="updFoot"></p>
       </section>
 
       <section class="page" id="pgMat" data-page="mat" aria-labelledby="hMat" hidden>
@@ -798,6 +800,13 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
         <li class="srow"><span>Namen</span><div class="segc mini" id="sLang" role="group" aria-label="Namen anzeigen auf"><button type="button" data-l="de">Deutsch</button><button type="button" data-l="en">English</button></div></li>
       </ul>
       <p class="foot">Sparmodus für nebenbei beim Zocken: keine Animationen, die Karte wird nur neu gezeichnet, wenn du sie bedienst.</p>
+      <h3 class="gh">Updates</h3>
+      <ul class="group in">
+        <li class="srow"><span>Letztes Update</span><span class="sval" id="updLast"></span></li>
+        <li class="srow"><span>Daten zuletzt geändert</span><span class="sval" id="updData"></span></li>
+        <li class="srow" id="updNextRow"><span>Nächstes Update</span><span class="sval" id="updNext"></span></li>
+      </ul>
+      <p class="foot">Jeden Montag früh werden die Spieldaten geprüft. «Letztes Update» ist die letzte Prüfung, auch wenn sich dabei nichts geändert hat. Das nächste Datum ist geplant, nicht garantiert.</p>
       <p class="foot" id="gfxTxt"></p>
       <p class="foot" id="standTxt"></p>
       <p class="foot">Alle Angaben mit Quellen. Was nicht belegt ist, steht als «Annahme» da. «Verifiziert» heisst: durch Quellen belegt, nicht im Spiel getestet.</p>
@@ -5741,6 +5750,35 @@ if (!G3) $('#eveRow').hidden = true;
 $('#gfxTxt').textContent = G3 ? '3D-Grafik: ' + G3.info + ', mit Licht, Schatten und Materialien. Gezeichnet wird nur, wenn sich die Ansicht ändert.' : '3D-Grafik: einfache Darstellung, weil WebGL 2 hier nicht verfügbar ist.';
 $('#standTxt').textContent = 'Datenstand: ' + DATA_STAND + (APP ? ' · Windows-Fenster' : '');
 $('#standFoot').textContent = ' Datenstand: ' + DATA_STAND + '.';
+
+/* ================= Updates: letztes und nächstes ================= */
+/* Die geplante Aufgabe läuft jeden Montag um 04:33 Uhr (Europe/Zurich), siehe docs/UPDATE.md.
+   Letztes Update = jüngstes Datum aus DATA_STAND und WISSEN_TIEF (wird bei jedem Lauf gesetzt). */
+const UPD_TAG = 1, UPD_FERTIG_H = 5;
+const WOTAG = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+function updZahl(s){ const m = /(\d{2})\.(\d{2})\.(\d{4})/.exec(s || ''); return m ? Date.UTC(+m[3], +m[2] - 1, +m[1]) : 0; }
+function updText(ms){ const d = new Date(ms), z = n => String(n).padStart(2, '0'); return WOTAG[d.getUTCDay()] + ', ' + z(d.getUTCDate()) + '.' + z(d.getUTCMonth() + 1) + '.' + d.getUTCFullYear(); }
+function updInfo(now){
+  const tief = typeof WISSEN_TIEF === 'object' && WISSEN_TIEF ? Object.keys(WISSEN_TIEF).map(k => updZahl(WISSEN_TIEF[k])) : [];
+  const daten = updZahl(DATA_STAND), letzt = Math.max(daten, ...tief);
+  let next = 0, heute = false;
+  try {
+    const p = {}; new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Zurich', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', hourCycle:'h23' })
+      .formatToParts(now || new Date()).forEach(x => { p[x.type] = +x.value; });
+    const tag = Date.UTC(p.year, p.month - 1, p.day);
+    let d = (UPD_TAG - new Date(tag).getUTCDay() + 7) % 7;
+    if (d === 0 && (p.hour >= UPD_FERTIG_H || letzt >= tag)) d = 7;
+    next = tag + d * 864e5; heute = d === 0;
+  } catch(_){}
+  return { letzt, daten, next, heute };
+}
+(function updZeigen(){
+  const u = updInfo();
+  $('#updLast').textContent = u.letzt ? updText(u.letzt) : 'unbekannt';
+  $('#updData').textContent = u.daten ? updText(u.daten) : 'unbekannt';
+  if (u.next) $('#updNext').textContent = u.heute ? 'heute früh' : updText(u.next); else $('#updNextRow').hidden = true;
+  $('#updFoot').textContent = 'Letztes Update: ' + (u.letzt ? updText(u.letzt) : 'unbekannt') + '.' + (u.next ? ' Nächstes geplant: ' + (u.heute ? 'heute früh' : updText(u.next)) + '.' : '');
+})();
 document.addEventListener('pointerdown', wake, true);
 document.addEventListener('keydown', wake, true);
 window.addEventListener('wheel', wake, { capture:true, passive:true });
