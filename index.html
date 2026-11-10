@@ -847,7 +847,7 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
 'use strict';
 /* @datei wissen/stand.js */
 // Datenstand: Datum des letzten belegten Daten-Updates (TT.MM.JJJJ).
-const DATA_STAND = '07.11.2026';
+const DATA_STAND = '10.11.2026';
 // Letzte gründliche Prüfung pro Thema. Die wöchentliche Automation prüft alle Themen kurz
 // und jede Woche das Thema mit dem ältesten Datum gründlich (danach Datum hier aktualisieren).
 const WISSEN_TIEF = {
@@ -1945,8 +1945,10 @@ CHECK.maps.dam = {
     "6 Räume",
     "Night Raid erhöht laut KeenGamer die Chance auf Schlüssel"
   ],
+  "src": "Lage der Orte: Arc Raiders Hub, interaktive Karte (abgemessen am 10.11.2026)",
   "ann": [
-    "Lage, Form und Grösse der Gebäude im Modell: eigene Skizze nach Textbeschreibungen, nicht nach echten Koordinaten"
+    "Gebäude sind als Rechtecke vereinfacht und nicht gedreht",
+    "Gelände (Damm-Mauer, Red Lakes, Swamp, Hügel): Form nach Kartenbild, Höhen geschätzt"
   ]
 };
 /* @datei wissen/pruefung/buried.js */
@@ -3112,6 +3114,13 @@ function buildMap(m, id){
   }
   for (const d of (m.deco || [])){
     if (d.t === 'box'){ box(...d.b, {col:d.col, s:.25, mat: d.col[0] === 150 || d.col[0] === 120 ? 'slab' : undefined}); shadows.push({x:(d.b[0]+d.b[1])/2, z:(d.b[4]+d.b[5])/2, w:d.b[1]-d.b[0], d:d.b[5]-d.b[4], h:d.b[3]}); }
+    else if (d.t === 'wall'){ /* schräge Mauer von a nach b (Breite w, Höhe h), z. B. eine Damm-Mauer */
+      const dx = d.b[0]-d.a[0], dz = d.b[1]-d.a[1], L = Math.hypot(dx,dz) || 1, nx = -dz/L*d.w/2, nz = dx/L*d.w/2;
+      const q = [[d.a[0]+nx,d.a[1]+nz],[d.b[0]+nx,d.b[1]+nz],[d.b[0]-nx,d.b[1]-nz],[d.a[0]-nx,d.a[1]-nz]];
+      hexa(q.map(v => [v[0],0,v[1]]).concat(q.map(v => [v[0],d.h,v[1]])), {col:d.col, s:.25, mat:'slab'});
+      shadows.push({x:(d.a[0]+d.b[0])/2, z:(d.a[1]+d.b[1])/2, w:Math.abs(dx)+d.w*.6, d:Math.abs(dz)+d.w*.6, h:d.h});
+      if (d.n) LAB(d.n, [(d.a[0]+d.b[0])/2, d.h+2, (d.a[1]+d.b[1])/2], { land:true, pri:2 });
+      continue; }
     else { cyl(d.c, d.r, d.h, 10, 'y', {col:d.col, s:.2, mat:'metal'}); shadows.push({x:d.c[0], z:d.c[2], w:d.r*2, d:d.r*2, h:d.c[1]+d.h/2}); }
     if (d.n){ const p = d.t === 'box' ? [(d.b[0]+d.b[1])/2, d.b[3]+2, (d.b[4]+d.b[5])/2] : [d.c[0], d.c[1]+d.h/2+2, d.c[2]]; LAB(d.n, p, { land:true, pri:2 }); }
   }
@@ -3157,31 +3166,38 @@ const MAPS = {};
 MAPS.dam = { name:'Dam Battlegrounds', short:'Dam', ground:'#1b231f',
     intro:'Sechs Räume: vier mit Schlüssel, einer mit Power Rod und die Controlled Access Zone. Die besten laut Guides: Kontrollturm oben und Staff Room. Die Ruby Residence im Nordwesten gilt als guter Ort, um Schlüssel zu finden.',
     tags:['6 Räume','Night Raid und EM-Sturm lohnen sich'],
+    /* Lage und Grösse: am 10.11.2026 an der interaktiven Karte von arcraidershub.com abgemessen (Ortsnamen und Gebietsumrisse).
+       Massstab: 1 Einheit = 1/100 der Kartenbreite, Mitte bei den Floodgates, Norden = -z. Gebäude als Rechtecke vereinfacht.
+       Gelände (Damm-Mauer, Becken, Hügel): Form nach Kartenbild, Höhen geschätzt (Annahme). */
     zones:[
-      {n:'Red Lakes', col:'rgba(170,74,60,.34)', p:[[26,26],[46,24],[50,46],[28,50]]},
-      {n:'Swamp', col:'rgba(84,118,72,.32)', p:[[-26,20],[4,22],[6,46],[-28,48]]},
-      {n:'Wüste', col:'rgba(176,150,96,.2)', p:[[-52,24],[-31,24],[-31,52],[-52,52]]},
-      {n:'Victory Ridge', col:'rgba(120,130,140,.12)', p:[[-40,-52],[40,-52],[40,-44],[-40,-44]]}
+      {n:'Red Lakes', col:'rgba(170,74,60,.34)', p:[[12,-13],[36,-12],[44,4],[38,21],[20,22],[9,3]]},
+      {n:'Swamp', col:'rgba(84,118,72,.32)', p:[[-52,-19],[-20,-17],[-11,-5],[-17,15],[-52,15]]},
+      {n:'Victory Ridge', col:'rgba(120,130,140,.12)', p:[[-40,-58],[44,-58],[44,-54],[-40,-54]]}
     ],
-    ridges:[[-40,-49,-10,-50,7,6],[-10,-50,18,-49,7,7],[18,-49,40,-51,7,6]],
-    trees:{ box:[-26,4,22,46], n:16, seed:3 },
-    deco:[{t:'box', b:[6,22,0,6,1,3.5], col:[150,158,168], n:'The Dam'}],
+    ridges:[[-40,-57,-8,-58,7,6],[14,-58,46,-53,7,6],[50,-12,53,18,8,7],[53,18,47,44,8,6],[-34,48,-14,52,9,6],[2,53,32,47,9,7]],
+    trees:{ box:[-50,-17,-13,13], n:30, seed:3 },
+    deco:[
+      {t:'wall', a:[11,-21.5], b:[9.1,-18.1], w:4, h:7, col:[150,158,168]},
+      {t:'wall', a:[6.1,-12.8], b:[3.5,-8.1], w:4, h:7, col:[150,158,168], n:'The Dam'},
+      {t:'wall', a:[.5,-2.8], b:[-1.7,1.2], w:4, h:7, col:[150,158,168]}
+    ],
     b:[
-      {id:'ct', name:'Kontrollturm / Research & Admin', x:0, z:-2, w:14, d:12, fl:3, tower:{w:5,d:5,fl:7}},
-      {id:'wtc', name:'Water Treatment Control', x:-17, z:9, w:10, d:9, fl:2},
-      {id:'ta', name:'Testing Annex', x:18, z:30, w:13, d:8, fl:2},
-      {id:'pgc', name:'Power Generation Complex', x:22, z:-30, w:16, d:10, fl:3},
-      {id:'caz', name:'Controlled Access Zone', x:11, z:-21, w:10, d:8, fl:-1},
-      {id:'ruby', name:'Ruby Residence', x:-32, z:-30, w:10, d:10, fl:5, kind:'land'}
+      {id:'ct', name:'Kontrollturm / Research & Admin', x:3, z:10.5, w:9, d:13, fl:3, tower:{w:5,d:5,fl:7}},
+      {id:'wtc', name:'Water Treatment Control', x:-27, z:3, w:7, d:10, fl:2},
+      {id:'ta', name:'Testing Annex', x:19, z:28.5, w:9, d:10, fl:2},
+      {id:'pgc', name:'Power Generation Complex', x:26.5, z:-33, w:17, d:8, fl:3},
+      {id:'caz', name:'Controlled Access Zone', x:11.5, z:-26, w:9, d:8, fl:-1},
+      {id:'ruby', name:'Ruby Residence', x:-27, z:-42, w:8, d:8, fl:5, kind:'land'}
     ],
-    places:[['Pale Apartments',-42,-38,4],['West Broken Bridge',-14,-44,1,8,3],['East Broken Bridge',44,-38,1,8,3],['Raider Outpost East',40,-22,2],
-      ['Pipeline Tower',20,-17,5,3,3],['Generator Hall',32,-36,2],['Floodgates',19,7,1],['The Breach',25,-6,1],
-      ['South Swamp Outpost',-12,40,1],['Old Battleground',-22,32,1],['Electrical Substation',-44,38,2],['Water Towers',-48,28,4,3,3],['Hydroponic Dome Complex',-25,-14,1,12,10],['Primary Facility',31,10,2,9,7]],
+    places:[['Pale Apartments',-44.5,-33.5,4],['West Broken Bridge',1.5,-51,1,8,3],['East Broken Bridge',46,-23,1,8,3],['Raider Outpost East',38.5,-35,2],
+      ['Pipeline Tower',19,-21,5,3,3],['Generator Hall',15,-36,2,6,6],['Floodgates',2,-5.5,1],['The Breach',7.5,-15.5,1],
+      ['South Swamp Outpost',-46,4.5,1],['Old Battleground',-46,-12.5,1],['Electrical Substation',-28,22.5,2],['Water Towers',-38.5,29,4,3,3],['Hydroponic Dome Complex',-11.5,-23.5,1,16,18],['Primary Facility',-6.3,5.2,2,9,7],
+      ['Pattern House',16,-47,2],['Red Lakes Balcony',15,18,1],['Scrap Yard',-8,37.5,1,7,6],['Wreckage',3,36,1],['Formicai Outpost',-7,51.5,2]],
     r:[
       {b:'ct', fl:'top', n:'Kontrollturm, oberster Raum', key:'Dam Control Tower Key', rar:'Episch', floor:'oberster Stock',
         text:'Ganz oben im Kontrollturm in der Kartenmitte. Im Gebäude links die verbarrikadierte Tür aufbrechen, dann geht es durch den Liftschacht per Seil bzw. Zipline nach oben. Oben die Treppe hoch, dort ist die Tür.',
         tags:['oft mehrere Waffenkisten','einer der besten Räume der Map'], warn:'Geschütze im Liftschacht und viel PvP. Turrets zuerst checken.', pitch:.4, dist:46},
-      {b:'ct', fl:1, dx:5, dz:2, n:'Staff Room', key:'Dam Staff Room Key', rar:'Ungewöhnlich', floor:'Erdgeschoss',
+      {b:'ct', fl:1, dx:3, dz:2, n:'Staff Room', key:'Dam Staff Room Key', rar:'Ungewöhnlich', floor:'Erdgeschoss',
         text:'Im Erdgeschoss des Komplexes beim Kontrollturm, nahe beim Eingang: an der Rezeption vorbei und rechts halten, die Tür liegt auf der Ostseite.',
         tags:['rote Spinde','Munitionskisten','Crafting-Material'], warn:'Manche Guides nennen den Bau Kontrollturm, andere Research & Administration. Beide meinen den Komplex in der Kartenmitte.'},
       {b:'ta', fl:1, dx:-3.5, n:'Testing Annex (2 Türen)', key:'Dam Testing Annex Key', rar:'Selten', floor:'Erdgeschoss',
