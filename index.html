@@ -21,9 +21,7 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
   addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
 }
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Jost:ital,wght@0,500;0,600;0,700;1,700&family=VT323&display=swap">
+<!-- Keine Schriften von fremden Servern: Die App nutzt nur Schriften, die auf dem Gerät vorhanden sind (siehe farben-und-schrift.css). -->
 <style>
 /* @datei styleguide/css/farben-und-schrift.css */
 :root{
@@ -823,6 +821,9 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
       <p class="foot" id="gfxTxt"></p>
       <p class="foot" id="standTxt"></p>
       <p class="foot">Alle Angaben mit Quellen. Was nicht belegt ist, steht als «Annahme» da. «Verifiziert» heisst: durch Quellen belegt, nicht im Spiel getestet.</p>
+      <h3 class="gh">Über diese App</h3>
+      <p class="foot">Inoffizielles Fan-Projekt ohne Verbindung zu Embark Studios. ARC Raiders und alle Namen aus dem Spiel gehören Embark Studios. Die App enthält keine Grafiken aus dem Spiel.</p>
+      <p class="foot">Datenschutz: Die App setzt keine Cookies, sammelt keine Daten und lädt nichts von fremden Servern nach. Dein Fortschritt (Quests, Einkaufsliste, Einstellungen) bleibt nur in diesem Browser auf deinem Gerät. Der Anbieter der Webadresse sieht beim Aufruf wie bei jeder Website deine IP-Adresse.</p>
     </div>
   </div>
 </div>
