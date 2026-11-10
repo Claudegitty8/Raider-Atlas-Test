@@ -257,6 +257,12 @@ svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-l
 .ctl button{width:44px;height:44px;border:0;background:transparent;font:500 23px/1 var(--body);cursor:pointer;color:var(--ink);display:flex;align-items:center;justify-content:center}
 .ctl button + button{box-shadow:inset 0 .5px 0 var(--line)}
 .ctl svg{width:19px;height:19px;stroke-width:2.1}
+/* Ausrichtung: Kompassnadel = Norden oben, Pfeil = folgt der Laufrichtung */
+.camb svg path{fill:none;stroke:currentColor;stroke-linejoin:round}
+.camb svg .nf{fill:var(--accent);stroke:var(--accent)}
+.camb .i-folgen{display:none}
+.camb[aria-pressed="true"] .i-nord{display:none}
+.camb[aria-pressed="true"] .i-folgen{display:block}
 
 /* ================= Infobereich (Sheet) ================= */
 .sheet{position:absolute;left:8px;right:8px;bottom:calc(var(--tabh) + 8px);height:84px;z-index:4;display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:var(--sheet);box-shadow:0 10px 34px rgba(0,0,0,.45),0 0 0 .5px var(--line);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);transition:height .28s cubic-bezier(.2,.8,.2,1)}
@@ -753,6 +759,7 @@ li.qd .row .t1{color:var(--muted)}
     <div class="ctl" role="group" aria-label="Kartensteuerung">
       <button type="button" id="zIn" aria-label="Hineinzoomen">+</button>
       <button type="button" id="zOut" aria-label="Herauszoomen">−</button>
+      <button type="button" id="btnCam" class="camb" aria-pressed="false" aria-label="Ausrichtung: Norden oben. Tippen: der Laufrichtung folgen"><svg class="i-nord" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l4.5 10h-9z" class="nf"/><path d="M7.5 13h9L12 21z"/></svg><svg class="i-folgen" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z" class="nf"/></svg></button>
       <button type="button" id="btnReset" aria-label="Ganze Karte zeigen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
     </div>
   </main>
@@ -3750,9 +3757,20 @@ function seg3(a, b){
   ctx.moveTo(sx(qa), sy(qa)); ctx.lineTo(sx(qb), sy(qb));
 }
 function path3(pts){ for (let i=1;i<pts.length;i++) seg3(pts[i-1], pts[i]); }
+/* Ausrichtung wie die Karte im Spiel (Entscheid des Nutzers, 10.11.2026): Norden (-z) fest oben, nicht von Hand drehbar.
+   Knopf in der Kartensteuerung: «nord» = starr nordweisend, zoomt aufs Wesentliche und wandert mit den Aufgaben;
+   «folgen» = fokussiert und dreht in Laufrichtung (vom letzten Punkt zum Ziel zeigt nach oben, c.head).
+   Fregatte und Emperor-Dungeon haben keine Himmelsrichtung: dort bleibt der Blickwinkel der Station. */
+let CAM_MODE = 'nord';
+try { if (localStorage.getItem('raider-atlas:cam') === 'folgen') CAM_MODE = 'folgen'; } catch(_){}
+const camFree = () => viewId === 'fregatte' || viewId === 'emperor';
+const camYaw = c => camFree() ? c.yaw : CAM_MODE === 'folgen' && c.head != null ? c.head : 0;
+// Blickrichtung, in der der Weg von a nach b auf dem Bildschirm nach oben zeigt
+const headTo = (a, b) => (!a || !b || Math.hypot(b[0] - a[0], b[1] - a[1]) < 1) ? null : Math.atan2(-(b[0] - a[0]), -(b[1] - a[1]));
 function fitCam(c){
-  if (W < 600 && c.ov) return { t:c.t, yaw:c.yaw, pitch:c.pitch, dist:c.dist*(c.mob || .88) };
-  return c;
+  const yaw = camYaw(c);
+  if (W < 600 && c.ov) return { t:c.t, yaw, pitch:c.pitch, dist:c.dist*(c.mob || .88), head:c.head };
+  return yaw === c.yaw ? c : Object.assign({}, c, { yaw });
 }
 function setCam(c){ c = fitCam(c); cam.tx=c.t[0]; cam.ty=c.t[1]; cam.tz=c.t[2]; cam.yaw=c.yaw; cam.pitch=c.pitch; cam.dist=c.dist; anim=null; dirty=true; wake(); }
 // Kamera für eine Station: die Station (pos) liegt genau in der Mitte der sichtbaren Karte.
@@ -3775,7 +3793,7 @@ function camOn(c, pos, keep){
   });
   let d = c.dist;
   for (let i = 0; i < 40 && d < 200 && !fits(d); i++) d *= 1.06;
-  return { t, yaw:c.yaw, pitch:c.pitch, dist:Math.min(d, 200) };
+  return { t, yaw:c.yaw, pitch:c.pitch, dist:Math.min(d, 200), head:c.head };
 }
 function stepCam(R, i){
   const s = R[i]; if (!s.pos) return s.cam;
@@ -3794,8 +3812,10 @@ let markers = [];
 // Flächen, die Karten-Labels nicht überdecken sollen (Bildschirm-Koordinaten der Karte): [x, y, w, h]
 function labelObstacles(R){
   const out = [];
-  if (ROUTE && ROUTE.view === viewId){
-    ROUTE.stops.forEach((s, i) => { const sel = i === ROUTE.i, r = sel ? 13 : 10.5, q = toCam([s.x, s.h + (sel ? 6 : 4), s.z]); if (q[2] < NEAR) return;
+  // Startpunkt wählen: Ortsnamen haben Vorrang (Orientierung), die Pins liegen darüber
+  if (ROUTE && ROUTE.view === viewId && ROUTE.pick){ /* keine Pins als Hindernis */ }
+  else if (ROUTE && ROUTE.view === viewId){
+    ROUTE.stops.forEach((s, i) => { const sel = i === ROUTE.i && !ROUTE.pick, r = ROUTE.pick ? 16 : sel ? 13 : 10.5, q = toCam([s.x, s.h + (sel ? 6 : 4), s.z]); if (q[2] < NEAR) return;
       const x = sx(q), y = sy(q); out.push([x - r - 4, y - 2*r - 3, 2*r + 8, 2*r + (sel ? 14 : 10) + 6]);
       if (sel){ ctx.font = '600 12px "Barlow", system-ui, sans-serif'; const w = Math.max(ctx.measureText(s.name).width + 14, 130); out.push([x - w/2, y - 2*r - 48, w, 44]); } });
   } else if (view.group !== 'keys' || layers.key){
@@ -3916,10 +3936,12 @@ function draw(t){
     let d = 0; for (const v of q) d += v[2];
     items.push({ d:d/q.length, f, q, front });
   }
-  for (const s of sprites){ if (!layers[s.k]) continue; const q = toCam(s.p); if (q[2] < NEAR) continue; items.push({ d:q[2]-.5, s, q }); }
+  // Startpunkt wählen: nur Startpunkte und Ortsnamen, alle anderen Symbole aus
+  const pickOnly = !!(ROUTE && ROUTE.pick && ROUTE.view === viewId);
+  for (const s of sprites){ if (!layers[s.k] || pickOnly) continue; const q = toCam(s.p); if (q[2] < NEAR) continue; items.push({ d:q[2]-.5, s, q }); }
   items.sort((a,b) => b.d - a.d);
   for (const it of items) it.f ? drawFace(it) : drawSprite(it);
-  if (layers.key !== false) for (const gp of keyGlows){
+  if (layers.key !== false && !pickOnly) for (const gp of keyGlows){
     const q = toCam(gp); if (q[2] < NEAR) continue;
     const x = sx(q), y = sy(q), r = clamp(C.f*3.2/q[2], 10, 44);
     const rg = ctx.createRadialGradient(x, y, 0, x, y, r);
@@ -4704,6 +4726,20 @@ $('#nextBig').addEventListener('click', () => { goStep(1); revealSheet(); });
 $('#mSquad').addEventListener('click', () => setMode('squad'));
 $('#mSolo').addEventListener('click', () => setMode('solo'));
 $('#btnReset').addEventListener('click', () => { if (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId) fitRoute(); else flyTo(steps()[0].cam); });
+// Ausrichtung umschalten (kamera.js): Norden oben oder der Laufrichtung folgen; danach den Fokus neu setzen
+function camBtnSync(){ const f = CAM_MODE === 'folgen', b = $('#btnCam');
+  b.setAttribute('aria-pressed', String(f));
+  b.setAttribute('aria-label', f ? 'Ausrichtung: folgt der Laufrichtung. Tippen: Norden oben' : 'Ausrichtung: Norden oben. Tippen: der Laufrichtung folgen'); }
+function camRefocus(){
+  if (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId){ if (ROUTE.pick) fitRoute(); else flyTo(stopCam(ROUTE.i)); }
+  else flyTo({ t:[cam.tx, cam.ty, cam.tz], yaw:0, pitch:cam.pitch, dist:cam.dist });
+}
+$('#btnCam').addEventListener('click', () => {
+  CAM_MODE = CAM_MODE === 'folgen' ? 'nord' : 'folgen';
+  try { localStorage.setItem('raider-atlas:cam', CAM_MODE); } catch(_){}
+  camBtnSync(); camRefocus();
+});
+camBtnSync();
 $('#zIn').addEventListener('click', () => { anim = null; cam.dist = clamp(cam.dist*.72, 10, 200); dirty = true; wake(); });
 $('#zOut').addEventListener('click', () => { anim = null; cam.dist = clamp(cam.dist/.72, 10, 200); dirty = true; wake(); });
 window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (id && id !== viewId && VIEWS[id]) openView(id, { noHash:true }); });
@@ -4789,7 +4825,11 @@ filDlg.addEventListener('click', e => { if (e.target === filDlg) closeModal(filD
 /* ================= Gesten ================= */
 const ptrs = new Map(); let down = null, pinch = null;
 function pinchState(){ const [a,b] = [...ptrs.values()]; return { d:Math.hypot(a.x-b.x, a.y-b.y) || 1, cx:(a.x+b.x)/2, cy:(a.y+b.y)/2 }; }
-function pan(dx, dy){ if (!C) return; const s = cam.dist / C.f; cam.tx -= C.cy*dx*s; cam.tz += C.sy*dx*s; cam.ty = clamp(cam.ty + dy*s, -5, 45); dirty = true; }
+// Verschieben über den Boden: Der Punkt unter dem Finger wandert mit. Auf den Maps bleibt die Mitte in der Nähe der Karte.
+function pan(dx, dy){ if (!C) return; const s = cam.dist / C.f, s2 = s / Math.max(.35, C.sp);
+  cam.tx -= C.cy*dx*s + C.sy*dy*s2; cam.tz += C.sy*dx*s - C.cy*dy*s2;
+  if (!camFree()){ cam.tx = clamp(cam.tx, -70, 70); cam.tz = clamp(cam.tz, -70, 70); }
+  dirty = true; }
 cv.addEventListener('contextmenu', e => e.preventDefault());
 cv.addEventListener('pointerdown', e => {
   try { cv.setPointerCapture(e.pointerId); } catch(_){}
@@ -4817,7 +4857,8 @@ cv.addEventListener('pointermove', e => {
   if (ptrs.size === 1 && down){
     if (Math.hypot(p.x-down.x, p.y-down.y) > 6) down.moved = true;
     if (down.moved){ const dx = p.x-prev.x, dy = p.y-prev.y;
-      if (e.shiftKey || (e.buttons & 2)) pan(dx, dy);
+      // Maps: Ziehen verschiebt, Drehen gibt es nicht (Norden bleibt oben). Fregatte und Emperor: drehen wie bisher.
+      if (!camFree() || e.shiftKey || (e.buttons & 2)) pan(dx, dy);
       else { cam.yaw -= dx*.008; cam.pitch += dy*.006; dirty = true; } }
   } else if (ptrs.size === 2){
     const s = pinchState();
@@ -4834,6 +4875,7 @@ function up(e){
     if (down && !down.moved){
       const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
       let fp = null, fd = 26;
+      if (ROUTE && ROUTE.pick) fd = 34;
       for (const q of routePins){ const d = Math.hypot(q.x-x, q.y-y); if (d < fd){ fd = d; fp = q; } }
       let best = null, bd = 22;
       for (const m of markers){ const d = Math.hypot(m.x-x, m.y-y); if (d < bd){ bd = d; best = m; } }
@@ -5600,13 +5642,25 @@ function fitRoute(){
   const cx = (Math.min(...xs) + Math.max(...xs))/2, cz = (Math.min(...zs) + Math.max(...zs))/2, ext = Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...zs) - Math.min(...zs));
   // Ziel etwas angehoben: Pins über hohen Gebäuden bleiben im Bild statt unter Leiste und Mini-Karte
   const hMax = Math.max(0, ...ROUTE.stops.map(s => s.h || 0));
-  flyTo({ t:[cx, Math.max(2, hMax * .45), cz], yaw:.45, pitch:.98, dist:clamp(ext*1.45 + 34 + hMax * .3, 52, 160) });
+  // Startpunkt wählen: Draufsicht (2D), Norden oben, alle Startpunkte im Bild
+  // (mit dem kleinen Infobereich gerechnet, der bleibt beim Wählen klein; Rand für die grossen Pins)
+  if (ROUTE.pick){ const f = Math.min(W, H)*1.12, hw = Math.max(60, (W - leftW)/2 - 34), hh = Math.max(60, (H - topH - botH)/2 - 40);
+    const ex = Math.max(...xs) - Math.min(...xs), ez = Math.max(...zs) - Math.min(...zs);
+    flyTo({ t:[cx, 0, cz], yaw:0, pitch:1.5, dist:clamp(Math.max(ex/2*f/hw, ez/2*f/hh) + 4, 30, 200) }); return; }
+  flyTo({ t:[cx, Math.max(2, hMax * .45), cz], yaw:0, pitch:.98, dist:clamp(ext*1.45 + 34 + hMax * .3, 52, 160) });
+}
+// Kamera auf einen Stopp: der Stopp steht in der Mitte, der Punkt davor bleibt im Bild (wandert mit den Aufgaben).
+// Im Modus «Folgen» zeigt der Weg vom Punkt davor zum Stopp nach oben.
+function stopCam(i){
+  const S = ROUTE.stops, s = S[i], p = i > 0 ? S[i - 1] : null;
+  const c = { t:[s.x, (s.h || 0)*.5 + 2, s.z], yaw:0, pitch:.9, dist:44, head:p ? headTo([p.x, p.z], [s.x, s.z]) : null };
+  return camOn(c, c.t, p ? [[p.x, 0, p.z]] : []);
 }
 function selectStop(i, quiet){
   if (!ROUTE) return;
   if (ROUTE.pick){ naviPicked(i); return; }
   ROUTE.i = clamp(i, 0, ROUTE.stops.length - 1); const s = ROUTE.stops[ROUTE.i];
-  flyTo({ t:[s.x, s.h*.5 + 6, s.z], yaw:.45, pitch:.74, dist:60 }); renderRoutePanel(); if (!quiet) revealSheet(); dirty = true;
+  flyTo(stopCam(ROUTE.i)); renderRoutePanel(); if (!quiet) revealSheet(); dirty = true;
 }
 function clearRoute(silent){ ROUTE = null; routePins = []; dirty = true; if (!silent){ renderCard(); renderMapBar(); flyTo(steps()[0].cam); } }
 function renderRoutePanel(){
@@ -5663,7 +5717,7 @@ function drawRoute(t){
       if (first){ ctx.moveTo(sx(q), sy(q)); first = false; } else ctx.lineTo(sx(q), sy(q)); } };
   const order = S.map((s, i) => i).sort((a, b) => (a === ROUTE.i) - (b === ROUTE.i));
   for (const i of order){
-    const s = S[i], sel = i === ROUTE.i, R0 = s.r || 6;
+    const s = S[i], sel = i === ROUTE.i && !ROUTE.pick, R0 = s.r || 6;
     ctx.globalAlpha = s.done ? .4 : 1;
     ring(s, R0); ctx.setLineDash([6,5]); ctx.strokeStyle = sel ? 'rgba(44,230,255,.95)' : 'rgba(255,62,165,.55)'; ctx.lineWidth = sel ? 2.4 : 1.6; ctx.stroke(); ctx.setLineDash([]);
     if (sel){ ring(s, R0 + ph*6); ctx.strokeStyle = `rgba(44,230,255,${.7*(1-ph)})`; ctx.lineWidth = 2; ctx.stroke(); }
@@ -5671,14 +5725,14 @@ function drawRoute(t){
     const x1 = sx(qt), y1 = sy(qt);
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1, y1 + (sel ? 14 : 10)); ctx.strokeStyle = sel ? 'rgba(44,230,255,.95)' : 'rgba(255,62,165,.8)'; ctx.lineWidth = 2; ctx.stroke();
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    const r = sel ? 13 : 10.5;
+    const r = ROUTE.pick ? 16 : sel ? 13 : 10.5;
     ctx.beginPath(); ctx.arc(x1, y1 - r + 1, r, 0, Math.PI*2);
     const amber = s.start && !sel;
     ctx.save(); ctx.shadowColor = amber ? 'rgba(246,196,83,.9)' : sel || s.exit ? 'rgba(44,230,255,.9)' : 'rgba(255,62,165,.9)'; ctx.shadowBlur = 12; ctx.fillStyle = amber ? '#F6C453' : sel || s.exit ? '#2CE6FF' : '#FF3EA5'; ctx.fill(); ctx.restore();
     ctx.strokeStyle = 'rgba(10,6,8,.85)'; ctx.lineWidth = 1.4; ctx.stroke();
     const im = s.exit && MARK_IMG[s.exit];
     if (im && im.ok){ const g = r * 1.75; ctx.beginPath(); ctx.arc(x1, y1 - r + 1, r - 1.2, 0, Math.PI*2); ctx.fillStyle = '#12202a'; ctx.fill(); ctx.drawImage(im, x1 - g/2, y1 - r + 1 - g/2, g, g); }
-    else { ctx.font = `700 ${sel ? 13 : 11.5}px "Jost", "Avenir Next", sans-serif`; ctx.fillStyle = '#12060C';
+    else { ctx.font = `700 ${ROUTE.pick ? 15 : sel ? 13 : 11.5}px "Jost", "Avenir Next", sans-serif`; ctx.fillStyle = '#12060C';
       ctx.fillText(s.pin || (s.start ? 'S' : s.exit ? 'A' : String(i + (S[0].start ? 0 : 1))), x1, y1 - r + 1.5); }
     if (sel){
       ctx.font = '600 12px "Barlow", system-ui, sans-serif';
@@ -6411,12 +6465,11 @@ function naviRender(){
     + `<h3 class="dn">Run auf ${esc(MAPS[m].short)}</h3>`
     + `<p class="dalt">Geplant: ca. ${fmin(P.T)} von ${fmin(P.budget)} Minuten · ${P.stops.filter(s => !s.loot).length} Stopps${P.stops.some(s => s.loot) ? ' · ' + P.stops.filter(s => s.loot).length + ' Top-Loot' : ''}</p>`
     + `<div class="sb"><span class="bar navbar"><i style="width:${pct}%"></i></span></div>`
-    + `<div class="btncol"><button type="button" class="bp" id="naviGo"${st ? '' : ' disabled'}>Route auf der Karte</button>${st ? '' : '<p class="fine">Wähle zuerst deinen Startpunkt.</p>'}</div>`;
+    + (st ? '<div class="btncol"><button type="button" class="bp" id="naviGo">Route auf der Karte</button></div>'
+      : '<div class="btncol"><button type="button" class="bp" data-npick="1">Startpunkt auf der Karte wählen</button><p class="fine">Die Karte zeigt von oben alle Startpunkte. Tippe auf deinen.</p></div>');
   // Start und Zeit
   h += '<h4>Start und Zeit</h4><ul class="group">'
-    + `<li class="srow"><label for="naviStartSel">Startpunkt</label><select class="stsel" id="naviStartSel"><option value=""${st ? '' : ' selected'}>Bitte wählen</option>`
-    + starts.map((s, i) => `<option value="${i}"${st && st.i === i ? ' selected' : ''}>${esc(startInfo(m, i).label)}</option>`).join('') + '</select></li>'
-    + `<li class="srow"><span>Auf der Karte wählen</span><button type="button" class="pill" id="naviPick">Karte</button></li>`
+    + `<li><button type="button" class="row" data-npick="1"><span class="rt"><span class="t1">Startpunkt</span><span class="t2">${st ? esc(st.label) : 'Noch keiner gewählt'}</span></span><span class="sval">Karte</span>${CHEV}</button></li>`
     + `<li class="srow"><label for="naviRest">Restzeit im Spiel</label><input class="navin" id="naviRest" type="text" inputmode="numeric" value="${esc(NAVI.rest)}" placeholder="30:00" aria-describedby="naviRestH"></li>`
     + `<li class="srow"><label for="naviCond">Kartenbedingung</label><select class="stsel" id="naviCond">${NAVI_COND.map(([k, t]) => `<option value="${k}"${NAVI.cond === k ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></li>`
     + `<li class="srow"><span>Kampf-Puffer (Min.)</span><div class="segc mini" id="naviPuf" role="group" aria-label="Puffer für Kämpfe in Minuten">${['0', '3', '6'].map((t, i) => `<button type="button" data-puf="${i}" aria-pressed="${NAVI.puffer === i}">${t}</button>`).join('')}</div></li>`
@@ -6464,7 +6517,7 @@ $('#naviDetail').addEventListener('click', e => {
   const t = e.target;
   if (t.closest('#naviBack')){ naviClose(); return; }
   if (t.closest('#naviGo')){ naviRoute(NAVI.m); return; }
-  if (t.closest('#naviPick')){ naviPick(NAVI.m); return; }
+  if (t.closest('[data-npick]')){ naviPick(NAVI.m); return; }
   const s = t.closest('[data-nsel]'); if (s){ const k = s.dataset.nsel, cur = s.getAttribute('aria-pressed') === 'true'; naviSet(() => { NAVI.sel[k] = !cur; }); return; }
   const l = t.closest('[data-nloot]'); if (l){ const k = l.dataset.nloot, cur = l.dataset.on === 'true'; naviSet(() => { NAVI.sel[k] = !cur; }); return; }
   const x = t.closest('[data-nexit]'); if (x){ naviSet(() => { NAVI.exit[NAVI.m] = x.dataset.nexit; }); return; }
@@ -6472,7 +6525,6 @@ $('#naviDetail').addEventListener('click', e => {
 });
 $('#naviDetail').addEventListener('change', e => {
   const t = e.target;
-  if (t.id === 'naviStartSel') naviSet(() => { if (t.value === '') delete NAVI.start[NAVI.m]; else NAVI.start[NAVI.m] = +t.value; });
   if (t.id === 'naviCond') naviSet(() => { NAVI.cond = t.value; });
   if (t.id === 'naviKey') naviSet(() => { NAVI.key = t.checked; });
   if (t.id === 'naviSb') naviSet(() => { NAVI.sb = t.checked; });
@@ -6866,7 +6918,7 @@ function measureTop(){
   // im breiten als Spalte links (die Kartenmitte rückt in die freie Fläche rechts davon)
   if (HUD_OK){ const hs = hudSpace(); if (hs.oben) topH = Math.max(topH, hs.hl + 5); if (hs.seite) leftW = Math.max(0, Math.round(hs.r.right - st.left) + 4); }
   // Zoom-Tasten rechts unter der Mini-Karte, sonst (wenig Höhe über dem Sheet) links oben
-  const need = topH + 14 + 128 + 12 + 132 + 10;
+  const need = topH + 14 + 128 + 12 + 176 + 10;
   appEl.dataset.ctl = st.height - botH < need ? 'links' : 'rechts';
   fitMapTitle();
   dirty = true;
@@ -6893,7 +6945,8 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { di
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
 window.__atlas = { track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
-  navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE };
+  navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
+  kam:() => cam, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
 })();
 </script>
