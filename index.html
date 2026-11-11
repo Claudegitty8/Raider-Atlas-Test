@@ -200,9 +200,7 @@ svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-l
 .searchf{margin:0 16px 10px;display:flex;align-items:center;gap:6px;min-height:44px;padding:0 10px;border-radius:10px;background:var(--fill);color:var(--muted)}
 .searchf svg{flex:none;width:18px;height:18px;stroke-width:2.2}
 .searchf input{flex:1 1 auto;min-width:0;border:0;outline:none;background:transparent;color:var(--ink);font:400 17px/1.3 var(--body);padding:8px 0}
-.chipsrow{display:flex;gap:8px;overflow-x:auto;padding:5px 16px 15px;margin:-5px 0 -5px;scrollbar-width:none}
-.chipsrow::-webkit-scrollbar{display:none}
-.chipsrow.wrap{flex-wrap:wrap;overflow:visible;padding:0;margin:0}
+.chipsrow{display:flex;flex-wrap:wrap;gap:8px}   
 .chip{flex:none;min-height:34px;padding:0 14px;border:0;border-radius:17px;background:var(--fill);color:var(--ink);font:600 15px/1 var(--body);cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
 .btncol{display:flex;flex-direction:column;gap:10px;padding:16px}
@@ -226,6 +224,18 @@ svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-l
 .cond .cb{padding:0 0 14px;display:flex;flex-direction:column;gap:8px}
 .cond .cb p{margin:0;font-size:15px;line-height:1.42}
 .cond .cs{font-size:13px;color:var(--muted)}
+
+.cond .ct{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;min-width:0;padding:10px 0}
+.cond .cmks{display:inline-flex;flex-wrap:wrap;gap:6px}
+.cmk{font:700 11px/1.2 var(--body);letter-spacing:.04em;text-transform:uppercase;padding:3px 6px 2px;border-radius:5px;background:var(--fill);color:var(--muted);white-space:nowrap}
+.cmk.p{background:rgba(52,199,89,.16);color:var(--ok)}
+:root[data-theme="light"] .cmk.p{color:#1E7A34}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .cmk.p{color:#1E7A34}}
+.cond .cb p.cs{font-size:13px}
+.cond .cs .ver{margin-left:4px}
+.cond .cfl{margin:0;padding:0 0 0 18px;font-size:14px;line-height:1.5;color:var(--muted)}
+a.linkbtn{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+a.linkbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 .cond.faq summary{font-weight:600;font-size:16px}
 
@@ -780,7 +790,7 @@ li.qd .row .t1{color:var(--muted)}
                 <div class="runextra">
           <h3 class="gh">Geführte Runs</h3>
           <ul class="group" id="runListK"></ul>
-          <ul class="group"><li><button type="button" class="row" data-wis="cond"><span class="rt"><span class="t1">Kartenbedingungen</span><span class="t2">Was Night Raid, EM-Sturm und die anderen ändern</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li></ul>
+          <ul class="group"><li><button type="button" class="row" data-wis="cond"><span class="rt"><span class="t1">Kartenbedingungen</span><span class="t2">Was Night Raid, Hurricane und die anderen ändern</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li></ul>
         </div>
         </div>
         <div class="sdet" id="naviDetail" hidden></div>
@@ -792,7 +802,7 @@ li.qd .row .t1{color:var(--muted)}
         <h3 class="gh">Geführte Runs</h3>
         <ul class="group" id="runList"></ul>
         <h3 class="gh">Kartenbedingungen</h3>
-        <div class="group" id="condList"></div>
+        <div id="condList"></div>
         <p class="foot">Weitere Kategorien lassen sich als neue Bereiche ergänzen.</p>
         </div>
       </section>
@@ -860,8 +870,9 @@ li.qd .row .t1{color:var(--muted)}
           </div>
           <div id="wkHer" hidden>
             <div class="sfrow"><div class="searchf"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
-              <input id="wkHerQ" type="search" placeholder="Rezept suchen" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Rezepte durchsuchen" enterkeyhint="search"></div></div>
-            <div class="chipsrow" id="wkHerF" role="group" aria-label="Station"></div>
+              <input id="wkHerQ" type="search" placeholder="Rezept suchen" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Rezepte durchsuchen" enterkeyhint="search"></div>
+              <button type="button" class="fbtn" id="wkHerFilBtn" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg><span>Filter</span><span class="fnum" id="wkHerFilN" hidden></span></button></div>
+            <div class="ftok" id="wkHerTok" role="group" aria-label="Aktive Filter" hidden></div>
             <p class="foot" id="wkHerInfo" role="status"></p>
             <ul class="group" id="wkHerList"></ul>
             <p class="foot">«Geht» heisst: Deine Station hat die nötige Stufe, und falls ein Bauplan nötig ist, hast du ihn abgehakt. Ob du die Zutaten hast, weiss die App nicht.</p>
@@ -897,7 +908,7 @@ li.qd .row .t1{color:var(--muted)}
         <div class="sdet" id="wDetail" hidden>
           <div class="subnav own"><button type="button" class="back" id="wdBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Wissen</span></button></div>
           <h3 class="dn" id="wdTitle" tabindex="-1"></h3>
-          <div id="wvCond" hidden><p class="fine">Kartenbedingungen ändern einen Raid. Die aktuelle Bedingung wählst du im Navi unter «Run planen».</p><div class="group" id="condListW"></div></div>
+          <div id="wvCond" hidden><p class="fine">Kartenbedingungen ändern einen Raid: Wetter, Gegner, Beute und Ausgänge. Die aktuelle Bedingung wählst du im Navi unter «Run planen», Optionen.</p><div id="condListW"></div></div>
           <div id="wvFaq" hidden></div>
           <div id="wvEinst" hidden>
             <ul class="group in">
@@ -1110,7 +1121,7 @@ const DATA_STAND = '11.11.2026';
 
 const WISSEN_TIEF = {
   materialien:'06.11.2026', orte:'06.11.2026', schluessel:'06.11.2026', karten:'06.11.2026',
-  fregatte:'06.11.2026', emperor:'06.11.2026', kartenbedingungen:'06.11.2026', deutsch:'06.11.2026',
+  fregatte:'06.11.2026', emperor:'06.11.2026', kartenbedingungen:'11.11.2026', deutsch:'06.11.2026',
   arc:'07.11.2026', quests:'07.11.2026', projekte:'07.11.2026',
   
   werkstatt:'11.11.2026', rezepte:'11.11.2026', bauplaene:'11.11.2026', werte:'18.08.2026'
@@ -1226,7 +1237,24 @@ const SRCS = {
   Wtr:['q13'],
   Wah:['q5'],
   Wag:['q5'],
-  Wde:['q24']
+  Wde:['q24'],
+  
+  Mad:['q5'],
+  Mas:['q5'],
+  Mat:['q5'],
+  Mts:['q13'],
+  Mt2:['q13'],
+  Mtp:['q13'],
+  Mmf:['q7'],
+  Mem:['q34'],
+  Mig:['q32'],
+  Mit:['q32'],
+  Mns:['q35'],
+  Mnb:['q36'],
+  Mdv:['q37'],
+  Mah:['q6'],
+  Mp1:['q38'],
+  Mgr:['q39'],
 };
 
 /* @datei wissen/items.js */
@@ -3049,13 +3077,32 @@ Zipline|Seilrutsche
 `;
 /* @datei wissen/kartenbedingungen.js */
 
-const CONDS = [
-  { t:'ARC Frigate', x:'Rotiert über den Tag unter anderem durch Pendola Pass, Dam, Buried City, Spaceport und Blue Gate. Mit der Fregatte sind Raider Hatches deaktiviert.', s:'', a:'Fregatte-Run öffnen', go:'squad' },
-  { t:'Night Raid', x:'Erhöht die Chance auf Loot und Schlüssel.', s:'', a:'', go:'' },
-  { t:'Redirection (Pendola Pass)', x:'Aus Harvester Payloads kommen der Bauplan und die drei Coupler für den Emperor Gateway Conduit. Gebaut wird an der Workbench Stufe 1.', s:'', a:'Emperor-Run öffnen', go:'emperor' },
-  { t:'Close Scrutiny', x:'Assessor-Sonden lassen die Assessor Matrix fallen.', s:'', a:'', go:'' },
-  { t:'EM-Sturm', x:'Noch nicht recherchiert. Kommt mit dem nächsten Daten-Update, sobald es gesicherte Angaben gibt.', s:'', a:'', go:'' }
-];
+const COND_DATA = `nightraid|Night Raid|G|dam,buried,spaceport,bluegate,riven,stella|HRLP|Dunkelheit und mehr ARC-Aktivität, dafür ist die Beute mehr wert. Eine Angabe nennt auch eine höhere Chance auf Schlüssel.|Eine Angabe führt Night Raid auch für Pendola Pass.|Mad+Mas+Mts+Mt2+Mmf+Mah+k|
+emstorm|Electromagnetic Storm|G|dam,spaceport,bluegate|HRLP|Gewitter: Blitze treffen Raider und ARC, ein blaues Leuchten am Boden kündigt den Einschlag an. Die Sicht ist schlecht, der Donner überdeckt Geräusche.||Mad+Mas+Mts+Mt2+Mmf|
+hurricane|Hurricane|G|dam,buried,spaceport,bluegate|LP|Sturm und Regen: schlechte Sicht, gedämpfte Geräusche, der Wind bremst. Trümmer beschädigen im Freien den Schild, und stärkere ARC sind unterwegs.||Mad+Mas+Mts+Mt2+Mmf|
+bunker|Hidden Bunker|G|spaceport|HRP|Der Bunker am Rand von Spaceport ist offen: Antennen auf den Dächern einschalten und im Bunker Daten holen. An den Engstellen ist mit anderen Raidern zu rechnen.||Mad+Mas+Mts+Mmf|
+gate|Locked Gate|G|bluegate|HRP|Das Tor ist abgeriegelt. Wer vier Sicherheitscodes sammelt, öffnet die Tunnel darunter mit hochwertiger Beute.|Zwei Angaben nennen dazu vier Schlüsselkarten.|Mad+Mas+Mts+Mt2+Mmf|
+scrutiny|Close Scrutiny|O|dam,buried,spaceport,bluegate|Tl|ARC überwachen die Map dichter und holen schnell Verstärkung. Gewöhnliche Beute ist weniger wert, ARC lassen mehr fallen: Assessor-Sonden zum Beispiel die Assessor Matrix.||Mad+Mas+Mts+Mmf+Mnb+b|
+frigate|ARC Frigate|O|dam,buried,spaceport,bluegate,riven,pendola|HTl|Die ARC Frigate erscheint über der Map. Die Beute am Boden ist weniger wert.||Mad+Mts+Mtp+w|Fregatte-Run öffnen=squad
+-coldsnap|Cold Snap|G|dam,buried,spaceport,bluegate|LP|Kälte schadet im Freien. Dafür lassen sich Candleberries ernten.||Mad+Mas+Mmf+Mts+Mt2|
+redirection|Redirection|K|pendola||Emperor Beacons werden aktiv: einsammeln und aufstellen lenkt die Harvester Payloads zu dir um. Daraus kommen der Bauplan und die drei Coupler für den Emperor Gateway Conduit (gebaut an der Workbench Stufe 1). Kein Flash Freeze, dafür fallen Trümmer.||Mad+Mts+Mtp+Mdv+c|Emperor-Run öffnen=emperor
+blooms|Lush Blooms|K|dam,buried,spaceport,bluegate,riven||Ruhiges Wetter und viel mehr Natur-Beute: Zitronen, Oliven, Agave und Pilze.||Mad+Mas+Mts+Mmf|
+caches|Uncovered Caches|K|dam,buried,spaceport,bluegate,riven||Das Wetter hat Verstecke von Raidern freigelegt. Schnell plündern: Nach kurzer Zeit explodieren sie und locken Raider und ARC an.||Mad+Mas+Mts+Mt2+Mmf|
+husks|Husk Graveyard|K|dam,buried,spaceport,bluegate,riven||Wracks von ARC der First Wave liegen herum und stehen unter Strom. Aufbrechen bringt Material, macht aber Lärm.||Mad+Mas+Mts+Mmf|
+probes|Prospecting Probes|K|dam,buried,spaceport,riven||Mehr ARC Probes: Die Absturzstellen kommen in Wellen und sind bewacht. Gut für Motion Cores und Circuitry.|Eine ältere Angabe nennt Dam und Blue Gate.|Mad+Mas+Mts+Mmf|
+harvester|Harvester|K|dam,spaceport,bluegate||Ein grosser ARC-Harvester steht im Freien, bewacht von einer Queen. Wer die Feuer-Phasen übersteht, kommt an hochwertige Beute und legendäre Baupläne.||Mas+Mts+Mt2+Mmf|
+matriarch|Matriarch|K|dam,spaceport,bluegate||Die Matriarch ist unterwegs: ein Boss für ein volles Squad mit schwerer Munition und Sprengstoff.||Mas+Mts+Mt2+Mmf|
+beach|Beachcombing|K|riven||Wertsachen liegen im Sand vergraben. Du findest sie mit dem Dockmaster's Detector, den es in dieser Zeit in Behältern gibt. Dazu sind mehr Vögel da.||Mem+Mad+Mig+Mts|
+birdcity|Bird City|K|buried||Mehr Wertsachen, Vögel und Seilrutschen. Vogelnester sitzen in den Kaminen auf den Dächern.|Zwei ältere Angaben beschreiben stattdessen sehr dichte Gruppen von ARC.|Mad+Mts+Mit+Mas+Mmf|
+launch|Launch Tower Loot|K|spaceport||Am Startturm: Fuel Cells sammeln, Generatoren versorgen, Seilrutschen nehmen und Drohnen abwehren. Oben stehen Waffenkisten der höchsten Stufe.||Mas+Mts+Mmf|
+aftermath|Storm Aftermath|?|*||Weniger Raider und schwächere ARC. Nur für neue Spieler: Das Matchmaking bringt sie unter sich.||Mad|`;
+
+const COND_REGELN = {
+
+  trials:{ x:'Trials: Läuft eine grosse Bedingung, zählen die Punkte doppelt. Für Close Scrutiny und ARC Frigate ist das nicht ausdrücklich belegt.', s:'Mat+Mit+Mns' },
+  
+  zeitplan:{ x:'Die Bedingungen wechseln jede Stunde, jede Map hat ihren eigenen Plan, und seit dem 18.08.2026 ist er je Region verschoben. Die App läuft offline und kennt den Plan darum nicht.', s:'Mp1+Mas+Mt2+Mgr' }
+};
 /* @datei wissen/infos.js */
 
 const SRC = () => '';
@@ -3156,9 +3203,11 @@ const FAQ_GRUNDLAGE = [
   { t:'Wie aktuell sind die Daten?', x:[
     'Jeden Montag früh prüft ein automatisches Update zuerst die offiziellen Ankündigungen, dann die übrigen Angaben, und prüft jede Woche ein Thema gründlich. Das Datum der letzten Prüfung steht unter Wissen, Updates.' ] },
   { t:'Was weiss die App nicht?', x:[
-    'Sie hat keine Verbindung zum Spiel. Deinen Stand kennt sie nur aus deinen Eingaben. Nach Patches kann eine Angabe kurz veraltet sein, bis das nächste Update sie prüft.' ] },
+    'Sie hat keine Verbindung zum Spiel. Deinen Stand kennt sie nur aus deinen Eingaben. Nach Patches kann eine Angabe kurz veraltet sein, bis das nächste Update sie prüft.',
+    'Welche Kartenbedingung gerade läuft, weiss sie auch nicht: Der Zeitplan wechselt jede Stunde und ist je Region verschoben. Unter Wissen, Kartenbedingungen führt ein Knopf zum offiziellen Zeitplan.' ] },
   { t:'Wo bleiben meine Daten?', x:[
-    'Alles bleibt in deinem Browser: Queststand, Einkaufsliste und Run-Plan. Keine Anmeldung, keine Cookies, kein Tracking, nichts wird von fremden Servern geladen.' ] },
+    'Alles bleibt in deinem Browser: Queststand, Einkaufsliste und Run-Plan. Keine Anmeldung, keine Cookies, kein Tracking, nichts wird von fremden Servern geladen.',
+    'Die App hat genau einen Knopf, der nach aussen führt: «Offizieller Zeitplan» bei den Kartenbedingungen. Er öffnet die Seite des Herstellers erst, wenn du ihn antippst.' ] },
   { t:'Offene Daten und Lizenzen', x:[
     "Die Angaben zur Werkstatt (Stationen, Rezepte, Aufwertungen, Verkaufswerte und Zerlegen) stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt, dass dieser Hinweis mitgeliefert wird:",
     "MIT License",
@@ -5777,6 +5826,55 @@ function loop(t){
   if (eco && !anim && !ptrs.size && t - lastActive > 1200){ sleepT = setTimeout(() => { sleepT = null; requestAnimationFrame(loop); }, 250); return; }
   requestAnimationFrame(loop);
 }
+/* @datei app/kern/bedingungen.js */
+
+const ZEITPLAN_URL = 'https://arcraiders.com/map-conditions';
+const COND_KLASSE = { G:'Gross', O:'Gross · ARC Operation', K:'Klein', '?':'Klasse nicht bekannt' };
+const COND_FOLGE = { H:'Raider Hatches nicht aktiv', R:'Weniger Return Points', L:'Beute mehr wert', l:'Beute weniger wert', T:'Keine verschlossenen Türen', P:'Trials-Punkte doppelt' };
+const CONDS = COND_DATA.trim().split('\n').map(l => {
+  const z = l.split('|'), aus = z[0][0] === '-', run = (z[8] || '').split('=');
+  
+  const seiten = new Set(z[7].split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
+  return { id:aus ? z[0].slice(1) : z[0], t:z[1], kl:z[2], aus, gross:z[2] === 'G' || z[2] === 'O', maps:z[3] === '*' ? null : z[3].split(','),
+    f:z[4].split(''), x:z[5], abw:z[6], ver:seiten >= 2, a:run[0] || '', go:run[1] || '' };
+});
+const COND_BY = new Map(CONDS.map(c => [c.id, c]));
+
+const NAVI_COND = [['normal', 'Normal'], ...CONDS.filter(c => !c.aus).map(c => [c.id, c.t]), ['andere', 'Andere Bedingung']];
+const HATCH_ZU = Object.fromEntries(CONDS.filter(c => c.f.includes('H')).map(c => [c.id, 1]));
+const condMaps = c => c.maps ? c.maps.map(m => MAPS[m] ? MAPS[m].short : m).join(', ') : 'Maps nicht bekannt';
+
+const condAuf = (c, m) => !c.maps || !m || c.maps.includes(m);
+
+function condNaviHinweis(id, mitKey){
+  const c = COND_BY.get(id); if (!c) return '';
+  const S = [];
+  if (c.f.includes('H')) S.push(mitKey ? 'Raider Hatches sind nicht aktiv: Das Navi plant einen anderen Ausgang, dein Hatch Key nützt hier nichts.' : 'Raider Hatches sind nicht aktiv.');
+  if (c.f.includes('R')) S.push('Es sind weniger Return Points aktiv: Der geplante Ausgang kann zu sein, merk dir den Ersatzausgang.');
+  if (c.f.includes('T')) S.push('Alle verschlossenen Türen sind offen: Schlüssel brauchst du nicht.');
+  if (c.f.includes('L')) S.push('Die Beute ist mehr wert.'); else if (c.f.includes('l')) S.push('Die Beute ist weniger wert.');
+  if (c.f.includes('P')) S.push('Trials-Punkte zählen doppelt.');
+  return S.join(' ');
+}
+
+function condHtml(){
+  const e = escH;
+  const marke = (c, k) => c.f.includes(k) ? `<span class="cmk${k === 'P' ? ' p' : ''}">${k === 'H' ? 'Hatches gesperrt' : 'Trials doppelt'}</span>` : '';
+  const zeile = c => `<details class="cond" data-cond="${c.id}"><summary><span class="ct"><span class="cn1">${e(c.t)}</span><span class="cmks">${marke(c, 'H')}${marke(c, 'P')}</span></span></summary><div class="cb">`
+    + `<p>${e(c.x)}</p>`
+    + `<p class="cs">${e(COND_KLASSE[c.kl] || '')} · Auf: ${e(condMaps(c))} ${c.ver ? VER2 : VER1}</p>`
+    + (c.f.length ? `<ul class="cfl">${c.f.map(k => `<li>${e(COND_FOLGE[k])}</li>`).join('')}</ul>` : '')
+    + (c.abw ? `<p class="cs">Andere Angabe: ${e(c.abw)} <span class="ver v0">Widerspruch</span></p>` : '')
+    + (c.go ? `<p><button type="button" class="pill" data-run="${c.go}">${e(c.a)}</button></p>` : '') + '</div></details>';
+  const gruppe = (titel, L) => L.length ? `<h4>${titel} (${L.length})</h4><div class="group">${L.map(zeile).join('')}</div>` : '';
+  const lauf = CONDS.filter(c => !c.aus);
+  return `<div class="btncol"><a class="bp linkbtn" href="${ZEITPLAN_URL}" target="_blank" rel="noopener noreferrer">Offizieller Zeitplan<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8M11 7H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-5"/></svg></a></div>`
+    + `<p class="fine">${e(COND_REGELN.zeitplan.x)} Der Knopf öffnet die Seite des Herstellers im Browser.</p>`
+    + gruppe('Gross', lauf.filter(c => c.gross)) + gruppe('Klein', lauf.filter(c => c.kl === 'K')) + gruppe('Weitere', lauf.filter(c => c.kl === '?'))
+    + gruppe('Zurzeit nicht im Umlauf', CONDS.filter(c => c.aus))
+    + `<p class="fine">${e(COND_REGELN.trials.x)}</p>`
+    + '<p class="fine">Der Haken heisst «verifiziert»: Mindestens zwei unabhängige Angaben beschreiben die Bedingung so. Auf welchen Maps eine Bedingung läuft, stammt meist aus einer einzigen Liste. Nicht im Spiel getestet.</p>';
+}
 /* @datei app/kern/oberflaeche.js */
 
 const appEl = $('#app');
@@ -5974,7 +6072,7 @@ const RUNS = [
 function openRun(g){ if (g === 'emperor') openView('emperor', { from:UI.tab }); else { openView('fregatte', { from:UI.tab }); setMode(g); } }
 function renderRaids(){
   const runs = RUNS.map(r => `<li><button type="button" class="row" data-run="${r.id}"><span class="rt"><span class="t1">${escH(r.title)}</span><span class="t2">${escH(r.sub)}</span></span>${CHEV}</button></li>`).join('');
-  const conds = CONDS.map(c => `<details class="cond"><summary>${escH(c.t)}</summary><div class="cb"><p>${escH(c.x)}</p>${c.s ? `<p class="cs">${escH(c.s)}</p>` : ''}${c.go ? `<p><button type="button" class="pill" data-run="${c.go}">${escH(c.a)}</button></p>` : ''}</div></details>`).join('');
+  const conds = condHtml();   
   
   $('#runList').innerHTML = $('#runListK').innerHTML = runs; $('#condList').innerHTML = $('#condListW').innerHTML = conds;
 }
@@ -6185,7 +6283,7 @@ function filRender(){
         return `<button type="button" class="tile${o.thumb ? ' map' : ''}" data-g="${g.key}" data-k="${esc(o.k)}" aria-pressed="${on}"${off ? ' disabled' : ''}>`
           + (o.thumb ? `<span class="tthumb" aria-hidden="true">${o.thumb}</span>` : '')
           + (o.av ? `<span class="av" style="background:${o.av}" aria-hidden="true">${esc(o.label[0])}</span>` : '')
-          + `<span class="tl"><span class="tn">${esc(o.label)}</span>${o.n != null ? `<span class="tc">${o.n} ${esc(FIL.unit)}</span>` : ''}</span></button>`;
+          + `<span class="tl"><span class="tn">${esc(o.label)}</span>${o.n != null ? `<span class="tc">${o.n} ${esc(o.n === 1 && FIL.unit1 ? FIL.unit1 : FIL.unit)}</span>` : ''}</span></button>`;
       }).join('') + '</div>';
   }
   $('#filBody').innerHTML = h;
@@ -6955,7 +7053,7 @@ $('#sList').addEventListener('click', e => {
   const o = e.target.closest('[data-open]'); if (o) showDetail(ITEMS[+o.dataset.open], null);
 });
 
-const S_FIL = { title:'Filter', unit:'Einträge', groups:[
+const S_FIL = { title:'Filter', unit:'Einträge', unit1:'Eintrag', groups:[
   { key:'cat', label:'Kategorie', def:'all', get:() => sFilter, set:k => { sFilter = k; },
     items:() => FILTERS.map(([k, lab]) => ({ k, label:k === 'all' ? 'Alle' : lab, n:ITEMS.filter(it => matchFilterK(it, k)).length })) } ],
   changed:() => { if (matView !== 'suche') matShow('suche'); else renderList(); scrollOben('mat'); filUI(S_FIL, '#sFilBtn', '#sFilN', '#sTok'); } };
@@ -7384,11 +7482,11 @@ renderList(); shopRender();
 
 const FAQ_FUNKTIONEN = [
 {"t":"Karten","b":[{"k":"p","x":"Jede Map gibt es als 3D-Modell und als 2D-Plan, mit Markern, die sich einzeln filtern lassen. Norden ist wie im Spiel fest oben."},{"k":"ul","i":[["Marker","Ausgänge (Lift, Raider-Luke), Waffenkisten, Security-Spinde, Rucksäcke, Startpunkte, Orte und Questziele."],["Ebenen","oben und unten getrennt, wo eine Map mehrere Stockwerke hat."],["Suche","Orte, Items und Quests direkt auf der Karte finden."],["Mini-Karte","kleine Karte mit Position und Route, auch während eines Runs."],["Ausrichtung","Der Kompass-Knopf wechselt zwischen drei Modi. «Norden oben» bleibt starr, zoomt auf das nächste Ziel und wandert mit; Ziehen verschiebt die Karte. «Folgen» dreht die Karte, damit dein Weg nach oben zeigt. «Frei drehen» dreht und neigt die Karte mit einem Finger, verschoben wird mit zwei Fingern."],["Gebäude und Gelände","Alle Maps sind nach dem Kartenbild grob nachgebaut: Gebäude so gedreht wie im Spiel, Hügel und Täler. Die Höhen sind geschätzt. Stella Montis ist eine Innenanlage und bleibt ein flacher Plan."],["Eigene Karte","einen eigenen Screenshot als Unterlage unter die Marker legen."],["Annahmen markiert","Was nicht belegt ist, steht als «Annahme» beim Marker oder Raum."],["3D-Grafik bleibt","Verliert der Browser die 3D-Grafik (zum Beispiel das iPhone im Hintergrund), zeichnet die App einfach weiter und baut die 3D-Ansicht neu auf, sobald es geht."]]}]},
-{"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Run», die Mini-Karte und die Knopfspalte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde. Kartenbedingung, Kampf-Puffer, Raider Hatch Key, Security Breach und Uhr stehen unter «Optionen»."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel ausgeschrieben mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus dem Inventar wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Run steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","5 Bedingungen mit Erklärung (ARC Frigate, Night Raid, Redirection, Close Scrutiny, EM-Sturm) unter «Wissen»; ein Eintrag unten in «Run planen» führt dorthin. Im Navi wählst du die aktuelle Bedingung; sind Raider-Luken gesperrt, plant es einen anderen Ausgang."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
+{"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Run», die Mini-Karte und die Knopfspalte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde. Kartenbedingung, Kampf-Puffer, Raider Hatch Key, Security Breach und Uhr stehen unter «Optionen»."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel ausgeschrieben mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus dem Inventar wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Run steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","alle 19 Bedingungen stehen unter «Wissen»; ein Eintrag unten in «Run planen» führt dorthin. Im Navi wählst du unter «Optionen» die aktuelle Bedingung, zuerst stehen die der gewählten Map. Das Navi nennt die Folgen: Sind Raider Hatches nicht aktiv, plant es einen anderen Ausgang; es sagt auch, wenn weniger Return Points aktiv sind oder alle verschlossenen Türen offen stehen."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
 {"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat drei Reiter: Bedarf, Einkaufsliste und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte, deinen Werkstatt-Zielen, deinen Wunsch-Waffen und eigenen Einträgen der Einkaufsliste, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan lernen (nach dem Abhaken: Verkaufen). Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann das weg?","der Filter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Entsteht beim Zerlegen von","jedes Material zeigt, welche Items es beim Zerlegen ergeben, beste Ausbeute zuerst, mit der Menge in Speranza und im Raid. Brauchst du eines dieser Items selbst noch, steht das als Warnung in der Zeile."],["Symbole","jedes Item trägt ein eigenes Symbol für seine Art (Waffe, Aufsatz, Munition, Bauplan, Material, Wertsache und weitere), in der Farbe seiner Seltenheit. Die Symbole sind selbst gezeichnet, keine Grafiken aus dem Spiel."],["Alle Items","623 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Rezept auf die Liste","ein Knopf setzt alle Zutaten eines Rezepts auf die Einkaufsliste; damit zählen sie im Bedarf."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
-{"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Vier Reiter: Stationen, Waffen, Herstellen und Baupläne."},{"k":"ul","i":[["Stationen","8 Stationen mit Stufen (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Research Station, Scrappy). Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Herstellen","156 Rezepte, durchsuchbar und nach Station gefiltert. «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst."],["Baupläne","85 Baupläne mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
+{"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Vier Reiter: Stationen, Waffen, Herstellen und Baupläne."},{"k":"ul","i":[["Stationen","8 Stationen mit Stufen (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Research Station, Scrappy). Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Herstellen","156 Rezepte, durchsuchbar. Der Knopf «Filter» grenzt nach Station ein, und «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst. Beides lässt sich kombinieren."],["Baupläne","85 Baupläne mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen, alle davor werden abgehakt."],["Suche und Filter","nach Name, Ort, Händler oder Material."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste. Im Detail steht «Wird verfolgt» als Zustand."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."]]}]},
-{"t":"Wissen","b":[{"k":"p","x":"Der Knopf mit dem Buch öffnet die Seite «Wissen» (am iPhone oben rechts in jedem Bereich, im breiten Fenster unten in der Symbolleiste): alles zum Nachschlagen und alles über die App an einem Ort. «Zurück» führt in den Bereich, aus dem du kamst."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","5 Bedingungen und was sie ändern."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht und Namen auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
+{"t":"Wissen","b":[{"k":"p","x":"Der Knopf mit dem Buch öffnet die Seite «Wissen» (am iPhone oben rechts in jedem Bereich, im breiten Fenster unten in der Symbolleiste): alles zum Nachschlagen und alles über die App an einem Ort. «Zurück» führt in den Bereich, aus dem du kamst."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","19 Bedingungen in den Gruppen Gross und Klein: was sie ändern, auf welchen Maps sie laufen, ob Raider Hatches gesperrt sind und ob Trials-Punkte doppelt zählen. Weichen Angaben voneinander ab, stehen beide da."],["Offizieller Zeitplan","welche Bedingung gerade läuft, weiss die App nicht (der Plan wechselt jede Stunde und ist je Region verschoben). Ein Knopf öffnet den offiziellen Zeitplan im Browser. Es ist der einzige Knopf der App, der nach aussen führt."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht und Namen auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
 {"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Werkstatt-Stand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Eigene Stelle pro Bereich","jeder Bereich merkt sich, wie weit du gescrollt hast. «Zurück» aus einem Detail führt an die alte Stelle der Liste; den Bereich erneut antippen führt nach oben."],["Breites Fenster (PC, iPad quer)","ab 860 px Breite steht links eine schmale Symbolleiste mit den fünf Bereichen und «Wissen», daneben die Liste über die ganze Höhe. In Inventar, Werkstatt, Quests und Wissen steht das Detail rechts neben der Liste: Die Liste bleibt stehen, die gewählte Zeile ist markiert, und was du im Detail abhakst, steht sofort auch in der Liste. Karten und Run planen zeigen Karte und Infobereich. Öffnest du aus einem Detail einen Ort auf der Karte, wechselt die App zu «Karten»; «Zurück» in der Kartenleiste führt wieder zum Detail."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Einstellungen und Updates","stehen unter «Wissen»."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
 {"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein; in der App steht dafür ein kleiner Haken. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
 {"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
@@ -7810,7 +7908,7 @@ INV_BEREIT = true;
 bedarfNeu(); renderList(); shopRender(); matShow('bedarf');
 /* @datei app/kern/werkstatt.js */
 
-let wkView = 'st', wkCur = null, wkBack = null, wkHerF = 'alle';
+let wkView = 'st', wkCur = null, wkBack = null, wkHerG = 'alle', wkHerB = 'alle';
 const WK_REITER = { st:'Stationen', waf:'Waffen', her:'Herstellen', bp:'Baupläne' };
 const WK_BACK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 const wkId = k => '#wk' + k[0].toUpperCase() + k.slice(1);
@@ -7928,11 +8026,19 @@ function wkWafOpen(fam, back){
 }
 
 const WK_REZ = [...WSD.items.values()].filter(w => w.rez);
+const wkHerPasst = (w, g, b) => (g === 'alle' || rezGeht(w)) && (b === 'alle' || w.rez.bank.includes(b));
+
+const WK_HER_FIL = { title:'Filter', unit:'Rezepte', unit1:'Rezept', groups:[
+  { key:'geht', label:'Zeigen', def:'alle', cls:'wide', get:() => wkHerG, set:k => { wkHerG = k; },
+    items:() => [['alle', 'Alle Rezepte'], ['geht', 'Geht jetzt']].map(([k, l]) => ({ k, label:l, n:WK_REZ.filter(w => wkHerPasst(w, k, wkHerB)).length })) },
+  { key:'bank', label:'Station', def:'alle', cls:'wide', get:() => wkHerB, set:k => { wkHerB = k; },
+    items:() => [['alle', 'Alle Stationen']].concat(Object.keys(WS_BANK).filter(b => WK_REZ.some(w => w.rez.bank.includes(b))).map(b => [b, WS_BANK[b]]))
+      .map(([k, l]) => ({ k, label:l, n:WK_REZ.filter(w => wkHerPasst(w, wkHerG, k)).length })) } ],
+  changed:() => { wkHerRender(); scrollOben('werk'); } };
 function wkHerRender(){
-  const F = [['alle', 'Alle'], ['geht', 'Geht jetzt']].concat(Object.keys(WS_BANK).filter(b => WK_REZ.some(w => w.rez.bank.includes(b))).map(b => [b, WS_BANK[b]]));
-  $('#wkHerF').innerHTML = F.map(([k, t]) => `<button type="button" class="chip" data-herf="${k}" aria-pressed="${k === wkHerF}">${esc(t)}</button>`).join('');
+  filUI(WK_HER_FIL, '#wkHerFilBtn', '#wkHerFilN', '#wkHerTok');
   const q = norm($('#wkHerQ').value.trim());
-  const L = WK_REZ.filter(w => (wkHerF === 'alle' || (wkHerF === 'geht' ? rezGeht(w) : w.rez.bank.includes(wkHerF)))
+  const L = WK_REZ.filter(w => wkHerPasst(w, wkHerG, wkHerB)
     && (!q || norm(w.n).includes(q) || norm(invName(w.n)).includes(q) || ((itemByName(w.n) || {})._d || '').includes(q)))
     .sort((a, b) => invName(a.n).localeCompare(invName(b.n), 'de'));
   const geht = WK_REZ.filter(rezGeht).length;
@@ -7941,7 +8047,7 @@ function wkHerRender(){
   $('#wkHerList').innerHTML = L.map(w => wkItemRow(w, w.rez.bank.map(b => WS_BANK[b]).join(' oder ') + (w.rez.stufe ? ' Stufe ' + w.rez.stufe : ''))).join('');
 }
 $('#wkHerQ').addEventListener('input', wkHerRender);
-$('#wkHerF').addEventListener('click', e => { const b = e.target.closest('[data-herf]'); if (!b) return; wkHerF = b.dataset.herf; wkHerRender(); });
+$('#wkHerFilBtn').addEventListener('click', () => filOpen(WK_HER_FIL));
 
 const bpWoher = s => s.replace(/\ball maps\b/g, 'alle Maps').replace(/\bAny container\b/g, 'jeder Container').replace(/\bany major map condition\b/gi, 'jede grosse Kartenbedingung')
   .replace(/\bContainer not published\b/g, 'Container nicht bekannt').replace(/\bquest:/g, 'Quest:');
@@ -8167,9 +8273,7 @@ const saveNavi = () => { try { localStorage.setItem(NAVI_KEY, JSON.stringify(NAV
 const NZ = { anlauf:.5, anlaufOhne:1.5, quest:2, unterwegs:1, wcase:1, slock:1, pack:.5, nah:1, maxLoot:6, sicher:1, merge:3 };
 const KAMPF = [.5, .5, 1, 2, 3.5, 5];
 const PUFFER = [0, 3, 6];
-const NAVI_COND = [['normal', 'Normal'], ['nightraid', 'Night Raid'], ['emstorm', 'Electromagnetic Storm'], ['frigate', 'ARC Frigate'],
-  ['bunker', 'Hidden Bunker'], ['gate', 'Locked Gate'], ['andere', 'Andere Bedingung']];
-const HATCH_ZU = { nightraid:1, emstorm:1, frigate:1, bunker:1, gate:1 };   
+
 const LOOT_ART = { w:['wcase', 'Waffenkiste', NZ.wcase], b:['pack', 'Rucksack', NZ.pack], s:['slock', 'Security-Spind', NZ.slock] };
 const PRIO_NAME = { 4:'verfolgte Quest', 3:'nächste Quest', 2:'Material', 1:'Top-Loot' };
 
@@ -8430,8 +8534,16 @@ function naviRefresh(force){
 const chk = (on, attr, label) => `<button type="button" class="check" ${attr} aria-pressed="${on}" aria-label="${esc(label)}">${CHECK_SVG}</button>`;
 const STATE_TXT = { plan:'', cut:'passt nicht mehr in die Zeit', aus:'abgewählt', zeit:'passt nicht mehr in die Zeit', weit:'zu weit weg' };
 let naviOptAuf = false;   
+
+function naviCondOpt(m){
+  const opt = ([k, t]) => `<option value="${k}"${NAVI.cond === k ? ' selected' : ''}>${esc(t)}</option>`;
+  const fremd = ([k]) => COND_BY.has(k) && !condAuf(COND_BY.get(k), m), L = NAVI_COND.filter(c => c[0] !== 'andere');
+  const sonst = L.filter(fremd);
+  return L.filter(c => !fremd(c)).map(opt).join('') + (sonst.length ? `<optgroup label="Den Daten nach nicht auf dieser Map">${sonst.map(opt).join('')}</optgroup>` : '') + opt(['andere', 'Andere Bedingung']);
+}
 function naviRender(){
   const m = NAVI.m; if (!m || !MAPS[m]) return;
+  if (!NAVI_COND.some(c => c[0] === NAVI.cond)) NAVI.cond = 'normal';   
   const P = naviPlanCache = naviPlan(m), st = P.st, starts = startsOf(m);
   const pct = Math.min(100, Math.round(P.T / Math.max(1, P.budget) * 100));
   let h = `<div class="subnav"><button type="button" class="back" id="naviBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Run planen</button></div>`
@@ -8449,13 +8561,14 @@ function naviRender(){
   
   const opt = [NAVI.cond !== 'normal' ? (NAVI_COND.find(c => c[0] === NAVI.cond) || [])[1] : '', 'Puffer ' + ['0', '3', '6'][NAVI.puffer] + ' min', NAVI.key ? 'Hatch Key' : '', NAVI.sb ? 'Security Breach' : '', NAVI.uhr ? 'Uhr an' : ''].filter(Boolean).join(' · ');
   h += `<details class="cond nopt" id="naviOpt"${naviOptAuf ? ' open' : ''}><summary><span class="rt"><span class="t1">Optionen</span><span class="t2">${esc(opt)}</span></span></summary><ul class="group in">`
-+ `<li class="srow"><label for="naviCond">Kartenbedingung</label><select class="stsel" id="naviCond">${NAVI_COND.map(([k, t]) => `<option value="${k}"${NAVI.cond === k ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></li>`
++ `<li class="srow"><label for="naviCond">Kartenbedingung</label><select class="stsel" id="naviCond">${naviCondOpt(m)}</select></li>`
     + `<li class="srow"><span>Kampf-Puffer (Min.)</span><div class="segc mini" id="naviPuf" role="group" aria-label="Puffer für Kämpfe in Minuten">${['0', '3', '6'].map((t, i) => `<button type="button" data-puf="${i}" aria-pressed="${NAVI.puffer === i}">${t}</button>`).join('')}</div></li>`
     + `<li class="srow"><label for="naviKey">Raider Hatch Key dabei</label><input type="checkbox" class="switch" id="naviKey" role="switch"${NAVI.key ? ' checked' : ''}></li>`
     + `<li class="srow"><label for="naviSb">Skill Security Breach</label><input type="checkbox" class="switch" id="naviSb" role="switch"${NAVI.sb ? ' checked' : ''}></li>`
     + `<li class="srow"><label for="naviUhr">Uhr im Run mitlaufen lassen</label><input type="checkbox" class="switch" id="naviUhr" role="switch"${NAVI.uhr ? ' checked' : ''}></li>`
     + '</ul>'
-    + (NAVI.key && HATCH_ZU[NAVI.cond] ? '<p class="fine">Mit dieser Bedingung sind Raider Hatches gesperrt.</p>' : '') + '</details>';
+    + (condNaviHinweis(NAVI.cond, NAVI.key) ? `<p class="fine" id="naviCondH">${esc(condNaviHinweis(NAVI.cond, NAVI.key))}</p>` : '')
+    + (COND_BY.has(NAVI.cond) && !condAuf(COND_BY.get(NAVI.cond), m) ? `<p class="fine" id="naviCondM">Den Daten nach läuft ${esc(COND_BY.get(NAVI.cond).t)} auf dieser Map nicht, sondern auf: ${esc(condMaps(COND_BY.get(NAVI.cond)))}.</p>` : '') + '</details>';
   
   h += '<h4>Quests</h4>';
   if (P.quests.length){
@@ -8873,7 +8986,7 @@ function uiSnap(){
     mat:{ v:matView, prev:matPrev, q:$('#sInput').value, f:sFilter, item:matView === 'detail' && sLast ? sLast.n : null },
     q:{ v:qView, q:$('#qInput').value, tr:qTrader, map:qMapF, done:qShowDone,
       cur:qCur ? (qCur.t === 'q' ? { t:'q', en:QUESTS[qCur.i].en } : { t:'p', id:qCur.id }) : null },
-    arc:{ cur:arcCur ? arcCur.n : null }, werk:{ v:wkView, cur:wkCur, f:wkHerF }, wis:{ v:wView }, von:{ wissen:VON.wissen, arc:VON.arc }, navi:!$('#naviDetail').hidden ? NAVI.m : null, scroll:SCROLL };
+    arc:{ cur:arcCur ? arcCur.n : null }, werk:{ v:wkView, cur:wkCur, g:wkHerG, b:wkHerB }, wis:{ v:wView }, von:{ wissen:VON.wissen, arc:VON.arc }, navi:!$('#naviDetail').hidden ? NAVI.m : null, scroll:SCROLL };
 }
 function uiSave(){ if (!uiReady) return; clearTimeout(uiT); uiT = null; try { localStorage.setItem(UI_KEY, JSON.stringify(uiSnap())); } catch(_){} }
 function uiSoon(){ if (!uiReady) return; clearTimeout(uiT); uiT = setTimeout(uiSave, 300); }
@@ -8912,7 +9025,7 @@ function uiRestore(hashId, lastId){
   });
   tryIt(() => { if (s.arc && s.arc.cur && ARC_BY.has(s.arc.cur)) arcOpen(s.arc.cur); });
   tryIt(() => { if (s.navi && MAPS[s.navi]) naviOpen(s.navi); });
-  tryIt(() => { if (!s.werk) return; if (typeof s.werk.f === 'string') wkHerF = s.werk.f;
+  tryIt(() => { if (!s.werk) return; if (s.werk.g === 'geht' || s.werk.f === 'geht') wkHerG = 'geht'; const wb = s.werk.b || s.werk.f; if (typeof wb === 'string' && WS_BANK[wb]) wkHerB = wb;   
     const c = s.werk.cur; if (WK_REITER[s.werk.v]) wkShow(s.werk.v);
     if (c && c.t === 'st' && wsStation(c.n)) wkStOpen(c.n, null); else if (c && c.t === 'waf' && WAFFEN.has(c.n)) wkWafOpen(c.n, null); });
   tryIt(() => { if (s.wis && W_TITEL[s.wis.v]) wissenShow(s.wis.v); });
@@ -8989,7 +9102,7 @@ uiRestore(startId, lastId);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
-window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
+window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN }), cond:() => ({ CONDS, NAVI_COND, HATCH_ZU, maps:Object.keys(MAPS) }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
   navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
   marker:() => markers, g3:() => G3, zeiger:() => ptrs.size, ruhig:() => !anim && !dirty, kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
