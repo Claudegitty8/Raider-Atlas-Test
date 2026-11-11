@@ -629,6 +629,21 @@ li.qd .row .t1{color:var(--muted)}
 
 
 .app[data-pick="1"] .hud,.app[data-pick="1"] #miniWrap{display:none}
+
+
+.keep{display:flex;flex-direction:column;align-items:flex-end;gap:2px;margin:0 8px 0 10px;flex:none}
+.keep .lcdn{font-size:34px;line-height:.9}
+.keep small{font:600 11px/1 var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.vtag{flex:none;margin:0 8px 0 10px;font:700 11px/1 var(--body);letter-spacing:.07em;text-transform:uppercase;padding:7px 10px;border-radius:999px;border:1.5px solid currentColor}
+.vtag.sell{color:var(--muted)}.vtag.rec{color:var(--neon2)}.vtag.craft{color:var(--ink)}
+.verdict{margin:14px 16px 4px;padding:14px 16px;border-radius:16px;background:var(--cell);border:1.5px solid var(--neon2)}
+.verdict.v-sell,.verdict.v-gear,.verdict.v-bp,.verdict.v-unk{border-color:var(--line, rgba(128,128,128,.4))}
+.verdict .vkopf{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.verdict .vlab{font:700 13px/1 var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--neon2)}
+.verdict.v-sell .vlab,.verdict.v-gear .vlab,.verdict.v-bp .vlab,.verdict.v-unk .vlab{color:var(--muted)}
+.verdict .lcdn{font-size:44px;line-height:.9}
+.verdict p{margin:8px 0 0;font:400 15px/1.35 var(--body);color:var(--ink)}
+#pgMat[data-v="liste"] #matRoot .sfrow,#pgMat[data-v="liste"] #matRoot .ftok{display:none}
 /* @ende-dateien */
 </style>
 </head>
@@ -638,7 +653,7 @@ li.qd .row .t1{color:var(--muted)}
     <aside class="side" id="side" aria-label="Bereiche">
     <div class="brandrow"><span class="brand">Raider-Atlas</span><span class="stripes" aria-hidden="true"></span></div>
     <nav class="sidenav" aria-label="Bereiche">
-      <button type="button" class="sn" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM15.5 15.5L20 20M8 10.5h5M10.5 8v5"/></svg><span>Materialsuche</span></button>
+      <button type="button" class="sn" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8 12 3.5 20.5 8v8L12 20.5 3.5 16z"/><path d="M3.5 8 12 12.5 20.5 8M12 12.5v8"/></svg><span>Inventar</span></button>
       <button type="button" class="sn" data-tab="karten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5zM9 4v13.5M15 6.5V20"/></svg><span>Karten</span></button>
       <button type="button" class="sn" data-tab="run"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg><span>Run planen</span></button>
       <button type="button" class="sn" data-tab="arc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.4"/><path d="M12 5.8v2.8M12 15.4v2.8"/></svg><span>ARC</span></button>
@@ -655,23 +670,31 @@ li.qd .row .t1{color:var(--muted)}
 
       <section class="page" id="pgMat" data-page="mat" aria-labelledby="hMat" hidden>
         <div id="matRoot">
-          <header class="lt"><h1 id="hMat">Materialsuche</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+          <header class="lt"><h1 id="hMat">Inventar</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
           <div class="segc" role="group" aria-label="Ansicht">
-            <button type="button" id="segSuche" aria-pressed="true">Suchen</button>
+            <button type="button" id="segBedarf" aria-pressed="true">Bedarf</button>
             <button type="button" id="segListe" aria-pressed="false">Einkaufsliste <span class="lcdn" id="shopN">0</span></button>
+            <button type="button" id="segSuche" aria-pressed="false">Alle Items</button>
           </div>
-        </div>
-        <div id="vSuche">
           <div class="sfrow"><div class="searchf"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
-            <input id="sInput" type="search" placeholder="Material suchen" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Material oder Schlüssel suchen, deutsch oder englisch" enterkeyhint="search"></div>
+            <input id="sInput" type="search" placeholder="Item suchen" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Item oder Schlüssel suchen, deutsch oder englisch" enterkeyhint="search"></div>
             <button type="button" class="fbtn" id="sFilBtn" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg><span>Filter</span><span class="fnum" id="sFilN" hidden></span></button></div>
           <div class="ftok" id="sTok" role="group" aria-label="Aktive Filter" hidden></div>
+        </div>
+        <div id="vBedarf">
+          <p class="foot" id="bedInfo" role="status"></p>
+          <p class="foot" id="bedWerk" hidden>Die Werkstatt zählt vorerst mit allen Stufen mit, bis du deine eigenen Stufen einstellen kannst.</p>
+          <ul class="group" id="bedList"></ul>
+          <div class="btncol"><button type="button" class="bs" id="bedWeg">Was kann weg? Items ohne Bedarf und ohne Rezept</button></div>
+          <p class="foot">Die Zahl ist, was du insgesamt noch brauchst. Dein Lager kennt die App nicht: Was du darüber hast, kannst du verkaufen oder zerlegen. Pausierte Projekte zählen nicht mit. Nicht im Spiel getestet, Grundlage siehe FAQ unter Quests.</p>
+        </div>
+        <div id="vSuche" hidden>
           <p class="foot" id="sCount" role="status"></p>
           <ul class="group" id="sList"></ul>
-          <p class="foot">Kreis antippen: auf die Einkaufsliste. Zeile antippen: Details und beste Fundorte. Nicht im Spiel getestet, Grundlage siehe FAQ unter Quests.<span id="standFoot"></span></p>
+          <p class="foot">Kreis antippen: auf die Einkaufsliste. Zeile antippen: Urteil, Wofür und beste Fundorte. Die Marke rechts sagt, ob du es behalten sollst. Nicht im Spiel getestet, Grundlage siehe FAQ unter Quests.<span id="standFoot"></span></p>
         </div>
         <div id="vListe" hidden>
-          <p class="foot" id="shopEmpty">Noch leer. Wähle unter «Suchen» die Materialien, die du brauchst.</p>
+          <p class="foot" id="shopEmpty">Noch leer. Hier steht, was du in den nächsten Runs suchst. Setze unter «Bedarf» oder «Alle Items» ein Material auf die Liste, oder verfolge eine Quest.</p>
           <ul class="group" id="shopList"></ul>
           <div class="btncol" id="shopBtns">
             <button type="button" class="bp" id="btnWo">Wo suchen?</button>
@@ -858,7 +881,7 @@ li.qd .row .t1{color:var(--muted)}
   </section>
 
     <nav class="tabbar" id="tabbar" aria-label="Bereiche">
-    <button type="button" class="tb" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM15.5 15.5L20 20M8 10.5h5M10.5 8v5"/></svg><span>Materialsuche</span></button>
+    <button type="button" class="tb" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8 12 3.5 20.5 8v8L12 20.5 3.5 16z"/><path d="M3.5 8 12 12.5 20.5 8M12 12.5v8"/></svg><span>Inventar</span></button>
     <button type="button" class="tb" data-tab="karten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5zM9 4v13.5M15 6.5V20"/></svg><span>Karten</span></button>
     <button type="button" class="tb" data-tab="run"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg><span>Run planen</span></button>
     <button type="button" class="tb" data-tab="arc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.4"/><path d="M12 5.8v2.8M12 15.4v2.8"/></svg><span>ARC</span></button>
@@ -2640,6 +2663,277 @@ Red Light Stick|bank|U1|Utility Station 2|Wts
 Wolfpack|wert|6000|5000|Wwc
 Yellow Light Stick|bank|U1|Utility Station 2|Wts
 `;
+
+const WS_DE_SUCHE = `
+"Leviathan's Crown" Ship Model|Schiffsmodell "Leviathan's Crown"
+"Sirena Dorata" Ship Model|Schiffsmodell "Sirena Dorata"
+"Twilight Compass" Ship Model|Schiffsmodell "Twilight Compass"
+"Velocity" Ship Model|Schiffsmodell "Velocity"
+"Wind Sprite" Ship Model|Schiffsmodell "Wind Sprite"
+Acoustic Guitar|Akustikgitarre
+Adrenaline Shot|Adrenalinspritze
+Advanced ARC Powercell|Fortschrittliche ARC-Energiezelle
+Agave Juice|Agavensaft
+Alien Duck|Außerirdische Ente
+Angled Grip I|Abgewinkelter Griff I
+Angled Grip II|Abgewinkelter Griff II
+Angled Grip II Blueprint|Bauplan: Abgewinkelter Griff II
+Angled Grip III|Abgewinkelter Griff III
+Angled Grip III Blueprint|Bauplan: Abgewinkelter Griff III
+Anvil Blueprint|Bauplan: Anvil
+Anvil I|Amboss I
+Anvil II|Amboss II
+Anvil III|Amboss III
+Anvil IV|Amboss IV
+Anvil Splitter|Amboss-Spalter
+Aphelion Blueprint|Bauplan: Aphelion
+Bandage|Verband
+Barricade Kit|Barrikadenset
+Barricade Kit Blueprint|Bauplan: Barrikadenset
+Bettina Blueprint|Bauplan: Bettina
+Binoculars|Fernglas
+Blaze Grenade|Flammengranate
+Blaze Grenade Blueprint|Bauplan: Flammengranate
+Blaze Grenade Trap|Laserfalle: Feuer
+Blue Light Stick|Blauer Leuchtstab
+Blue Light Stick Blueprint|Bauplan: Blauer Leuchtstab
+Bobcat Blueprint|Bauplan: Bobcat
+Book|Buch
+Burletta Blueprint|Bauplan: Burletta
+Burned Arc Circuitry|Durchgebrannte ARC-Schaltkreise
+Burnt-Out Candles|Ausgebrannte Kerzen
+Candleberries|Kerzenbeeren
+Canto Blueprint|Canto Bauplan
+Celeste's Journal|Celestes Tagebuch
+Colorful Shoes (Green)|Farbenfrohe Schuhe (grün)
+Colorful Shoes (Red)|Farbenfrohe Schuhe (rot)
+Colorful Shoes (Silver)|Farbenfrohe Schuhe (silber)
+Combat Mk. 1|Kampf-Marke 1
+Combat Mk. 2|Kampf-Marke 2
+Combat Mk. 3 (Aggressive)|Kampf-Marke 3 (Aggressiv)
+Combat Mk. 3 (Aggressive) Blueprint|Bauplan: Kampf-Marke 3 (Aggressiv)
+Combat Mk. 3 (Flanking)|Kampf-Marke 3 (Flankierend)
+Combat Mk. 3 (Flanking) Blueprint|Bauplan: Kampf-Marke 3 (Flankierend)
+Comet Igniter|Kometenzünder
+Compensator I|Kompensator I
+Compensator II|Kompensator II
+Compensator II Blueprint|Bauplan: Kompensator II
+Compensator III|Kompensator III
+Compensator III Blueprint|Bauplan: Kompensator III
+Complex Gun Parts Blueprint|Bauplan: Komplexe Waffenteile
+Crash Mat|Sturzmatte
+Crash Mat Blueprint|Sturzmatte-Blaupause
+Deadline Blueprint|Bauplan: Deadline
+Defibrillator Blueprint|Bauplan: Defibrillator
+Dockmaster's Detector|Detektor des Hafenmeisters
+Dodger's Note|Dodgers Notiz
+Dolabra Blueprint|Dolabra Bauplan
+Doodly Duck|Kritzel-Ente
+Door Blocker|Türblocker
+Dusty Film Reel|Verstaubte Filmrolle
+Elephant Obelisk|Elefantenobelisk
+Energy Clip|Energieclip
+Equalizer Blueprint|Bauplan: Equalizer
+Equatorial Sundial|Äquatoriale Sonnenuhr
+Espresso Machine Parts|Espressomaschinenteile
+ESR Analyzer|ESR-Analysegerät
+Experimental Seed Sample|Experimentelle Samenprobe
+Explosive Mine|Sprengmine
+Explosive Mine Blueprint|Bauplan: Sprengmine
+Extended Barrel I|Verlängerter Lauf I
+Extended Barrel II|Verlängerter Lauf II
+Extended Barrel II Blueprint|Bauplan: Verlangerter Lauf II
+Extended Barrel III|Verlängerter Lauf III
+Extended Barrel III Blueprint|Bauplan: Verlangerter Lauf III
+Extended Light Mag I|Erweitertes leichtes Magazin I
+Extended Light Mag II|Erweitertes leichtes Magazin II
+Extended Light Mag II Blueprint|Bauplan: Erweitertes leichtes Magazin II
+Extended Light Mag III|Erweitertes leichtes Magazin III
+Extended Light Mag III Blueprint|Bauplan: Erweitertes leichtes Magazin III
+Extended Medium Mag I|Erweitertes mittelschweres Magazin I
+Extended Medium Mag II|Erweitertes mittelschweres Magazin II
+Extended Medium Mag II Blueprint|Bauplan: Erweitertes mittelschweres Magazin II
+Extended Medium Mag III|Erweitertes mittelschweres Magazin III
+Extended Medium Mag III Blueprint|Bauplan: Erweitertes mittelschweres Magazin III
+Extended Shotgun Mag I|Erweitertes Schrotflintenmagazin I
+Extended Shotgun Mag II|Erweitertes Schrotflintenmagazin II
+Extended Shotgun Mag II Blueprint|Bauplan: Erweitertes Schrotflintenmagazin II
+Extended Shotgun Mag III|Erweitertes Schrotflintenmagazin III
+Extended Shotgun Mag III Blueprint|Bauplan: Erweitertes Schrotflintenmagazin III
+Familiar Duck|Vertraute Ente
+Firecracker|Böller
+Firefly Burner|Glühwürmchenbrenner
+Fireworks Box|Feuerwerkskiste
+Fireworks Box Blueprint|Bauplan: Feuerwerkskiste
+First Wave Compass|Erste-Welle-Kompass
+First Wave Rations|Erste-Welle-Rationen
+First Wave Tape|Erste-Welle-Band
+Flame Spray|Flammen-Spray
+Flashy Duck|Prunkvolle Ente
+Flushing Terminal Key|Schlüssel für das Flushing-Terminal
+Fossilized Lightning|Versteinerter Blitz
+Free Loadout Augment|Augment mit Gratis-Loadout
+Fruit Mix|Obstmischung
+Gas Grenade|Gasgranate
+Gas Grenade Trap|Laserfalle: Gas
+Gas Mine|Sprungmine: Ausdauerverlust über Zeit
+Gas Mine Blueprint|Bauplan: Sprungmine: Ausdauerverlust über Zeit
+Gentle Duck|Sanfte Ente
+Glitched ARC Circuitry|Gestörter ARC-Schaltkreis
+Glitched ARC Light Ring|Gestörter ARC-Lichtring
+Glitched ARC Phased Array|Gestörtes ARC-Phased-Array
+Glitched ARC Power Converter|Fehlerhafter ARC-Stromrichter
+Glitched ARC Transmitter|Gestörter ARC-Transmitter
+Green Light Stick|Grüner Leuchtstab
+Green Light Stick Blueprint|Bauplan: Grüner Leuchtstab
+Heavy Ammo|Schwere Munition
+Heavy Fuze Grenade|Schwere Zündgranate
+Heavy Gun Parts Blueprint|Bauplan: Teile für Waffe mit schwerer Munition
+Heavy Shield|Schwerer Schild
+Herbal Bandage|Kräuterverband
+Horizontal Grip|Horizontaler Griff
+Hullcracker Blueprint|Bauplan: Hüllenbrecher
+Hullcracker I|Hüllenbrecher I
+Hullcracker II|Hüllenbrecher II
+Hullcracker III|Hüllenbrecher III
+Hullcracker IV|Hüllenbrecher IV
+Il Toro Blueprint|Bauplan: Il Toro
+Jolt Mine|Schockmine
+Jolt Mine Blueprint|Bauplan: Schockmine
+Jupiter Blueprint|Bauplan: Jupiter
+Kinetic Converter|Kinetischer Konverter
+Launcher Ammo|Werfermunition
+Li'l Smoke Grenade|Mini-Rauchgranate
+Lidar Scanner|Lidar-Scanner
+Light Ammo|Leichte Munition
+Light Gun Parts Blueprint|Bauplan: Leichte Waffenteile
+Light Impact Grenade|Leichte Aufschlaggranate
+Light Shield|Leichter Schild
+Lightweight Stock|Leichtgewicht-Schaft
+Lightweight Stock Blueprint|Bauplan: Leichtgewicht-Schaft
+Looting Mk. 1|Beute-Marke 1
+Looting Mk. 2|Beute-Marke 2
+Looting Mk. 3 (Cautious)|Beute-Marke 3 (Vorsichtig)
+Looting Mk. 3 (Safekeeper)|Beute-Marke 3 (Hüter)
+Looting Mk. 3 (Safekeeper) Blueprint|Bauplan: Beute-Marke 3 (Hüter)
+Looting Mk. 3 (Survivor)|Beute-Marke 3 (Überleben)
+Looting Mk. 3 (Survivor) Blueprint|Bauplan: Beute-Marke 3 (Überleben)
+Lure Grenade|Ködergranate
+Lure Grenade Blueprint|Bauplan: Ködergranate
+Lure Grenade Trap|Köder-Granatenfalle
+Major Aiva's Mementos|Major Aivas Andenken
+Major Aiva's Patch|Major Aivas Abzeichen
+Marano Market Business Card|Visitenkarte des Marano-Markts
+Matriarch Reactor|Matriarchenreaktor
+Medium Ammo|Mittlere Munition
+Medium Gun Parts Blueprint|Bauplan: Teile für Waffe mit mittlerer Munition
+Medium Shield|Mittlerer Schild
+Moisture Meter|Feuchtigkeitsmesser
+Muzzle Brake I|Mündungsbremse I
+Muzzle Brake II|Mündungsbremse II
+Muzzle Brake II Blueprint|Bauplan: Mündungsbremse II
+Muzzle Brake III|Mündungsbremse III
+Muzzle Brake III Blueprint|Bauplan: Mundungsbremse III
+Noisemaker|Krachmacher
+Nutrient Meter|Nährstoffmessgerät
+Official Shutdown Documentation|Offizielle Stilllegungsdokumentation
+Old World Books|Bücher der Alten Welt
+Osprey Blueprint|Bauplan: Osprey
+Padded Stock|Gepolsterter Schaft
+Padded Stock Blueprint|Bauplan: Gepolsterter Schaft
+Photoelectric Cloak|Fotoelektrischer Umhang
+Possibly Toxic Plant|Möglicherweise giftige Pflanze
+Powered Descender|Motorisierter Abseiler
+Powered Descender Blueprint|Blaupause für motorisierten Abseiler
+Precision Gimbal|Präzisions-Gimbal
+Project Heartwood Blueprints|Projekt-Heartwood-Baupläne
+Pulse Mine|Sprungmine: Impuls
+Pulse Mine Blueprint|Bauplan: Sprungmine: Impuls
+Raider Flag|Raider-Flagge
+Rascal Blueprint|Rascal-Blaupause
+Recorder|Spielbare Flöte
+Red Light Stick|Roter Leuchtstab
+Red Light Stick Blueprint|Bauplan: Roter Leuchtstab
+Remote Raider Flare|Raider-Leuchtfackel mit Fernzündung
+Remote Raider Flare Blueprint|Bauplan: Raider-Leuchtfackel mit Fernzündung
+Ruined Augment|Kaputte Verstärkung
+Scout Patrol Note|Späherpatrouillen-Notiz
+Secret Meeting Info|Geheime Besprechungsinfos
+Seeker Grenade|Suchgranate
+Seeker Grenade Blueprint|Bauplan: Suchgranate
+Shield Recharger|Schildauflader
+Shotgun Ammo|Schrotflintenmunition
+Shotgun Choke I|Schrotflintenchoke I
+Shotgun Choke II|Schrotflintenchoke II
+Shotgun Choke II Blueprint|Bauplan: Schrotflintenchoke II
+Shotgun Choke III|Schrotflintenchoke III
+Shotgun Choke III Blueprint|Bauplan: Schrotflintenchoke III
+Shotgun Silencer|Schrotflinten-Schalldämpfer
+Shotgun Silencer Blueprint|Bauplan: Schrotflinten-Schalldampfer
+Showstopper Blueprint|Bauplan: Showstopper
+Shrapnel Grenade|Schrapnellgranate
+Shredder Gyro|Schredder-Gyroskop
+Silencer I|Schalldämpfer I
+Silencer I Blueprint|Bauplan: Schalldämpfer I
+Silencer II|Schalldämpfer II
+Silencer II Blueprint|Bauplan: Schalldämpfer II
+Silencer III|Schalldämpfer III
+Smoke Grenade|Rauchgranate
+Smoke Grenade Blueprint|Bauplan: Rauchgranate
+Smoke Grenade Trap|Laserfalle: Rauch
+Snap Blast Grenade|Snapshot-Granate
+Snap Hook|Karabinerhaken
+Snap Hook Blueprint|Bauplan: Karabinerhaken
+Snowball|Schneeball
+Stable Stock I|Stabiler Kolben I
+Stable Stock II|Stabiler Kolben II
+Stable Stock II Blueprint|Bauplan: Stabiler Kolben II
+Stable Stock III|Stabiler Kolben III
+Stable Stock III Blueprint|Bauplan: Stabiler Kolben III
+Stack of Movie Tapes|Stapel Filmkassetten
+Sterilized Bandage|Steriler Verband
+Surge Coil Blueprint|Bauplan: Surge Coil
+Surge Shield Recharger|Sofort-Schildauflader
+Tactical Mk. 1|Taktisch-Marke 1
+Tactical Mk. 2|Taktisch-Marke 2
+Tactical Mk. 3 (Defensive)|Taktisch-Marke 3 (Defensiv)
+Tactical Mk. 3 (Defensive) Blueprint|Bauplan: Taktisch-Marke 3 (Verteidigung)
+Tactical Mk. 3 (Healing)|Taktisch-Marke 3 (Heilung)
+Tactical Mk. 3 (Healing) Blueprint|Bauplan: Taktisch-Marke 3 (Heilung)
+Tactical Mk. 3 (Revival)|Taktisch-Marke 3 (Wiederbelebung)
+Tactical Mk. 3 (Revival) Blueprint|Bauplan: Taktisch-Marke 3 (Wiederbelebung)
+Tactical Mk. 3 (Smoke)|Taktisch-Marke 3 (Rauch)
+Tactical Mk. 3 (Smoke) Blueprint|Bauplan: Taktisch-Marke 3 (Rauch)
+Tagging Grenade|Markierungsgranate
+Tagging Grenade Blueprint|Bauplan: Markierungsgranate
+Tattered Arc Lining|Zerfetzte ARC-Fütterung
+Tempest Blueprint|Bauplan: Tempest
+Torrente Blueprint|Bauplan: Torrente
+Trailblazer Blueprint|Bauplan: Trailblazer
+Train Model|Zugmodell
+Trigger 'Nade|Abzuggranate
+Trigger Nade Blueprint|Bauplan: Abzuggranate
+Tropical Duck|Tropische Ente
+Turbine Compressor|Turbinenkompressor
+Venator Blueprint|Bauplan: Venator
+Vertical Grip I|Vertikaler Griff I
+Vertical Grip II|Vertikaler Griff II
+Vertical Grip II Blueprint|Bauplan: Vertikaler Griff II
+Vertical Grip III|Vertikaler Griff III
+Vertical Grip III Blueprint|Bauplan: Vertikaler Griff III
+Vintage Steering Wheel|Vintage-Lenkrad
+Vita Shot|Vita-Spritze
+Vita Shot Blueprint|Bauplan: Vita-Spritze
+Vita Spray|Vita-Spray
+Vita Spray Blueprint|Bauplan: Vita-Spray
+Vulcano Blueprint|Bauplan: Vulcano
+White Flag|Weiße Flagge
+White Flag Blueprint|Weiße-Flagge-Blaupause
+Wolfpack Blueprint|Bauplan: Wolfpack
+Yellow Light Stick|Gelber Leuchtstab
+Yellow Light Stick Blueprint|Bauplan: Gelber Leuchtstab
+Zipline|Seilrutsche
+`;
 /* @datei wissen/kartenbedingungen.js */
 
 const CONDS = [
@@ -2698,7 +2992,7 @@ const INFO = {
     <li>Eine offizielle Liste der Ausgänge gibt es nicht. Offiziell bestätigt sind der Seed-Vault-Ausgang auf Stella Montis und die Ballistic Gondola auf Pendola Pass.</li>
     <li>Kleine Ringe auf Buried City: Eingänge zur Metro. Nah herangezoomt steht der Name am Ausgang.</li></ul>
     <h4>Routen</h4><ul>
-    <li>Jede Route aus der Materialsuche endet an einem frei zugänglichen Ausgang (Lift, Metro, Airshaft oder Gondel). Gewählt wird der, mit dem der ganze Weg am kürzesten ist. Dazu steht ein Ersatz-Ausgang, falls der erste schon geschlossen ist.</li>
+    <li>Jede Route aus dem Inventar endet an einem frei zugänglichen Ausgang (Lift, Metro, Airshaft oder Gondel). Gewählt wird der, mit dem der ganze Weg am kürzesten ist. Dazu steht ein Ersatz-Ausgang, falls der erste schon geschlossen ist.</li>
     <li>Ein Raid dauert 30 Minuten. Die App plant höchstens 29 Minuten. Dauert es länger, fallen die Stopps mit den wenigsten Materialien weg, und die App sagt, welche.</li>
     <li>Laufen: Sprint rund 6,3 m/s für etwa 24,5 s, danach Jog rund 3,65 m/s, bis die Ausdauer nach etwa 22,6 s wieder voll ist. Der Lift fährt 90 s nach dem Ruf ab.</li>
     <li><span class="annt">Annahme</span> Für die Zeit rechnet die App mit im Mittel 5 m/s, 30 % Umweg, 1,5 Minuten Anlauf vom Spawn, 1,5 Minuten pro Stopp plus 0,5 Minuten pro weiteres Material und 2 Minuten am Ausgang (Raider Hatch 0,5 Minuten). Den Massstab der Karte gibt es nur für Dam (rund 11 m pro Einheit) und Spaceport (rund 12,5 m) aus bekannten Distanzen, für die übrigen Karten ist er geschätzt.</li></ul>
@@ -2764,13 +3058,13 @@ const FAQ_GRUNDLAGE = [
 
 const FAQ_FUNKTIONEN = [
 {"t":"Karten","b":[{"k":"p","x":"Jede Map gibt es als 3D-Modell und als 2D-Plan, mit Markern, die sich einzeln filtern lassen. Norden ist wie im Spiel fest oben."},{"k":"ul","i":[["Marker","Ausgänge (Lift, Raider-Luke), Waffenkisten, Security-Spinde, Rucksäcke, Startpunkte, Orte und Questziele."],["Ebenen","oben und unten getrennt, wo eine Map mehrere Stockwerke hat."],["Suche","Orte, Items und Quests direkt auf der Karte finden."],["Mini-Karte","kleine Karte mit Position und Route, auch während eines Runs."],["Ausrichtung","Der Kompass-Knopf wechselt zwischen drei Modi. «Norden oben» bleibt starr, zoomt auf das nächste Ziel und wandert mit; Ziehen verschiebt die Karte. «Folgen» dreht die Karte, damit dein Weg nach oben zeigt. «Frei drehen» dreht und neigt die Karte mit einem Finger, verschoben wird mit zwei Fingern."],["Gebäude und Gelände","Alle Maps sind nach dem Kartenbild grob nachgebaut: Gebäude so gedreht wie im Spiel, Hügel und Täler. Die Höhen sind geschätzt. Stella Montis ist eine Innenanlage und bleibt ein flacher Plan."],["Eigene Karte","einen eigenen Screenshot als Unterlage unter die Marker legen."],["Annahmen markiert","Was nicht belegt ist, steht als «Annahme» beim Marker oder Raum."],["3D-Grafik bleibt","Verliert der Browser die 3D-Grafik (zum Beispiel das iPhone im Hintergrund), zeichnet die App einfach weiter und baut die 3D-Ansicht neu auf, sobald es geht."]]}]},
-{"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Run» und die Mini-Karte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus der Materialsuche wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Run steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","5 Bedingungen mit Erklärung (ARC Frigate, Night Raid, Redirection, Close Scrutiny, EM-Sturm), unten in «Run planen». Im Navi wählst du die aktuelle Bedingung; sind Raider-Luken gesperrt, plant es einen anderen Ausgang."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
-{"t":"Materialsuche","b":[{"k":"p","x":"Du suchst ein Material und die App zeigt, wo es vorkommt, und baut daraus eine Sammelroute."},{"k":"ul","i":[["Suche","192 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie und Seltenheit."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
+{"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Run» und die Mini-Karte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus dem Inventar wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Run steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","5 Bedingungen mit Erklärung (ARC Frigate, Night Raid, Redirection, Close Scrutiny, EM-Sturm), unten in «Run planen». Im Navi wählst du die aktuelle Bedingung; sind Raider-Luken gesperrt, plant es einen anderen Ausgang."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
+{"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat drei Reiter: Bedarf, Einkaufsliste und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte und den Stufen der Werkstatt, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan. Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann das weg?","der Filter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Alle Items","623 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten. Daneben steht das FAQ."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen, alle davor werden abgehakt."],["Suche und Filter","nach Name, Ort, Händler oder Material."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."],["FAQ","dritter Reiter neben Quests und Projekte. Erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."]]}]},
 {"t":"ARC","b":[{"k":"p","x":"Der ARC-Bereich zeigt 32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen."},{"k":"ul","i":[["Steckbrief","antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr","Balken von grün (niedrig) bis rot (extrem)."],["Gruppen","Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme)."],["Im Navi","die Gefahr bestimmt die eingeplante Kampfzeit von 0,5 bis 5 Minuten."]]}]},
 {"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
 {"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
-{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."]]}]}
+{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Die Werkstatt zählt mit allen Stufen mit, bis du im Bereich Werkstatt deine eigenen Stufen einstellen kannst."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
 ];
 /* @datei wissen/pruefung/basis.js */
 
@@ -5482,7 +5776,7 @@ function renderMapBar(){
     : rOn ? (ROUTE.focus ? 'Fundort' : 'Route · ' + nSt + (nSt === 1 ? ' Stopp' : ' Stopps') + (ROUTE.min ? ' · ca. ' + Math.round(ROUTE.min) + ' min' : ''))
     : isE ? 'im Fallen Emperor · Pendola Pass' : isF ? (mode === 'solo' ? 'Solo-Run' : 'Squad-Run') : m.r.length + ' Schlüsselräume';
   const bt = backTarget();
-  $('#mapBackL').textContent = bt ? 'Pendola Pass' : { mat:'Materialsuche', run:'Run planen', raids:'Raids', arc:'ARC', quests:'Quests' }[UI.tab] || 'Karten';
+  $('#mapBackL').textContent = bt ? 'Pendola Pass' : { mat:'Inventar', run:'Run planen', raids:'Raids', arc:'ARC', quests:'Quests' }[UI.tab] || 'Karten';
   $('#mapBack').classList.toggle('show', !!bt);
   requestAnimationFrame(fitMapTitle);
 }
@@ -6108,9 +6402,114 @@ $('#arcDetail').addEventListener('click', e => {
     setTab('mat'); showDetail(it, { label:arcName(a), go:() => arcOpen(a.n, back) }); }
 });
 $('#btnArc').addEventListener('click', () => { setTab('arc'); arcReset(); });
+/* @datei app/kern/werkstatt-daten.js */
+
+const WSD = (() => {
+  const leer = { da:false, items:new Map(), stationen:[], abw:new Map(), nur:new Set(), ok:() => false, zutatIn:new Map() };
+  if (typeof WS_ITEMS === 'undefined') return leer;
+  const voll = n => WS_KURZ[n] || n;
+  const mengen = s => !s || s === '-' ? [] : s.split(',').map(t => { const i = t.lastIndexOf(':'); return { n:voll(t.slice(0, i)), c:+t.slice(i + 1) }; });
+  const items = new Map();
+  for (const l of WS_ITEMS.trim().split('\n')){
+    const z = l.split('|'), o = { n:z[0], typ:z[1] || '', r:z[2] || '', wert:z[3] ? +z[3] : null, zerl:mengen(z[4]), raid:mengen(z[5]), rez:null, bp:false, auf:mengen(z[7]) };
+    if (z[6] === '!') o.bp = true;
+    else if (z[6]){ const m = z[6].match(/^([GEMXURWI]+)(\d?)(!?)=(.+)$/); if (m){ o.rez = { bank:m[1].split(''), stufe:m[2] ? +m[2] : 0, zut:mengen(m[4]) }; o.bp = !!m[3]; } }
+    items.set(o.n, o);
+  }
+  
+  const seiten = ks => new Set(ks.split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
+  const stationen = WS_STATIONS.trim().split('\n').map(l => { const s = l.split('|');
+    return { n:s[0], max:+s[1], stufen:s[2].split('/').map(mengen), ver:s[3].split('/').map(k => seiten(k) >= 2) }; });
+  const nur = new Set(Object.values(WS_NUR).join(';').split(';').filter(Boolean));
+  const abw = new Map();
+  for (const l of WS_ABW.trim().split('\n')){ if (!l) continue; const a = l.split('|'); if (!abw.has(a[0])) abw.set(a[0], []); abw.get(a[0]).push({ feld:a[1], hier:a[2], andere:a[3] }); }
+  
+  const ok = (feld, n) => !nur.has(n) && !!(WS_OK[feld] && WS_OK[feld][n]);
+  
+  const zutatIn = new Map();
+  const merk = (n, o, c, art) => { if (!zutatIn.has(n)) zutatIn.set(n, []); zutatIn.get(n).push({ n:o.n, c, art, bank:o.rez ? o.rez.bank : [], stufe:o.rez ? o.rez.stufe : 0 }); };
+  for (const o of items.values()){ if (o.rez) for (const x of o.rez.zut) merk(x.n, o, x.c, 'h'); for (const x of o.auf) merk(x.n, o, x.c, 'a'); }
+  return { da:true, items, stationen, abw, nur, ok, zutatIn };
+})();
+let INV_BEREIT = false;   
+const ROEM = ['I', 'II', 'III', 'IV'];
+const WS_WAFFEN_TYP = new Set('AR SM PI SP SG BR SR LM HC'.split(' '));
+
+const WS_AUSRUESTUNG = new Set('AR SM PI SP SG BR SR LM HC MD AU SH AM QU'.split(' '));
+
+const WAFFEN = (() => {
+  const F = new Map();
+  for (const o of WSD.items.values()){
+    if (!WS_WAFFEN_TYP.has(o.typ)) continue;
+    const m = o.n.match(/^(.*) (I|II|III|IV)$/), fam = m ? m[1] : o.n, t = m ? ROEM.indexOf(m[2]) : 0;
+    if (!F.has(fam)) F.set(fam, { n:fam, typ:o.typ, stufen:[] });
+    F.get(fam).stufen[t] = o;
+  }
+  return F;
+})();
+
+if (WSD.da){
+  const hat = new Set(ITEMS.map(x => x.n)), deSuche = new Map();
+  
+  if (typeof WS_DE_SUCHE !== 'undefined') for (const l of WS_DE_SUCHE.trim().split('\n')){ const i = l.indexOf('|'); if (i > 0) deSuche.set(l.slice(0, i), l.slice(i + 1)); }
+  for (const o of WSD.items.values()){
+    if (hat.has(o.n) || o.typ === 'KY') continue;
+    ITEMS.push({ kind:'item', n:o.n, r:o.r, rsrc:'', src:{}, cats:{}, arc:[], spots:[], notes:[], wsOnly:true, typ:o.typ, de:'', _n:norm(o.n), _d:norm(deSuche.get(o.n) || '') });
+  }
+  ITEMS.sort((a, b) => a.n.localeCompare(b.n));
+}
+
+let WST = { ok:false, st:{}, ziel:{}, waffe:{}, wunsch:{}, bp:{} };
+try { const w = JSON.parse(localStorage.getItem('raider-atlas:werkstatt') || 'null'); if (w && typeof w === 'object') for (const k in WST) if (k in w && typeof w[k] === typeof WST[k]) WST[k] = w[k]; } catch(_){}
+const saveWst = () => { try { localStorage.setItem('raider-atlas:werkstatt', JSON.stringify(WST)); } catch(_){} };
+
+function bedarfRechnen(){
+  const B = new Map(), Z = { quests:0, proj:0, werk:0, waffen:0 };
+  const add = (n, c, w) => { if (!B.has(n)) B.set(n, { n, sum:0, wofuer:[], mind:false }); const e = B.get(n); e.sum += c || 1; if (!c) e.mind = true; e.wofuer.push(Object.assign({ c:c || 0 }, w)); };
+  for (const q of QUESTS){
+    if (qDone(q)) continue; let hat = false;
+    for (const x of q.need){ if (x.quest || !qItem(x.n)) continue; add(x.n, x.c, { t:'Quest', label:qName(q), go:'q|' + q.i, jetzt:QS.t.includes(q.en) }); hat = true; }
+    if (hat) Z.quests++;
+  }
+  for (const p of PROJS){
+    if (p.st !== 'aktiv' && p.st !== 'saison') continue;
+    p.stufen.forEach((s, i) => { if (pDone(p, i)) return; let hat = false;
+      for (const x of s.need){ if (!qItem(x.n)) continue; add(x.n, x.c, { t:'Projekt', label:p.n + ', Stufe ' + (i + 1), go:'p|' + p.id }); hat = true; }
+      if (hat) Z.proj++; });
+  }
+  
+  for (const s of WSD.stationen){
+    const von = WST.ok ? (WST.st[s.n] || 0) : 0, bis = WST.ok && WST.ziel[s.n] != null ? Math.min(s.max, WST.ziel[s.n]) : s.max;
+    for (let l = von + 1; l <= bis; l++){ const k = s.stufen[l - 1] || []; if (!k.length) continue; Z.werk++; for (const x of k) add(x.n, x.c, { t:'Werkstatt', label:s.n + ' Stufe ' + l, go:'s|' + s.n }); }
+  }
+  for (const fam in WST.wunsch){
+    const f = WAFFEN.get(fam); if (!f) continue; const hab = WST.waffe[fam] || 0, zielT = Math.min(f.stufen.length, WST.wunsch[fam]); if (zielT <= hab) continue; Z.waffen++;
+    for (let t = hab + 1; t <= zielT; t++){ const o = f.stufen[t - 1]; if (!o) continue;
+      const kosten = t === 1 ? (o.rez ? o.rez.zut : []) : o.auf;
+      for (const x of kosten) add(x.n, x.c, { t:'Waffe', label:fam + ' ' + ROEM[t - 1], go:'w|' + fam }); }
+  }
+  return { B, Z };
+}
+let BED = new Map(), BED_Z = { quests:0, proj:0, werk:0, waffen:0 };
+function bedarfNeu(){ const r = bedarfRechnen(); BED = r.B; BED_Z = r.Z; return r; }
+
+function urteil(it){
+  const zut = WSD.zutatIn.get(it.n) || [];
+  const b = BED.get(it.n); if (b) return { k:'keep', sum:b.sum, mind:b.mind, wofuer:b.wofuer, zut };
+  if (it.kind === 'key') return { k:'key' };
+  const w = WSD.items.get(it.n);
+  if (!w || !w.typ) return { k:'unk', wert:w ? w.wert : null };   
+  if (w.typ === 'BP') return { k:'bp', wert:w.wert };
+  if (w.typ === 'KY') return { k:'key' };
+  if (WS_AUSRUESTUNG.has(w.typ)) return { k:'gear', wert:w.wert };
+  const nutz = w.zerl.filter(x => BED.has(x.n));
+  if (zut.length) return { k:'craft', zut, nutz, wert:w.wert };
+  if (nutz.length) return { k:'rec', nutz, wert:w.wert };
+  return { k:'sell', wert:w.wert };
+}
 /* @datei app/kern/materialsuche.js */
 
-let sFilter = 'all', sLast = null, sLang = 'de', matView = 'suche', sBack = null;
+let sFilter = 'all', sLast = null, sLang = 'de', matView = 'bedarf', matPrev = 'bedarf', sBack = null;
 try { const l = localStorage.getItem('raider-atlas:lang'); if (l === 'en' || l === 'de') sLang = l; } catch(_){}
 const dispName = it => sLang === 'de' && it.de ? it.de : it.n;
 const altName = it => sLang === 'de' ? (it.de ? it.n : '') : it.de;
@@ -6118,17 +6517,19 @@ const esc = escH;
 const catLabel = c => CAT[c][0] === CAT[c][1] ? CAT[c][0] : `${CAT[c][0]} (${CAT[c][1]})`;
 
 const VER2 = '<span class="ver v2">Verifiziert</span>', VER1 = '<span class="ver v1">Einfach belegt</span>';
-const FILTERS = [['all','Alle'],['N','Natur'],['A','ARC'],['ET','Technik'],['D','Medizin'],['MI','Mechanik'],['key','Schlüssel'],['spec','Fregatte · Emperor']];
+const FILTERS = [['all','Alle'],['N','Natur'],['A','ARC'],['ET','Technik'],['D','Medizin'],['MI','Mechanik'],['key','Schlüssel'],['spec','Fregatte · Emperor'],
+  ['#TR','Wertsachen'],['#RC','Zum Zerlegen'],['#WF','Waffen und Aufsätze'],['#BP','Baupläne'],['#weg','Kann weg']];
 for (const it of ITEMS){
   const extra = it.kind === 'key' ? it.rooms.map(r => MAPS[r.m].name + ' ' + r.room).join(' ')
     : it.kind === 'special' ? it.t : Object.keys(it.cats).map(c => CAT[c].join(' ')).join(' ');
   const maps = it.kind === 'key' ? it.rooms.map(r => MAP_DE[r.m]).join(' ') : '';
   const arcs = it.kind === 'item' ? it.arc.map(a => a + ' ' + (ARC_DE[a] || '') + ' ' + (ARC_WORDS[a] || '')).join(' ') : '';
-  it._k = norm([extra, maps, arcs, DE_ALIAS[it.n] || '', it.kind === 'key' ? 'schlüssel schlüsselkarte key keycard' : ''].join(' '));
+  it._k = norm([extra, maps, arcs, DE_ALIAS[it.n] || '', it.wsOnly && WS_TYP[it.typ] ? WS_TYP[it.typ].join(' ') : '', it.kind === 'key' ? 'schlüssel schlüsselkarte key keycard' : ''].join(' '));
 }
 const itemByName = n => ITEMS.find(x => x.n === n);
 function matchFilterK(it, f){
   if (f === 'all') return true;
+  if (f[0] === '#') return invFilter(it, f.slice(1));
   if (f === 'key') return it.kind === 'key';
   if (f === 'spec') return it.kind === 'special';
   return it.kind === 'item' && (f.split('').some(c => !!it.cats[c]) || (f === 'A' && !!it.arcOnly));
@@ -6156,7 +6557,8 @@ function searchItems(q){
     if (!miss) full.push({ it, s: s + exact });
     else if (toks.length > 1 && miss < toks.length && s >= 2) part.push({ it, s: s - miss });
   }
-  const by = (a, b) => b.s - a.s || dispName(a.it).localeCompare(dispName(b.it), 'de');
+  const kern = it => dispName(it).replace(/^[^\p{L}\p{N}]+/u, '');   
+  const by = (a, b) => b.s - a.s || kern(a.it).localeCompare(kern(b.it), 'de');
   if (full.length || !toks.length) return { res: full.sort(by).map(x => x.it), fuzzy:false };
   return { res: part.sort(by).map(x => x.it), fuzzy: part.length > 0 };
 }
@@ -6168,12 +6570,13 @@ function verBadge(it){
   const v = itemVerified(it);
   if (v == null) return '';
   const n = new Set([...Object.values(it.cats).flat()]).size;
-  if (!n) return it.arcOnly || it.projOnly ? '' : '<span class="ver v0">keine Kategorie</span>';
+  if (!n) return it.arcOnly || it.projOnly || it.wsOnly ? '' : '<span class="ver v0">keine Kategorie</span>';
   return v ? VER2 : VER1;
 }
 function itemMeta(it){
   if (it.kind === 'key') return 'Schlüssel · ' + (it.rooms.length ? [...new Set(it.rooms.map(r => MAPS[r.m].short))].join(', ') : 'alle Maps');
   if (it.kind === 'special') return it.t;
+  if (it.wsOnly) return WS_TYP[it.typ] ? WS_TYP[it.typ][1] : 'Item';
   if (it.projOnly) return 'Projekt-Material';
   if (it.arcOnly) return 'ARC-Drop · ' + it.arc.map(a => ARC_DE[a] && sLang === 'de' ? ARC_DE[a] : a).join(', ');
   const cl = itemCatList(it).slice(0, 2).map(x => CAT[x.c][1]);
@@ -6207,29 +6610,34 @@ try { RUN = JSON.parse(localStorage.getItem('raider-atlas:run') || 'null'); } ca
 const saveRun = () => { try { if (RUN) localStorage.setItem('raider-atlas:run', JSON.stringify(RUN)); else localStorage.removeItem('raider-atlas:run'); } catch(_){} };
 
 function matShow(v){
-  matView = v;
-  $('#matRoot').hidden = !(v === 'suche' || v === 'liste');
-  $('#vSuche').hidden = v !== 'suche'; $('#vListe').hidden = v !== 'liste';
+  if (v === 'bedarf' || v === 'suche' || v === 'liste') matPrev = v;   
+  matView = v; $('#pgMat').dataset.v = v;
+  $('#matRoot').hidden = !(v === 'bedarf' || v === 'suche' || v === 'liste');
+  $('#vBedarf').hidden = v !== 'bedarf'; $('#vSuche').hidden = v !== 'suche'; $('#vListe').hidden = v !== 'liste';
   $('#vVorschlag').hidden = v !== 'vorschlag'; $('#sDetail').hidden = v !== 'detail';
-  $('#segSuche').setAttribute('aria-pressed', v === 'suche'); $('#segListe').setAttribute('aria-pressed', v === 'liste');
+  $('#segBedarf').setAttribute('aria-pressed', v === 'bedarf'); $('#segSuche').setAttribute('aria-pressed', v === 'suche'); $('#segListe').setAttribute('aria-pressed', v === 'liste');
+  if (v === 'bedarf' && INV_BEREIT) bedRender();
+  if (v === 'suche' && INV_BEREIT) renderList();
   if (v === 'liste') shopRender();
   if (v === 'vorschlag') rankRender();
   const pg = $('#pages'); if (pg) pg.scrollTop = 0;
 }
-function matReset(){ sBack = null; matShow('suche'); }
+function matReset(){ sBack = null; matShow('bedarf'); }
+$('#segBedarf').addEventListener('click', () => matShow('bedarf'));
 $('#segSuche').addEventListener('click', () => matShow('suche'));
 $('#segListe').addEventListener('click', () => matShow('liste'));
 $('#vorBack').addEventListener('click', () => matShow('liste'));
 $('#btnWo').addEventListener('click', () => matShow('vorschlag'));
 
 function renderList(){
+  if (INV_BEREIT) bedarfNeu();   
   const { res, fuzzy } = searchItems($('#sInput').value);
   $('#sCount').textContent = fuzzy ? `Keine genauen Treffer. ${res.length} ähnliche Einträge:` : res.length === ITEMS.length ? `${res.length} Einträge` : `${res.length} Treffer`;
   const show = res.slice(0, 120);
   let h = show.map(it => {
     const on = inList(it.n), alt = altName(it), i = ITEMS.indexOf(it);
     return `<li${rrCls(it.r)}><div class="row static"><button type="button" class="check" data-tog="${i}" aria-pressed="${on}" aria-label="${on ? 'Von der Einkaufsliste nehmen' : 'Auf die Einkaufsliste'}: ${esc(dispName(it))}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path class="tick" d="M7.5 12.5l3 3 6-6.5"/></svg></button>`
-      + `<button type="button" class="rowin" data-open="${i}"><span class="rt"><span class="t1">${esc(dispName(it))}</span><span class="t2">${rTag(it.r)}${alt ? esc(alt) + ' · ' : ''}${esc(itemMeta(it))}</span></span>${CHEV}</button></div></li>`;
+      + `<button type="button" class="rowin" data-open="${i}"><span class="rt"><span class="t1">${esc(dispName(it))}</span><span class="t2">${rTag(it.r)}${alt ? esc(alt) + ' · ' : ''}${esc(itemMeta(it))}</span></span>${INV_BEREIT ? invTag(it) : ''}${CHEV}</button></div></li>`;
   }).join('');
   if (res.length > 120) h += `<li class="more">… und ${res.length - 120} weitere. Tipp: genauer suchen.</li>`;
   if (!res.length) h += '<li class="more">Nichts gefunden. Versuch einen Teil des Namens, z. B. «Energiestab», «Power Rod» oder «Dünger».</li>';
@@ -6243,10 +6651,10 @@ $('#sList').addEventListener('click', e => {
 const S_FIL = { title:'Filter', unit:'Einträge', groups:[
   { key:'cat', label:'Kategorie', def:'all', get:() => sFilter, set:k => { sFilter = k; },
     items:() => FILTERS.map(([k, lab]) => ({ k, label:k === 'all' ? 'Alle' : lab, n:ITEMS.filter(it => matchFilterK(it, k)).length })) } ],
-  changed:() => { renderList(); filUI(S_FIL, '#sFilBtn', '#sFilN', '#sTok'); } };
+  changed:() => { if (matView !== 'suche') matShow('suche'); else renderList(); filUI(S_FIL, '#sFilBtn', '#sFilN', '#sTok'); } };
 $('#sFilBtn').addEventListener('click', () => filOpen(S_FIL));
 const sInput = $('#sInput');
-sInput.addEventListener('input', renderList);
+sInput.addEventListener('input', () => { if (matView !== 'suche') matShow('suche'); else renderList(); });   
 sInput.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const r = searchItems(sInput.value).res; if (r.length) showDetail(r[0], null); } });
 
 const sDetail = $('#sDetail');
@@ -6257,8 +6665,11 @@ function showDetail(it, back){
   const deL = it.de ? `Deutsch: ${it.de}` : 'Deutscher Name: nicht bekannt';
   const subL = sLang === 'de' && it.de ? `Englisch: ${it.n}` : deL;
   const on = inList(it.n);
-  let h = `<div class="subnav"><button type="button" class="back" id="sBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(sBack ? sBack.label : 'Suchen')}</button></div><h3 class="dn${it.r && RAR[it.r] ? ' rr-t r' + it.r : ''}">${esc(dispName(it))}</h3><p class="dalt">${esc(subL)}</p><div class="sb">${rarBadge(it.r)}${verBadge(it)}</div>`
+  let h = `<div class="subnav"><button type="button" class="back" id="sBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(sBack ? sBack.label : { bedarf:'Bedarf', suche:'Alle Items', liste:'Einkaufsliste' }[matPrev])}</button></div><h3 class="dn${it.r && RAR[it.r] ? ' rr-t r' + it.r : ''}">${esc(dispName(it))}</h3><p class="dalt">${esc(subL)}</p><div class="sb">${rarBadge(it.r)}${verBadge(it)}</div>`
+    + (INV_BEREIT ? (bedarfNeu(), urteilKarte(it)) : '')
     + `<button type="button" class="${on ? 'bs' : 'bp'} tobtn" id="sTog">${on ? 'Auf der Einkaufsliste' : 'Zur Einkaufsliste'}</button>`;
+  
+  if (INV_BEREIT) h += wofuerSection(it) + handelSection(it) + rezeptSection(it) + zutatSection(it);
   if (it.kind === 'item'){
     const rs = RAR_SRC[it.n];
     if (rs){ const [rb, rk] = rs; if (rb && rk && rb !== rk) h += `<p class="fine">Seltenheit nicht eindeutig: ${RAR[rb]} oder ${RAR[rk]}</p>`; }
@@ -6299,7 +6710,7 @@ function showDetail(it, back){
     h += '</ul>';
   }
   if (it.kind !== 'item') h += arcSection(it);
-  h += questUseSection(it);
+  if (!INV_BEREIT) h += questUseSection(it);
   sDetail.innerHTML = h;
   $('#sBack').addEventListener('click', backToList);
   $('#sTog').addEventListener('click', () => { toggleList(it.n); showDetail(it); });
@@ -6308,6 +6719,7 @@ function showDetail(it, back){
   sDetail.querySelectorAll('button[data-room]').forEach(b => b.addEventListener('click', () => { const [m, st] = b.dataset.room.split('|'); jumpGuide(m, +st, it.n); }));
   sDetail.querySelectorAll('button[data-arcgo]').forEach(b => b.addEventListener('click', () => arcOpen(b.dataset.arcgo, { label:dispName(it), go:() => { setTab('mat'); showDetail(it); } })));
   sDetail.querySelectorAll('button[data-qgo]').forEach(b => b.addEventListener('click', () => { const [t, v] = b.dataset.qgo.split('|'), back = { label:dispName(it), go:() => { setTab('mat'); showDetail(it); } }; if (t === 'q') questOpen(+v, back); else projOpen(v, back); }));
+  sDetail.querySelectorAll('button[data-iopen]').forEach(b => b.addEventListener('click', () => { const z = itemByName(b.dataset.iopen); if (z) showDetail(z, { label:dispName(it), go:() => { setTab('mat'); showDetail(it); } }); }));
   sDetail.querySelectorAll('button[data-guide]').forEach(b => b.addEventListener('click', () => { const [v, st] = b.dataset.guide.split('|'); jumpGuide(v, st === '' ? null : +st, it.n); }));
   $('#sBack').focus();
 }
@@ -6318,7 +6730,7 @@ function rankRow(e, i){
   return `<li class="prow"><span class="rk${i === 0 ? ' first' : ''}">${i + 1}</span><div class="pinfo"><b>${esc(e.n)}</b> <span class="pm">${esc(MAPS[e.m].short)}</span>${why.map(w => `<div class="pe">${w}</div>`).join('')}</div>`
     + (e.pos ? `<button class="pill go" type="button" data-rank="${i}">Karte</button>` : '<span class="nopos">Position nicht im Modell</span>') + '</li>';
 }
-function backToList(){ if (sBack){ const b = sBack; sBack = null; matShow('suche'); b.go(); return; } matShow('suche'); sInput.focus(); }
+function backToList(){ if (sBack){ const b = sBack; sBack = null; matShow(matPrev); b.go(); return; } matShow(matPrev); if (matPrev === 'suche') sInput.focus(); }
 function openSearch(detail){
   setTab('mat');
   if (detail && sLast) showDetail(sLast); else { matShow('suche'); renderList(); }
@@ -6332,11 +6744,13 @@ function jumpGuide(v, step, item){
 }
 
 function shopRender(){
+  if (INV_BEREIT) bedarfNeu();
+  const zweck = x => { const b = INV_BEREIT && BED.get(x.n); return b ? 'Für ' + zweckKurz(b.wofuer) : 'Von Hand gesetzt'; };   
   $('#shopN').textContent = LIST.length;
   $('#shopEmpty').hidden = !!LIST.length; $('#shopBtns').hidden = !LIST.length;
   $('#shopList').hidden = !LIST.length;
   $('#shopList').innerHTML = LIST.map((x, i) => { const it = itemByName(x.n), ok = x.have >= x.need, nm = esc(dispName(it));
-    return `<li${rrCls(it.r)}><div class="row static"><span class="rt"><span class="t1"${ok ? ' style="color:var(--muted)"' : ''}>${nm}</span><span class="t2">${rTag(it.r)}${ok ? 'Erledigt · ' + x.have + ' von ' + x.need : 'Gefunden ' + x.have + ' von ' + x.need + ' · noch ' + (x.need - x.have)}</span><span class="bar"><i style="width:${Math.min(100, Math.round(x.have / Math.max(1, x.need) * 100))}%"></i></span></span>`
+    return `<li${rrCls(it.r)}><div class="row static"><span class="rt"><span class="t1"${ok ? ' style="color:var(--muted)"' : ''}>${nm}</span><span class="t2">${rTag(it.r)}${ok ? 'Erledigt · ' + x.have + ' von ' + x.need : 'Gefunden ' + x.have + ' von ' + x.need + ' · noch ' + (x.need - x.have)}</span><span class="t2">${esc(zweck(x))}</span><span class="bar"><i style="width:${Math.min(100, Math.round(x.have / Math.max(1, x.need) * 100))}%"></i></span></span>`
       + `<div class="stepper" role="group" aria-label="Brauche ${x.need} Stück ${nm}"><button type="button" data-act="minus" data-i="${i}" aria-label="Eins weniger">−</button><span class="lcdn">${x.need}</span><button type="button" data-act="plus" data-i="${i}" aria-label="Eins mehr">+</button></div>`
       + `<button type="button" class="rm" data-act="rm" data-i="${i}" aria-label="Entfernen: ${nm}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></li>`; }).join('');
   arcRefresh(); hudRender();
@@ -6641,7 +7055,7 @@ const sLangBox = $('#sLang');
 function setLang(l){
   sLang = l; try { localStorage.setItem('raider-atlas:lang', l); } catch(_){}
   sLangBox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.l === l));
-  renderList(); shopRender(); qRender(); if (matView === 'detail' && sLast) showDetail(sLast); if (matView === 'vorschlag') rankRender();
+  renderList(); shopRender(); qRender(); if (matView === 'detail' && sLast) showDetail(sLast); if (matView === 'vorschlag') rankRender(); if (matView === 'bedarf') bedRender();
   
   if (UI.tab === 'quests' && qCur && !$('#qDetail').hidden){ if (qCur.t === 'q') questOpen(qCur.i); else projOpen(qCur.id); }
   if (UI.tab === 'arc' && arcCur && !$('#arcDetail').hidden) arcOpen(arcCur.n, arcBack);
@@ -6736,7 +7150,7 @@ function faqRender(){
   const para = x => `<p>${esc(x)}</p>`;
   const list = (b) => `<${b.k} class="faql">` + b.i.map(([l, x]) => `<li>${l ? `<b>${esc(l)}:</b> ` : ''}${esc(x)}</li>`).join('') + `</${b.k}>`;
   const nStart = typeof MAP_START !== 'undefined' ? Object.values(MAP_START).reduce((a, l) => a + l.length, 0) : 0;
-  const zahlen = [[ITEMS.filter(x => x.kind === 'item' && !x.arcOnly && !x.projOnly).length, 'Items'], [ITEMS.filter(x => x.kind === 'key').length, 'Schlüssel'], [QUESTS.length, 'Quests'], [ARCS.length, 'ARC-Gegner'],
+  const zahlen = [[ITEMS.filter(x => x.kind === 'item' && !x.arcOnly && !x.projOnly && !x.wsOnly).length, 'Materialien'], [ITEMS.filter(x => x.wsOnly).length, 'weitere Items'], [ITEMS.filter(x => x.kind === 'key').length, 'Schlüssel'], [QUESTS.length, 'Quests'], [ARCS.length, 'ARC-Gegner'],
     [PROJS.length, 'Projekte'], [MAP_ORDER.length, 'Maps'], [nStart, 'Startpunkte'], [CONDS.length, 'Kartenbedingungen']].filter(z => z[0]);
   let h = `<p class="foot">${esc(FAQ_INTRO)}</p>`
     + '<h3 class="gh">Worauf die Infos beruhen</h3><div class="group">' + FAQ_GRUNDLAGE.map(f => acc(f.t, f.x.map(para).join(''))).join('') + '</div>'
@@ -6898,6 +7312,138 @@ $('#qDetail').addEventListener('click', e => {
 });
 
 qRender(); pRender(); qSeason();
+/* @datei app/kern/inventar.js */
+
+const fmtCoins = n => String(n).replace(/\B(?=(\d{3})+$)/g, '’') + ' Coins';
+const invName = n => { const it = itemByName(n); return it ? dispName(it) : n; };
+const mengenTxt = L => L.map(x => x.c + ' ' + invName(x.n)).join(', ');
+const undListe = a => a.length > 1 ? a.slice(0, -1).join(', ') + ' und ' + a[a.length - 1] : a[0] || '';
+
+const abwTxt = s => { const L = [...s.matchAll(/([^;,]+?)\s*x\s*(\d+)/g)].map(m => ({ n:m[1].trim(), c:+m[2] })); return L.length ? mengenTxt(L) : s; };
+
+function zweckKurz(W){
+  const q = W.filter(w => w.t === 'Quest'), p = [...new Set(W.filter(w => w.t === 'Projekt').map(w => w.label.split(', Stufe')[0]))];
+  const s = W.filter(w => w.t === 'Werkstatt').map(w => w.label), f = W.filter(w => w.t === 'Waffe').map(w => w.label), T = [];
+  if (q.length) T.push(q.length === 1 ? q[0].label : q.length + ' Quests');
+  if (p.length) T.push(p.length === 1 ? 'Projekt ' + p[0] : p.length + ' Projekte');
+  if (s.length) T.push(s.length <= 2 ? s.join(', ') : s.length + ' Werkstatt-Stufen');
+  if (f.length) T.push(f.length <= 2 ? f.join(', ') : f.length + ' Waffen-Stufen');
+  return T.join(' · ');
+}
+
+function zweckSumme(W){
+  const sum = t => W.filter(w => w.t === t).reduce((a, w) => a + (w.c || 1), 0), n = t => W.filter(w => w.t === t).length, T = [];
+  if (n('Quest')) T.push(sum('Quest') + ' für ' + (n('Quest') === 1 ? 'eine Quest' : n('Quest') + ' Quests'));
+  if (n('Projekt')) T.push(sum('Projekt') + ' für Projekte');
+  if (n('Werkstatt')) T.push(sum('Werkstatt') + ' für die Werkstatt');
+  if (n('Waffe')) T.push(sum('Waffe') + ' für Wunsch-Waffen');
+  return undListe(T);
+}
+
+function invTag(it){
+  const u = urteil(it);
+  if (u.k === 'keep') return `<span class="keep"><span class="lcdn">${u.sum}</span><small>${u.mind ? 'mind.' : 'behalten'}</small></span>`;
+  if (u.k === 'craft') return '<span class="vtag craft">Vorrat</span>';
+  if (u.k === 'rec') return '<span class="vtag rec">Zerlegen</span>';
+  if (u.k === 'sell') return '<span class="vtag sell">Verkaufen</span>';
+  return '';
+}
+
+function invFilter(it, f){
+  if (f === 'weg'){ const k = urteil(it).k; return k === 'sell' || k === 'rec'; }
+  const w = WSD.items.get(it.n), typ = w ? w.typ : '';
+  if (f === 'WF') return WS_WAFFEN_TYP.has(typ) || typ === 'MD';
+  return typ === f;
+}
+
+function bedRender(){
+  bedarfNeu();
+  const L = [...BED.values()].map(e => ({ e, it:itemByName(e.n) })).filter(x => x.it);
+  const jetzt = x => x.e.wofuer.some(w => w.jetzt) || inList(x.e.n);
+  L.sort((a, b) => jetzt(b) - jetzt(a) || dispName(a.it).localeCompare(dispName(b.it), 'de'));
+  const Z = BED_Z, T = [];
+  if (Z.quests) T.push(Z.quests === 1 ? 'einer offenen Quest' : Z.quests + ' offenen Quests');
+  if (Z.proj) T.push(Z.proj === 1 ? 'einer Projekt-Stufe' : Z.proj + ' Projekt-Stufen');
+  if (Z.werk) T.push(Z.werk === 1 ? 'einer Werkstatt-Stufe' : Z.werk + ' Werkstatt-Stufen');
+  if (Z.waffen) T.push(Z.waffen === 1 ? 'einer Wunsch-Waffe' : Z.waffen + ' Wunsch-Waffen');
+  $('#bedInfo').textContent = L.length
+    ? `${L.length} ${L.length === 1 ? 'Material' : 'Materialien'} behalten. Gerechnet aus ${undListe(T)}.`
+    : 'Kein offener Bedarf: Alle Quests, Projekt-Stufen und Werkstatt-Stufen sind erledigt.';
+  $('#bedList').hidden = !L.length;
+  $('#bedList').innerHTML = L.map(x => `<li${rrCls(x.it.r)}><button type="button" class="row" data-bed="${ITEMS.indexOf(x.it)}"><span class="rt"><span class="t1">${esc(dispName(x.it))}${jetzt(x) ? ' <span class="stb s-aktiv">Gesucht</span>' : ''}</span>`
+    + `<span class="t2">${esc(zweckKurz(x.e.wofuer))}</span></span><span class="keep"><span class="lcdn">${x.e.sum}</span><small>${x.e.mind ? 'mind.' : 'behalten'}</small></span>${CHEV}</button></li>`).join('');
+  $('#bedWerk').hidden = WST.ok || !Z.werk;
+}
+$('#bedList').addEventListener('click', e => { const b = e.target.closest('[data-bed]'); if (b) showDetail(ITEMS[+b.dataset.bed], null); });
+$('#bedWeg').addEventListener('click', () => { sFilter = '#weg'; $('#sInput').value = ''; matShow('suche'); filUI(S_FIL, '#sFilBtn', '#sFilN', '#sTok'); });
+
+const rezAnz = Z => { const n = new Set(Z.map(z => z.n)).size; return n === 1 ? 'einem Rezept' : n + ' Rezepten'; };
+
+const zutBsp = Z => [...new Map(Z.slice().sort((a, b) => (a.art === 'a') - (b.art === 'a') || a.stufe - b.stufe || a.n.localeCompare(b.n)).map(z => [z.n, z])).keys()].slice(0, 3).map(invName);
+function urteilKarte(it){
+  const u = urteil(it), coins = u.wert != null ? ' Verkaufswert: ' + fmtCoins(u.wert) + '.' : '';
+  let kopf, zahl = '', text;
+  if (u.k === 'keep'){ kopf = 'Behalten'; zahl = String(u.sum);
+    text = `Du brauchst noch ${u.mind ? 'mindestens ' : ''}${u.sum} Stück: ${zweckSumme(u.wofuer)}. `
+      + (u.zut.length ? `Dazu ist es Zutat in ${rezAnz(u.zut)}: Halte dafür einen Vorrat.` : 'Was du darüber hast, kann weg.'); }
+  else if (u.k === 'craft'){ kopf = 'Vorrat halten';
+    text = `Kein fester Bedarf in Quests, Projekten und Werkstatt, aber Zutat in ${rezAnz(u.zut)}, zum Beispiel ${undListe(zutBsp(u.zut))}. Behalte, was du zum Herstellen brauchst; der Rest kann weg.`
+      + (u.nutz.length ? ` Zerlegen ergibt ${mengenTxt(u.nutz)}, und das brauchst du noch.` : '') + coins; }
+  else if (u.k === 'rec'){ kopf = 'Zerlegen'; text = `Selbst brauchst du es nicht. Zerlegen ergibt ${mengenTxt(u.nutz)}, und das brauchst du noch.` + coins; }
+  else if (u.k === 'sell'){ kopf = 'Verkaufen'; text = 'Kein offener Bedarf in Quests, Projekten und Werkstatt und in keinem bekannten Rezept eine Zutat.' + coins; }
+  else if (u.k === 'gear'){ kopf = 'Ausrüstung'; text = 'Zum Benutzen gedacht. Als Material wird es gerade nicht gebraucht.' + coins; }
+  else if (u.k === 'bp'){ kopf = 'Bauplan'; text = 'Lernen schaltet das Rezept frei. Einen doppelten kannst du verkaufen.' + coins; }
+  else if (u.k === 'unk'){ kopf = 'Keine Angaben'; text = (u.wert != null ? 'Art und Verwendung' : 'Wert, Rezepte und Verwendung') + ' sind für dieses Item noch nicht belegt. Die App kann nicht sagen, ob es weg kann.' + coins; }
+  else return '';
+  return `<div class="verdict v-${u.k}"><div class="vkopf"><span class="vlab">${kopf}</span>${zahl ? `<span class="lcdn">${zahl}</span>` : ''}</div><p>${esc(text)}</p></div>`;
+}
+function wofuerSection(it){
+  const b = BED.get(it.n), rows = [];
+  if (b) for (const w of b.wofuer) rows.push({ t:w.t, n:w.label, c:w.c, d:false, go:w.go });
+  
+  for (const q of QUESTS){ if (!qDone(q)) continue; const x = q.need.find(y => !y.quest && y.n === it.n); if (x) rows.push({ t:'Quest', n:qName(q), c:x.c, d:true, go:'q|' + q.i }); }
+  for (const p of PROJS) p.stufen.forEach((s, i) => { const x = s.need.find(y => y.n === it.n); if (!x) return;
+    const laeuft = p.st === 'aktiv' || p.st === 'saison', fertig = pDone(p, i); if (laeuft && !fertig) return;
+    rows.push({ t:'Projekt' + (p.st === 'ende' ? ', beendet' : p.st === 'pause' ? ', pausiert' : ''), n:`${p.n}, Stufe ${i + 1}`, c:x.c, d:fertig, ruht:!fertig, go:'p|' + p.id }); });
+  if (!rows.length) return '';
+  return `<h4>Wofür${b ? ` (${b.mind ? 'mindestens ' : ''}${b.sum} Stück offen)` : ''}</h4><ul class="plist">` + rows.map(r => `<li class="prow${r.d || r.ruht ? ' qd' : ''}"><div class="pinfo"><b>${esc(r.n)}</b> <span class="pm">${esc(r.t)}</span>`
+    + `<div class="pe">${r.c ? r.c + ' Stück' : 'Anzahl nicht angegeben'}${r.d ? ' · erledigt' : r.ruht ? ' · zählt nicht mit' : ''}</div></div>${/^[qp]\|/.test(r.go) ? `<button class="pill go" type="button" data-qgo="${esc(r.go)}">Zeigen</button>` : ''}</li>`).join('') + '</ul>';
+}
+function handelSection(it){
+  const w = WSD.items.get(it.n); if (!w || (w.wert == null && !w.zerl.length && !w.raid.length)) return '';
+  const pill = f => WSD.ok(f, it.n) ? VER2 : VER1, A = WSD.abw.get(it.n) || [], WID = '<span class="ver v0">Widerspruch</span>';
+  let h = '<h4>Verkaufen und Zerlegen</h4><ul class="cats">';
+  if (w.wert != null){ h += `<li><span class="cn">Verkaufswert: ${fmtCoins(w.wert)}</span>${pill('wert')}</li>`;
+    for (const a of A.filter(a => a.feld === 'wert')) h += `<li><span class="cn">Andere Angabe: ${fmtCoins(+a.andere)}</span>${WID}</li>`; }
+  if (w.zerl.length){ h += `<li><span class="cn">Zerlegen in Speranza: ${esc(mengenTxt(w.zerl))}</span>${pill('zerlegen')}</li>`;
+    for (const a of A.filter(a => a.feld === 'zerlegen')) h += `<li><span class="cn">Andere Angabe: ${esc(abwTxt(a.andere))}</span>${WID}</li>`; }
+  if (w.raid.length) h += `<li><span class="cn">Zerlegen im Raid: ${esc(mengenTxt(w.raid))}</span>${VER1}</li>`;
+  return h + '</ul>';
+}
+
+function zutatSection(it){
+  const Z = (WSD.zutatIn.get(it.n) || []).slice().sort((a, b) => invName(a.n).localeCompare(invName(b.n), 'de')); if (!Z.length) return '';
+  const wo = z => z.art === 'a' ? 'Aufwerten' : z.bank.map(b => WS_BANK[b]).join(' oder ') + (z.stufe ? ' Stufe ' + z.stufe : '');
+  return `<h4>Zutat in (${Z.length})</h4><ul class="plist">` + Z.slice(0, 12).map(z => `<li class="prow"><div class="pinfo"><b>${esc(invName(z.n))}</b><div class="pe">${z.c} Stück · ${esc(wo(z))}</div></div>`
+    + `${itemByName(z.n) ? `<button class="pill go" type="button" data-iopen="${esc(z.n)}">Zeigen</button>` : ''}</li>`).join('') + '</ul>'
+    + (Z.length > 12 ? `<p class="fine">und ${Z.length - 12} weitere</p>` : '');
+}
+const zutRow = x => `<li class="prow"><div class="pinfo"><b>${esc(invName(x.n))}</b><div class="pe">${x.c} Stück</div></div>${itemByName(x.n) ? `<button class="pill go" type="button" data-iopen="${esc(x.n)}">Zeigen</button>` : ''}</li>`;
+function rezeptSection(it){
+  const w = WSD.items.get(it.n); if (!w || (!w.rez && !w.auf.length && !w.bp)) return '';
+  let h = '';
+  if (w.rez){
+    const bank = w.rez.bank.map(b => WS_BANK[b]).join(' oder ') + (w.rez.stufe ? ' Stufe ' + w.rez.stufe : '');
+    h += `<h4>Herstellen</h4><ul class="cats"><li><span class="cn">${esc(bank)}${w.bp ? ' · Bauplan nötig' : ''}</span>${WSD.ok('rezept', it.n) ? VER2 : VER1}</li>`;
+    for (const a of (WSD.abw.get(it.n) || []).filter(a => a.feld === 'bank')) h += `<li><span class="cn">Andere Angabe: ${esc(a.andere.replace(/ (\d)$/, ' Stufe $1'))}</span><span class="ver v0">Widerspruch</span></li>`;
+    h += '</ul><ul class="plist">' + w.rez.zut.map(zutRow).join('') + '</ul>';
+  } else if (w.bp && !w.auf.length) h += '<h4>Herstellen</h4><p class="fine">Braucht einen Bauplan. Das Rezept ist nicht bekannt.</p>';
+  if (w.auf.length) h += '<h4>Aufwerten auf diese Stufe</h4><ul class="plist">' + w.auf.map(zutRow).join('') + '</ul>';
+  return h;
+}
+
+INV_BEREIT = true;
+bedarfNeu(); renderList(); shopRender(); matShow('bedarf');
 /* @datei app/kern/queststand.js */
 
 const stDlg = $('#stDlg');
@@ -7751,7 +8297,7 @@ function uiRestore(hashId, lastId){
     $('#sInput').value = s.mat.q || ''; renderList(); filUI(S_FIL, '#sFilBtn', '#sFilN', '#sTok');
     const it = s.mat.item && itemByName(s.mat.item);
     if (s.mat.v === 'detail' && it) showDetail(it, null);
-    else if (s.mat.v === 'liste' || s.mat.v === 'vorschlag') matShow(s.mat.v);
+    else if (s.mat.v === 'liste' || s.mat.v === 'vorschlag' || s.mat.v === 'suche') matShow(s.mat.v);
   });
   tryIt(() => { if (s.arc && s.arc.cur && ARC_BY.has(s.arc.cur)) arcOpen(s.arc.cur); });
   tryIt(() => { if (s.navi && MAPS[s.navi]) naviOpen(s.navi); });
@@ -7821,7 +8367,7 @@ uiRestore(startId, lastId);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
-window.__atlas = { track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
+window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN }), urteil, bedarfNeu, saveWst, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
   navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
   marker:() => markers, g3:() => G3, zeiger:() => ptrs.size, ruhig:() => !anim && !dirty, kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
