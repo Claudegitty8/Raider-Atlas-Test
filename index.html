@@ -970,12 +970,14 @@ li.qd .row .t1{color:var(--muted)}
 'use strict';
 /* @datei wissen/stand.js */
 
-const DATA_STAND = '10.11.2026';
+const DATA_STAND = '11.11.2026';
 
 const WISSEN_TIEF = {
   materialien:'06.11.2026', orte:'06.11.2026', schluessel:'06.11.2026', karten:'06.11.2026',
   fregatte:'06.11.2026', emperor:'06.11.2026', kartenbedingungen:'06.11.2026', deutsch:'06.11.2026',
-  arc:'07.11.2026', quests:'07.11.2026', projekte:'07.11.2026'
+  arc:'07.11.2026', quests:'07.11.2026', projekte:'07.11.2026',
+  
+  werkstatt:'11.11.2026', rezepte:'11.11.2026', bauplaene:'11.11.2026', werte:'18.08.2026'
 };
 /* @datei wissen/kategorien.js */
 
@@ -1077,7 +1079,18 @@ const SRCS = {
   Ptm:['q13'],
   Par:['q31'],
   Pin:['q32'],
-  Pwm:['q5']
+  Pwm:['q5'],
+  
+  Wrt:['q33'],
+  Wwg:['q9'],
+  Wwr:['q9'],
+  Wwl:['q9'],
+  Wwc:['q9'],
+  Wts:['q13'],
+  Wtr:['q13'],
+  Wah:['q5'],
+  Wag:['q5'],
+  Wde:['q24']
 };
 
 /* @datei wissen/items.js */
@@ -1884,6 +1897,749 @@ const PROJ_ITEMS = [
   { n:'Mask Fragment', r:'E', rs:'', notes:[] },
   { n:'Insulation Roll', r:'E', rs:'', notes:[] }
 ];
+/* @datei wissen/werkstatt.js */
+
+const WS_KURZ = { AA:'ARC Alloy', AC:'ARC Circuitry', AE:'Advanced Electrical Components', AM:'Advanced Mechanical Components', AN:'Antiseptic', AS:'Assorted Seeds', BA:'Battery', CA:'Canister', CE:'Crude Explosives', CG:'Complex Gun Parts', CH:'Chemicals', DC:'Durable Cloth', DT:'Duct Tape', EC:'Electrical Components', EM:'Exodus Modules', EP:'Explosive Compound', FA:'Fabric', HG:'Heavy Gun Parts', LG:'Light Gun Parts', MA:'Magnetic Accelerator', MC:'Mechanical Components', MD:'Mod Components', MG:'Medium Gun Parts', MN:'Magnet', MP:'Metal Parts', OI:'Oil', PP:'Plastic Parts', PR:'Processor', PW:'Power Rod', RP:'Rubber Parts', SC:'Speaker Component', SE:'Sensors', SG:'Simple Gun Parts', SS:'Steel Spring', VC:'Voltage Converter', WI:'Wires' };
+
+const WS_TYP = { RC:['Recyclable','Zum Zerlegen'], BP:['Blueprint','Bauplan'], TR:['Trinket','Wertsache'], QU:['Quick Use','Verbrauchsgut'], KY:['Key','Schlüssel'], MD:['Modification','Waffen-Aufsatz'], TM:['Topside Material','Material von oben'], AR:['Assault Rifle','Sturmgewehr'], AU:['Augment','Augment'], SM:['SMG','Maschinenpistole'], PI:['Pistol','Pistole'], NA:['Nature','Natur'], RM:['Refined Material','Veredeltes Material'], SP:['Special','Spezialwaffe'], SG:['Shotgun','Schrotflinte'], BR:['Battle Rifle','Kampfgewehr'], AM:['Ammunition','Munition'], SR:['Sniper Rifle','Scharfschützengewehr'], LM:['LMG','Leichtes MG'], BM:['Basic Material','Grundmaterial'], HC:['Hand Cannon','Handkanone'], SH:['Shield','Schild'], MI:['Misc','Sonstiges'] };
+
+const WS_BANK = { G:'Gunsmith', E:'Gear Bench', M:'Medical Lab', X:'Explosives Station', U:'Utility Station', R:'Refiner', W:'Workbench', I:'Im Raid' };
+
+const WS_STATIONS = `
+Workbench|1|-|Wrt+Wwg
+Gunsmith|4|MP:20,RP:30/MC:5,Rusted Tools:3,Wasp Driver:8/AM:5,Rusted Gear:3,Sentinel Firing Core:4/Emperor Modulator:1,MA:3,Radial Press:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg/Wwg
+Gear Bench|3|FA:30,PP:25/EC:5,Hornet Driver:5,Power Cable:3/AE:5,Bastion Cell:6,Industrial Battery:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
+Medical Lab|3|AA:6,FA:50/Cracked Bioscanner:2,DC:5,Tick Pod:8/AN:8,Rusted Shut Medical Kit:3,Surveyor Vault:5|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
+Explosives Station|3|AA:6,CH:50/CE:5,Pop Trigger:5,Synthesized Fuel:3/EP:5,Laboratory Reagents:3,Rocketeer Driver:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
+Utility Station|3|AA:6,PP:50/Damaged Heat Sink:2,EC:5,Snitch Scanner:6/AE:5,Fried Motherboard:3,Leaper Pulse Unit:4|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
+Refiner|3|ARC Powercell:5,MP:60/ARC Motion Core:5,Fireball Burner:8,Toaster:3/AC:10,Bombardier Cell:6,Motor:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
+Research Station|4|Battered Paperback:5,Mini Pump:3,Planks:35/Calculator:3,Raider Logbook:3,Skulker Targeter:5/Bully Fragmenter:6,Differential Microphone:3,Exodus Technical Handbook:3/ARC Data Module:3,Frigate Inductor:1,Thermal Shaker:3|Wwg/Wwg/Wwg/Wwg
+Scrappy|5|-/Dog Collar:1/Apricot:3,Lemon:3/Cat Bed:1,Olives:6,Prickly Pear:6/Apricot:12,Mushroom:12,Very Comfortable Pillow:3|Wrt/Wrt/Wrt/Wrt/Wrt+Wah
+`;
+
+const WS_ITEMS = `
+"Leviathan's Crown" Ship Model|TR|L|10000
+"Sirena Dorata" Ship Model|TR|E|7000
+"Twilight Compass" Ship Model|TR|U|1000
+"Velocity" Ship Model|TR|R|3000
+"Wind Sprite" Ship Model|TR|C|1000
+Acoustic Guitar|QU|L|7000|MP:4,WI:6|WI:3
+Adrenaline Shot|QU|C|300|CH:1,PP:1|CH:1|IM1=CH:3,PP:3
+Advanced ARC Powercell|TM|R|640|ARC Powercell:2|ARC Powercell:1
+Advanced Camera|||1000|Calculator:1
+Advanced Camera Blueprint|BP||5000
+Advanced Electrical Components|RM|R|1750|EC:1,WI:1|EC:1|R2=EC:2,WI:3
+Advanced Mechanical Components|RM|R|1750|MC:1,SS:1|MC:1|R2=MC:2,SS:2
+Agave|NA|U|1000|AS:3|AS:2
+Agave Juice|QU|C|1800||Empty Wine Bottle:1|I=Agave:1,Empty Wine Bottle:1
+Air Freshener|TR|U|2000
+Alarm Clock|RC|R|1000|PP:6,PR:1|PR:1
+Alien Duck|TR|U|1000
+Amplification Module Mk. I|||7000|Amplified Fragments:7
+Amplification Module Mk. II|||7000|Amplified Fragments:7
+Amplification Module Mk. III|||7000|Amplified Fragments:7
+Amplification Module Mk. IV|||7000|Amplified Fragments:7
+Amplification Module Mk. V|||7000|Amplified Fragments:7
+Amplified Fragments|||500
+Ancient Fort Security Code|KY|C|100
+Angled Grip I|MD|C|640|PP:6|PP:3|G1=DT:1,PP:6
+Angled Grip II|MD|U|2000|DT:1,MC:1|MC:1|G2!=DT:3,MC:2
+Angled Grip II Blueprint|BP|C|5000
+Angled Grip III|MD|R|5000|DT:2,MD:1|MC:2|G3!=DT:5,MD:2
+Angled Grip III Blueprint|BP|C|5000
+Antiseptic|RM|R|1000|CH:10|CH:5|R2=CH:10,Great Mullein:2
+Anvil Blueprint|BP|C|5000
+Anvil I|HC|U|5000|MC:2,SG:2|SG:2|G1!=MC:5,SG:6
+Anvil II|HC|U|7000|MC:3,SG:3|SG:3||MC:3,SG:1
+Anvil III|HC|U|10000|MC:4,SG:4|SG:4||HG:1,MC:4
+Anvil IV|HC|U|13000|MC:5,SG:5|SG:5||HG:1,MC:4
+Anvil Splitter|MD|L|7000|MD:1,PR:1|MC:2
+Aphelion|SP|L|27500|CG:1,MA:2|MA:1|G3!=CG:3,MA:3,Matriarch Reactor:1
+Aphelion Blueprint|BP|C|5000
+Apricot|NA|U|640|AS:3|AS:2
+ARC Alloy|TM|U|200|MP:2|MP:1
+ARC Circuitry|TM|R|1000|AA:2|AA:1|R2=AA:8
+ARC Conductive Coupler|||100
+ARC Coolant|RC|R|1000|CH:16|CH:9
+ARC Data Module|||2000
+ARC Flex Rubber|RC|R|1000|RP:16|RP:9
+ARC Insulated Coupler|||100
+ARC Motion Core|TM|R|1000|AA:2|AA:1|R2=AA:8
+ARC Performance Steel|RC|R|1000|MP:12|MP:7
+ARC Powercell|TM|C|270
+ARC Synthetic Resin|RC|R|1000|PP:14|PP:9
+ARC Thermo Lining|RC|R|1000|FA:16|FA:9
+Arcade Duck|||7000
+Archive Desk Lamp|||5000
+Arpeggio I|AR|U|5500|MC:2,SG:2|SG:2|G2=MC:6,SG:6
+Arpeggio II|AR|U|8000|MC:3,SG:3|SG:3||MC:4,SG:1
+Arpeggio III|AR|U|11500|MC:4,SG:4|SG:4||MC:5,MG:1
+Arpeggio IV|AR|U|15000|MC:5,SG:5|SG:5||MC:5,MG:1
+Assessor Matrix|RC|E|5000|Advanced ARC Powercell:3,AM:1|Advanced ARC Powercell:2
+Assorted Seeds|NA|C|100
+Bandage|QU|C|250|FA:2|FA:1|IMW1=FA:5
+Bantam Blueprint|BP||5000
+Barricade Kit|QU|U|640|MP:4|MP:3|U2!=MC:1
+Barricade Kit Blueprint|BP|C|5000
+Basic Camera|||640|PP:5
+Bastion Cell|RC|E|3000|AA:3,AM:1|AM:1
+Battered Paperback|||270
+Battery|TM|U|250|MP:2|MP:1
+Bettina Blueprint|BP|C|5000
+Bettina I|AR|E|8000|AM:1,HG:2|AM:1|G3!=AM:3,CA:3,HG:3
+Bettina II|AR|E|11000|AM:2,HG:2|AM:2||AM:1,HG:2
+Bettina III|AR|E|14000|AM:2,HG:3|AM:3||AM:1,HG:2
+Bettina IV|AR|E|18000|AM:3,HG:3|AM:4||AM:2,HG:2
+Bicycle Pump|RC|R|2000|CA:4,MP:10|CA:3
+Binoculars|QU|C|640|PP:4,RP:2|PP:4|U1=PP:8,RP:4
+Blaze Grenade|QU|R|1600|MP:4,OI:2|OI:1|X3!=EP:1,OI:2
+Blaze Grenade Blueprint|BP|C|5000
+Blaze Grenade Trap|QU|R|1000|||IW1=Blaze Grenade:1,WI:1
+Bloated Tuna Can|TR|C|1000
+Blue Gate Cellar Key|KY|R|100
+Blue Gate Communication Tower Key|KY|R|100
+Blue Gate Confiscation Room Key|KY|E|100
+Blue Gate Village Key|KY|U|100
+Blue Light Stick|QU|C|150|CH:1|CH:1|U1!=CH:3
+Blue Light Stick Blueprint|BP|C|5000
+Bobcat Blueprint|BP|C|5000
+Bobcat I|SM|E|13000|AM:2,LG:2|LG:2|G3!=EM:2,LG:3,MA:1
+Bobcat II|SM|E|17000|AM:3,LG:3|LG:3||AM:2,LG:1
+Bobcat III|SM|E|22000|AM:4,LG:4|LG:4||AM:2,LG:3
+Bobcat IV|SM|E|27000|AM:5,LG:4|LG:4||AM:2,LG:3
+Bombardier Cell|RC|E|3000|AA:3,AM:1|AM:1
+Book|TR|C|100
+Breathtaking Snow Globe|TR|E|7000
+Broken Flashlight|RC|R|1000|BA:2,MP:6|MP:7
+Broken Guidance System|RC|R|2000|PR:4|PR:2
+Broken Handheld Radio|RC|R|2000|SE:3,WI:2|SE:2
+Broken Taser|RC|R|1000|BA:2,WI:2|BA:2
+Bully Fragmenter
+Buried City Hospital Key|KY|R|100
+Buried City JKV Employee Access Card|KY|U|100
+Buried City Residential Master Key|KY|U|100
+Buried City Town Hall Key|KY|E|100
+Burletta Blueprint|BP|C|5000
+Burletta I|PI|U|2900|MC:1,SG:2|SG:2|G1!=MC:3,SG:3
+Burletta II|PI|U|5000|MC:2,SG:2|SG:2||MC:3,SG:1
+Burletta III|PI|U|7000|MC:3,SG:3|SG:3||MC:3,SG:1
+Burletta IV|PI|U|10000|MC:4,SG:4|SG:4||LG:1,MC:4
+Burned Arc Circuitry|RC|U|640|AA:2|AA:1
+Burnt-Out Candles|TR|C|640
+Calculator
+Camera Lens|RC|U|640|PP:8|PP:4
+Candle Holder|RC|U|640|MP:8|MP:4
+Candleberries|NA|R|460|AS:2
+Canister|TM|U|300|PP:3|PP:1
+Canto Blueprint|BP|C|5000
+Canto I|SM|R|7000|AM:1,MG:2|MG:2|G3!=AM:2,MN:5,MG:3
+Canto II|SM|R|10000|AM:2,MG:2|MG:2||AM:1,MG:2
+Canto III|SM|R|13000|AM:2,MG:3|MG:3||AM:1,MG:2
+Canto IV|SM|R|17000|AM:3,MG:3|MG:3||AM:2,MG:2
+Cat Bed|TR|U|1000
+Celeste's Journal|TR|C|100
+Chemicals|BM|C|50
+Coffee Pot|TR|C|1000
+Colorful Shoes (Green)|TR|E|7000
+Colorful Shoes (Red)|TR|R|3000
+Colorful Shoes (Silver)|TR|L|10000
+Combat Mk. 1|AU|U|640|PP:3,RP:3|PP:3|E1=PP:6,RP:6
+Combat Mk. 2|AU|R|2000|EC:1,MN:1|EC:1|E2=EC:2,MN:3
+Combat Mk. 3 (Aggressive)|AU|E|5000|AE:1,PR:1|EC:2|E3!=AE:2,PR:3
+Combat Mk. 3 (Aggressive) Blueprint|BP|C|5000
+Combat Mk. 3 (Flanking)|AU|E|5000|AE:1,PR:1|EC:2|E3!=AE:2,PR:3
+Combat Mk. 3 (Flanking) Blueprint|BP|C|5000
+Comet Igniter|RC|R|1000|AA:2,CE:2|CE:2
+Compensator I|MD|C|640|MP:5|MP:3|G1=MP:6,WI:1
+Compensator II|MD|U|2000|MC:1,WI:1|MC:1|G2!=MC:2,WI:4
+Compensator II Blueprint|BP|C|5000
+Compensator III|MD|R|5000|MD:1,WI:2|MC:2|G3!=MD:2,WI:8
+Compensator III Blueprint|BP|C|5000
+Complex Gun Parts|TM|E|3000|SG:3|SG:2|R3!=HG:2,LG:2,MG:2
+Complex Gun Parts Blueprint|BP|C|5000
+Coolant|RC|R|1000|CH:5,OI:2|OI:2
+Cooling Coil|RC|R|1000|CH:6,SS:2|SS:2
+Cooling Fan|RC|R|2000|PP:14,WI:4|WI:4
+Cracked Bioscanner|RC|R|1000|BA:3,RP:3|BA:2
+Crash Mat|QU|U|1200|FA:6,PP:3|FA:4|U2!=DC:1,EC:1
+Crash Mat Blueprint|BP|C|5000
+Crude Explosives|RM|U|270|CH:3|CH:2|R1=CH:6
+Crumpled Plastic Bottle|RC|U|270|PP:4|PP:1
+Dam Control Tower Key|KY|E|100
+Dam Controlled Access Zone Key|KY|R|100
+Dam Staff Room Key|KY|U|100
+Dam Surveillance Key|KY|U|100
+Dam Testing Annex Key|KY|R|100
+Damaged ARC Motion Core|RC|U|640|AA:2|AA:1
+Damaged ARC Powercell|RC|C|293|AA:1|MP:1
+Damaged Fireball Burner|RC|C|270|AA:1|MP:1
+Damaged Heat Sink|RC|R|1000|MP:6,WI:2|WI:3
+Damaged Hornet Driver|RC|C|640|AA:2|AA:1
+Damaged Rocketeer Driver|RC|C|1000|AA:3|AA:2
+Damaged Snitch Scanner|RC|C|659
+Damaged Tick Pod|RC|C|270|AA:1|MP:1
+Damaged Wasp Driver|RC|C|270|AA:1|MP:1
+Dart Board|TR|U|2000
+Deadline|QU|E|6000|AC:1,EP:1|EP:1|X3!=AC:2,Comet Igniter:1,EP:3
+Deadline Blueprint|BP|C|5000
+Defibrillator|QU|R|1000|Moss:1,PP:1|CH:2|M2!=Moss:1,PP:9
+Defibrillator Blueprint|BP|C|5000
+Deflated Football|RC|U|1000|FA:9,RP:9|RP:9
+Degraded ARC Rubber|RC|U|640|RP:11|RP:5
+Differential Microphone
+Diving Goggles|RC|R|640|RP:12|RP:5
+Dockmaster's Detector|QU|U|1000
+Dodger's Note|TR|C|100
+Dog Collar|RC|R|640|FA:8,MP:1|FA:5
+Dolabra|SG|L|27500|MA:2|MA:1|G3!=MA:3,Shredder Gyro:3,Vaporizer Regulator:2
+Dolabra Blueprint|BP|C|5000
+Doodly Duck|TR|R|3000
+Door Blocker|QU|C|270|MP:2|MP:1|U1=MP:3,RP:3
+Dried-Out ARC Resin|RC|U|640|PP:9|PP:4
+Duct Tape|TM|U|300|FA:3|FA:1
+Durable Cloth|RM|U|640|FA:6|FA:2|R1=FA:14
+Dusty Film Reel|TR|C|100
+Electrical Components|RM|U|640|PP:3,RP:3|PP:3|R1=PP:8,RP:4
+Elephant Obelisk|TR|L|10000
+Emperor Modulator
+Empty Wine Bottle|TR|C|1000
+Energy Clip|AM|R|200|||W1=Advanced ARC Powercell:1,BA:2
+Equalizer|LM|L|27500|CG:1,MA:2|MA:1|G3!=CG:3,MA:3,Queen Reactor:1
+Equalizer Blueprint|BP|C|5000
+Equatorial Sundial|TR|R|3000
+Espresso Machine Parts|TR|C|100
+ESR Analyzer|TR|C|100
+Exodus Modules|TM|E|2750|MN:2,PR:2|PR:2
+Exodus Technical Handbook
+Experimental Seed Sample|TR|C|100
+Expired Pasta|TR|C|1000
+Expired Respirator|RC|R|640|FA:4,RP:8|RP:5
+Expired Security Code|KY|C|10
+Explosive Compound|RM|R|1000|CE:2|CE:1|R2=CE:2,OI:2
+Explosive Mine|QU|R|1500|OI:1,SE:1|OI:2|X3!=EP:1,SE:1
+Explosive Mine Blueprint|BP|C|5000
+Extended Barrel I|MD|U|1000|MP:5|MP:3|G1=MP:6,WI:3
+Extended Barrel II|MD|R|3000|MC:1,WI:1|MC:1|G2!=MC:3,WI:6
+Extended Barrel II Blueprint|BP|C|5000
+Extended Barrel III|MD|E|5000|MD:1,WI:1|MC:2|G3!=MD:2,WI:8
+Extended Barrel III Blueprint|BP|C|5000
+Extended Light Mag I|MD|C|640|PP:6|PP:3|G1=PP:6,SS:1
+Extended Light Mag II|MD|U|2000|MC:1,SS:1|MC:1|G2!=MC:2,SS:3
+Extended Light Mag II Blueprint|BP|C|5000
+Extended Light Mag III|MD|R|5000|MD:1,SS:2|MC:2|G3!=MD:2,SS:5
+Extended Light Mag III Blueprint|BP|C|5000
+Extended Medium Mag I|MD|C|640|PP:6|PP:3|G1=PP:6,SS:1
+Extended Medium Mag II|MD|U|2000|MC:1,SS:1|MC:1|G2!=MC:2,SS:3
+Extended Medium Mag II Blueprint|BP|C|5000
+Extended Medium Mag III|MD|R|5000|MD:1,SS:2|MC:2|G3!=MD:2,SS:5
+Extended Medium Mag III Blueprint|BP|C|5000
+Extended Shotgun Mag I|MD|C|640|PP:6|PP:3|G1=PP:6,SS:1
+Extended Shotgun Mag II|MD|U|2000|MC:1,SS:1|MC:1|G2!=MC:2,SS:3
+Extended Shotgun Mag II Blueprint|BP|C|5000
+Extended Shotgun Mag III|MD|R|5000|MD:1,SS:2|MC:2|G3!=MD:2,SS:5
+Extended Shotgun Mag III Blueprint|BP|C|5000
+Fabric|BM|C|50
+Faded Photograph|TR|C|640
+Familiar Duck|TR|E|7000
+Ferro I|BR|C|475|MP:2,RP:1|MP:2|GW1=MP:5,RP:2
+Ferro II|BR|C|1000|MP:4,RP:3|MP:4||MP:7
+Ferro III|BR|C|2000|MP:6,SG:1|SG:1||MP:9,SG:1
+Ferro IV|BR|C|2900|MC:1,SG:2|SG:2||MC:1,SG:1
+Fertilizer|NA|U|1000|AS:2|AS:1
+Film Reel|TR|R|2000
+Fine Wristwatch|TR|R|3000
+Fireball Burner|RC|U|640|AA:1,CE:1|AA:1
+Firecracker|QU|C|270|PP:3|PP:1|U1=CH:2,PP:4
+Firefly Burner|RC|R|1000|AA:2,CE:2|CE:2
+Fireworks Box|QU|R|2000|EP:1|EP:1|X2!=EP:1,Pop Trigger:3
+Fireworks Box Blueprint|BP|C|5000
+First Wave Compass|TR|C|100
+First Wave Rations|TR|C|100
+First Wave Tape|TR|C|100
+Flame Spray|QU|U|2000|CA:1,Fireball Burner:1|Fireball Burner:1|I=Air Freshener:1,Fireball Burner:1
+Flashy Duck|TR|R|3000
+Flow Controller|RC|R|3000|AM:1,SE:1|MC:2
+Flushing Terminal Key|TR|C|100
+Fossilized Lightning|TM|E|4000|EP:3|EP:2
+Free Loadout Augment|AU|C|660|PP:6,RP:6
+Frequency Modulation Box|RC|R|3000|AE:1,SC:1|EC:2
+Fried Motherboard|RC|R|2000|EC:2,PP:5|WI:5
+Frigate Inductor
+Fruit Mix|QU|U|1800|||I=Apricot:1,Lemon:1,Prickly Pear:1
+Frying Pan|RC|R|640|MP:8|MP:4
+Garlic Press|RC|U|1000|MP:12|MP:7
+Gas Grenade|QU|C|270|CH:1,RP:1|CH:1|X1=CH:4,RP:2
+Gas Grenade Trap|QU|C|300|||IW1=Gas Grenade:1,WI:1
+Gas Mine|QU|C|270|CH:1,RP:1|CH:2|X1!=CH:4,RP:2
+Gas Mine Blueprint|BP|C|5000
+Geiger Counter|RC|E|3500|BA:3,EM:1|BA:3
+Gentle Duck|TR|U|1000
+Glitched ARC Circuitry|RC|L|5000|AA:6,EM:1
+Glitched ARC Light Ring|RC|E|3000|AA:3,AE:1
+Glitched ARC Phased Array|RC|R|2000|AA:3,SE:2
+Glitched ARC Power Converter|RC|C|640|AA:3
+Glitched ARC Transmitter|RC|U|1000|AA:1,EC:1
+Great Mullein|TM|U|300|AS:2|AS:1
+Green Light Stick|QU|C|150|CH:1|CH:1|U1!=CH:3
+Green Light Stick Blueprint|BP|C|5000
+Hairpin I|PI|C|450|MP:2,RP:1|MP:2|GW1=MP:2,PP:5
+Hairpin II|PI|C|1000|MP:4,RP:3|MP:4||MP:8
+Hairpin III|PI|C|2000|MP:6,SG:1|SG:1||MP:9,SG:1
+Hairpin IV|PI|C|2900|MC:1,SG:2|SG:2||MC:1,SG:1
+Headphones|RC|R|1000|RP:7,SC:1|SC:1
+Heavy Ammo|AM|C|12|||W1=CH:2,MP:3
+Heavy Fuze Grenade|QU|R|1600|OI:1,RP:2|CE:1|X3=CA:2,EP:1
+Heavy Gun Parts|TM|R|700|SG:2|SG:1|R2!=SG:4
+Heavy Gun Parts Blueprint|BP|C|5000
+Heavy Shield|SH|E|5500|AC:2,VC:1|AA:4|E2=PW:1,VC:2
+Herbal Bandage|QU|U|900|AS:2,FA:5|FA:8|IM1=DC:1,Great Mullein:1
+Hidden Bunker Key|KY|C|100
+Horizontal Grip|MD|E|7000|DT:2,MD:1|MC:2
+Hornet Driver|RC|R|1000|AA:1,EC:1|EC:1
+Household Cleaner|RC|U|640|CH:11|CH:5
+Hullcracker Blueprint|BP|C|5000
+Hullcracker I|SP|E|10000|AM:2,HG:2|HG:2|G3!=EM:1,HG:3,MA:1
+Hullcracker II|SP|E|13000|AM:2,HG:3|HG:3||AM:1,HG:2
+Hullcracker III|SP|E|17000|AM:3,HG:4|HG:4||AM:2,HG:1
+Hullcracker IV|SP|E|22000|AM:4,HG:5|HG:5||AM:2,HG:3
+Humidifier|RC|R|1000|CA:2,WI:2|CA:2
+Ice Cream Scooper|RC|U|640|MP:7|MP:3
+Il Toro Blueprint|BP|C|5000
+Il Toro I|SG|U|5000|MC:2,SG:2|SG:2|G1!=MC:5,SG:6
+Il Toro II|SG|U|7000|MC:3,SG:3|SG:3||MC:3,SG:1
+Il Toro III|SG|U|10000|MC:4,SG:4|SG:4||HG:1,MC:4
+Il Toro IV|SG|U|13000|MC:5,SG:5|SG:5||HG:1,MC:4
+Impure ARC Coolant|RC|U|640|CH:12|CH:5
+Industrial Battery|RC|R|1000|BA:2,CH:7|BA:2
+Industrial Charger|RC|R|1000|MP:5,VC:1|VC:1
+Industrial Magnet|RC|R|1000|MN:2,MP:4|MN:2
+Integrated Binoculars|||0
+Ion Sputter|RC|E|6000|EM:1,VC:4|EM:1
+Jolt Mine|QU|R|850|BA:1,PP:2|BA:1|X2!=BA:1,EC:1
+Jolt Mine Blueprint|BP|C|5000
+Jupiter|SR|L|27500|CG:1,MA:2|AM:3|G3!=CG:3,MA:3,Queen Reactor:1
+Jupiter Blueprint|BP|C|5000
+Kettle I|AR|C|840|MP:3,RP:2|MP:3|GW1=MP:6,RP:8
+Kettle II|AR|C|2000|MP:6,RP:6|MP:6||MP:8,PP:10
+Kettle III|AR|C|3000|MP:12,SG:1|SG:1||MP:10,SG:1
+Kettle IV|AR|C|5000|MC:2,SG:2|SG:2||MC:3,SG:1
+Kinetic Converter|MD|L|7000|DT:2,MD:1|MC:2
+Laboratory Reagents|RC|R|2000|CH:16,CE:3|CE:3
+Lance's Mixtape (5th Edition)|TR|E|10000
+Launcher Ammo|AM|R|250|||W1=ARC Motion Core:1,CE:2
+Leaper Pulse Unit|RC|E|3000|AA:3,AM:1|MC:2
+Lemon|NA|U|640|AS:3|AS:2
+Li'l Smoke Grenade|QU|C|300|CH:1,PP:1|CH:2|IU1=CH:5,PP:1
+Lidar Scanner|TR|C|100
+Light Ammo|AM|C|4|||W1=CH:2,MP:3
+Light Bulb|TR|U|2000
+Light Gun Parts|TM|R|700|SG:2|SG:1|R2!=SG:4
+Light Gun Parts Blueprint|BP|C|5000
+Light Impact Grenade|QU|C|270|CH:1,PP:1|CH:1|IWX1=CH:3,PP:2
+Light Shield|SH|U|640|PP:4|AA:1|EW1=AA:2,PP:4
+Lightweight Stock|MD|E|5000|DT:1,MD:1|MC:2|G3!=DT:5,MD:2
+Lightweight Stock Blueprint|BP|C|5000
+Looting Mk. 1|AU|U|640|PP:3,RP:3|PP:3|EW1=PP:6,RP:6
+Looting Mk. 2|AU|R|2000|EC:1,MN:1|EC:1|E2=EC:2,MN:3
+Looting Mk. 3 (Cautious)|AU|E|5000|AE:1,PR:1|EC:2|E3=AE:2,PR:3
+Looting Mk. 3 (Safekeeper)|AU|E|5000|AE:1,PR:1|EC:2|E3!=AE:2,PR:3
+Looting Mk. 3 (Safekeeper) Blueprint|BP|C|5000
+Looting Mk. 3 (Survivor)|AU|E|5000|AE:1,PR:1|EC:2|E3!=AE:2,PR:3
+Looting Mk. 3 (Survivor) Blueprint|BP|C|5000
+Lure Grenade|QU|U|1000|SC:1|SC:1|U2!=EC:1,SC:1
+Lure Grenade Blueprint|BP|C|5000
+Lure Grenade Trap|QU|U|1000|||IW1=Lure Grenade:1,WI:1
+Magnet|TM|U|300|MP:2|MP:1
+Magnetic Accelerator|RM|E|5500|ARC Motion Core:1,AM:1|AM:1|R3=ARC Motion Core:2,AM:2
+Magnetron|RC|E|6000|MA:1,SS:1|AM:1
+Major Aiva's Mementos|TR|C|100
+Major Aiva's Patch|TR|C|100
+Marano Market Business Card|TR|C|100
+Matriarch Reactor|RC|L|11000|MA:1,PW:1|MA:1
+Mechanical Components|RM|U|640|MP:3,RP:2|MP:3|R1=MP:7,RP:3
+Medium Ammo|AM|C|6|||W1=CH:2,MP:3
+Medium Gun Parts|TM|R|700|SG:2|SG:1|R2!=SG:4
+Medium Gun Parts Blueprint|BP|C|5000
+Medium Shield|SH|R|2000|AC:1|AA:2|E1=AC:1,BA:4
+Metal Brackets|RC|U|640|MP:8|MP:4
+Metal Parts|BM|C|75
+Microscope|RC|R|3000|AM:1,MN:3|MC:2
+Mini Centrifuge|RC|R|3000|AM:1,CA:2|MC:2
+Mini Pump
+Mod Components|RM|R|1750|MC:1,SS:1|MC:1|R2=MC:2,SS:2
+Moisture Meter|TR|C|100
+Moss|TM|R|500|AS:3|AS:2
+Motor|RC|R|2000|MC:2,OI:2|OI:3
+Mushroom|NA|U|1000
+Music Album|TR|R|3000
+Music Box|TR|R|5000
+Muzzle Brake I|MD|C|640|MP:5|MP:3|G1=MP:6,WI:1
+Muzzle Brake II|MD|U|2000|MC:1,WI:1|MC:1|G2!=MC:2,WI:4
+Muzzle Brake II Blueprint|BP|C|5000
+Muzzle Brake III|MD|R|5000|MD:1,WI:2|MC:2|G3!=MD:2,WI:8
+Muzzle Brake III Blueprint|BP|C|5000
+Noisemaker|QU|C|640|SC:1|SC:1|I=PP:2,SC:1
+Number Plate|RC|U|270|MP:3|MP:2
+Nutrient Meter|TR|C|100
+Official Shutdown Documentation|TR|C|100
+Oil|TM|U|300|CH:3|CH:1
+Old World Books|TR|C|100
+Olives|NA|U|640|AS:2|AS:1
+Osprey Blueprint|BP|C|5000
+Osprey I|SR|R|7000|AM:1,MG:2|MG:2|G2!=AM:2,MG:3,WI:7
+Osprey II|SR|R|10000|AM:2,MG:2|MG:2||AM:1,MG:2
+Osprey III|SR|R|13000|AM:2,MG:3|MG:3||AM:1,MG:2
+Osprey IV|SR|R|17000|AM:3,MG:3|MG:3||AM:2,MG:2
+Padded Stock|MD|E|5000|DT:1,MD:1|MC:2|G3!=DT:5,MD:2
+Padded Stock Blueprint|BP|C|5000
+Painted Box|TR|U|2000
+Patrol Car Key|KY|U|100
+Photoelectric Cloak|QU|E|5000|AE:1,SC:1|AE:1|U3=AE:2,SC:4
+Pilgrim's Peak Security Code|KY|C|100
+Planks
+Plastic Parts|BM|C|60
+Playing Cards|TR|R|5000
+Polluted Air Filter|RC|R|1000|FA:6,OI:2|OI:2
+Pop Trigger|RC|U|640|AA:1,CE:1|CE:1
+Portable TV|RC|R|2000|BA:2,WI:6|WI:4
+Possibly Toxic Plant|TR|C|100
+Poster of Natural Wonders|TR|U|2000
+Pottery|TR|U|2000
+Power Bank|RC|R|1000|BA:2,WI:2|BA:2
+Power Cable|RC|R|1000|WI:4|WI:3
+Power Rod|RM|E|5000|AC:1,AE:1|AE:1|R3=AC:2,AE:2
+Powered Descender|QU|E|10000|AC:2,AE:1|AE:1|U3!=PW:1,Turbine Compressor:1
+Powered Descender Blueprint|BP|C|5000
+Precision Gimbal|TR|C|100
+Prickly Pear|NA|C|640|AS:3|AS:2
+Processor|TM|R|500|PP:1,WI:1|PP:2
+Project Heartwood Blueprints|TR|C|100
+Projector|RC|R|1000|PR:1,WI:2|PR:1
+Pulse Mine|QU|U|470|CH:6|CH:3|X1!=CE:1,WI:1
+Pulse Mine Blueprint|BP|C|5000
+Queen Reactor|RC|L|11000|MA:1,PW:1|PW:1
+Radial Press
+Radio|RC|R|1000|SE:1,SC:1|SC:1
+Radio Relay|RC|R|3000|SE:2,SC:2|SE:2
+Raider Flag|TR|C|100
+Raider Hatch Key|KY|R|2000|||IU2=AE:1,SE:3
+Raider Logbook
+Raider's Refuge Security Code|KY|C|100
+Rascal Blueprint|BP|C|5000
+Rascal I|SP|R|7000|AM:1,HG:2|HG:2|G2!=AM:2,CA:5,HG:3
+Rascal II|SP|R|10000|AM:2,HG:2|HG:2||AM:1,HG:2
+Rascal III|SP|R|13000|AM:2,HG:3|HG:3||AM:1,HG:2
+Rascal IV|SP|R|17000|AM:3,HG:3|HG:3||AM:2,HG:2
+Rattler I|AR|C|1750|MP:8|MP:4|G1=MP:16,RP:12
+Rattler II|AR|C|3000|MP:12|MP:8||MP:10,RP:10
+Rattler III|AR|C|5000|MC:3,SG:1|MP:12||MC:3,SG:1
+Rattler IV|AR|C|7000|MC:4,SG:2|MP:14||MC:3,SG:1
+Recorder|QU|U|1000|PP:10|PP:4
+Red Coral Jewelry|TR|R|5000
+Red Light Stick|QU|C|150|CH:1|CH:1|U1!=CH:3
+Red Light Stick Blueprint|BP|C|5000
+Reinforced Reception Security Code|KY|C|100
+Remote Control|RC|R|1000|PP:7,SE:1|SE:1
+Remote Raider Flare|QU|C|270|CH:1,RP:1|CH:1|U1!=CH:2,RP:4
+Remote Raider Flare Blueprint|BP|C|5000
+Renegade I|BR|R|7000|AM:1,MG:2|MG:2|G3=AM:2,MG:3,OI:5
+Renegade II|BR|R|10000|AM:2,MG:2|MG:2||AM:1,MG:2
+Renegade III|BR|R|13000|AM:2,MG:3|MG:3||AM:1,MG:2
+Renegade IV|BR|R|17000|AM:3,MG:3|MG:3||AM:2,MG:2
+Resin|NA|C|1000
+Ripped Safety Vest|RC|U|1000|DC:1,MN:1|FA:8
+Riven Tides Classified Records Keycard|KY|U|100
+Riven Tides Crane House Keycard|KY|C|100
+Riven Tides Hotel Keycard No. 102|KY|C|100
+Riven Tides Hotel Keycard No. 107|KY|C|100
+Riven Tides Hotel Keycard No. 113|KY|C|100
+Riven Tides Hotel Keycard No. 205|KY|C|100
+Riven Tides Hotel Keycard No. 208|KY|C|100
+Riven Tides Hotel Keycard No. 311|KY|C|100
+Riven Tides Hotel Keycard No. 404|KY|C|100
+Riven Tides Secure Storage Keycard|KY|E|100
+Rocket Thruster|RC|R|2000|MP:6,Synthesized Fuel:2|Synthesized Fuel:1
+Rocketeer Driver|RC|E|3000|AA:3,AE:1|AC:1
+Roots|NA|U|640|AS:1|AS:1
+Rope|TM|R|500|FA:5|FA:2
+Rosary|TR|R|2000
+Rotary Encoder|RC|R|3000|EC:2,PR:2|PR:2
+Rubber Duck|TR|C|1000
+Rubber Pad|RC|R|1000|RP:18|RP:12
+Rubber Parts|BM|C|50
+Ruined Accordion|RC|R|2000|RP:18,SS:3|RP:13
+Ruined Augment|RC|C|270|PP:2,RP:2|PP:3
+Ruined Baton|RC|U|640|MP:6,RP:3|MP:4
+Ruined Handcuffs|RC|U|640|MP:8|MP:4
+Ruined Parachute|RC|U|640|FA:10|FA:5
+Ruined Riot Shield|RC|R|1000|PP:10,RP:6|PP:10
+Ruined Tactical Vest|RC|U|640|FA:5,MN:1|FA:5
+Rusted Bolts|RC|U|640|MP:8|MP:4
+Rusted Gear|RC|R|2000|MC:2,MP:4|MP:12
+Rusted Shut Medical Kit|RC|R|2000|AN:1,Syringe:2|Syringe:2
+Rusted Tools|RC|R|1000|MP:8,SS:1|MP:7
+Rusty ARC Steel|RC|U|640|MP:8|MP:3
+Sample Cleaner|RC|R|3000|AS:14,EC:2|AS:12
+Scout Patrol Note|TR|C|100
+Secret Meeting Info|TR|C|100
+Seed Vault Box Key|KY|C|100
+Seeker Grenade|QU|U|640|CE:1|CH:3|X1!=AA:2,CE:1
+Seeker Grenade Blueprint|BP|C|5000
+Sensors|TM|R|500|MP:1,WI:1|WI:1
+Sentinel Firing Core|RC|R|2000|AA:2,MC:2|MC:2
+Sextant|TR|U|2000
+Shaker|QU|U|1000|PP:10|PP:4|I=AS:7,CA:1
+Shield Recharger|QU|U|520|RP:4|RP:3|IMW1=ARC Powercell:1,RP:5
+Shotgun Ammo|AM|C|20|||W1=CH:2,MP:3
+Shotgun Choke I|MD|C|640|MP:5|MP:3|G1=MP:6,WI:1
+Shotgun Choke II|MD|U|2000|MC:1,WI:1|MC:1|G2!=MC:2,WI:4
+Shotgun Choke II Blueprint|BP|C|5000
+Shotgun Choke III|MD|R|5000|MD:1,WI:2|MC:2|G3!=MD:2,WI:8
+Shotgun Choke III Blueprint|BP|C|5000
+Shotgun Silencer|MD|E|5000|MD:1,WI:1|MC:2|G3!=MD:2,WI:8
+Shotgun Silencer Blueprint|BP|C|5000
+Showstopper|QU|R|2100|EC:1,VC:1|EC:1|X3!=EC:1,Hornet Driver:1,VC:1
+Showstopper Blueprint|BP|C|5000
+Shrapnel Grenade|QU|U|800|CE:1,MP:1|CE:1|X2=CE:1,SS:2
+Shredder Gyro|RC|R|2000|AA:2,MC:2|MC:2
+Signal Amplifier|RC|R|3000|EC:2,VC:2|VC:2
+Silencer I|MD|U|2000|MC:1,WI:1|MC:1|G2!=MC:2,WI:4
+Silencer I Blueprint|BP|C|5000
+Silencer II|MD|R|5000|MD:1,WI:2|MC:2|G3!=MD:2,WI:8
+Silencer II Blueprint|BP|C|5000
+Silencer III|MD|E|7000|MD:1,WI:3|MD:1
+Silver Teaspoon Set|TR|R|3000
+Simple Gun Parts|TM|U|330|MP:2|MP:1
+Skulker Targeter
+Smoke Grenade|QU|R|1000|CA:1,CH:2|CH:3|U2!=CA:1,CH:14
+Smoke Grenade Blueprint|BP|C|5000
+Smoke Grenade Trap|QU|R|640|||IW1=Smoke Grenade:1,WI:1
+Snap Blast Grenade|QU|U|800|CH:1,MN:1|CH:2|X2=CE:2,MN:1
+Snap Hook|QU|L|14000|PW:1,Rope:3|AE:2|U3!=EM:1,PW:2,Rope:3
+Snap Hook Blueprint|BP|C|5000
+Snitch Scanner|RC|U|1000|AA:1,EC:1|EC:1
+Snowball|QU|C|10
+Spaceport Container Storage Key|KY|R|100
+Spaceport Control Tower Key|KY|R|100
+Spaceport Trench Tower Key|KY|U|100
+Spaceport Warehouse Key|KY|U|100
+Speaker Component|TM|R|500|PP:2,RP:3|PP:2
+Spectrometer|RC|R|3000|AE:1,SE:1|EC:2
+Spectrum Analyzer|RC|E|3500|EM:1,SE:1|PR:2
+Spotter Relay|RC|U|1000|AA:1,EC:1|EC:1
+Spring Cushion|RC|R|2000|DC:2,SS:2|SS:2
+Stable Stock I|MD|C|640|RP:6|RP:3|G1=DT:1,RP:7
+Stable Stock II|MD|U|2000|DT:1,MC:1|MC:1|G2!=DT:3,MC:2
+Stable Stock II Blueprint|BP|C|5000
+Stable Stock III|MD|R|5000|DT:2,MD:1|MC:2|G3!=DT:5,MD:2
+Stable Stock III Blueprint|BP|C|5000
+Stack of Movie Tapes|TR|C|100
+Statuette|TR|R|3000
+Steel Spring|TM|U|300|MP:2|MP:1
+Stella Montis Archives Key|KY|E|100
+Stella Montis Assembly Admin Key|KY|U|100
+Stella Montis Medical Storage Key|KY|U|100
+Stella Montis Security Checkpoint Key|KY|R|100
+Sterilized Bandage|QU|R|2000|AN:1,FA:1|DC:1|M2=AN:1,DC:2
+Stitcher I|SM|C|800|MP:3,RP:2|MP:3|GW1=MP:8,RP:4
+Stitcher II|SM|C|2000|MP:6,RP:6|MP:6||MP:8,RP:12
+Stitcher III|SM|C|3000|MP:12,SG:1|SG:1||MP:10,SG:1
+Stitcher IV|SM|C|5000|MC:2,SG:2|SG:2||MC:3,SG:1
+Surge Coil|QU|U|2100|EC:1,SE:1|EC:1|X3!=EC:1,Hornet Driver:1,SE:1
+Surge Coil Blueprint|BP|C|5000
+Surge Shield Recharger|QU|R|1200|EC:1|PP:5|M2=Advanced ARC Powercell:1,EC:1
+Surveyor Vault|RC|R|1000|AA:1,MC:1|MC:1
+Synthesized Fuel|TM|R|700|CH:1,OI:1|OI:1
+Syringe|TM|R|500|CH:2,PP:3|PP:2
+Tactical Mk. 1|AU|U|640|PP:3,RP:3|PP:3|E1=PP:6,RP:6
+Tactical Mk. 2|AU|R|2000|EC:1,MN:1|EC:1|E2=EC:2,MN:3
+Tactical Mk. 3 (Defensive)|AU|E|5000|AE:1,PR:1|EC:2|E3!=AE:2,PR:3
+Tactical Mk. 3 (Defensive) Blueprint|BP|C|5000
+Tactical Mk. 3 (Healing)|AU|E|5000|AE:1,PR:1|EC:2|E3!=AE:2,PR:3
+Tactical Mk. 3 (Healing) Blueprint|BP|C|5000
+Tactical Mk. 3 (Revival)|AU|E|5000|AE:1,PR:1|EC:2|E3!=AE:2,PR:3
+Tactical Mk. 3 (Revival) Blueprint|BP|C|5000
+Tactical Mk. 3 (Smoke)|AU|E|5000|AE:1,PR:1|EC:2|E3!=AE:2,PR:3
+Tactical Mk. 3 (Smoke) Blueprint|BP|C|5000
+Tagging Grenade|QU|R|1000|PP:1,SE:1|SE:1|U3!=EC:1,SE:1
+Tagging Grenade Blueprint|BP|C|5000
+Tattered Arc Lining|RC|U|640|FA:12|FA:5
+Tattered Clothes|RC|U|640|FA:11|FA:5
+Telemetry Transceiver|RC|R|3000|AE:1,PR:1|EC:2
+Tellurion|TR|E|7000
+Tempest Blueprint|BP|C|5000
+Tempest I|AR|E|13000|AM:2,MG:2|MG:2|G3!=EM:2,MA:1,MG:3
+Tempest II|AR|E|17000|AM:3,MG:3|MG:3||AM:2,MG:1
+Tempest III|AR|E|22000|AM:4,MG:4|MG:4||AM:2,MG:3
+Tempest IV|AR|E|27000|AM:5,MG:4|MG:5||AM:2,MG:3
+Thermal Shaker
+Thermostat|RC|R|1000|RP:7,SE:1|SE:1
+Tick Pod|RC|U|640|AA:2,CH:2|AA:1
+Toaster|RC|R|1000|PP:5,WI:3|WI:3
+Torn Blanket|RC|R|640|FA:12|FA:5
+Torn Book|TR|C|1000
+Torrente Blueprint|BP|C|5000
+Torrente I|LM|R|7000|AM:1,MG:2|MG:2|G2!=AM:2,MG:3,SS:6
+Torrente II|LM|R|10000|AM:2,MG:2|MG:2||AM:1,MG:2
+Torrente III|LM|R|13000|AM:2,MG:3|MG:3||AM:1,MG:2
+Torrente IV|LM|R|17000|AM:3,MG:3|MG:3||AM:2,MG:2
+Trailblazer|QU|R|2200|CE:2|CE:2|X3!=CE:2,Firefly Burner:1,Synthesized Fuel:1
+Trailblazer Blueprint|BP|C|5000
+Train Model|TR|C|1000
+Trigger 'Nade|QU|R|1000|CH:1,PR:1|PR:1|X2!=CE:2,PR:1
+Trigger Nade Blueprint|BP|C|5000
+Tropical Duck|TR|U|1000
+Turbine Compressor|RC|E|5000|AC:1,ARC Motion Core:1|AC:1
+Turbo Pump|RC|R|2000|MC:1,OI:3|SS:3
+Unusable Weapon|RC|R|2000|MP:4,SG:5|SG:3
+Vaporizer Regulator|RC|E|6000|AC:2,AE:1|AC:2
+Vase|TR|R|3000
+Venator Blueprint|BP|C|5000
+Venator I|PI|R|7000|AM:1,MG:2|MG:2|G2!=AM:2,MN:5,MG:3
+Venator II|PI|R|10000|AM:2,MG:2|MG:2||AM:1,MG:2
+Venator III|PI|R|13000|AM:2,MG:3|MG:3||AM:1,MG:2
+Venator IV|PI|R|17000|AM:3,MG:3|MG:3||AM:2,MG:2
+Vertical Grip I|MD|C|640|PP:6|PP:3|G1=DT:1,PP:6
+Vertical Grip II|MD|U|2000|DT:1,MC:1|MC:1|G2!=DT:3,MC:2
+Vertical Grip II Blueprint|BP|C|5000
+Vertical Grip III|MD|R|5000|DT:2,MC:2|MC:2|G3!=DT:5,MD:2
+Vertical Grip III Blueprint|BP|C|5000
+Very Comfortable Pillow|TR|U|2000
+Vintage Steering Wheel|TR|U|2000
+Vita Shot|QU|R|2200|CH:4,Syringe:1|Syringe:1|M3!=AN:2,Syringe:1
+Vita Shot Blueprint|BP|C|5000
+Vita Spray|QU|E|3400|AN:1,CA:1|AN:1|M3!=AN:3,CA:1,Tick Pod:1
+Vita Spray Blueprint|BP|C|5000
+Volcanic Rock|MI|C|270
+Voltage Converter|TM|R|500|RP:1,WI:1|RP:2
+Vulcano Blueprint|BP|C|5000
+Vulcano I|SG|E|10000|AM:2,HG:2|HG:2|G3!=EM:1,HG:3,MA:1
+Vulcano II|SG|E|13000|AM:2,HG:3|HG:3||AM:1,HG:2
+Vulcano III|SG|E|17000|AM:3,HG:4|HG:4||AM:2,HG:1
+Vulcano IV|SG|E|22000|AM:4,HG:5|HG:5||AM:2,HG:3
+Wasp Driver|RC|R|640|AA:2|AA:2
+Water Filter|RC|R|1000|CA:3,RP:2|CA:2
+Water Pump|RC|R|1000|MP:4,OI:2|OI:2
+White Flag|QU|U|640|FA:5,PP:1|FA:3|IM1!=FA:10,PP:3
+White Flag Blueprint|BP|C|5000
+Wires|TM|U|200|RP:2|RP:1
+Wolfpack|QU|E|6000|ARC Motion Core:1,EP:1|EP:2|X3!=ARC Motion Core:2,EP:1,Rocketeer Driver:1
+Wolfpack Blueprint|BP|C|5000
+Yellow Light Stick|QU|C|150|CH:1|CH:1|U1!=CH:3
+Yellow Light Stick Blueprint|BP|C|5000
+Zipline|QU|R|1000|MP:1,Rope:1|Rope:1|U2=MC:1,Rope:1
+`;
+
+const WS_NUR = { Wwl:'Advanced Camera;Amplification Module Mk. I;Amplification Module Mk. II;Amplification Module Mk. III;Amplification Module Mk. IV;Amplification Module Mk. V;Amplified Fragments;ARC Conductive Coupler;ARC Data Module;ARC Insulated Coupler;Arcade Duck;Archive Desk Lamp;Basic Camera;Battered Paperback;Integrated Binoculars;Advanced Camera Blueprint;Bantam Blueprint', Wwg:'Bully Fragmenter;Calculator;Differential Microphone;Emperor Modulator;Exodus Technical Handbook;Frigate Inductor;Mini Pump;Planks;Radial Press;Raider Logbook;Skulker Targeter;Thermal Shaker' };
+
+const WS_OK = { rezept:{ 'Angled Grip II':'Wts', 'Angled Grip III':'Wts', 'Anvil I':'Wts', 'Aphelion':'Wts', 'Barricade Kit':'Wts', 'Bettina I':'Wts', 'Blaze Grenade':'Wts', 'Blue Light Stick':'Wts', 'Bobcat I':'Wts', 'Burletta I':'Wts', 'Canto I':'Wts', 'Combat Mk. 3 (Aggressive)':'Wts', 'Combat Mk. 3 (Flanking)':'Wts', 'Compensator II':'Wts', 'Compensator III':'Wts', 'Complex Gun Parts':'Wts', 'Crash Mat':'Wts', 'Deadline':'Wts', 'Defibrillator':'Wts', 'Dolabra':'Wts', 'Equalizer':'Wts', 'Explosive Mine':'Wts', 'Extended Barrel II':'Wts', 'Extended Barrel III':'Wts', 'Extended Light Mag II':'Wts', 'Extended Light Mag III':'Wts', 'Extended Medium Mag II':'Wts', 'Extended Medium Mag III':'Wts', 'Extended Shotgun Mag II':'Wts', 'Extended Shotgun Mag III':'Wts', 'Fireworks Box':'Wts', 'Gas Mine':'Wts', 'Green Light Stick':'Wts', 'Heavy Gun Parts':'Wts', 'Hullcracker I':'Wts', 'Il Toro I':'Wts', 'Jolt Mine':'Wts', 'Jupiter':'Wts', 'Light Gun Parts':'Wts', 'Lightweight Stock':'Wts', 'Looting Mk. 3 (Safekeeper)':'Wts', 'Looting Mk. 3 (Survivor)':'Wts', 'Lure Grenade':'Wts', 'Medium Gun Parts':'Wts', 'Muzzle Brake II':'Wts', 'Muzzle Brake III':'Wts', 'Osprey I':'Wts', 'Padded Stock':'Wts', 'Powered Descender':'Wts', 'Pulse Mine':'Wts', 'Rascal I':'Wts', 'Red Light Stick':'Wts', 'Remote Raider Flare':'Wts', 'Seeker Grenade':'Wts', 'Shotgun Choke II':'Wts', 'Shotgun Choke III':'Wts', 'Shotgun Silencer':'Wts', 'Showstopper':'Wts', 'Silencer I':'Wts', 'Silencer II':'Wts', 'Smoke Grenade':'Wts', 'Snap Hook':'Wts', 'Stable Stock II':'Wts', 'Stable Stock III':'Wts', 'Surge Coil':'Wts', 'Tactical Mk. 3 (Defensive)':'Wts', 'Tactical Mk. 3 (Healing)':'Wts', 'Tactical Mk. 3 (Revival)':'Wts', 'Tactical Mk. 3 (Smoke)':'Wts', 'Tagging Grenade':'Wts', 'Tempest I':'Wts', 'Torrente I':'Wts', 'Trailblazer':'Wts', 'Trigger \'Nade':'Wts', 'Venator I':'Wts', 'Vertical Grip II':'Wts', 'Vertical Grip III':'Wts', 'Vita Shot':'Wts', 'Vita Spray':'Wts', 'Vulcano I':'Wts', 'White Flag':'Wts', 'Wolfpack':'Wts', 'Yellow Light Stick':'Wts' },
+  wert:{ 'ARC Alloy':'Wwl', 'ARC Circuitry':'Wwl', 'ARC Coolant':'Wwl', 'ARC Flex Rubber':'Wwl', 'ARC Motion Core':'Wwl', 'ARC Performance Steel':'Wwl', 'ARC Powercell':'Wwl', 'ARC Synthetic Resin':'Wwl', 'ARC Thermo Lining':'Wag+Wwl', 'Acoustic Guitar':'Wwl', 'Adrenaline Shot':'Wwl', 'Advanced ARC Powercell':'Wwl', 'Advanced Electrical Components':'Wwl', 'Advanced Mechanical Components':'Wwl', 'Agave':'Wwl', 'Agave Juice':'Wwl', 'Air Freshener':'Wwl', 'Alarm Clock':'Wwl', 'Alien Duck':'Wwl', 'Angled Grip I':'Wwl', 'Angled Grip II':'Wwl', 'Angled Grip II Blueprint':'Wwl', 'Angled Grip III':'Wwl', 'Angled Grip III Blueprint':'Wwl', 'Antiseptic':'Wwl', 'Anvil Blueprint':'Wwl', 'Anvil I':'Wwc', 'Anvil II':'Wwc', 'Anvil III':'Wwc', 'Anvil IV':'Wwc', 'Anvil Splitter':'Wwl', 'Aphelion':'Wwc', 'Aphelion Blueprint':'Wwl', 'Apricot':'Wag+Wwl', 'Arpeggio I':'Wwc', 'Arpeggio II':'Wwc', 'Arpeggio III':'Wwc', 'Arpeggio IV':'Wwc', 'Assessor Matrix':'Wwl', 'Assorted Seeds':'Wwl', 'Bandage':'Wwl', 'Barricade Kit':'Wwl', 'Barricade Kit Blueprint':'Wwl', 'Bastion Cell':'Wwl', 'Battery':'Wag+Wwl', 'Bettina Blueprint':'Wwl', 'Bettina I':'Wwc', 'Bettina II':'Wwc', 'Bettina III':'Wwc', 'Bettina IV':'Wwc', 'Bicycle Pump':'Wwl', 'Binoculars':'Wwl', 'Blaze Grenade':'Wwl', 'Blaze Grenade Blueprint':'Wwl', 'Blaze Grenade Trap':'Wwl', 'Bloated Tuna Can':'Wwl', 'Blue Gate Cellar Key':'Wwl', 'Blue Gate Communication Tower Key':'Wwl', 'Blue Gate Confiscation Room Key':'Wwl', 'Blue Gate Village Key':'Wwl', 'Blue Light Stick':'Wwl', 'Blue Light Stick Blueprint':'Wwl', 'Bobcat Blueprint':'Wwl', 'Bobcat I':'Wwc', 'Bobcat II':'Wwc', 'Bobcat III':'Wwc', 'Bobcat IV':'Wwc', 'Burletta Blueprint':'Wwl', 'Burletta I':'Wwc', 'Burletta II':'Wwc', 'Burletta III':'Wwc', 'Burletta IV':'Wwc', 'Dog Collar':'Wag', 'Equalizer':'Wwc', 'Ferro I':'Wwc', 'Ferro II':'Wwc', 'Ferro III':'Wwc', 'Ferro IV':'Wwc', 'Hairpin I':'Wwc', 'Hairpin II':'Wwc', 'Hairpin III':'Wwc', 'Hairpin IV':'Wwc', 'Hullcracker I':'Wwc', 'Hullcracker II':'Wwc', 'Hullcracker III':'Wwc', 'Hullcracker IV':'Wwc', 'Il Toro I':'Wwc', 'Il Toro II':'Wwc', 'Il Toro III':'Wwc', 'Il Toro IV':'Wwc', 'Jupiter':'Wwc', 'Kettle I':'Wwc', 'Kettle II':'Wwc', 'Kettle III':'Wwc', 'Kettle IV':'Wwc', 'Lemon':'Wag', 'Mushroom':'Wag', 'Olives':'Wag', 'Osprey I':'Wwc', 'Osprey II':'Wwc', 'Osprey III':'Wwc', 'Osprey IV':'Wwc', 'Rattler I':'Wwc', 'Rattler II':'Wwc', 'Rattler III':'Wwc', 'Rattler IV':'Wwc', 'Renegade I':'Wwc', 'Renegade II':'Wwc', 'Renegade III':'Wwc', 'Renegade IV':'Wwc', 'Sample Cleaner':'Wag', 'Silencer III':'Wwc', 'Stitcher I':'Wwc', 'Stitcher II':'Wwc', 'Stitcher III':'Wwc', 'Stitcher IV':'Wwc', 'Tempest I':'Wwc', 'Tempest II':'Wwc', 'Tempest III':'Wwc', 'Tempest IV':'Wwc', 'Torrente I':'Wwc', 'Torrente II':'Wwc', 'Torrente III':'Wwc', 'Torrente IV':'Wwc', 'Venator I':'Wwc', 'Venator II':'Wwc', 'Venator III':'Wwc', 'Venator IV':'Wwc', 'Vulcano I':'Wwc', 'Vulcano II':'Wwc', 'Vulcano III':'Wwc', 'Vulcano IV':'Wwc', 'Wires':'Wag' },
+  zerlegen:{ 'ARC Alloy':'Wwl', 'ARC Circuitry':'Wwl', 'ARC Coolant':'Wwl', 'ARC Flex Rubber':'Wwl', 'ARC Motion Core':'Wwl', 'ARC Performance Steel':'Wwl', 'ARC Synthetic Resin':'Wwl', 'ARC Thermo Lining':'Wwl', 'Acoustic Guitar':'Wwl', 'Adrenaline Shot':'Wwl', 'Advanced ARC Powercell':'Wwl', 'Advanced Electrical Components':'Wwl', 'Advanced Mechanical Components':'Wwl', 'Agave':'Wwl', 'Alarm Clock':'Wwl', 'Angled Grip I':'Wwl', 'Angled Grip II':'Wwl', 'Angled Grip III':'Wwl', 'Antiseptic':'Wwl', 'Apricot':'Wwl', 'Assessor Matrix':'Wwl', 'Bandage':'Wwl', 'Barricade Kit':'Wwl', 'Bastion Cell':'Wwl', 'Battery':'Wwl', 'Bicycle Pump':'Wwl', 'Binoculars':'Wwl', 'Blaze Grenade':'Wwl', 'Blue Light Stick':'Wwl', 'Dog Collar':'Wag', 'Water Filter':'Wtr' } };
+
+const WS_BLUEPRINTS = `
+Advanced Camera|||Wwl
+Angled Grip III||Residential Containers, all maps, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Angled Grip II||Residential Containers, all maps|Wrt+Wts
+Anvil|Anvil I|Raider Containers, all maps|Wrt+Wts
+Aphelion||Any container, Stella Montis|Wrt+Wts
+Bantam|||Wwl
+Barricade Kit||Electrical Containers, all maps|Wrt+Wts
+Bettina|Bettina I|Raider Containers, all maps|Wrt+Wts
+Blaze Grenade||Industrial Containers, all maps|Wrt+Wts
+Blue Light Stick||Any container, all maps|Wrt+Wts
+Bobcat|Bobcat I|Any container, any major map condition|Wrt+Wts
+Burletta|Burletta I|Quest: Industrial Espionage|Wrt+Wts
+Canto|Canto I|First Wave Cache, Hurricane|Wrt+Wts
+Combat Mk. 3 (Aggressive)||Medical/Security Containers, Stella Montis/The Blue Gate|Wrt+Wts
+Combat Mk. 3 (Flanking)||Medical/Security Containers, Stella Montis/The Blue Gate|Wrt+Wts
+Compensator III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Compensator II||Residential Containers, all maps|Wrt+Wts
+Complex Gun Parts||Security Containers, all maps|Wrt+Wts
+Crash Mat||Any container, Riven Tides|Wrt+Wts
+Deadline||Any container, Stella Montis|Wrt+Wts
+Defibrillator||Medical Containers, all maps|Wrt+Wts
+Dolabra||Any container, any major map condition|Wrt+Wts
+Equalizer||Any major map condition; Harvester core-activation containers|Wrt+Wts
+Explosive Mine||Industrial Containers, all maps|Wrt+Wts
+Extended Barrel III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Extended Barrel II||Container not published, all maps|Wrt+Wts
+Extended Light Mag III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Extended Light Mag II||Residential Containers, all maps|Wrt+Wts
+Extended Medium Mag III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Extended Medium Mag II||Residential Containers, all maps, Night Raid|Wrt+Wts
+Extended Shotgun Mag III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Extended Shotgun Mag II||Residential Containers, all maps|Wrt+Wts
+Fireworks Box||Any container, Cold Snap; quest: Test Case|Wrt+Wts
+Gas Mine||Any container, Stella Montis|Wrt+Wts
+Green Light Stick||Any container, all maps|Wrt+Wts
+Heavy Gun Parts||Raider Containers, all maps|Wrt+Wts
+Hullcracker|Hullcracker I|Quest: The Major's Footlocker|Wrt+Wts
+Il Toro|Il Toro I|Raider Containers, all maps|Wrt+Wts
+Jolt Mine||Industrial Containers, all maps|Wrt+Wts
+Jupiter||Any major map condition; Harvester core-activation containers|Wrt+Wts
+Light Gun Parts||Raider Containers, all maps|Wrt+Wts
+Lightweight Stock||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Looting Mk. 3 (Safekeeper)||Medical/Security Containers, Metal Crate, all maps|Wrt+Wts
+Looting Mk. 3 (Survivor)||Medical/Security Containers, Metal Crate, all maps|Wrt+Wts
+Lure Grenade||Quest: Greasing Her Palms|Wrt+Wts
+Medium Gun Parts||Raider Containers, all maps|Wrt+Wts
+Muzzle Brake III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Muzzle Brake II||Residential Containers, all maps|Wrt+Wts
+Osprey|Osprey I|Raider Containers, all maps|Wrt+Wts
+Padded Stock||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid/Hidden Bunker|Wrt+Wts
+Powered Descender||Any container, Riven Tides|Wrt+Wts
+Pulse Mine||Any container, Stella Montis|Wrt+Wts
+Rascal|Rascal I|Raider Containers, all maps|Wrt+Wts
+Red Light Stick||Any container, all maps|Wrt+Wts
+Remote Raider Flare||Electrical Containers, all maps|Wrt+Wts
+Seeker Grenade||Any container, Stella Montis|Wrt+Wts
+Shotgun Choke III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Shotgun Choke II||Residential Containers, all maps|Wrt+Wts
+Shotgun Silencer||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid/Hidden Bunker|Wrt+Wts
+Showstopper||Industrial Containers, all maps|Wrt+Wts
+Silencer II||Residential Containers, all maps|Wrt+Wts
+Silencer I||Residential Containers, all maps|Wrt+Wts
+Smoke Grenade||Residential Containers, all maps|Wrt+Wts
+Snap Hook||Any container, Electromagnetic Storm|Wrt+Wts
+Stable Stock III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Stable Stock II||Residential Containers, all maps|Wrt+Wts
+Surge Coil||Container not published, Electromagnetic Storm|Wrt+Wts
+Tactical Mk. 3 (Defensive)||Medical/Security Containers/ARC Surveyor, Stella Montis/The Blue Gate|Wrt+Wts
+Tactical Mk. 3 (Healing)||Medical/Security Containers, Stella Montis/The Blue Gate|Wrt+Wts
+Tactical Mk. 3 (Revival)||Medical/Security Containers, Stella Montis/The Blue Gate|Wrt+Wts
+Tactical Mk. 3 (Smoke)||Container not published|Wrt+Wts
+Tagging Grenade||Electrical Containers, all maps|Wrt+Wts
+Tempest|Tempest I|Any container, any major map condition|Wrt+Wts
+Torrente|Torrente I|Raider Containers, all maps|Wrt+Wts
+Trailblazer||Any container, Stella Montis|Wrt+Wts
+Trigger Nade|||Wrt
+Venator|Venator I|Raider Containers, all maps|Wrt+Wts
+Vertical Grip III||Residential Containers, Electromagnetic Storm/Locked Gate/Night Raid|Wrt+Wts
+Vertical Grip II||Residential Containers, all maps|Wrt+Wts
+Vita Shot||Medical Containers/ARC Surveyor, all maps|Wrt+Wts
+Vita Spray||Medical Containers/ARC Surveyor, all maps; quest: Worth Your Salt|Wrt+Wts
+Vulcano|Vulcano I|Any container, any major map condition|Wrt+Wts
+White Flag||Any container, Riven Tides|Wrt+Wts
+Wolfpack||Residential Containers, Night Raid|Wrt+Wts
+Yellow Light Stick||Any container, all maps|Wrt+Wts
+`;
+
+const WS_ABW = `
+Anvil Splitter|zerlegen|MD:1,PR:1|Amplified Fragments x5|Wwl
+Barricade Kit|bank|U2|Utility Station 1|Wts
+Blue Light Stick|bank|U1|Utility Station 2|Wts
+Crash Mat|bank|U2|Utility Station 1|Wts
+Deadline|wert|6000|5000|Wwc
+Exodus Modules|wert|2750|5000|Wde
+Green Light Stick|bank|U1|Utility Station 2|Wts
+Leaper Pulse Unit|wert|3000|5000|Wde
+Magnetic Accelerator|wert|5500|5000|Wde
+Power Bank|wert|1000|640|Wag
+Power Bank|zerlegen|BA:2,WI:2|Battery x4; Wires x2|Wag
+Red Light Stick|bank|U1|Utility Station 2|Wts
+Wolfpack|wert|6000|5000|Wwc
+Yellow Light Stick|bank|U1|Utility Station 2|Wts
+`;
 /* @datei wissen/kartenbedingungen.js */
 
 const CONDS = [
@@ -1995,7 +2751,14 @@ const FAQ_GRUNDLAGE = [
   { t:'Was weiss die App nicht?', x:[
     'Sie hat keine Verbindung zum Spiel. Deinen Stand kennt sie nur aus deinen Eingaben. Nach Patches kann eine Angabe kurz veraltet sein, bis das nächste Update sie prüft.' ] },
   { t:'Wo bleiben meine Daten?', x:[
-    'Alles bleibt in deinem Browser: Queststand, Einkaufsliste und Run-Plan. Keine Anmeldung, keine Cookies, kein Tracking, nichts wird von fremden Servern geladen.' ] }
+    'Alles bleibt in deinem Browser: Queststand, Einkaufsliste und Run-Plan. Keine Anmeldung, keine Cookies, kein Tracking, nichts wird von fremden Servern geladen.' ] },
+  { t:'Offene Daten und Lizenzen', x:[
+    "Die Angaben zur Werkstatt (Stationen, Rezepte, Aufwertungen, Verkaufswerte und Zerlegen) stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt, dass dieser Hinweis mitgeliefert wird:",
+    "MIT License",
+    "Copyright (c) 2025 RaidTheory",
+    "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+    "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+    "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE." ] }
 ];
 /* @datei wissen/faq-funktionen.js */
 
@@ -2006,7 +2769,7 @@ const FAQ_FUNKTIONEN = [
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten. Daneben steht das FAQ."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen, alle davor werden abgehakt."],["Suche und Filter","nach Name, Ort, Händler oder Material."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."],["FAQ","dritter Reiter neben Quests und Projekte. Erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."]]}]},
 {"t":"ARC","b":[{"k":"p","x":"Der ARC-Bereich zeigt 32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen."},{"k":"ul","i":[["Steckbrief","antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr","Balken von grün (niedrig) bis rot (extrem)."],["Gruppen","Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme)."],["Im Navi","die Gefahr bestimmt die eingeplante Kampfzeit von 0,5 bis 5 Minuten."]]}]},
 {"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
-{"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
+{"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
 {"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."]]}]}
 ];
 /* @datei wissen/pruefung/basis.js */
