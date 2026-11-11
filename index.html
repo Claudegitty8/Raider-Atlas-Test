@@ -105,12 +105,14 @@ svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-l
 .pages{flex:1 1 auto;min-height:0;overflow-y:auto;padding-bottom:calc(var(--tabh) + 24px);overscroll-behavior:contain}
 .lt{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:calc(env(safe-area-inset-top) + 44px) 16px 6px}
 .lt h1{margin:0;min-width:0;font:700 clamp(26px, 8.6vw, 34px)/1.12 var(--display);letter-spacing:.005em;display:flex;align-items:center;gap:12px}
-.lt .gear{flex:none}
+.lt .wis{flex:none}
 .lt h1::before{content:"";flex:none;width:20px;height:24px;background:var(--stripes);transform:skewX(-14deg);border-radius:2px}
 .h2{margin:0;padding:2px 16px 4px;font:700 28px/1.15 var(--display)}
 .gh{margin:22px 0 6px;padding:0 32px;font:600 13px/1.3 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .foot{margin:0;padding:6px 32px 12px;font-size:13px;line-height:1.4;color:var(--muted)}
 .subnav{display:flex;align-items:center;padding:calc(env(safe-area-inset-top) + 40px) 8px 0}
+
+.subnav + .lt{padding-top:8px}
 
 
 .group{list-style:none;margin:0 16px;padding:0;border-radius:12px;overflow:hidden;background:var(--cell)}
@@ -188,6 +190,12 @@ svg{stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-l
 .segc button{flex:1 1 0;min-height:32px;border:0;border-radius:8px;background:transparent;font:500 14px/1 var(--body);cursor:pointer;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:6px}
 .segc button[aria-pressed="true"]{background:var(--cell2);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .segc.mini{margin:0;flex:none}
+
+.segc.seg4 button{font-size:13.5px;padding:0 2px}
+
+.lvlrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 16px;padding:8px 10px 8px 16px;border-radius:12px;background:var(--cell);font:600 17px/1.2 var(--body)}
+.stepper button:disabled{opacity:.28;cursor:default}
+.stepper .lcdn{min-width:34px}
 .segc.mini button{padding:0 10px;min-height:30px;font-size:13px}
 .searchf{margin:0 16px 10px;display:flex;align-items:center;gap:6px;min-height:40px;padding:0 10px;border-radius:10px;background:var(--fill);color:var(--muted)}
 .searchf svg{flex:none;width:18px;height:18px;stroke-width:2.2}
@@ -476,7 +484,7 @@ li.qd .t1,.prow.qd b{color:var(--muted);text-decoration:line-through;text-decora
   .lt{padding:12px 16px 6px}
   .lt h1{font-size:26px}
   .lt h1::before{width:14px;height:18px}
-  .lt .gear{display:none}
+  .lt .wis{display:none}
   .subnav{padding:8px 8px 0}
   .stage{position:relative;inset:auto;grid-column:2}
   .mapbar{padding:0 8px}
@@ -656,13 +664,13 @@ li.qd .row .t1{color:var(--muted)}
       <button type="button" class="sn" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8 12 3.5 20.5 8v8L12 20.5 3.5 16z"/><path d="M3.5 8 12 12.5 20.5 8M12 12.5v8"/></svg><span>Inventar</span></button>
       <button type="button" class="sn" data-tab="karten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5zM9 4v13.5M15 6.5V20"/></svg><span>Karten</span></button>
       <button type="button" class="sn" data-tab="run"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg><span>Run planen</span></button>
-      <button type="button" class="sn" data-tab="arc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.4"/><path d="M12 5.8v2.8M12 15.4v2.8"/></svg><span>ARC</span></button>
+      <button type="button" class="sn" data-tab="werk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.4"/><path d="M12 5.8v2.8M12 15.4v2.8"/></svg><span>Werkstatt</span></button>
       <button type="button" class="sn" data-tab="quests"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15l-3-2-3 2-3-2-3 2V5A1.5 1.5 0 0 1 7 3.5zM9 8.5h6M9 12h6"/></svg><span>Quests</span></button>
     </nav>
     <div class="pages" id="pages">
 
       <section class="page" id="pgKarten" data-page="karten" aria-labelledby="hKarten">
-        <header class="lt"><h1 id="hKarten">Karten</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+        <header class="lt"><h1 id="hKarten">Karten</h1><button type="button" class="ib wis" aria-label="Wissen und Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h11a1 1 0 0 1 1 1V20H7.5A1.5 1.5 0 0 1 6 18.5zM6 18.5A1.5 1.5 0 0 1 7.5 17H18M9.5 8.5h5"/></svg></button></header>
         <p class="foot">Wähle eine Map. Schlüsselräume, Orte und Routen siehst du direkt auf der Karte.</p>
         <ul class="group" id="mapList"></ul>
         <p class="foot" id="updFoot"></p>
@@ -670,7 +678,7 @@ li.qd .row .t1{color:var(--muted)}
 
       <section class="page" id="pgMat" data-page="mat" aria-labelledby="hMat" hidden>
         <div id="matRoot">
-          <header class="lt"><h1 id="hMat">Inventar</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+          <header class="lt"><h1 id="hMat">Inventar</h1><button type="button" class="ib wis" aria-label="Wissen und Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h11a1 1 0 0 1 1 1V20H7.5A1.5 1.5 0 0 1 6 18.5zM6 18.5A1.5 1.5 0 0 1 7.5 17H18M9.5 8.5h5"/></svg></button></header>
           <div class="segc" role="group" aria-label="Ansicht">
             <button type="button" id="segBedarf" aria-pressed="true">Bedarf</button>
             <button type="button" id="segListe" aria-pressed="false">Einkaufsliste <span class="lcdn" id="shopN">0</span></button>
@@ -683,15 +691,15 @@ li.qd .row .t1{color:var(--muted)}
         </div>
         <div id="vBedarf">
           <p class="foot" id="bedInfo" role="status"></p>
-          <p class="foot" id="bedWerk" hidden>Die Werkstatt zählt vorerst mit allen Stufen mit, bis du deine eigenen Stufen einstellen kannst.</p>
+          <div id="bedWerk" hidden><p class="foot">Die Werkstatt zählt mit allen Stufen mit. Stell dort deine Stufen ein, dann wird die Liste kürzer.</p><div class="btncol"><button type="button" class="bs" id="bedWerkGo">Werkstatt einrichten</button></div></div>
           <ul class="group" id="bedList"></ul>
           <div class="btncol"><button type="button" class="bs" id="bedWeg">Was kann weg? Items ohne Bedarf und ohne Rezept</button></div>
-          <p class="foot">Die Zahl ist, was du insgesamt noch brauchst. Dein Lager kennt die App nicht: Was du darüber hast, kannst du verkaufen oder zerlegen. Pausierte Projekte zählen nicht mit. Nicht im Spiel getestet, Grundlage siehe FAQ unter Quests.</p>
+          <p class="foot">Die Zahl ist, was du insgesamt noch brauchst. Dein Lager kennt die App nicht: Was du darüber hast, kannst du verkaufen oder zerlegen. Pausierte Projekte zählen nicht mit. Nicht im Spiel getestet, Grundlage siehe FAQ unter Wissen.</p>
         </div>
         <div id="vSuche" hidden>
           <p class="foot" id="sCount" role="status"></p>
           <ul class="group" id="sList"></ul>
-          <p class="foot">Kreis antippen: auf die Einkaufsliste. Zeile antippen: Urteil, Wofür und beste Fundorte. Die Marke rechts sagt, ob du es behalten sollst. Nicht im Spiel getestet, Grundlage siehe FAQ unter Quests.<span id="standFoot"></span></p>
+          <p class="foot">Kreis antippen: auf die Einkaufsliste. Zeile antippen: Urteil, Wofür und beste Fundorte. Die Marke rechts sagt, ob du es behalten sollst. Nicht im Spiel getestet, Grundlage siehe FAQ unter Wissen.<span id="standFoot"></span></p>
         </div>
         <div id="vListe" hidden>
           <p class="foot" id="shopEmpty">Noch leer. Hier steht, was du in den nächsten Runs suchst. Setze unter «Bedarf» oder «Alle Items» ein Material auf die Liste, oder verfolge eine Quest.</p>
@@ -715,14 +723,13 @@ li.qd .row .t1{color:var(--muted)}
 
       <section class="page" id="pgRun" data-page="run" aria-labelledby="hRun" hidden>
         <div id="runRoot">
-        <header class="lt"><h1 id="hRun">Run planen</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+        <header class="lt"><h1 id="hRun">Run planen</h1><button type="button" class="ib wis" aria-label="Wissen und Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h11a1 1 0 0 1 1 1V20H7.5A1.5 1.5 0 0 1 6 18.5zM6 18.5A1.5 1.5 0 0 1 7.5 17H18M9.5 8.5h5"/></svg></button></header>
         <p class="foot">Wähle die Map für deinen nächsten Run. Das Navi plant deine Quests, die Einkaufsliste und Top-Loot in der Nähe, vom Startpunkt bis zum Ausgang, in höchstens 29 Minuten.</p>
         <ul class="group" id="naviMaps"></ul>
                 <div class="runextra">
           <h3 class="gh">Geführte Runs</h3>
           <ul class="group" id="runListK"></ul>
-          <h3 class="gh">Kartenbedingungen</h3>
-          <div class="group" id="condListK"></div>
+          <ul class="group"><li><button type="button" class="row" data-wis="cond"><span class="rt"><span class="t1">Kartenbedingungen</span><span class="t2">Was Night Raid, EM-Sturm und die anderen ändern</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li></ul>
         </div>
         </div>
         <div class="sdet" id="naviDetail" hidden></div>
@@ -730,7 +737,7 @@ li.qd .row .t1{color:var(--muted)}
 
       <section class="page" id="pgRaids" data-page="raids" aria-labelledby="hRaids" hidden>
         <div id="raidsRoot">
-        <header class="lt"><h1 id="hRaids">Raids</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+        <header class="lt"><h1 id="hRaids">Raids</h1><button type="button" class="ib wis" aria-label="Wissen und Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h11a1 1 0 0 1 1 1V20H7.5A1.5 1.5 0 0 1 6 18.5zM6 18.5A1.5 1.5 0 0 1 7.5 17H18M9.5 8.5h5"/></svg></button></header>
         <h3 class="gh">Geführte Runs</h3>
         <ul class="group" id="runList"></ul>
         <h3 class="gh">Kartenbedingungen</h3>
@@ -741,11 +748,10 @@ li.qd .row .t1{color:var(--muted)}
 
       <section class="page" id="pgQuests" data-page="quests" aria-labelledby="hQuests" hidden>
         <div id="qRoot">
-          <header class="lt"><h1 id="hQuests">Quests</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+          <header class="lt"><h1 id="hQuests">Quests</h1><button type="button" class="ib wis" aria-label="Wissen und Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h11a1 1 0 0 1 1 1V20H7.5A1.5 1.5 0 0 1 6 18.5zM6 18.5A1.5 1.5 0 0 1 7.5 17H18M9.5 8.5h5"/></svg></button></header>
           <div class="segc" role="group" aria-label="Ansicht">
             <button type="button" id="segQuests" aria-pressed="true">Quests</button>
             <button type="button" id="segProj" aria-pressed="false">Projekte</button>
-            <button type="button" id="segFaq" aria-pressed="false">FAQ</button>
           </div>
           <div id="qSeason"></div>
         </div>
@@ -761,28 +767,110 @@ li.qd .row .t1{color:var(--muted)}
           <p class="foot" id="qCount" role="status"></p>
           <ul class="group" id="qList"></ul>
           <div class="btncol"><button type="button" class="bs" id="qDoneBtn">Erledigte zeigen</button><button type="button" class="bs" id="qSetupBtn">Meinen Stand einrichten</button></div>
-          <p class="foot">Kreis antippen: als erledigt abhaken. Zielscheibe: verfolgen, dann steht die Quest in «Mein Run» auf der Karte und ihre Materialien kommen auf die Einkaufsliste. Zeile antippen: Ziel, Ort und Materialien. Nicht im Spiel getestet, Grundlage siehe FAQ.</p>
+          <p class="foot">Kreis antippen: als erledigt abhaken. Zielscheibe: verfolgen, dann steht die Quest in «Mein Run» auf der Karte und ihre Materialien kommen auf die Einkaufsliste. Zeile antippen: Ziel, Ort und Materialien. Nicht im Spiel getestet, Grundlage siehe FAQ unter Wissen.</p>
         </div>
         <div id="qvProj" hidden>
           <div id="pList"></div>
           <p class="foot">Projekte im Spiel unter Raider, Projekte. Saisonale Projekte laufen nur bis zum angegebenen Datum. Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen.</p>
         </div>
-                <div id="qvFaq" hidden></div>
         <div class="sdet" id="qDetail" hidden></div>
       </section>
 
       <section class="page" id="pgArc" data-page="arc" aria-labelledby="hArc" hidden>
         <div id="arcRoot">
-          <header class="lt"><h1 id="hArc">ARC</h1><button type="button" class="ib gear" aria-label="Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3L5.5 5.5"/></svg></button></header>
+          <div class="subnav"><button type="button" class="back" id="arcRootBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Wissen</span></button></div>
+          <header class="lt"><h1 id="hArc">ARC-Gegner</h1><button type="button" class="ib wis" aria-label="Wissen und Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h11a1 1 0 0 1 1 1V20H7.5A1.5 1.5 0 0 1 6 18.5zM6 18.5A1.5 1.5 0 0 1 7.5 17H18M9.5 8.5h5"/></svg></button></header>
           <p class="foot">Welcher ARC was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen.</p>
           <div id="arcFor"></div>
           <div id="arcGroups"></div>
-          <p class="foot">Balken: Gefahr (grün niedrig bis rot extrem). Neue ARC und Wracks sind von Hand einer Gruppe zugeordnet (Annahme). Nicht im Spiel getestet, Grundlage siehe FAQ unter Quests.</p>
+          <p class="foot">Balken: Gefahr (grün niedrig bis rot extrem). Neue ARC und Wracks sind von Hand einer Gruppe zugeordnet (Annahme). Nicht im Spiel getestet, Grundlage siehe FAQ unter Wissen.</p>
         </div>
         <div class="sdet" id="arcDetail" hidden></div>
       </section>
+
+            <section class="page" id="pgWerk" data-page="werk" aria-labelledby="hWerk" hidden>
+        <div id="wkRoot">
+          <header class="lt"><h1 id="hWerk">Werkstatt</h1><button type="button" class="ib wis" aria-label="Wissen und Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h11a1 1 0 0 1 1 1V20H7.5A1.5 1.5 0 0 1 6 18.5zM6 18.5A1.5 1.5 0 0 1 7.5 17H18M9.5 8.5h5"/></svg></button></header>
+          <div class="segc seg4" role="group" aria-label="Ansicht">
+            <button type="button" data-wk="st" aria-pressed="true">Stationen</button>
+            <button type="button" data-wk="waf" aria-pressed="false">Waffen</button>
+            <button type="button" data-wk="her" aria-pressed="false">Herstellen</button>
+            <button type="button" data-wk="bp" aria-pressed="false">Baupläne</button>
+          </div>
+          <div id="wkSt">
+            <p class="foot" id="wkStInfo"></p>
+            <ul class="group" id="wkStList"></ul>
+            <p class="foot">Stufe und Ziel bestimmen, was im Inventar unter «Bedarf» steht. Ohne Angabe gilt als Ziel die höchste Stufe. Nicht im Spiel getestet.</p>
+          </div>
+          <div id="wkWaf" hidden>
+            <p class="foot" id="wkWafInfo"></p>
+            <div id="wkWafList"></div>
+            <p class="foot">Stufe I wird hergestellt, die Stufen II bis IV sind Aufwertungen. Die Kosten der Aufwertungen haben erst eine Angabe.</p>
+          </div>
+          <div id="wkHer" hidden>
+            <div class="sfrow"><div class="searchf"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
+              <input id="wkHerQ" type="search" placeholder="Rezept suchen" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Rezepte durchsuchen" enterkeyhint="search"></div></div>
+            <div class="chipsrow" id="wkHerF" role="group" aria-label="Station"></div>
+            <p class="foot" id="wkHerInfo" role="status"></p>
+            <ul class="group" id="wkHerList"></ul>
+            <p class="foot">«Geht» heisst: Deine Station hat die nötige Stufe, und falls ein Bauplan nötig ist, hast du ihn abgehakt. Ob du die Zutaten hast, weiss die App nicht.</p>
+          </div>
+          <div id="wkBp" hidden>
+            <p class="foot" id="wkBpInfo" role="status"></p>
+            <ul class="group" id="wkBpList"></ul>
+            <p class="foot">Kreis antippen: als gelernt abhaken. Dann zeigt «Herstellen», was du bauen kannst, und das Inventar rät bei einem doppelten Bauplan zum Verkaufen.</p>
+          </div>
+        </div>
+        <div class="sdet" id="wkDetail" hidden></div>
+      </section>
+
+            <section class="page" id="pgWissen" data-page="wissen" aria-labelledby="hWissen" hidden>
+        <div id="wRoot">
+          <div class="subnav"><button type="button" class="back" id="wBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Zurück</span></button></div>
+          <header class="lt"><h1 id="hWissen">Wissen</h1></header>
+          <h3 class="gh">Nachschlagen</h3>
+          <ul class="group">
+            <li><button type="button" class="row" data-wis="arc"><span class="rt"><span class="t1">ARC-Gegner</span><span class="t2" id="wArcSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
+            <li><button type="button" class="row" data-wis="cond"><span class="rt"><span class="t1">Kartenbedingungen</span><span class="t2" id="wCondSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
+          </ul>
+          <h3 class="gh">Über die App</h3>
+          <ul class="group">
+            <li><button type="button" class="row" data-wis="faq"><span class="rt"><span class="t1">FAQ</span><span class="t2">Worauf die Infos beruhen, alle Funktionen</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
+            <li><button type="button" class="row" data-wis="einst"><span class="rt"><span class="t1">Einstellungen</span><span class="t2">Sparmodus, Abendlicht, Namen</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
+            <li><button type="button" class="row" data-wis="upd"><span class="rt"><span class="t1">Updates</span><span class="t2" id="wUpdSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
+          </ul>
+          <p class="foot">Der Knopf oben rechts öffnet diese Seite aus jedem Bereich.</p>
+            <p class="foot">Inoffizielles Fan-Projekt ohne Verbindung zu Embark Studios. ARC Raiders und alle Namen aus dem Spiel gehören Embark Studios. Die App enthält keine Grafiken aus dem Spiel.</p>
+            <p class="foot">Datenschutz: Die App setzt keine Cookies, sammelt keine Daten und lädt nichts von fremden Servern nach. Dein Fortschritt (Quests, Einkaufsliste, Einstellungen) bleibt nur in diesem Browser auf deinem Gerät. Der Anbieter der Webadresse sieht beim Aufruf wie bei jeder Website deine IP-Adresse.</p>
+        </div>
+        <div class="sdet" id="wDetail" hidden>
+          <div class="subnav"><button type="button" class="back" id="wdBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Wissen</span></button></div>
+          <h3 class="dn" id="wdTitle" tabindex="-1"></h3>
+          <div id="wvCond" hidden><p class="fine">Kartenbedingungen ändern einen Raid. Die aktuelle Bedingung wählst du im Navi unter «Run planen».</p><div class="group" id="condListW"></div></div>
+          <div id="wvFaq" hidden></div>
+          <div id="wvEinst" hidden>
+            <ul class="group in">
+              <li class="srow"><label for="ecoChk">Sparmodus</label><input type="checkbox" class="switch" id="ecoChk" role="switch"></li>
+              <li class="srow" id="eveRow"><label for="eveChk">Abendlicht</label><input type="checkbox" class="switch" id="eveChk" role="switch"></li>
+              <li class="srow"><span>Namen</span><div class="segc mini" id="sLang" role="group" aria-label="Namen anzeigen auf"><button type="button" data-l="de">Deutsch</button><button type="button" data-l="en">English</button></div></li>
+            </ul>
+            <p class="foot">Sparmodus für nebenbei beim Zocken: keine Animationen, die Karte wird nur neu gezeichnet, wenn du sie bedienst.</p>
+          </div>
+          <div id="wvUpd" hidden>
+            <ul class="group in">
+              <li class="srow"><span>Letztes Update</span><span class="sval" id="updLast"></span></li>
+              <li class="srow"><span>Daten zuletzt geändert</span><span class="sval" id="updData"></span></li>
+              <li class="srow" id="updNextRow"><span>Nächstes Update</span><span class="sval" id="updNext"></span></li>
+            </ul>
+            <p class="foot">Jeden Montag früh werden die Spieldaten geprüft. «Letztes Update» ist die letzte Prüfung, auch wenn sich dabei nichts geändert hat. Das nächste Datum ist geplant, nicht garantiert.</p>
+            <p class="foot" id="gfxTxt"></p>
+            <p class="foot" id="standTxt"></p>
+            <p class="foot">Was nicht belegt ist, steht als «Annahme» da. «Verifiziert» heisst: von mindestens zwei unabhängigen Angaben bestätigt, nicht im Spiel getestet. Woher die Infos stammen, erklärt das FAQ.</p>
+          </div>
+        </div>
+      </section>
     </div>
-    <div class="sidefoot"><button type="button" class="pill gear">Einstellungen</button></div>
+    <div class="sidefoot"><button type="button" class="pill wis">Wissen und Einstellungen</button></div>
   </aside>
 
     <main class="stage" id="stage">
@@ -884,7 +972,7 @@ li.qd .row .t1{color:var(--muted)}
     <button type="button" class="tb" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8 12 3.5 20.5 8v8L12 20.5 3.5 16z"/><path d="M3.5 8 12 12.5 20.5 8M12 12.5v8"/></svg><span>Inventar</span></button>
     <button type="button" class="tb" data-tab="karten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5zM9 4v13.5M15 6.5V20"/></svg><span>Karten</span></button>
     <button type="button" class="tb" data-tab="run"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg><span>Run planen</span></button>
-    <button type="button" class="tb" data-tab="arc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.4"/><path d="M12 5.8v2.8M12 15.4v2.8"/></svg><span>ARC</span></button>
+    <button type="button" class="tb" data-tab="werk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l8 4.6v9.2l-8 4.6-8-4.6V7.4z"/><circle cx="12" cy="12" r="3.4"/><path d="M12 5.8v2.8M12 15.4v2.8"/></svg><span>Werkstatt</span></button>
     <button type="button" class="tb" data-tab="quests"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15l-3-2-3 2-3-2-3 2V5A1.5 1.5 0 0 1 7 3.5zM9 8.5h6M9 12h6"/></svg><span>Quests</span></button>
   </nav>
 </div>
@@ -893,33 +981,6 @@ li.qd .row .t1{color:var(--muted)}
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
     <header><span></span><h3 id="dlgTitle">Infos</h3><button type="button" class="tbtn b" id="dlgClose">Fertig</button></header>
     <div class="cardbody" id="dlgBody"></div>
-  </div>
-</div>
-
-<div class="dlg" id="setDlg" hidden>
-  <div class="card" role="dialog" aria-modal="true" aria-labelledby="setTitle">
-    <header><span></span><h3 id="setTitle">Einstellungen</h3><button type="button" class="tbtn b" id="setClose">Fertig</button></header>
-    <div class="cardbody">
-      <ul class="group in">
-        <li class="srow"><label for="ecoChk">Sparmodus</label><input type="checkbox" class="switch" id="ecoChk" role="switch"></li>
-        <li class="srow" id="eveRow"><label for="eveChk">Abendlicht</label><input type="checkbox" class="switch" id="eveChk" role="switch"></li>
-        <li class="srow"><span>Namen</span><div class="segc mini" id="sLang" role="group" aria-label="Namen anzeigen auf"><button type="button" data-l="de">Deutsch</button><button type="button" data-l="en">English</button></div></li>
-      </ul>
-      <p class="foot">Sparmodus für nebenbei beim Zocken: keine Animationen, die Karte wird nur neu gezeichnet, wenn du sie bedienst.</p>
-      <h3 class="gh">Updates</h3>
-      <ul class="group in">
-        <li class="srow"><span>Letztes Update</span><span class="sval" id="updLast"></span></li>
-        <li class="srow"><span>Daten zuletzt geändert</span><span class="sval" id="updData"></span></li>
-        <li class="srow" id="updNextRow"><span>Nächstes Update</span><span class="sval" id="updNext"></span></li>
-      </ul>
-      <p class="foot">Jeden Montag früh werden die Spieldaten geprüft. «Letztes Update» ist die letzte Prüfung, auch wenn sich dabei nichts geändert hat. Das nächste Datum ist geplant, nicht garantiert.</p>
-      <p class="foot" id="gfxTxt"></p>
-      <p class="foot" id="standTxt"></p>
-      <p class="foot">Was nicht belegt ist, steht als «Annahme» da. «Verifiziert» heisst: von mindestens zwei unabhängigen Angaben bestätigt, nicht im Spiel getestet. Woher die Infos stammen, erklärt das FAQ unter Quests.</p>
-      <h3 class="gh">Über diese App</h3>
-      <p class="foot">Inoffizielles Fan-Projekt ohne Verbindung zu Embark Studios. ARC Raiders und alle Namen aus dem Spiel gehören Embark Studios. Die App enthält keine Grafiken aus dem Spiel.</p>
-      <p class="foot">Datenschutz: Die App setzt keine Cookies, sammelt keine Daten und lädt nichts von fremden Servern nach. Dein Fortschritt (Quests, Einkaufsliste, Einstellungen) bleibt nur in diesem Browser auf deinem Gerät. Der Anbieter der Webadresse sieht beim Aufruf wie bei jeder Website deine IP-Adresse.</p>
-    </div>
   </div>
 </div>
 
@@ -3041,7 +3102,7 @@ const FAQ_GRUNDLAGE = [
   { t:'Zeiten im Navi', x:[
     'Die Laufzeit ist aus gemessenen Sprint- und Ausdauerwerten der Community abgeleitet: im Mittel 5 m/s mit 30 % Umweg. Alle übrigen Zeiten sind Schätzungen (Annahme): Stopps, Kämpfe nach Gefahrenstufe, Ausgänge.' ] },
   { t:'Wie aktuell sind die Daten?', x:[
-    'Jeden Montag früh prüft ein automatisches Update zuerst die offiziellen Ankündigungen, dann die übrigen Angaben, und prüft jede Woche ein Thema gründlich. Das Datum der letzten Prüfung steht in den Einstellungen.' ] },
+    'Jeden Montag früh prüft ein automatisches Update zuerst die offiziellen Ankündigungen, dann die übrigen Angaben, und prüft jede Woche ein Thema gründlich. Das Datum der letzten Prüfung steht unter Wissen, Updates.' ] },
   { t:'Was weiss die App nicht?', x:[
     'Sie hat keine Verbindung zum Spiel. Deinen Stand kennt sie nur aus deinen Eingaben. Nach Patches kann eine Angabe kurz veraltet sein, bis das nächste Update sie prüft.' ] },
   { t:'Wo bleiben meine Daten?', x:[
@@ -3053,18 +3114,6 @@ const FAQ_GRUNDLAGE = [
     "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
     "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
     "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE." ] }
-];
-/* @datei wissen/faq-funktionen.js */
-
-const FAQ_FUNKTIONEN = [
-{"t":"Karten","b":[{"k":"p","x":"Jede Map gibt es als 3D-Modell und als 2D-Plan, mit Markern, die sich einzeln filtern lassen. Norden ist wie im Spiel fest oben."},{"k":"ul","i":[["Marker","Ausgänge (Lift, Raider-Luke), Waffenkisten, Security-Spinde, Rucksäcke, Startpunkte, Orte und Questziele."],["Ebenen","oben und unten getrennt, wo eine Map mehrere Stockwerke hat."],["Suche","Orte, Items und Quests direkt auf der Karte finden."],["Mini-Karte","kleine Karte mit Position und Route, auch während eines Runs."],["Ausrichtung","Der Kompass-Knopf wechselt zwischen drei Modi. «Norden oben» bleibt starr, zoomt auf das nächste Ziel und wandert mit; Ziehen verschiebt die Karte. «Folgen» dreht die Karte, damit dein Weg nach oben zeigt. «Frei drehen» dreht und neigt die Karte mit einem Finger, verschoben wird mit zwei Fingern."],["Gebäude und Gelände","Alle Maps sind nach dem Kartenbild grob nachgebaut: Gebäude so gedreht wie im Spiel, Hügel und Täler. Die Höhen sind geschätzt. Stella Montis ist eine Innenanlage und bleibt ein flacher Plan."],["Eigene Karte","einen eigenen Screenshot als Unterlage unter die Marker legen."],["Annahmen markiert","Was nicht belegt ist, steht als «Annahme» beim Marker oder Raum."],["3D-Grafik bleibt","Verliert der Browser die 3D-Grafik (zum Beispiel das iPhone im Hintergrund), zeichnet die App einfach weiter und baut die 3D-Ansicht neu auf, sobald es geht."]]}]},
-{"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Run» und die Mini-Karte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus dem Inventar wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Run steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","5 Bedingungen mit Erklärung (ARC Frigate, Night Raid, Redirection, Close Scrutiny, EM-Sturm), unten in «Run planen». Im Navi wählst du die aktuelle Bedingung; sind Raider-Luken gesperrt, plant es einen anderen Ausgang."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
-{"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat drei Reiter: Bedarf, Einkaufsliste und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte und den Stufen der Werkstatt, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan. Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann das weg?","der Filter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Alle Items","623 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
-{"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten. Daneben steht das FAQ."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen, alle davor werden abgehakt."],["Suche und Filter","nach Name, Ort, Händler oder Material."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."],["FAQ","dritter Reiter neben Quests und Projekte. Erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."]]}]},
-{"t":"ARC","b":[{"k":"p","x":"Der ARC-Bereich zeigt 32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen."},{"k":"ul","i":[["Steckbrief","antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr","Balken von grün (niedrig) bis rot (extrem)."],["Gruppen","Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme)."],["Im Navi","die Gefahr bestimmt die eingeplante Kampfzeit von 0,5 bis 5 Minuten."]]}]},
-{"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
-{"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
-{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Die Werkstatt zählt mit allen Stufen mit, bis du im Bereich Werkstatt deine eigenen Stufen einstellen kannst."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
 ];
 /* @datei wissen/pruefung/basis.js */
 
@@ -5685,9 +5734,20 @@ const escH = t => String(t).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;',
 const CHEV = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
 
 function setScreen(s){ UI.screen = s; appEl.dataset.screen = s; dirty = true; wake(); requestAnimationFrame(measureTop); }
+
+const TAB_LEISTE = ['mat', 'karten', 'run', 'werk', 'quests'];
+const TAB_NAME = { mat:'Inventar', karten:'Karten', run:'Run planen', werk:'Werkstatt', quests:'Quests', wissen:'Wissen', arc:'ARC-Gegner' };
+const VON = { wissen:'karten', arc:'wissen' };
+function tabWurzel(k){ for (let i = 0; i < 4 && !TAB_LEISTE.includes(k); i++) k = VON[k] || 'karten'; return k; }
+
+let tabRueck = false;
+function tabZurueck(k){ tabRueck = true; try { setTab(VON[k] || 'karten'); } finally { tabRueck = false; } }
 function setTab(k){
+  if (k === 'faq') k = 'wissen';
+  if ((k === 'wissen' || k === 'arc') && UI.tab !== k && !tabRueck && VON[UI.tab] !== k) VON[k] = UI.tab;
   if (UI.tab === k && typeof matReset === 'function' && k === 'mat' && (isWide() || UI.screen === 'list')) matReset();
   if (UI.tab === k && k === 'arc' && (isWide() || UI.screen === 'list')) arcReset();
+  if (UI.tab === k && k === 'werk' && typeof wkReset === 'function' && (isWide() || UI.screen === 'list')) wkReset();
   if (UI.tab === k && k === 'quests' && (isWide() || UI.screen === 'list')) qReset();
   
   if (k === 'raids') k = 'run';
@@ -5695,8 +5755,18 @@ function setTab(k){
   else if (k === 'run' && typeof naviRefresh === 'function') naviRefresh(true);
   UI.tab = k; appEl.dataset.tab = k;
   document.querySelectorAll('.page').forEach(p => p.hidden = p.dataset.page !== k);
-  document.querySelectorAll('.tb, .sn').forEach(b => b.setAttribute('aria-current', b.dataset.tab === k ? 'page' : 'false'));
+  tabMarke();
+  
+  if (k === 'werk' && typeof WK_DA !== 'undefined' && WK_DA) wkRender();
+  if (k === 'mat' && typeof INV_DA !== 'undefined' && INV_DA) matRefresh();
   if (!isWide()) setScreen('list');
+}
+
+function tabMarke(){
+  const w = tabWurzel(UI.tab);
+  document.querySelectorAll('.tb, .sn').forEach(b => b.setAttribute('aria-current', b.dataset.tab === w ? 'page' : 'false'));
+  if ($('#arcRootBack')) $('#arcRootBack').lastElementChild.textContent = TAB_NAME[VON.arc] || 'Wissen';
+  if (typeof WIS_DA !== 'undefined' && WIS_DA) wissenRender();
 }
 document.querySelectorAll('.tb, .sn').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
 function setDetent(d){
@@ -5754,9 +5824,9 @@ function renderRaids(){
   const runs = RUNS.map(r => `<li><button type="button" class="row" data-run="${r.id}"><span class="rt"><span class="t1">${escH(r.title)}</span><span class="t2">${escH(r.sub)}</span></span>${CHEV}</button></li>`).join('');
   const conds = CONDS.map(c => `<details class="cond"><summary>${escH(c.t)}</summary><div class="cb"><p>${escH(c.x)}</p>${c.s ? `<p class="cs">${escH(c.s)}</p>` : ''}${c.go ? `<p><button type="button" class="pill" data-run="${c.go}">${escH(c.a)}</button></p>` : ''}</div></details>`).join('');
   
-  $('#runList').innerHTML = $('#runListK').innerHTML = runs; $('#condList').innerHTML = $('#condListK').innerHTML = conds;
+  $('#runList').innerHTML = $('#runListK').innerHTML = runs; $('#condList').innerHTML = $('#condListW').innerHTML = conds;
 }
-['#pgRaids', '#pgRun'].forEach(s => $(s).addEventListener('click', e => { const b = e.target.closest('[data-run]'); if (b) openRun(b.dataset.run); }));
+['#pgRaids', '#pgRun', '#pgWissen'].forEach(s => $(s).addEventListener('click', e => { const b = e.target.closest('[data-run]'); if (b) openRun(b.dataset.run); }));
 
 function openView(id, opts){
   UI.from = (opts && opts.from) || UI.tab;
@@ -5902,7 +5972,7 @@ $('#zIn').addEventListener('click', () => { anim = null; cam.dist = clamp(cam.di
 $('#zOut').addEventListener('click', () => { anim = null; cam.dist = clamp(cam.dist/.72, 10, 200); dirty = true; wake(); });
 window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (id && id !== viewId && VIEWS[id]) openView(id, { noHash:true }); });
 
-const dlg = $('#dlg'), setDlg = $('#setDlg');
+const dlg = $('#dlg');
 let dlgReturn = null;
 function openModal(el, focusSel){ dlgReturn = document.activeElement; el.hidden = false; const f = el.querySelector(focusSel || '.tbtn.b'); if (f) f.focus(); }
 function closeModal(el){ el.hidden = true; if (dlgReturn && dlgReturn.focus) dlgReturn.focus(); }
@@ -5912,9 +5982,9 @@ const closeDlg = () => closeModal(dlg);
 $('#btnInfo').addEventListener('click', openDlg);
 $('#dlgClose').addEventListener('click', closeDlg);
 dlg.addEventListener('click', e => { if (e.target === dlg) closeDlg(); });
-document.querySelectorAll('.gear').forEach(b => b.addEventListener('click', () => openModal(setDlg)));
-$('#setClose').addEventListener('click', () => closeModal(setDlg));
-setDlg.addEventListener('click', e => { if (e.target === setDlg) closeModal(setDlg); });
+
+document.querySelectorAll('.wis').forEach(b => b.addEventListener('click', () => wissenOpen()));
+document.addEventListener('click', e => { const b = e.target.closest('[data-wis]'); if (b) wissenOpen(b.dataset.wis); });
 document.addEventListener('keydown', e => {
   const open = [...document.querySelectorAll('.dlg')].find(d => !d.hidden);
   if (open){
@@ -6361,7 +6431,7 @@ function arcOpen(n, back){
   const dd = arcDrops(a), sp = dd.spez[0];
   const en = a.en || a.n;
   const alt = a.de === en ? '' : sLang === 'de' && a.de ? 'Englisch: ' + en : a.de ? 'Deutsch: ' + a.de : 'Deutscher Name: nicht bekannt';
-  let h = `<div class="subnav"><button type="button" class="back" id="arcBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(arcBack ? arcBack.label : 'ARC')}</button></div>`
+  let h = `<div class="subnav"><button type="button" class="back" id="arcBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(arcBack ? arcBack.label : 'ARC-Gegner')}</button></div>`
     + `<h3 class="dn${sp && sp.r ? ' rr-t r' + sp.r : ''}">${esc(arcName(a))}</h3>${alt ? `<p class="dalt">${esc(alt)}</p>` : ''}`
     + `<div class="sb">${arcThr(a.t)}<span class="thrt">${a.t ? 'Gefahr ' + ARC_THREAT[a.t] : 'Lootbar, greift nicht an'}</span>${a.neu ? '<span class="newb">Neu</span>' : ''}</div>`;
   if (a.neu) h += `<p class="fine">${esc(a.neu[0])}.</p>`;
@@ -6402,10 +6472,12 @@ $('#arcDetail').addEventListener('click', e => {
     setTab('mat'); showDetail(it, { label:arcName(a), go:() => arcOpen(a.n, back) }); }
 });
 $('#btnArc').addEventListener('click', () => { setTab('arc'); arcReset(); });
+
+$('#arcRootBack').addEventListener('click', () => tabZurueck('arc'));
 /* @datei app/kern/werkstatt-daten.js */
 
 const WSD = (() => {
-  const leer = { da:false, items:new Map(), stationen:[], abw:new Map(), nur:new Set(), ok:() => false, zutatIn:new Map() };
+  const leer = { da:false, items:new Map(), stationen:[], abw:new Map(), nur:new Set(), ok:() => false, zutatIn:new Map(), bps:[], bpFuer:new Map() };
   if (typeof WS_ITEMS === 'undefined') return leer;
   const voll = n => WS_KURZ[n] || n;
   const mengen = s => !s || s === '-' ? [] : s.split(',').map(t => { const i = t.lastIndexOf(':'); return { n:voll(t.slice(0, i)), c:+t.slice(i + 1) }; });
@@ -6419,7 +6491,13 @@ const WSD = (() => {
   
   const seiten = ks => new Set(ks.split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
   const stationen = WS_STATIONS.trim().split('\n').map(l => { const s = l.split('|');
-    return { n:s[0], max:+s[1], stufen:s[2].split('/').map(mengen), ver:s[3].split('/').map(k => seiten(k) >= 2) }; });
+    const st = { n:s[0], max:+s[1], stufen:s[2].split('/').map(mengen), ver:s[3].split('/').map(k => seiten(k) >= 2), min:0 };
+    
+    while (st.min < st.max && !(st.stufen[st.min] || []).length) st.min++;
+    return st; });
+  
+  const bps = WS_BLUEPRINTS.trim().split('\n').map(l => { const z = l.split('|'); return { n:z[0], frei:z[1] || z[0], woher:z[2] || '', ver:seiten(z[3] || '') >= 2 }; });
+  const bpFuer = new Map(bps.map(b => [b.frei, b.n]));
   const nur = new Set(Object.values(WS_NUR).join(';').split(';').filter(Boolean));
   const abw = new Map();
   for (const l of WS_ABW.trim().split('\n')){ if (!l) continue; const a = l.split('|'); if (!abw.has(a[0])) abw.set(a[0], []); abw.get(a[0]).push({ feld:a[1], hier:a[2], andere:a[3] }); }
@@ -6429,7 +6507,7 @@ const WSD = (() => {
   const zutatIn = new Map();
   const merk = (n, o, c, art) => { if (!zutatIn.has(n)) zutatIn.set(n, []); zutatIn.get(n).push({ n:o.n, c, art, bank:o.rez ? o.rez.bank : [], stufe:o.rez ? o.rez.stufe : 0 }); };
   for (const o of items.values()){ if (o.rez) for (const x of o.rez.zut) merk(x.n, o, x.c, 'h'); for (const x of o.auf) merk(x.n, o, x.c, 'a'); }
-  return { da:true, items, stationen, abw, nur, ok, zutatIn };
+  return { da:true, items, stationen, abw, nur, ok, zutatIn, bps, bpFuer };
 })();
 let INV_BEREIT = false;   
 const ROEM = ['I', 'II', 'III', 'IV'];
@@ -6463,8 +6541,24 @@ let WST = { ok:false, st:{}, ziel:{}, waffe:{}, wunsch:{}, bp:{} };
 try { const w = JSON.parse(localStorage.getItem('raider-atlas:werkstatt') || 'null'); if (w && typeof w === 'object') for (const k in WST) if (k in w && typeof w[k] === typeof WST[k]) WST[k] = w[k]; } catch(_){}
 const saveWst = () => { try { localStorage.setItem('raider-atlas:werkstatt', JSON.stringify(WST)); } catch(_){} };
 
+const wsStation = n => WSD.stationen.find(s => s.n === n);
+const wsStufe = s => Math.max(s.min, Math.min(s.max, WST.st[s.n] == null ? s.min : WST.st[s.n]));
+const wsZiel = s => Math.max(wsStufe(s), Math.min(s.max, WST.ziel[s.n] == null ? s.max : WST.ziel[s.n]));
+
+const wfStufe = f => Math.max(0, Math.min(f.stufen.length, WST.waffe[f.n] || 0));
+const wfWunsch = f => Math.max(0, Math.min(f.stufen.length, WST.wunsch[f.n] || 0));
+
+const bpName = n => WSD.bpFuer.get(n) || n;
+const bpGelernt = n => !!WST.bp[bpName(n)];
+
+function rezGeht(w){
+  if (!w || !w.rez) return false;
+  const bank = w.rez.bank.some(b => { if (b === 'I' || b === 'W') return true; const st = wsStation(WS_BANK[b]); return !!st && wsStufe(st) >= Math.max(1, w.rez.stufe); });
+  return bank && (!w.bp || bpGelernt(w.n));
+}
+
 function bedarfRechnen(){
-  const B = new Map(), Z = { quests:0, proj:0, werk:0, waffen:0 };
+  const B = new Map(), Z = { quests:0, proj:0, werk:0, waffen:0, liste:0 };
   const add = (n, c, w) => { if (!B.has(n)) B.set(n, { n, sum:0, wofuer:[], mind:false }); const e = B.get(n); e.sum += c || 1; if (!c) e.mind = true; e.wofuer.push(Object.assign({ c:c || 0 }, w)); };
   for (const q of QUESTS){
     if (qDone(q)) continue; let hat = false;
@@ -6479,18 +6573,20 @@ function bedarfRechnen(){
   }
   
   for (const s of WSD.stationen){
-    const von = WST.ok ? (WST.st[s.n] || 0) : 0, bis = WST.ok && WST.ziel[s.n] != null ? Math.min(s.max, WST.ziel[s.n]) : s.max;
+    const von = wsStufe(s), bis = wsZiel(s);
     for (let l = von + 1; l <= bis; l++){ const k = s.stufen[l - 1] || []; if (!k.length) continue; Z.werk++; for (const x of k) add(x.n, x.c, { t:'Werkstatt', label:s.n + ' Stufe ' + l, go:'s|' + s.n }); }
   }
   for (const fam in WST.wunsch){
-    const f = WAFFEN.get(fam); if (!f) continue; const hab = WST.waffe[fam] || 0, zielT = Math.min(f.stufen.length, WST.wunsch[fam]); if (zielT <= hab) continue; Z.waffen++;
+    const f = WAFFEN.get(fam); if (!f) continue; const hab = wfStufe(f), zielT = wfWunsch(f); if (zielT <= hab) continue; Z.waffen++;
     for (let t = hab + 1; t <= zielT; t++){ const o = f.stufen[t - 1]; if (!o) continue;
       const kosten = t === 1 ? (o.rez ? o.rez.zut : []) : o.auf;
       for (const x of kosten) add(x.n, x.c, { t:'Waffe', label:fam + ' ' + ROEM[t - 1], go:'w|' + fam }); }
   }
+  
+  for (const x of LIST){ if (B.has(x.n)) continue; const c = (x.by ? x.m : x.need) || 0; if (c > 0){ add(x.n, c, { t:'Liste', label:'Einkaufsliste' }); Z.liste++; } }
   return { B, Z };
 }
-let BED = new Map(), BED_Z = { quests:0, proj:0, werk:0, waffen:0 };
+let BED = new Map(), BED_Z = { quests:0, proj:0, werk:0, waffen:0, liste:0 };
 function bedarfNeu(){ const r = bedarfRechnen(); BED = r.B; BED_Z = r.Z; return r; }
 
 function urteil(it){
@@ -6499,7 +6595,7 @@ function urteil(it){
   if (it.kind === 'key') return { k:'key' };
   const w = WSD.items.get(it.n);
   if (!w || !w.typ) return { k:'unk', wert:w ? w.wert : null };   
-  if (w.typ === 'BP') return { k:'bp', wert:w.wert };
+  if (w.typ === 'BP') return WST.bp[it.n.replace(/ Blueprint$/, '')] ? { k:'sell', wert:w.wert, bp:true } : { k:'bp', wert:w.wert };
   if (w.typ === 'KY') return { k:'key' };
   if (WS_AUSRUESTUNG.has(w.typ)) return { k:'gear', wert:w.wert };
   const nutz = w.zerl.filter(x => BED.has(x.n));
@@ -6718,8 +6814,14 @@ function showDetail(it, back){
   sDetail.querySelectorAll('button[data-rank]').forEach(b => b.addEventListener('click', () => { const e = sRank[+b.dataset.rank]; openFocus(e.m, e.n, dispName(it)); }));
   sDetail.querySelectorAll('button[data-room]').forEach(b => b.addEventListener('click', () => { const [m, st] = b.dataset.room.split('|'); jumpGuide(m, +st, it.n); }));
   sDetail.querySelectorAll('button[data-arcgo]').forEach(b => b.addEventListener('click', () => arcOpen(b.dataset.arcgo, { label:dispName(it), go:() => { setTab('mat'); showDetail(it); } })));
-  sDetail.querySelectorAll('button[data-qgo]').forEach(b => b.addEventListener('click', () => { const [t, v] = b.dataset.qgo.split('|'), back = { label:dispName(it), go:() => { setTab('mat'); showDetail(it); } }; if (t === 'q') questOpen(+v, back); else projOpen(v, back); }));
-  sDetail.querySelectorAll('button[data-iopen]').forEach(b => b.addEventListener('click', () => { const z = itemByName(b.dataset.iopen); if (z) showDetail(z, { label:dispName(it), go:() => { setTab('mat'); showDetail(it); } }); }));
+  
+  const vor = sBack, hierher = { label:dispName(it), go:() => { setTab('mat'); showDetail(it, vor); } };
+  sDetail.querySelectorAll('button[data-qgo]').forEach(b => b.addEventListener('click', () => { const [t, v] = b.dataset.qgo.split('|');
+    if (t === 'q') questOpen(+v, hierher); else if (t === 'p') projOpen(v, hierher); else if (t === 's') wkStOpen(v, hierher); else if (t === 'w') wkWafOpen(v, hierher); }));
+  sDetail.querySelectorAll('button[data-iopen]').forEach(b => b.addEventListener('click', () => { const z = itemByName(b.dataset.iopen); if (z) showDetail(z, hierher); }));
+  sDetail.querySelectorAll('button[data-bptog]').forEach(b => b.addEventListener('click', () => { const n = b.dataset.bptog; if (WST.bp[n]) delete WST.bp[n]; else WST.bp[n] = 1; saveWst(); showDetail(it); }));
+  sDetail.querySelectorAll('button[data-rezlist]').forEach(b => b.addEventListener('click', () => { const w = WSD.items.get(it.n); if (!w || !w.rez) return;
+    w.rez.zut.filter(x => itemByName(x.n)).forEach(x => qAddList(x.n, x.c)); b.textContent = 'Zutaten stehen auf der Einkaufsliste'; b.disabled = true; }));
   sDetail.querySelectorAll('button[data-guide]').forEach(b => b.addEventListener('click', () => { const [v, st] = b.dataset.guide.split('|'); jumpGuide(v, st === '' ? null : +st, it.n); }));
   $('#sBack').focus();
 }
@@ -6745,7 +6847,7 @@ function jumpGuide(v, step, item){
 
 function shopRender(){
   if (INV_BEREIT) bedarfNeu();
-  const zweck = x => { const b = INV_BEREIT && BED.get(x.n); return b ? 'Für ' + zweckKurz(b.wofuer) : 'Von Hand gesetzt'; };   
+  const zweck = x => { const b = INV_BEREIT && BED.get(x.n), W = b ? b.wofuer.filter(w => w.t !== 'Liste') : []; return W.length ? 'Für ' + zweckKurz(W) : 'Von Hand gesetzt'; };   
   $('#shopN').textContent = LIST.length;
   $('#shopEmpty').hidden = !!LIST.length; $('#shopBtns').hidden = !LIST.length;
   $('#shopList').hidden = !LIST.length;
@@ -7065,6 +7167,19 @@ function setLang(l){
 }
 sLangBox.querySelectorAll('button').forEach(b => { b.setAttribute('aria-pressed', b.dataset.l === sLang); b.addEventListener('click', () => setLang(b.dataset.l)); });
 renderList(); shopRender();
+/* @datei wissen/faq-funktionen.js */
+
+const FAQ_FUNKTIONEN = [
+{"t":"Karten","b":[{"k":"p","x":"Jede Map gibt es als 3D-Modell und als 2D-Plan, mit Markern, die sich einzeln filtern lassen. Norden ist wie im Spiel fest oben."},{"k":"ul","i":[["Marker","Ausgänge (Lift, Raider-Luke), Waffenkisten, Security-Spinde, Rucksäcke, Startpunkte, Orte und Questziele."],["Ebenen","oben und unten getrennt, wo eine Map mehrere Stockwerke hat."],["Suche","Orte, Items und Quests direkt auf der Karte finden."],["Mini-Karte","kleine Karte mit Position und Route, auch während eines Runs."],["Ausrichtung","Der Kompass-Knopf wechselt zwischen drei Modi. «Norden oben» bleibt starr, zoomt auf das nächste Ziel und wandert mit; Ziehen verschiebt die Karte. «Folgen» dreht die Karte, damit dein Weg nach oben zeigt. «Frei drehen» dreht und neigt die Karte mit einem Finger, verschoben wird mit zwei Fingern."],["Gebäude und Gelände","Alle Maps sind nach dem Kartenbild grob nachgebaut: Gebäude so gedreht wie im Spiel, Hügel und Täler. Die Höhen sind geschätzt. Stella Montis ist eine Innenanlage und bleibt ein flacher Plan."],["Eigene Karte","einen eigenen Screenshot als Unterlage unter die Marker legen."],["Annahmen markiert","Was nicht belegt ist, steht als «Annahme» beim Marker oder Raum."],["3D-Grafik bleibt","Verliert der Browser die 3D-Grafik (zum Beispiel das iPhone im Hintergrund), zeichnet die App einfach weiter und baut die 3D-Ansicht neu auf, sobald es geht."]]}]},
+{"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Run» und die Mini-Karte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus dem Inventar wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Run steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","5 Bedingungen mit Erklärung (ARC Frigate, Night Raid, Redirection, Close Scrutiny, EM-Sturm) unter «Wissen»; ein Eintrag unten in «Run planen» führt dorthin. Im Navi wählst du die aktuelle Bedingung; sind Raider-Luken gesperrt, plant es einen anderen Ausgang."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
+{"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat drei Reiter: Bedarf, Einkaufsliste und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte, deinen Werkstatt-Zielen, deinen Wunsch-Waffen und eigenen Einträgen der Einkaufsliste, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan lernen (nach dem Abhaken: Verkaufen). Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann das weg?","der Filter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Alle Items","623 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Rezept auf die Liste","ein Knopf setzt alle Zutaten eines Rezepts auf die Einkaufsliste; damit zählen sie im Bedarf."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
+{"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Vier Reiter: Stationen, Waffen, Herstellen und Baupläne."},{"k":"ul","i":[["Stationen","8 Stationen mit Stufen (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Research Station, Scrappy). Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Herstellen","156 Rezepte, durchsuchbar und nach Station gefiltert. «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst."],["Baupläne","85 Baupläne mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
+{"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen, alle davor werden abgehakt."],["Suche und Filter","nach Name, Ort, Händler oder Material."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."]]}]},
+{"t":"Wissen","b":[{"k":"p","x":"Der Knopf oben rechts in jedem Bereich öffnet die Seite «Wissen»: alles zum Nachschlagen und alles über die App an einem Ort. «Zurück» führt in den Bereich, aus dem du kamst."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","5 Bedingungen und was sie ändern."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht und Namen auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
+{"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Werkstatt-Stand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Einstellungen und Updates","stehen unter «Wissen»."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
+{"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
+{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
+];
 /* @datei app/kern/quests.js */
 
 const QMAP_NAME = m => m === '*' ? 'Jede Karte' : m === 'fregatte' ? 'Fregatte' : MAPS[m] ? MAPS[m].short : m;
@@ -7127,15 +7242,17 @@ for (const q of QUESTS) q._k = norm([q.en, q.de, q.ziel, QUEST_TRADER[q.h], ...q
 let qView = 'quests', qTrader = 'all', qMapF = 'all', qShowDone = false, qBack = null, qCur = null;
 function qShow(v){
   qView = v;
-  $('#qRoot').hidden = !(v === 'quests' || v === 'projekte' || v === 'faq');
-  $('#qvQuests').hidden = v !== 'quests'; $('#qvProj').hidden = v !== 'projekte'; $('#qvFaq').hidden = v !== 'faq';
+  if (v === 'faq') v = 'quests';   
+  qView = v;
+  $('#qRoot').hidden = !(v === 'quests' || v === 'projekte');
+  $('#qvQuests').hidden = v !== 'quests'; $('#qvProj').hidden = v !== 'projekte';
   $('#qDetail').hidden = !(v === 'qdetail' || v === 'pdetail');
-  $('#segQuests').setAttribute('aria-pressed', v === 'quests'); $('#segProj').setAttribute('aria-pressed', v === 'projekte'); $('#segFaq').setAttribute('aria-pressed', v === 'faq');
-  if (v === 'quests') qRender(); if (v === 'projekte') pRender(); if (v === 'faq') faqRender();
+  $('#segQuests').setAttribute('aria-pressed', v === 'quests'); $('#segProj').setAttribute('aria-pressed', v === 'projekte');
+  if (v === 'quests') qRender(); if (v === 'projekte') pRender();
   qSeason();
   const pg = $('#pages'); if (pg) pg.scrollTop = 0;
 }
-function qReset(){ qBack = null; qCur = null; qShow(qView === 'projekte' || qView === 'pdetail' ? 'projekte' : qView === 'faq' ? 'faq' : 'quests'); }
+function qReset(){ qBack = null; qCur = null; qShow(qView === 'projekte' || qView === 'pdetail' ? 'projekte' : 'quests'); }
 function qSeason(){
   const s = PROJS.filter(p => p.st === 'saison' && (qDays(p.bis) == null || qDays(p.bis) >= 0));
   $('#qSeason').innerHTML = s.map(p => { const done = p.stufen.filter((_, i) => pDone(p, i)).length;
@@ -7158,7 +7275,7 @@ function faqRender(){
     + `<p class="foot">Datenstand ${esc(DATA_STAND)}: ${zahlen.map(z => z[0] + ' ' + z[1]).join(', ')}.</p>`
     + '<div class="group">' + FAQ_FUNKTIONEN.map(s => acc(s.t, s.b.map(b => b.k === 'p' ? para(b.x) : list(b)).join(''))).join('') + '</div>'
     + '<p class="foot">Inoffizielles Fan-Projekt, nicht im Spiel getestet. Fehler gefunden? Das wöchentliche Update prüft die Angaben laufend nach.</p>';
-  $('#qvFaq').innerHTML = h;
+  $('#wvFaq').innerHTML = h;
 }
 const qMatch = (q, tr, mp) => (tr === 'all' || q.h === tr) && (mp === 'all' || (mp === 'none' ? !q.maps.length : q.maps.includes(mp) || (mp !== '*' && q.maps.includes('*'))));
 const qOpenCount = (tr, mp) => QUESTS.filter(q => !qDone(q) && qMatch(q, tr, mp)).length;
@@ -7267,7 +7384,6 @@ function questUseSection(it){
 
 $('#segQuests').addEventListener('click', () => qShow('quests'));
 $('#segProj').addEventListener('click', () => qShow('projekte'));
-$('#segFaq').addEventListener('click', () => qShow('faq'));
 $('#qInput').addEventListener('input', qRender);
 $('#qDoneBtn').addEventListener('click', () => { qShowDone = !qShowDone; qRender(); });
 
@@ -7328,6 +7444,7 @@ function zweckKurz(W){
   if (p.length) T.push(p.length === 1 ? 'Projekt ' + p[0] : p.length + ' Projekte');
   if (s.length) T.push(s.length <= 2 ? s.join(', ') : s.length + ' Werkstatt-Stufen');
   if (f.length) T.push(f.length <= 2 ? f.join(', ') : f.length + ' Waffen-Stufen');
+  if (W.some(w => w.t === 'Liste')) T.push('Einkaufsliste');
   return T.join(' · ');
 }
 
@@ -7337,6 +7454,7 @@ function zweckSumme(W){
   if (n('Projekt')) T.push(sum('Projekt') + ' für Projekte');
   if (n('Werkstatt')) T.push(sum('Werkstatt') + ' für die Werkstatt');
   if (n('Waffe')) T.push(sum('Waffe') + ' für Wunsch-Waffen');
+  if (n('Liste')) T.push(sum('Liste') + ' für deine Einkaufsliste');
   return undListe(T);
 }
 
@@ -7366,15 +7484,17 @@ function bedRender(){
   if (Z.proj) T.push(Z.proj === 1 ? 'einer Projekt-Stufe' : Z.proj + ' Projekt-Stufen');
   if (Z.werk) T.push(Z.werk === 1 ? 'einer Werkstatt-Stufe' : Z.werk + ' Werkstatt-Stufen');
   if (Z.waffen) T.push(Z.waffen === 1 ? 'einer Wunsch-Waffe' : Z.waffen + ' Wunsch-Waffen');
+  if (Z.liste) T.push(Z.liste === 1 ? 'einem eigenen Eintrag der Einkaufsliste' : Z.liste + ' eigenen Einträgen der Einkaufsliste');
   $('#bedInfo').textContent = L.length
     ? `${L.length} ${L.length === 1 ? 'Material' : 'Materialien'} behalten. Gerechnet aus ${undListe(T)}.`
-    : 'Kein offener Bedarf: Alle Quests, Projekt-Stufen und Werkstatt-Stufen sind erledigt.';
+    : 'Kein offener Bedarf: Alle Quests, Projekt-Stufen und Werkstatt-Ziele sind erledigt.';
   $('#bedList').hidden = !L.length;
   $('#bedList').innerHTML = L.map(x => `<li${rrCls(x.it.r)}><button type="button" class="row" data-bed="${ITEMS.indexOf(x.it)}"><span class="rt"><span class="t1">${esc(dispName(x.it))}${jetzt(x) ? ' <span class="stb s-aktiv">Gesucht</span>' : ''}</span>`
     + `<span class="t2">${esc(zweckKurz(x.e.wofuer))}</span></span><span class="keep"><span class="lcdn">${x.e.sum}</span><small>${x.e.mind ? 'mind.' : 'behalten'}</small></span>${CHEV}</button></li>`).join('');
-  $('#bedWerk').hidden = WST.ok || !Z.werk;
+  $('#bedWerk').hidden = WST.ok || !Z.werk;   
 }
 $('#bedList').addEventListener('click', e => { const b = e.target.closest('[data-bed]'); if (b) showDetail(ITEMS[+b.dataset.bed], null); });
+$('#bedWerkGo').addEventListener('click', () => setTab('werk'));
 $('#bedWeg').addEventListener('click', () => { sFilter = '#weg'; $('#sInput').value = ''; matShow('suche'); filUI(S_FIL, '#sFilBtn', '#sFilN', '#sTok'); });
 
 const rezAnz = Z => { const n = new Set(Z.map(z => z.n)).size; return n === 1 ? 'einem Rezept' : n + ' Rezepten'; };
@@ -7390,12 +7510,14 @@ function urteilKarte(it){
     text = `Kein fester Bedarf in Quests, Projekten und Werkstatt, aber Zutat in ${rezAnz(u.zut)}, zum Beispiel ${undListe(zutBsp(u.zut))}. Behalte, was du zum Herstellen brauchst; der Rest kann weg.`
       + (u.nutz.length ? ` Zerlegen ergibt ${mengenTxt(u.nutz)}, und das brauchst du noch.` : '') + coins; }
   else if (u.k === 'rec'){ kopf = 'Zerlegen'; text = `Selbst brauchst du es nicht. Zerlegen ergibt ${mengenTxt(u.nutz)}, und das brauchst du noch.` + coins; }
-  else if (u.k === 'sell'){ kopf = 'Verkaufen'; text = 'Kein offener Bedarf in Quests, Projekten und Werkstatt und in keinem bekannten Rezept eine Zutat.' + coins; }
+  else if (u.k === 'sell'){ kopf = 'Verkaufen'; text = (u.bp ? 'Du hast diesen Bauplan als gelernt abgehakt. Ein weiteres Exemplar brauchst du nicht.' : 'Kein offener Bedarf in Quests, Projekten und Werkstatt und in keinem bekannten Rezept eine Zutat.') + coins; }
   else if (u.k === 'gear'){ kopf = 'Ausrüstung'; text = 'Zum Benutzen gedacht. Als Material wird es gerade nicht gebraucht.' + coins; }
-  else if (u.k === 'bp'){ kopf = 'Bauplan'; text = 'Lernen schaltet das Rezept frei. Einen doppelten kannst du verkaufen.' + coins; }
+  else if (u.k === 'bp'){ kopf = 'Bauplan lernen'; text = 'Lernen schaltet das Rezept frei. Hake ihn danach ab: Bei einem zweiten rät die App dann zum Verkaufen.' + coins; }
   else if (u.k === 'unk'){ kopf = 'Keine Angaben'; text = (u.wert != null ? 'Art und Verwendung' : 'Wert, Rezepte und Verwendung') + ' sind für dieses Item noch nicht belegt. Die App kann nicht sagen, ob es weg kann.' + coins; }
   else return '';
-  return `<div class="verdict v-${u.k}"><div class="vkopf"><span class="vlab">${kopf}</span>${zahl ? `<span class="lcdn">${zahl}</span>` : ''}</div><p>${esc(text)}</p></div>`;
+  const w = WSD.items.get(it.n), bp = w && w.typ === 'BP' ? it.n.replace(/ Blueprint$/, '') : '';
+  return `<div class="verdict v-${u.k}"><div class="vkopf"><span class="vlab">${kopf}</span>${zahl ? `<span class="lcdn">${zahl}</span>` : ''}</div><p>${esc(text)}</p></div>`
+    + (bp ? `<div class="btncol"><button type="button" class="bs" data-bptog="${esc(bp)}" aria-pressed="${!!WST.bp[bp]}">${WST.bp[bp] ? 'Gelernt · wieder offen setzen' : 'Als gelernt abhaken'}</button></div>` : '');
 }
 function wofuerSection(it){
   const b = BED.get(it.n), rows = [];
@@ -7407,7 +7529,7 @@ function wofuerSection(it){
     rows.push({ t:'Projekt' + (p.st === 'ende' ? ', beendet' : p.st === 'pause' ? ', pausiert' : ''), n:`${p.n}, Stufe ${i + 1}`, c:x.c, d:fertig, ruht:!fertig, go:'p|' + p.id }); });
   if (!rows.length) return '';
   return `<h4>Wofür${b ? ` (${b.mind ? 'mindestens ' : ''}${b.sum} Stück offen)` : ''}</h4><ul class="plist">` + rows.map(r => `<li class="prow${r.d || r.ruht ? ' qd' : ''}"><div class="pinfo"><b>${esc(r.n)}</b> <span class="pm">${esc(r.t)}</span>`
-    + `<div class="pe">${r.c ? r.c + ' Stück' : 'Anzahl nicht angegeben'}${r.d ? ' · erledigt' : r.ruht ? ' · zählt nicht mit' : ''}</div></div>${/^[qp]\|/.test(r.go) ? `<button class="pill go" type="button" data-qgo="${esc(r.go)}">Zeigen</button>` : ''}</li>`).join('') + '</ul>';
+    + `<div class="pe">${r.c ? r.c + ' Stück' : 'Anzahl nicht angegeben'}${r.d ? ' · erledigt' : r.ruht ? ' · zählt nicht mit' : ''}</div></div>${r.go ? `<button class="pill go" type="button" data-qgo="${esc(r.go)}">Zeigen</button>` : ''}</li>`).join('') + '</ul>';
 }
 function handelSection(it){
   const w = WSD.items.get(it.n); if (!w || (w.wert == null && !w.zerl.length && !w.raid.length)) return '';
@@ -7437,13 +7559,247 @@ function rezeptSection(it){
     h += `<h4>Herstellen</h4><ul class="cats"><li><span class="cn">${esc(bank)}${w.bp ? ' · Bauplan nötig' : ''}</span>${WSD.ok('rezept', it.n) ? VER2 : VER1}</li>`;
     for (const a of (WSD.abw.get(it.n) || []).filter(a => a.feld === 'bank')) h += `<li><span class="cn">Andere Angabe: ${esc(a.andere.replace(/ (\d)$/, ' Stufe $1'))}</span><span class="ver v0">Widerspruch</span></li>`;
     h += '</ul><ul class="plist">' + w.rez.zut.map(zutRow).join('') + '</ul>';
+    
+    if (WST.ok || (w.bp && bpGelernt(w.n))) h += `<p class="fine">${rezGeht(w) ? 'Kannst du herstellen: Station und Bauplan passen.' : w.bp && !bpGelernt(w.n) ? 'Dir fehlt noch der Bauplan (Werkstatt, Baupläne).' : 'Deine Station hat die nötige Stufe noch nicht.'}</p>`;
+    if (w.rez.zut.some(x => itemByName(x.n))) h += '<div class="btncol"><button type="button" class="bs" data-rezlist="1">Zutaten auf die Einkaufsliste</button></div>';
   } else if (w.bp && !w.auf.length) h += '<h4>Herstellen</h4><p class="fine">Braucht einen Bauplan. Das Rezept ist nicht bekannt.</p>';
   if (w.auf.length) h += '<h4>Aufwerten auf diese Stufe</h4><ul class="plist">' + w.auf.map(zutRow).join('') + '</ul>';
   return h;
 }
 
+function matRefresh(){
+  if (matView === 'bedarf') bedRender(); else if (matView === 'suche') renderList(); else if (matView === 'liste') shopRender();
+  else if (matView === 'detail' && sLast){ const pg = $('#pages'), y = pg ? pg.scrollTop : 0, f = document.activeElement; showDetail(sLast); if (pg) pg.scrollTop = y; if (f && f.focus && document.contains(f)) f.focus(); }
+}
+
+var INV_DA = true;   
 INV_BEREIT = true;
 bedarfNeu(); renderList(); shopRender(); matShow('bedarf');
+/* @datei app/kern/werkstatt.js */
+
+let wkView = 'st', wkCur = null, wkBack = null, wkHerF = 'alle';
+const WK_REITER = { st:'Stationen', waf:'Waffen', her:'Herstellen', bp:'Baupläne' };
+const WK_BACK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+const wkId = k => '#wk' + k[0].toUpperCase() + k.slice(1);
+const wkMat = n => n === 1 ? '1 Material' : n + ' Materialien';
+
+function wkShow(v){
+  if (v !== 'detail'){ wkView = WK_REITER[v] ? v : 'st'; wkCur = null; }
+  $('#wkRoot').hidden = v === 'detail'; $('#wkDetail').hidden = v !== 'detail';
+  for (const k in WK_REITER){ $(wkId(k)).hidden = k !== wkView; document.querySelector(`[data-wk="${k}"]`).setAttribute('aria-pressed', k === wkView); }
+  if (v !== 'detail') wkRender();
+  const pg = $('#pages'); if (pg) pg.scrollTop = 0;
+}
+function wkRender(){ if (wkCur) return; ({ st:wkStRender, waf:wkWafRender, her:wkHerRender, bp:wkBpRender })[wkView](); }
+function wkReset(){ wkBack = null; wkShow(wkView); }
+function wkClose(){ const b = wkBack; wkBack = null; wkShow(wkView); if (b) b.go(); }
+
+function wkGeaendert(){ WST.ok = true; saveWst(); bedarfNeu(); }
+const wkKeep = fn => { const pg = $('#pages'), y = pg ? pg.scrollTop : 0; fn(); if (pg) pg.scrollTop = y; };
+const wkStepper = (label, wert, minus, plus, kannM, kannP) => `<div class="lvlrow"><span>${label}</span><div class="stepper" role="group" aria-label="${label}">`
+  + `<button type="button" ${minus} aria-label="${label}: eins weniger"${kannM ? '' : ' disabled'}>−</button><span class="lcdn">${wert}</span><button type="button" ${plus} aria-label="${label}: eins mehr"${kannP ? '' : ' disabled'}>+</button></div></div>`;
+
+const wkStOffen = s => { const N = new Set(); for (let l = wsStufe(s) + 1; l <= wsZiel(s); l++) for (const x of s.stufen[l - 1] || []) N.add(x.n); return N.size; };
+function wkStText(s){
+  const l = wsStufe(s), z = wsZiel(s);
+  return (l === 0 ? 'Noch nicht gebaut' : `Stufe ${l} von ${s.max}`) + ' · ' + (l >= s.max ? 'fertig ausgebaut' : z <= l ? 'kein Ausbau geplant' : `bis Stufe ${z} fehlen ${wkMat(wkStOffen(s))}`);
+}
+function wkStRender(){
+  const L = WSD.stationen.filter(s => s.max > s.min);
+  $('#wkStInfo').textContent = (WST.ok ? '' : 'Stell deine Stufen ein. Daraus rechnet die App, was du behalten musst. ') + 'Tippe auf eine Station für Kosten, Ziel und Rezepte.';
+  $('#wkStList').innerHTML = L.map(s => { const l = wsStufe(s), n = esc(s.n);
+    return `<li><div class="row static"><button type="button" class="rowin" data-st="${n}"><span class="rt"><span class="t1">${n}</span><span class="t2">${esc(wkStText(s))}</span><span class="bar"><i style="width:${Math.round(l / s.max * 100)}%"></i></span></span></button>`
+      + `<div class="stepper" role="group" aria-label="Meine Stufe: ${n}"><button type="button" data-stm="${n}" aria-label="${n}: eine Stufe weniger"${l > s.min ? '' : ' disabled'}>−</button><span class="lcdn">${l}</span><button type="button" data-stp="${n}" aria-label="${n}: eine Stufe mehr"${l < s.max ? '' : ' disabled'}>+</button></div></div></li>`; }).join('')
+    
+    + WSD.stationen.filter(s => s.max <= s.min).map(s => { const r = wkStRezepte(s).length;
+      return `<li><button type="button" class="row" data-st="${esc(s.n)}"><span class="rt"><span class="t1">${esc(s.n)}</span><span class="t2">Von Anfang an da · ${r === 1 ? '1 Rezept' : r + ' Rezepte'}</span></span>${CHEV}</button></li>`; }).join('');
+}
+
+function wkStRezepte(s){
+  const b = Object.keys(WS_BANK).find(k => WS_BANK[k] === s.n); if (!b) return [];
+  return [...WSD.items.values()].filter(w => w.rez && w.rez.bank.includes(b)).sort((a, c) => a.rez.stufe - c.rez.stufe || invName(a.n).localeCompare(invName(c.n), 'de'));
+}
+const wkItemRow = (w, extra) => { const it = itemByName(w.n), geht = WST.ok && rezGeht(w);
+  const t2 = [extra, w.bp ? (bpGelernt(w.n) ? 'Bauplan gelernt' : 'Bauplan nötig') : '', (w.rez.zut.length === 1 ? '1 Zutat' : w.rez.zut.length + ' Zutaten')].filter(Boolean).join(' · ');
+  const in1 = `<span class="rt"><span class="t1">${esc(invName(w.n))}${geht ? ' <span class="stb s-aktiv">Geht</span>' : ''}</span><span class="t2">${esc(t2)}</span></span>`;
+  return it ? `<li${rrCls(it.r)}><button type="button" class="row" data-wkitem="${esc(w.n)}">${in1}${CHEV}</button></li>` : `<li><div class="row static">${in1}</div></li>`; };
+function wkStOpen(n, back){
+  const s = wsStation(n); if (!s) return;
+  if (UI.tab !== 'werk') setTab('werk');
+  if (!isWide()) setScreen('list');
+  if (back !== undefined) wkBack = back;
+  wkCur = { t:'st', n }; wkShow('detail');
+  const l = wsStufe(s), z = wsZiel(s), stuf = s.max > s.min;
+  let h = `<div class="subnav"><button type="button" class="back" id="wkBackBtn">${WK_BACK}${esc(wkBack ? wkBack.label : 'Stationen')}</button></div><h3 class="dn">${esc(s.n)}</h3>`
+    + `<p class="dalt">${stuf ? esc(wkStText(s)) : 'Von Anfang an da, keine Stufen'}</p>`;
+  if (stuf){
+    h += wkStepper('Meine Stufe', l, 'data-stm="' + esc(s.n) + '"', 'data-stp="' + esc(s.n) + '"', l > s.min, l < s.max)
+      + wkStepper('Ziel', z, 'data-zm="1"', 'data-zp="1"', z > l, z < s.max);
+    if (wkStOffen(s)) h += '<div class="btncol"><button type="button" class="bp" data-stall="1">Alles bis zum Ziel auf die Einkaufsliste</button></div>';
+    for (let i = s.min + 1; i <= s.max; i++){
+      const k = s.stufen[i - 1] || [], d = i <= l;
+      h += `<div class="pstage${d ? ' sd' : ''}"><div class="stagehd"><button type="button" class="check done" data-stdone="${i}" aria-pressed="${d}" aria-label="Stufe ${i} ${d ? 'nicht mehr erledigt' : 'abhaken'}">${CHECK_SVG}</button>`
+        + `<h4>Stufe ${i}${d ? '' : i <= z ? ' <span class="stb s-aktiv">zählt im Bedarf</span>' : ' <span class="stb s-pause">über deinem Ziel</span>'}</h4></div>`;
+      h += k.length ? '<ul class="group">' + k.map(qNeedRow).join('') + '</ul>' + (!d && k.some(x => qItem(x.n)) ? `<div class="btncol"><button type="button" class="bs" data-ststage="${i}">Stufe ${i} auf die Einkaufsliste</button></div>` : '')
+        : '<p class="fine">Kosten nicht bekannt.</p>';
+      h += `<p class="fine">${s.ver[i - 1] ? VER2 : VER1}</p></div>`;
+    }
+  }
+  const R = wkStRezepte(s);
+  if (R.length){ h += `<h4>Rezepte an dieser Station (${R.length})</h4>`;
+    for (const st of [...new Set(R.map(w => w.rez.stufe))]) h += `<h3 class="gh">${st ? 'Ab Stufe ' + st : 'Ohne Stufe'}</h3><ul class="group">` + R.filter(w => w.rez.stufe === st).map(w => wkItemRow(w, '')).join('') + '</ul>'; }
+  h += '<p class="fine">Nicht im Spiel getestet.</p>';
+  $('#wkDetail').innerHTML = h; $('#wkBackBtn').focus();
+}
+
+const wfRoem = t => t ? ROEM[t - 1] : '–';
+const wfKosten = (f, t) => { const o = f.stufen[t - 1]; return !o ? [] : t === 1 ? (o.rez ? o.rez.zut : []) : o.auf; };
+function wkWafRender(){
+  const F = [...WAFFEN.values()], G = new Map();
+  for (const f of F){ const k = WS_TYP[f.typ] ? WS_TYP[f.typ][1] : 'Waffe'; if (!G.has(k)) G.set(k, []); G.get(k).push(f); }
+  const nW = F.filter(f => wfWunsch(f) > wfStufe(f)).length;
+  $('#wkWafInfo').textContent = `${F.length} Waffen. ` + (nW ? (nW === 1 ? 'Eine Wunsch-Waffe zählt' : nW + ' Wunsch-Waffen zählen') + ' im Bedarf.' : 'Setz bei einer Waffe eine Wunsch-Stufe, dann zählt ihr Material im Bedarf.');
+  $('#wkWafList').innerHTML = [...G.keys()].sort((a, b) => a.localeCompare(b, 'de')).map(k => `<h3 class="gh">${esc(k)}</h3><ul class="group">` + G.get(k).sort((a, b) => a.n.localeCompare(b.n)).map(f => {
+    const l = wfStufe(f), w = wfWunsch(f), o = f.stufen.find(Boolean);
+    return `<li${rrCls(o && o.r)}><button type="button" class="row" data-waf="${esc(f.n)}"><span class="rt"><span class="t1">${esc(f.n)}${w > l ? ` <span class="stb s-aktiv">Wunsch ${wfRoem(w)}</span>` : ''}</span>`
+      + `<span class="t2">${l ? 'Meine Stufe ' + wfRoem(l) : 'Habe ich nicht'} · ${f.stufen.length} Stufen</span></span>${CHEV}</button></li>`; }).join('') + '</ul>').join('');
+}
+function wkWafOpen(fam, back){
+  const f = WAFFEN.get(fam); if (!f) return;
+  if (UI.tab !== 'werk') setTab('werk');
+  if (!isWide()) setScreen('list');
+  if (back !== undefined) wkBack = back;
+  wkCur = { t:'waf', n:fam }; wkShow('detail');
+  const l = wfStufe(f), w = wfWunsch(f), n = f.stufen.length, typ = WS_TYP[f.typ] ? WS_TYP[f.typ][1] : 'Waffe';
+  let h = `<div class="subnav"><button type="button" class="back" id="wkBackBtn">${WK_BACK}${esc(wkBack ? wkBack.label : 'Waffen')}</button></div><h3 class="dn">${esc(f.n)}</h3>`
+    + `<p class="dalt">${esc(typ)} · ${n} Stufen (I bis ${ROEM[n - 1]})</p>` + (w > l ? '<div class="sb"><span class="stb s-aktiv">Wunsch-Waffe</span></div>' : '')
+    + wkStepper('Meine Stufe', wfRoem(l), 'data-wfm="1"', 'data-wfp="1"', l > 0, l < n)
+    + wkStepper('Wunsch bis Stufe', wfRoem(w), 'data-wwm="1"', 'data-wwp="1"', w > 0, w < n);
+  if (w > l && Array.from({ length:w - l }, (_, i) => wfKosten(f, l + 1 + i)).some(k => k.some(x => qItem(x.n)))) h += '<div class="btncol"><button type="button" class="bp" data-wfall="1">Alles bis zur Wunsch-Stufe auf die Einkaufsliste</button></div>';
+  else if (!w) h += '<p class="fine">Ohne Wunsch-Stufe zählt diese Waffe nicht im Bedarf.</p>';
+  for (let t = 1; t <= n; t++){
+    const o = f.stufen[t - 1], k = wfKosten(f, t), d = t <= l;
+    h += `<div class="pstage${d ? ' sd' : ''}"><div class="stagehd"><button type="button" class="check done" data-wfdone="${t}" aria-pressed="${d}" aria-label="Stufe ${ROEM[t - 1]} ${d ? 'nicht mehr erledigt' : 'abhaken'}">${CHECK_SVG}</button>`
+      + `<h4>Stufe ${ROEM[t - 1]}: ${t === 1 ? 'herstellen' : 'aufwerten'}${d ? '' : t <= w ? ' <span class="stb s-aktiv">zählt im Bedarf</span>' : ''}</h4></div>`;
+    h += k.length ? '<ul class="group">' + k.map(qNeedRow).join('') + '</ul>' + (!d && k.some(x => qItem(x.n)) ? `<div class="btncol"><button type="button" class="bs" data-wfstage="${t}">Stufe ${ROEM[t - 1]} auf die Einkaufsliste</button></div>` : '')
+      : '<p class="fine">Kosten nicht bekannt.</p>';
+    if (t === 1 && o && o.rez) h += `<p class="fine">Braucht ${esc(o.rez.bank.map(b => WS_BANK[b]).join(' oder ') + (o.rez.stufe ? ' Stufe ' + o.rez.stufe : ''))}${o.bp ? (bpGelernt(o.n) ? ' · Bauplan gelernt' : ' · Bauplan nötig') : ''}. ${WSD.ok('rezept', o.n) ? VER2 : VER1}</p>`;
+    else if (k.length) h += `<p class="fine">${VER1}</p>`;
+    h += '</div>';
+  }
+  const I = f.stufen.filter(o => o && itemByName(o.n));
+  if (I.length) h += '<h4>Wert und Zerlegen</h4><ul class="group">' + I.map(o => `<li><button type="button" class="row" data-wkitem="${esc(o.n)}"><span class="rt"><span class="t1">${esc(o.n)}</span><span class="t2">${o.wert != null ? 'Verkaufswert ' + fmtCoins(o.wert) : 'Im Inventar ansehen'}</span></span>${CHEV}</button></li>`).join('') + '</ul>';
+  h += '<p class="fine">Nicht im Spiel getestet.</p>';
+  $('#wkDetail').innerHTML = h; $('#wkBackBtn').focus();
+}
+
+const WK_REZ = [...WSD.items.values()].filter(w => w.rez);
+function wkHerRender(){
+  const F = [['alle', 'Alle'], ['geht', 'Geht jetzt']].concat(Object.keys(WS_BANK).filter(b => WK_REZ.some(w => w.rez.bank.includes(b))).map(b => [b, WS_BANK[b]]));
+  $('#wkHerF').innerHTML = F.map(([k, t]) => `<button type="button" class="chip" data-herf="${k}" aria-pressed="${k === wkHerF}">${esc(t)}</button>`).join('');
+  const q = norm($('#wkHerQ').value.trim());
+  const L = WK_REZ.filter(w => (wkHerF === 'alle' || (wkHerF === 'geht' ? rezGeht(w) : w.rez.bank.includes(wkHerF)))
+    && (!q || norm(w.n).includes(q) || norm(invName(w.n)).includes(q) || ((itemByName(w.n) || {})._d || '').includes(q)))
+    .sort((a, b) => invName(a.n).localeCompare(invName(b.n), 'de'));
+  const geht = WK_REZ.filter(rezGeht).length;
+  $('#wkHerInfo').textContent = `${L.length} ${L.length === 1 ? 'Rezept' : 'Rezepte'}` + (WST.ok ? ` · ${geht} von ${WK_REZ.length} gehen mit deinem Stand` : ' · Stell unter «Stationen» deine Stufen ein, dann zeigt die App, was geht');
+  $('#wkHerList').hidden = !L.length;
+  $('#wkHerList').innerHTML = L.map(w => wkItemRow(w, w.rez.bank.map(b => WS_BANK[b]).join(' oder ') + (w.rez.stufe ? ' Stufe ' + w.rez.stufe : ''))).join('');
+}
+$('#wkHerQ').addEventListener('input', wkHerRender);
+$('#wkHerF').addEventListener('click', e => { const b = e.target.closest('[data-herf]'); if (!b) return; wkHerF = b.dataset.herf; wkHerRender(); });
+
+const bpWoher = s => s.replace(/\ball maps\b/g, 'alle Maps').replace(/\bAny container\b/g, 'jeder Container').replace(/\bany major map condition\b/gi, 'jede grosse Kartenbedingung')
+  .replace(/\bContainer not published\b/g, 'Container nicht bekannt').replace(/\bquest:/g, 'Quest:');
+function wkBpRender(){
+  const L = WSD.bps.slice().sort((a, b) => (!!WST.bp[a.n] - !!WST.bp[b.n]) || a.n.localeCompare(b.n));
+  const n = L.filter(b => WST.bp[b.n]).length;
+  $('#wkBpInfo').textContent = `${n} von ${L.length} Bauplänen gelernt.` + (n ? ' Gelernte stehen unten.' : '');
+  $('#wkBpList').innerHTML = L.map(b => { const on = !!WST.bp[b.n], nm = esc(b.n), it = itemByName(b.frei) || itemByName(b.n + ' Blueprint');
+    const t2 = (b.frei !== b.n ? 'Schaltet frei: ' + esc(b.frei) + ' · ' : '') + (b.woher ? 'Fundort: ' + esc(bpWoher(b.woher)) : 'Fundort nicht bekannt');
+    const in1 = `<span class="rt"><span class="t1"${on ? ' style="color:var(--muted)"' : ''}>${nm}</span><span class="t2">${t2}</span><span class="t2">${b.ver ? VER2 : VER1}</span></span>`;
+    return `<li><div class="row static"><button type="button" class="check done" data-bpt="${nm}" aria-pressed="${on}" aria-label="${nm}: ${on ? 'nicht mehr gelernt' : 'als gelernt abhaken'}">${CHECK_SVG}</button>`
+      + (it ? `<button type="button" class="rowin" data-wkitem="${esc(it.n)}">${in1}${CHEV}</button>` : in1) + '</div></li>'; }).join('');
+}
+
+document.querySelectorAll('[data-wk]').forEach(b => b.addEventListener('click', () => wkShow(b.dataset.wk)));
+const wkAufListe = L => L.filter(x => qItem(x.n)).forEach(x => qAddList(x.n, x.c));
+function wkItemOpen(n){
+  const it = itemByName(n); if (!it) return;
+  const cur = wkCur, back = wkBack, v = wkView;
+  const go = () => { if (!cur){ setTab('werk'); wkShow(v); } else if (cur.t === 'st') wkStOpen(cur.n, back); else wkWafOpen(cur.n, back); };
+  const label = cur ? cur.n : WK_REITER[v];
+  setTab('mat'); showDetail(it, { label, go });
+}
+$('#pgWerk').addEventListener('click', e => {
+  const T = sel => e.target.closest(sel);
+  let b;
+  if (T('#wkBackBtn')){ wkClose(); return; }
+  if ((b = T('[data-wkitem]'))){ wkItemOpen(b.dataset.wkitem); return; }
+  if ((b = T('[data-bpt]'))){ const n = b.dataset.bpt; if (WST.bp[n]) delete WST.bp[n]; else WST.bp[n] = 1; wkGeaendert(); wkKeep(wkBpRender); return; }
+  if ((b = T('[data-st]'))){ wkStOpen(b.dataset.st, null); return; }
+  if ((b = T('[data-waf]'))){ wkWafOpen(b.dataset.waf, null); return; }
+  
+  if ((b = T('[data-stm], [data-stp]'))){ const s = wsStation(b.dataset.stm || b.dataset.stp); if (!s) return;
+    WST.st[s.n] = Math.max(s.min, Math.min(s.max, wsStufe(s) + (b.dataset.stp ? 1 : -1))); wkGeaendert();
+    wkKeep(() => wkCur ? wkStOpen(s.n) : wkStRender()); return; }
+  const c = wkCur; if (!c) return;
+  const neu = () => wkKeep(() => c.t === 'st' ? wkStOpen(c.n) : wkWafOpen(c.n));
+  if ((b = T('[data-ntog]'))){ const n = b.dataset.ntog; if (inList(n)){ LIST = LIST.filter(x => x.n !== n); saveList(); shopRender(); } else qAddList(n, +b.dataset.c); neu(); return; }
+  if ((b = T('[data-nopen]'))){ wkItemOpen(b.dataset.nopen); return; }
+  if (c.t === 'st'){
+    const s = wsStation(c.n);
+    if ((b = T('[data-zm], [data-zp]'))){ WST.ziel[s.n] = Math.max(wsStufe(s), Math.min(s.max, wsZiel(s) + (b.dataset.zp ? 1 : -1))); wkGeaendert(); neu(); return; }
+    if ((b = T('[data-stdone]'))){ const i = +b.dataset.stdone; WST.st[s.n] = i <= wsStufe(s) ? i - 1 : i; wkGeaendert(); neu(); return; }
+    if ((b = T('[data-ststage]'))){ wkAufListe(s.stufen[+b.dataset.ststage - 1] || []); neu(); return; }
+    if (T('[data-stall]')){ for (let i = wsStufe(s) + 1; i <= wsZiel(s); i++) wkAufListe(s.stufen[i - 1] || []); neu(); return; }
+  } else {
+    const f = WAFFEN.get(c.n), n = f.stufen.length;
+    if ((b = T('[data-wfm], [data-wfp]'))){ WST.waffe[f.n] = Math.max(0, Math.min(n, wfStufe(f) + (b.dataset.wfp ? 1 : -1))); wkGeaendert(); neu(); return; }
+    if ((b = T('[data-wwm], [data-wwp]'))){ const w = Math.max(0, Math.min(n, wfWunsch(f) + (b.dataset.wwp ? 1 : -1))); if (w) WST.wunsch[f.n] = w; else delete WST.wunsch[f.n]; wkGeaendert(); neu(); return; }
+    if ((b = T('[data-wfdone]'))){ const t = +b.dataset.wfdone; WST.waffe[f.n] = t <= wfStufe(f) ? t - 1 : t; wkGeaendert(); neu(); return; }
+    if ((b = T('[data-wfstage]'))){ wkAufListe(wfKosten(f, +b.dataset.wfstage)); neu(); return; }
+    if (T('[data-wfall]')){ for (let t = wfStufe(f) + 1; t <= wfWunsch(f); t++) wkAufListe(wfKosten(f, t)); neu(); return; }
+  }
+});
+var WK_DA = true;   
+wkShow('st');
+/* @datei app/kern/wissen-seite.js */
+
+const W_TITEL = { cond:'Kartenbedingungen', faq:'FAQ', einst:'Einstellungen', upd:'Updates' };
+let wView = 'liste', wDirekt = false;   
+function wissenRender(){
+  $('#wBack').lastElementChild.textContent = TAB_NAME[VON.wissen] || 'Zurück';
+  $('#wArcSub').textContent = `${ARCS.length} Gegner mit Drops und Schwachpunkt`;
+  $('#wCondSub').textContent = `${CONDS.length} Bedingungen und was sie ändern`;
+  $('#wUpdSub').textContent = 'Datenstand ' + DATA_STAND + ' · letzte Prüfung und nächstes Update';
+}
+function wissenShow(v){
+  wView = W_TITEL[v] ? v : 'liste';
+  if (wView === 'liste') wDirekt = false;
+  $('#wRoot').hidden = wView !== 'liste'; $('#wDetail').hidden = wView === 'liste';
+  for (const k in W_TITEL) $('#wv' + k[0].toUpperCase() + k.slice(1)).hidden = k !== wView;
+  if (wView !== 'liste'){
+    $('#wdTitle').textContent = W_TITEL[wView];
+    $('#wdBack').lastElementChild.textContent = wDirekt ? (TAB_NAME[VON.wissen] || 'Zurück') : 'Wissen';
+    if (wView === 'faq') faqRender();
+  }
+  const pg = $('#pages'); if (pg) pg.scrollTop = 0;
+}
+
+function wissenOpen(v){
+  if (v === 'arc'){ setTab('arc'); arcReset(); return; }
+  const fremd = UI.tab !== 'wissen';
+  if (fremd) setTab('wissen');
+  if (!isWide()) setScreen('list');
+  wDirekt = fremd && !!W_TITEL[v];
+  wissenShow(v || 'liste');
+  const f = wView === 'liste' ? $('#wBack') : $('#wdBack'); if (f) f.focus();
+}
+$('#wBack').addEventListener('click', () => tabZurueck('wissen'));
+$('#wdBack').addEventListener('click', () => { if (wDirekt){ wissenShow('liste'); tabZurueck('wissen'); } else { wissenShow('liste'); $('#wBack').focus(); } });
+var WIS_DA = true;   
+wissenRender();
 /* @datei app/kern/queststand.js */
 
 const stDlg = $('#stDlg');
@@ -8260,6 +8616,8 @@ function uiSubKey(){
   if (UI.tab === 'mat') return 'mat:' + matView + (matView === 'detail' && sLast ? ':' + sLast.n : '');
   if (UI.tab === 'quests') return 'quests:' + qView + (qCur ? ':' + (qCur.t === 'q' ? qCur.i : qCur.id) : '');
   if (UI.tab === 'arc') return 'arc:' + (arcCur ? arcCur.n : '');
+  if (UI.tab === 'werk') return 'werk:' + wkView + (wkCur ? ':' + wkCur.t + ':' + wkCur.n : '');
+  if (UI.tab === 'wissen') return 'wissen:' + wView;
   if (UI.tab === 'run') return 'run:' + ($('#naviDetail').hidden ? '' : NAVI.m);
   return UI.tab;
 }
@@ -8270,7 +8628,7 @@ function uiSnap(){
     mat:{ v:matView, q:$('#sInput').value, f:sFilter, item:matView === 'detail' && sLast ? sLast.n : null },
     q:{ v:qView, q:$('#qInput').value, tr:qTrader, map:qMapF, done:qShowDone,
       cur:qCur ? (qCur.t === 'q' ? { t:'q', en:QUESTS[qCur.i].en } : { t:'p', id:qCur.id }) : null },
-    arc:{ cur:arcCur ? arcCur.n : null }, navi:!$('#naviDetail').hidden ? NAVI.m : null, scroll:SCROLL };
+    arc:{ cur:arcCur ? arcCur.n : null }, werk:{ v:wkView, cur:wkCur, f:wkHerF }, wis:{ v:wView }, von:{ wissen:VON.wissen, arc:VON.arc }, navi:!$('#naviDetail').hidden ? NAVI.m : null, scroll:SCROLL };
 }
 function uiSave(){ if (!uiReady) return; clearTimeout(uiT); uiT = null; try { localStorage.setItem(UI_KEY, JSON.stringify(uiSnap())); } catch(_){} }
 function uiSoon(){ if (!uiReady) return; clearTimeout(uiT); uiT = setTimeout(uiSave, 300); }
@@ -8301,7 +8659,15 @@ function uiRestore(hashId, lastId){
   });
   tryIt(() => { if (s.arc && s.arc.cur && ARC_BY.has(s.arc.cur)) arcOpen(s.arc.cur); });
   tryIt(() => { if (s.navi && MAPS[s.navi]) naviOpen(s.navi); });
-  tryIt(() => { const tab = ['mat', 'karten', 'run', 'raids', 'arc', 'quests'].includes(s.tab) ? s.tab : 'karten'; if (UI.tab !== tab) setTab(tab); });
+  tryIt(() => { if (!s.werk) return; if (typeof s.werk.f === 'string') wkHerF = s.werk.f;
+    const c = s.werk.cur; if (WK_REITER[s.werk.v]) wkShow(s.werk.v);
+    if (c && c.t === 'st' && wsStation(c.n)) wkStOpen(c.n, null); else if (c && c.t === 'waf' && WAFFEN.has(c.n)) wkWafOpen(c.n, null); });
+  tryIt(() => { if (s.wis && W_TITEL[s.wis.v]) wissenShow(s.wis.v); });
+  tryIt(() => { const tab = ['mat', 'karten', 'run', 'raids', 'arc', 'quests', 'werk', 'wissen'].includes(s.tab) ? s.tab : 'karten'; if (UI.tab !== tab) setTab(tab); });
+  
+  tryIt(() => { if (s.von) for (const k of ['wissen', 'arc']){ const v = s.von[k]; if (typeof v === 'string' && TAB_NAME[v] && v !== k) VON[k] = v; }
+    if (VON.wissen === 'arc' && VON.arc === 'wissen') VON.wissen = 'karten';   
+    tabMarke(); });
   
   tryIt(() => { if (s.layers) for (const k in layers) if (typeof s.layers[k] === 'boolean') layers[k] = s.layers[k]; });
   const vid = hashView ? hashId : VIEWS[s.view] ? s.view : VIEWS[lastId] ? lastId : 'dam';
@@ -8367,7 +8733,7 @@ uiRestore(startId, lastId);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
-window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN }), urteil, bedarfNeu, saveWst, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
+window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN }), urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
   navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
   marker:() => markers, g3:() => G3, zeiger:() => ptrs.size, ruhig:() => !anim && !dirty, kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
