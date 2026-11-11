@@ -485,23 +485,25 @@ li.qd .t1,.prow.qd b{color:var(--muted);text-decoration:line-through;text-decora
 .sdet .btncol{padding:10px 16px 4px}
 
 
+#mdLeer{display:none}   
 @media (min-width:860px){
   
-  .app{display:grid;grid-template-columns:320px minmax(0,1fr) 360px;grid-template-rows:minmax(0,1fr);--toph:52px;--tabh:0px}
-  .app[data-insp="0"]{grid-template-columns:320px minmax(0,1fr) 0}
+  
+  .app{display:grid;--railw:60px;--sidew:380px;--inspw:320px;grid-template-columns:var(--sidew) minmax(0,1fr) var(--inspw);grid-template-rows:minmax(0,1fr);--toph:52px;--tabh:0px}
+  .app[data-insp="0"]{grid-template-columns:var(--sidew) minmax(0,1fr) 0}
   .side,.stage,.sheet{min-height:0}
-  .side{position:relative;inset:auto;grid-column:1;display:flex!important;background:var(--panel);box-shadow:inset -.5px 0 0 var(--line)}
-  .brandrow{display:flex;align-items:center;gap:10px;padding:16px 16px 8px}
-  .brand{font:700 italic 22px/1 var(--display);letter-spacing:.01em}
-  .stripes{flex:1 1 auto;height:14px;background:var(--stripes);transform:skewX(-14deg);border-radius:2px;max-width:90px}
-  .sidenav{display:flex;flex-direction:column;gap:2px;padding:4px 10px 10px;box-shadow:inset 0 -.5px 0 var(--line)}
-  .sn{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 10px;border:0;border-radius:9px;background:transparent;text-align:left;font:500 16px/1.2 var(--body);cursor:pointer}
-  .sn svg{width:21px;height:21px;color:var(--muted)}
-  .sn[aria-current="page"]{background:var(--fill)}
-  .sn[aria-current="page"] svg{color:var(--accent)}
-  .sidefoot{display:block;padding:10px 16px 14px;box-shadow:inset 0 .5px 0 var(--line)}
-  .pages{padding-bottom:20px}
-  .lt{padding:12px 16px 6px}
+  .side{position:relative;inset:auto;grid-column:1;display:grid!important;grid-template-columns:var(--railw) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;background:var(--panel);box-shadow:inset -.5px 0 0 var(--line)}
+  .brandrow{display:none}
+  .sidenav{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:0;overflow-y:auto;padding:14px 0 8px;background:var(--cell);box-shadow:inset -.5px 0 0 var(--line)}
+  .sidenav::before{content:"";flex:none;width:26px;height:30px;margin:0 0 14px;background:var(--stripes);transform:skewX(-14deg);border-radius:3px}
+  .sn,.railb{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:54px;min-height:56px;padding:8px 0 7px;border:0;border-radius:12px;background:transparent;color:var(--ink);text-align:center;font:600 10px/1.15 var(--body);cursor:pointer}
+  .sn svg,.railb svg{width:24px;height:24px;color:var(--muted)}
+  .railb svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .sn[aria-current="page"],.railb[aria-current="page"]{background:var(--fill)}
+  .sn[aria-current="page"] svg,.railb[aria-current="page"] svg{color:var(--accent)}
+  .sidefoot{grid-column:1;grid-row:2;display:flex;justify-content:center;padding:4px 0 12px;background:var(--cell);box-shadow:inset -.5px 0 0 var(--line)}
+  .pages{grid-column:2;grid-row:1 / span 2;padding-bottom:20px}
+  .lt{padding:18px 16px 6px}
   .lt h1{font-size:26px}
   .lt h1::before{width:14px;height:18px}
   .lt .wis{display:none}
@@ -522,7 +524,24 @@ li.qd .t1,.prow.qd b{color:var(--muted);text-decoration:line-through;text-decora
   .tabbar{display:none}
   .dlg{align-items:center}
   .card{width:560px;max-height:86%;border-radius:16px}
+
+  
+  .app[data-md="1"] .stage,.app[data-md="1"] .sheet{visibility:hidden}
+  .app[data-md="1"] .side{z-index:6}
+  .app[data-md="1"] #mdLeer{display:flex;position:fixed;left:var(--sidew);top:0;right:0;bottom:0;z-index:5;align-items:center;justify-content:center;padding:40px;background:var(--bg);box-shadow:inset .5px 0 0 var(--line);color:var(--muted);font:400 17px/1.4 var(--body);text-align:center}
+  .app[data-md="1"] .page > .sdet,.app[data-md="1"] #vVorschlag{position:fixed;left:var(--sidew);top:0;right:0;bottom:0;z-index:11;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);box-shadow:inset .5px 0 0 var(--line);padding:18px max(24px, calc((100vw - var(--sidew) - 720px) / 2)) 40px}
+  
+  .app[data-md="1"] .subnav.own{display:none}
+  .app[data-md="1"] .subnav.own + .lt{padding-top:18px}
+  .app[data-md="1"] .sdet .subnav,.app[data-md="1"] #vVorschlag .subnav{padding:0 0 6px;margin-left:-8px}
+  
+  .app[data-md="1"] #matRoot[hidden],.app[data-md="1"] #qRoot[hidden],.app[data-md="1"] #wkRoot[hidden],.app[data-md="1"] #wRoot[hidden],.app[data-md="1"] #arcRoot[hidden]{display:block!important}
+  .app[data-md="1"] #pgMat[data-v="detail"][data-prev="bedarf"] #vBedarf,.app[data-md="1"] #pgMat[data-v="detail"][data-prev="suche"] #vSuche,.app[data-md="1"] #pgMat[data-v="detail"][data-prev="liste"] #vListe,.app[data-md="1"] #pgMat[data-v="vorschlag"] #vListe{display:block!important}
+  .app[data-md="1"] #pgQuests[data-v$="detail"][data-prev="quests"] #qvQuests,.app[data-md="1"] #pgQuests[data-v$="detail"][data-prev="projekte"] #qvProj{display:block!important}
+  .app[data-md="1"] .pages li.sel{background:var(--fill);box-shadow:inset 3px 0 0 var(--accent)}
 }
+
+@media (min-width:1280px){ .app{--railw:76px;--sidew:456px;--inspw:360px} .sn,.railb{width:64px;font-size:11px} }
 @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto;transition:none!important}}
 
 
@@ -679,6 +698,8 @@ li.qd .row .t1{color:var(--muted)}
 .verdict .lcdn{font-size:44px;line-height:.9}
 .verdict p{margin:8px 0 0;font:400 15px/1.35 var(--body);color:var(--ink)}
 #pgMat[data-v="liste"] #matRoot .sfrow,#pgMat[data-v="liste"] #matRoot .ftok{display:none}
+
+.app[data-md="1"] #pgMat[data-v="detail"][data-prev="liste"] #matRoot .sfrow,.app[data-md="1"] #pgMat[data-v="detail"][data-prev="liste"] #matRoot .ftok,.app[data-md="1"] #pgMat[data-v="vorschlag"] #matRoot .sfrow,.app[data-md="1"] #pgMat[data-v="vorschlag"] #matRoot .ftok{display:none}
 /* @ende-dateien */
 </style>
 </head>
@@ -740,7 +761,7 @@ li.qd .row .t1{color:var(--muted)}
           <p class="foot">«Brauche» ist die Zielmenge. Nach jedem Run trägst du ein, was du gefunden hast. Die Liste bleibt in diesem Browser gespeichert.</p>
         </div>
         <div id="vVorschlag" hidden>
-          <div class="subnav"><button type="button" class="back" id="vorBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Einkaufsliste</button></div>
+          <div class="subnav own"><button type="button" class="back" id="vorBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Einkaufsliste</button></div>
           <h2 class="h2">Wo suchen?</h2>
           <p class="foot">Die App vergleicht alle Maps: Wo findest du am meisten von deiner offenen Liste? Tippe auf eine Map für die Route.</p>
           <ul class="group" id="rankList"></ul>
@@ -854,7 +875,7 @@ li.qd .row .t1{color:var(--muted)}
 
             <section class="page" id="pgWissen" data-page="wissen" aria-labelledby="hWissen" hidden>
         <div id="wRoot">
-          <div class="subnav"><button type="button" class="back" id="wBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Zurück</span></button></div>
+          <div class="subnav own"><button type="button" class="back" id="wBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Zurück</span></button></div>
           <header class="lt"><h1 id="hWissen">Wissen</h1></header>
           <h3 class="gh">Nachschlagen</h3>
           <ul class="group">
@@ -867,12 +888,12 @@ li.qd .row .t1{color:var(--muted)}
             <li><button type="button" class="row" data-wis="einst"><span class="rt"><span class="t1">Einstellungen</span><span class="t2">Sparmodus, Abendlicht, Namen</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="upd"><span class="rt"><span class="t1">Updates</span><span class="t2" id="wUpdSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
           </ul>
-          <p class="foot">Der Knopf oben rechts öffnet diese Seite aus jedem Bereich.</p>
+          <p class="foot">Der Knopf mit dem Buch öffnet diese Seite aus jedem Bereich.</p>
             <p class="foot">Inoffizielles Fan-Projekt ohne Verbindung zu Embark Studios. ARC Raiders und alle Namen aus dem Spiel gehören Embark Studios. Die App enthält keine Grafiken aus dem Spiel.</p>
             <p class="foot">Datenschutz: Die App setzt keine Cookies, sammelt keine Daten und lädt nichts von fremden Servern nach. Dein Fortschritt (Quests, Einkaufsliste, Einstellungen) bleibt nur in diesem Browser auf deinem Gerät. Der Anbieter der Webadresse sieht beim Aufruf wie bei jeder Website deine IP-Adresse.</p>
         </div>
         <div class="sdet" id="wDetail" hidden>
-          <div class="subnav"><button type="button" class="back" id="wdBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Wissen</span></button></div>
+          <div class="subnav own"><button type="button" class="back" id="wdBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Wissen</span></button></div>
           <h3 class="dn" id="wdTitle" tabindex="-1"></h3>
           <div id="wvCond" hidden><p class="fine">Kartenbedingungen ändern einen Raid. Die aktuelle Bedingung wählst du im Navi unter «Run planen».</p><div class="group" id="condListW"></div></div>
           <div id="wvFaq" hidden></div>
@@ -898,8 +919,9 @@ li.qd .row .t1{color:var(--muted)}
         </div>
       </section>
     </div>
-    <div class="sidefoot"><button type="button" class="pill wis">Wissen und Einstellungen</button></div>
+    <div class="sidefoot"><button type="button" class="wis railb" aria-label="Wissen und Einstellungen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h11a1 1 0 0 1 1 1V20H7.5A1.5 1.5 0 0 1 6 18.5zM6 18.5A1.5 1.5 0 0 1 7.5 17H18M9.5 8.5h5"/></svg><span>Wissen</span></button></div>
   </aside>
+    <div id="mdLeer" aria-hidden="true"></div>
 
     <main class="stage" id="stage">
     <canvas id="gl3d" aria-hidden="true"></canvas>
@@ -5743,7 +5765,8 @@ function loop(t){
     if (k >= 1) anim = null;
     dirty = true;
   }
-  if (!isWide() && UI.screen === 'list' && !anim){ sleepT = setTimeout(() => { sleepT = null; requestAnimationFrame(loop); }, 400); return; }
+  
+  if (((!isWide() && UI.screen === 'list') || isMD()) && !anim){ sleepT = setTimeout(() => { sleepT = null; requestAnimationFrame(loop); }, 400); return; }
   const cus = CUS[viewId];
   const live = !eco && !reduce && !ptrs.size && (view.route || (cur > 0 && !(cus && cus.img)) || (ROUTE && ROUTE.view === viewId));
   if (dirty || anim || ptrs.size) lastActive = t;
@@ -5762,6 +5785,77 @@ const escH = t => String(t).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;',
 const CHEV = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
 
 function setScreen(s){ UI.screen = s; appEl.dataset.screen = s; dirty = true; wake(); requestAnimationFrame(measureTop); }
+
+const MD_TABS = ['mat', 'werk', 'quests', 'wissen', 'arc'];
+const MD_TEXT = { mat:'Wähle links ein Item. Hier stehen dann Urteil, Wofür, Wert und Fundorte.', werk:'Wähle links eine Station, eine Waffe, ein Rezept oder einen Bauplan.', quests:'Wähle links eine Quest oder ein Projekt.', wissen:'Wähle links ein Thema.', arc:'Wähle links einen ARC-Gegner.' };
+const isMD = () => isWide() && MD_TABS.includes(UI.tab);
+var UI_LADEN = false;   
+function mdSync(){
+  const md = isMD();
+  
+  const liste = UI.tab === 'mat' && typeof INV_DA !== 'undefined' && INV_DA && matView === 'liste';
+  appEl.dataset.md = md ? '1' : '0'; $('#mdLeer').textContent = liste ? 'Tippe links auf «Wo suchen?»: Hier steht dann, auf welcher Map du am meisten von deiner Liste findest. Ein Item öffnest du unter «Bedarf» oder «Alle Items».' : MD_TEXT[UI.tab] || '';
+  $('#stage').inert = md; $('#sheet').inert = md;   
+}
+
+function scrollEl(){ const d = isMD() ? document.querySelector('.page:not([hidden]) > .sdet:not([hidden]), #vVorschlag:not([hidden])') : null; return d || $('#pages'); }
+
+function mdMarke(){
+  document.querySelectorAll('.pages li.sel').forEach(l => l.classList.remove('sel'));
+  if (!isMD()) return;
+  let sel = '';
+  const q = s => String(s).replace(/["\\]/g, '\\$&');
+  if (UI.tab === 'mat' && matView === 'detail' && sLast){ const i = ITEMS.indexOf(sLast); sel = `#bedList [data-bed="${i}"], #sList [data-open="${i}"]`; }
+  else if (UI.tab === 'quests' && qCur) sel = qCur.t === 'q' ? `#qList [data-qopen="${qCur.i}"]` : `#pList [data-proj="${q(qCur.id)}"]`;
+  else if (UI.tab === 'werk' && wkCur) sel = wkCur.t === 'st' ? `#wkStList [data-st="${q(wkCur.n)}"]` : `#wkWafList [data-waf="${q(wkCur.n)}"]`;
+  else if (UI.tab === 'wissen' && wView !== 'liste') sel = `#wRoot [data-wis="${wView}"]`;
+  else if (UI.tab === 'arc' && arcCur) sel = `#arcGroups [data-arc="${q(arcCur.n)}"]`;
+  if (sel) document.querySelectorAll(sel).forEach(e => { const l = e.closest('li'); if (l) l.classList.add('sel'); });
+}
+
+function mdListe(){
+  if (!isMD()) return;
+  try {
+    if (UI.tab === 'mat' && matView === 'detail'){ if (matPrev === 'bedarf') bedRender(); else if (matPrev === 'suche') renderList(); else shopRender(); }
+    else if (UI.tab === 'mat' && matView === 'vorschlag') shopRender();
+    else if (UI.tab === 'quests' && (qView === 'qdetail' || qView === 'pdetail')){ if (qPrev === 'quests') qRender(); else pRender(); }
+    else if (UI.tab === 'werk' && wkCur) wkListe();
+    else if (UI.tab === 'arc' && arcCur) arcRender();
+  } catch(_){}
+}
+
+function mdDetail(){
+  const pg = $('#pages'), d = scrollEl(); if (d === pg) return;
+  const y = d.scrollTop, f = document.activeElement;
+  try {
+    if (UI.tab === 'mat' && matView === 'detail' && sLast) showDetail(sLast);
+    else if (UI.tab === 'quests' && qCur && qView === 'qdetail') questOpen(qCur.i);
+    else if (UI.tab === 'quests' && qCur && qView === 'pdetail') projOpen(qCur.id);
+    else return;
+  } catch(_){ return; }
+  const d2 = scrollEl(); if (d2 !== pg) d2.scrollTop = y;
+  if (f && f.focus && document.contains(f)) f.focus({ preventScroll:true });
+}
+const MD_FOKUS = 'button, a[href], input, select, summary';
+document.addEventListener('click', e => {
+  if (!isWide()) return;
+  const t = e.target && e.target.closest ? e.target : null;
+  const pane = t && isMD() ? t.closest('.sdet, #vVorschlag') : null, inListe = !pane && !!(t && t.closest('#pages'));
+  
+  const kn = pane ? t.closest(MD_FOKUS) : null, idx = kn ? [...pane.querySelectorAll(MD_FOKUS)].indexOf(kn) : -1;
+  const key = typeof MERK_DA !== 'undefined' && MERK_DA ? UI.tab + '|' + uiSubKey() : '';
+  requestAnimationFrame(() => {
+    if (isMD()){
+      const gleich = key && key === UI.tab + '|' + uiSubKey();
+      if (pane) mdListe(); else if (inListe && gleich) mdDetail();
+      if (idx >= 0 && gleich && (!document.activeElement || document.activeElement === document.body)){
+        const p2 = scrollEl(), L = p2 === pane ? p2.querySelectorAll(MD_FOKUS) : [];
+        if (L[idx] && !L[idx].disabled) L[idx].focus({ preventScroll:true });
+      }
+    }
+    mdMarke();
+  });
+}, true);
 
 const TAB_LEISTE = ['mat', 'karten', 'run', 'werk', 'quests'];
 const TAB_NAME = { mat:'Inventar', karten:'Karten', run:'Run planen', werk:'Werkstatt', quests:'Quests', wissen:'Wissen', arc:'ARC-Gegner' };
@@ -5783,27 +5877,37 @@ function setTab(k){
   if (UI.tab === k && k === 'run' && (isWide() || UI.screen === 'list') && typeof naviClose === 'function') naviClose();
   else if (k === 'run' && typeof naviRefresh === 'function') naviRefresh(true);
   UI.tab = k; appEl.dataset.tab = k;
+  mdSync();
+  if (k !== 'karten') UI.mdVon = null;
+  dirty = true; wake();
   document.querySelectorAll('.page').forEach(p => p.hidden = p.dataset.page !== k);
   tabMarke();
   
   if (k === 'werk' && typeof WK_DA !== 'undefined' && WK_DA) wkRender();
   if (k === 'mat' && typeof INV_DA !== 'undefined' && INV_DA) matRefresh();
-  if (tabVor !== k) scrollSetz(k, true);   
+  if (tabVor !== k) scrollSetz(k, true, true);   
+  if (tabVor !== k) mdListe();
+  
+  if (isWide()) requestAnimationFrame(() => { measureTop(); mdMarke(); });
   if (!isWide()) setScreen('list');
 }
 
 var SCROLL_V = {};
 
-function scrollSetz(tab, merk){
+function scrollSetz(tab, merk, wechsel){
   const pg = $('#pages'); if (!pg || UI.tab !== tab) return;
-  pg.scrollTop = merk && typeof MERK_DA !== 'undefined' && MERK_DA ? (SCROLL_V[uiSubKey()] || 0) : 0;
+  
+  if (isMD() && !wechsel){ if (!merk){ const d = scrollEl(); if (d !== pg) d.scrollTop = 0; } return; }
+  pg.scrollTop = merk && typeof MERK_DA !== 'undefined' && MERK_DA ? (SCROLL_V[skey()] || 0) : 0;
 }
 
-function scrollOben(tab){ const pg = $('#pages'); if (!pg || UI.tab !== tab) return; pg.scrollTop = 0; if (typeof MERK_DA !== 'undefined' && MERK_DA) SCROLL_V[uiSubKey()] = 0; }
+function scrollOben(tab){ const pg = $('#pages'); if (!pg || UI.tab !== tab) return; pg.scrollTop = 0; if (typeof MERK_DA !== 'undefined' && MERK_DA) SCROLL_V[skey()] = 0; }
 
 function tabMarke(){
-  const w = tabWurzel(UI.tab);
-  document.querySelectorAll('.tb, .sn').forEach(b => b.setAttribute('aria-current', b.dataset.tab === w ? 'page' : 'false'));
+
+  const w = tabWurzel(UI.tab), wis = isWide() && (UI.tab === 'wissen' || UI.tab === 'arc');
+  document.querySelectorAll('.tb, .sn').forEach(b => b.setAttribute('aria-current', b.dataset.tab === w && !(wis && b.classList.contains('sn')) ? 'page' : 'false'));
+  const rb = document.querySelector('.railb'); if (rb) rb.setAttribute('aria-current', wis ? 'page' : 'false');
   if ($('#arcRootBack')) $('#arcRootBack').lastElementChild.textContent = TAB_NAME[VON.arc] || 'Wissen';
   if (typeof WIS_DA !== 'undefined' && WIS_DA) wissenRender();
 }
@@ -5821,7 +5925,14 @@ function revealSheet(){ if (isWide()){ if (!UI.insp) setInsp(true); } else if (U
 $('#grab').addEventListener('click', () => setDetent(UI.d === 'mini' ? 'mittel' : UI.d === 'mittel' ? 'gross' : 'mini'));
 $('#shMin').addEventListener('click', () => isWide() ? setInsp(false) : setDetent(UI.d === 'mini' ? 'mittel' : 'mini'));
 $('#btnInsp').addEventListener('click', () => setInsp(true));
-wideMQ.addEventListener && wideMQ.addEventListener('change', () => { setDetent(UI.d); setTab(UI.tab); if (!isWide()) setScreen(UI.screen); renderMapBar(); requestAnimationFrame(resize); });
+
+wideMQ.addEventListener && wideMQ.addEventListener('change', () => {
+  setDetent(UI.d);
+  
+  if (isWide() && MD_TABS.includes(UI.tab) && UI.screen === 'map'){ const von = UI.tab; setTab('karten'); UI.mdVon = von; }
+  else if (!isWide()) setScreen('list');
+  mdSync(); tabMarke(); renderMapBar(); requestAnimationFrame(() => { resize(); mdMarke(); });
+});
 
 const FREG_TOP = {
   hull:[[-31,-4.2],[-22,-6.4],[-8,-7.2],[8,-7],[20,-6.2],[28,-4.2],[33,-1.8],[33,1.8],[28,4.2],[20,6.2],[8,7],[-8,7.2],[-22,6.4],[-31,4.2]],
@@ -5870,6 +5981,8 @@ function renderRaids(){
 function openView(id, opts){
   UI.from = (opts && opts.from) || UI.tab;
   setView(id, opts);
+  
+  if (isMD() && !UI_LADEN){ const von = UI.tab; setTab('karten'); UI.mdVon = von; }
   if (!isWide()) setScreen('map');
   if (opts && opts.detent) setDetent(opts.detent); else if (!isWide()) setDetent('mini');
   renderMapBar();
@@ -5885,8 +5998,9 @@ function renderMapBar(){
     : rOn ? (ROUTE.focus ? 'Fundort' : 'Route · ' + nSt + (nSt === 1 ? ' Stopp' : ' Stopps') + (ROUTE.min ? ' · ca. ' + Math.round(ROUTE.min) + ' min' : ''))
     : isE ? 'im Fallen Emperor · Pendola Pass' : isF ? (mode === 'solo' ? 'Solo-Run' : 'Squad-Run') : m.r.length + ' Schlüsselräume';
   const bt = backTarget();
-  $('#mapBackL').textContent = bt ? 'Pendola Pass' : { mat:'Inventar', run:'Run planen', raids:'Raids', arc:'ARC', quests:'Quests' }[UI.tab] || 'Karten';
-  $('#mapBack').classList.toggle('show', !!bt);
+  const mdVon = isWide() && UI.mdVon ? UI.mdVon : null;
+  $('#mapBackL').textContent = bt ? 'Pendola Pass' : mdVon ? TAB_NAME[mdVon] : { mat:'Inventar', run:'Run planen', raids:'Raids', arc:'ARC-Gegner', quests:'Quests', werk:'Werkstatt', wissen:'Wissen' }[UI.tab] || 'Karten';
+  $('#mapBack').classList.toggle('show', !!bt || !!mdVon);
   requestAnimationFrame(fitMapTitle);
 }
 
@@ -5900,6 +6014,7 @@ function fitMapTitle(){
 }
 $('#mapBack').addEventListener('click', () => {
   if (backTarget()){ const i = MAPS.pendola.r.findIndex(r => r.n === 'Emperor-Dungeon'); openView('pendola', { from:UI.tab, detent:'mittel' }); goStep(i + 1); return; }
+  if (isWide() && UI.mdVon){ setTab(UI.mdVon); renderMapBar(); return; }   
   setScreen('list');
 });
 $('#btnEnterEmp').addEventListener('click', () => { openView('emperor', { from:'pendola', detent:isWide() ? null : 'mittel' }); UI.from = 'pendola'; renderMapBar(); });
@@ -6040,7 +6155,7 @@ document.addEventListener('keydown', e => {
   if (e.target.closest && e.target.closest('input, textarea')) { if (e.key === 'Escape' && typeof backToList === 'function' && !$('#sDetail').hidden) backToList(); return; }
   if (e.key === '/'){ e.preventDefault(); openSearch(false); return; }
   if (e.target.closest && e.target.closest('button, summary') && (e.key === ' ' || e.key === 'Enter')) return;
-  if (UI.screen === 'list' && !isWide()) return;
+  if ((UI.screen === 'list' && !isWide()) || isMD()) return;   
   if (e.key === 'ArrowRight') stepNext();
   if (e.key === 'ArrowLeft') stepPrev();
 });
@@ -6472,7 +6587,7 @@ function arcOpen(n, back){
   const dd = arcDrops(a), sp = dd.spez[0];
   const en = a.en || a.n;
   const alt = a.de === en ? '' : sLang === 'de' && a.de ? 'Englisch: ' + en : a.de ? 'Deutsch: ' + a.de : 'Deutscher Name: nicht bekannt';
-  let h = `<div class="subnav"><button type="button" class="back" id="arcBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(arcBack ? arcBack.label : 'ARC-Gegner')}</button></div>`
+  let h = `<div class="subnav${arcBack ? '' : ' own'}"><button type="button" class="back" id="arcBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(arcBack ? arcBack.label : 'ARC-Gegner')}</button></div>`
     + `<h3 class="dn${sp && sp.r ? ' rr-t r' + sp.r : ''}">${esc(arcName(a))}</h3>${alt ? `<p class="dalt">${esc(alt)}</p>` : ''}`
     + `<div class="sb">${arcThr(a.t)}<span class="thrt">${a.t ? 'Gefahr ' + ARC_THREAT[a.t] : 'Lootbar, greift nicht an'}</span>${a.neu ? '<span class="newb">Neu</span>' : ''}</div>`;
   if (a.neu) h += `<p class="fine">${esc(a.neu[0])}.</p>`;
@@ -6792,14 +6907,16 @@ const saveRun = () => { try { if (RUN) localStorage.setItem('raider-atlas:run', 
 
 function matShow(v){
   if (v === 'bedarf' || v === 'suche' || v === 'liste') matPrev = v;   
-  matView = v; $('#pgMat').dataset.v = v;
+  matView = v; $('#pgMat').dataset.v = v; $('#pgMat').dataset.prev = matPrev;   
   $('#matRoot').hidden = !(v === 'bedarf' || v === 'suche' || v === 'liste');
   $('#vBedarf').hidden = v !== 'bedarf'; $('#vSuche').hidden = v !== 'suche'; $('#vListe').hidden = v !== 'liste';
   $('#vVorschlag').hidden = v !== 'vorschlag'; $('#sDetail').hidden = v !== 'detail';
-  $('#segBedarf').setAttribute('aria-pressed', v === 'bedarf'); $('#segSuche').setAttribute('aria-pressed', v === 'suche'); $('#segListe').setAttribute('aria-pressed', v === 'liste');
+  const lv = v === 'vorschlag' ? 'liste' : v === 'detail' ? matPrev : v;   
+  $('#segBedarf').setAttribute('aria-pressed', lv === 'bedarf'); $('#segSuche').setAttribute('aria-pressed', lv === 'suche'); $('#segListe').setAttribute('aria-pressed', lv === 'liste');
   if (v === 'bedarf' && INV_BEREIT) bedRender();
   if (v === 'suche' && INV_BEREIT) renderList();
-  if (v === 'liste') shopRender();
+  if (v === 'liste' || (v === 'vorschlag' && isMD())) shopRender();
+  mdSync();   
   if (v === 'vorschlag') rankRender();
   scrollSetz('mat', v === 'bedarf' || v === 'suche' || v === 'liste');   
 }
@@ -6849,7 +6966,7 @@ function showDetail(it, back){
   const deL = it.de ? `Deutsch: ${it.de}` : 'Deutscher Name: nicht bekannt';
   const subL = sLang === 'de' && it.de ? `Englisch: ${it.n}` : deL;
   const on = inList(it.n);
-  let h = `<div class="subnav"><button type="button" class="back" id="sBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(sBack ? sBack.label : { bedarf:'Bedarf', suche:'Alle Items', liste:'Einkaufsliste' }[matPrev])}</button></div><div class="dhead">${symKachel(it.n, it, true)}<div class="dhtx"><h3 class="dn${it.r && RAR[it.r] ? ' rr-t r' + it.r : ''}">${esc(dispName(it))}</h3><p class="dalt">${esc(subL)}</p></div></div><div class="sb">${rarBadge(it.r)}${verBadge(it)}</div>`
+  let h = `<div class="subnav${sBack ? '' : ' own'}"><button type="button" class="back" id="sBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(sBack ? sBack.label : { bedarf:'Bedarf', suche:'Alle Items', liste:'Einkaufsliste' }[matPrev])}</button></div><div class="dhead">${symKachel(it.n, it, true)}<div class="dhtx"><h3 class="dn${it.r && RAR[it.r] ? ' rr-t r' + it.r : ''}">${esc(dispName(it))}</h3><p class="dalt">${esc(subL)}</p></div></div><div class="sb">${rarBadge(it.r)}${verBadge(it)}</div>`
     + (INV_BEREIT ? (bedarfNeu(), urteilKarte(it)) : '')
     + `<button type="button" class="${on ? 'bs' : 'bp'} tobtn" id="sTog">${on ? 'Auf der Einkaufsliste' : 'Zur Einkaufsliste'}</button>`;
   
@@ -7265,8 +7382,8 @@ const FAQ_FUNKTIONEN = [
 {"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat drei Reiter: Bedarf, Einkaufsliste und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte, deinen Werkstatt-Zielen, deinen Wunsch-Waffen und eigenen Einträgen der Einkaufsliste, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan lernen (nach dem Abhaken: Verkaufen). Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann das weg?","der Filter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Symbole","jedes Item trägt ein eigenes Symbol für seine Art (Waffe, Aufsatz, Munition, Bauplan, Material, Wertsache und weitere), in der Farbe seiner Seltenheit. Die Symbole sind selbst gezeichnet, keine Grafiken aus dem Spiel."],["Alle Items","623 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Rezept auf die Liste","ein Knopf setzt alle Zutaten eines Rezepts auf die Einkaufsliste; damit zählen sie im Bedarf."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
 {"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Vier Reiter: Stationen, Waffen, Herstellen und Baupläne."},{"k":"ul","i":[["Stationen","8 Stationen mit Stufen (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Research Station, Scrappy). Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Herstellen","156 Rezepte, durchsuchbar und nach Station gefiltert. «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst."],["Baupläne","85 Baupläne mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen, alle davor werden abgehakt."],["Suche und Filter","nach Name, Ort, Händler oder Material."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste. Im Detail steht «Wird verfolgt» als Zustand."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."]]}]},
-{"t":"Wissen","b":[{"k":"p","x":"Der Knopf oben rechts in jedem Bereich öffnet die Seite «Wissen»: alles zum Nachschlagen und alles über die App an einem Ort. «Zurück» führt in den Bereich, aus dem du kamst."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","5 Bedingungen und was sie ändern."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht und Namen auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
-{"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Werkstatt-Stand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Eigene Stelle pro Bereich","jeder Bereich merkt sich, wie weit du gescrollt hast. «Zurück» aus einem Detail führt an die alte Stelle der Liste; den Bereich erneut antippen führt nach oben."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Einstellungen und Updates","stehen unter «Wissen»."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
+{"t":"Wissen","b":[{"k":"p","x":"Der Knopf mit dem Buch öffnet die Seite «Wissen» (am iPhone oben rechts in jedem Bereich, im breiten Fenster unten in der Symbolleiste): alles zum Nachschlagen und alles über die App an einem Ort. «Zurück» führt in den Bereich, aus dem du kamst."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","5 Bedingungen und was sie ändern."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht und Namen auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
+{"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Werkstatt-Stand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Eigene Stelle pro Bereich","jeder Bereich merkt sich, wie weit du gescrollt hast. «Zurück» aus einem Detail führt an die alte Stelle der Liste; den Bereich erneut antippen führt nach oben."],["Breites Fenster (PC, iPad quer)","ab 860 px Breite steht links eine schmale Symbolleiste mit den fünf Bereichen und «Wissen», daneben die Liste über die ganze Höhe. In Inventar, Werkstatt, Quests und Wissen steht das Detail rechts neben der Liste: Die Liste bleibt stehen, die gewählte Zeile ist markiert, und was du im Detail abhakst, steht sofort auch in der Liste. Karten und Run planen zeigen Karte und Infobereich. Öffnest du aus einem Detail einen Ort auf der Karte, wechselt die App zu «Karten»; «Zurück» in der Kartenleiste führt wieder zum Detail."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Einstellungen und Updates","stehen unter «Wissen»."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
 {"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein; in der App steht dafür ein kleiner Haken. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
 {"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
 ];
@@ -7329,6 +7446,7 @@ const qNeedDots = need => need.filter(x => !x.quest).map(x => { const it = qItem
   return `<span class="ri${r ? ' r' + r : ''}">${esc(qNeedName(x))}${x.c ? ' ×' + x.c : ''}${r ? `<span class="vh"> (${RAR[r]})</span>` : ''}</span>`; }).join(', ');
 for (const q of QUESTS) q._k = norm([q.en, q.de, q.ziel, QUEST_TRADER[q.h], ...q.need.map(x => x.n + ' ' + (DE[x.n] || '')), ...q.orte.map(o => o.n), ...q.maps.map(m => m + ' ' + (MAP_DE[m] || ''))].join(' '));
 
+let qPrev = 'quests';
 let qView = 'quests', qTrader = 'all', qMapF = 'all', qShowDone = false, qBack = null, qCur = null;
 function qShow(v){
   qView = v;
@@ -7337,7 +7455,9 @@ function qShow(v){
   $('#qRoot').hidden = !(v === 'quests' || v === 'projekte');
   $('#qvQuests').hidden = v !== 'quests'; $('#qvProj').hidden = v !== 'projekte';
   $('#qDetail').hidden = !(v === 'qdetail' || v === 'pdetail');
-  $('#segQuests').setAttribute('aria-pressed', v === 'quests'); $('#segProj').setAttribute('aria-pressed', v === 'projekte');
+  if (v === 'quests' || v === 'projekte') qPrev = v; else if (v === 'pdetail') qPrev = 'projekte';
+  $('#pgQuests').dataset.v = v; $('#pgQuests').dataset.prev = qPrev;   
+  $('#segQuests').setAttribute('aria-pressed', qPrev === 'quests'); $('#segProj').setAttribute('aria-pressed', qPrev === 'projekte');
   if (v === 'quests') qRender(); if (v === 'projekte') pRender();
   qSeason();
   scrollSetz('quests', v === 'quests' || v === 'projekte');
@@ -7420,7 +7540,7 @@ function questOpen(i, back){
   if (back !== undefined) qBack = back;
   qCur = { t:'q', i }; qShow('qdetail');
   const d = qDone(q), mats = q.need.filter(x => !x.quest && qItem(x.n));
-  let h = `<div class="subnav"><button type="button" class="back" id="qBackBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(qBack ? qBack.label : 'Quests')}</button></div>`
+  let h = `<div class="subnav${qBack ? '' : ' own'}"><button type="button" class="back" id="qBackBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(qBack ? qBack.label : 'Quests')}</button></div>`
     + `<h3 class="dn">${esc(qName(q))}</h3>${qAlt(q) ? `<p class="dalt">${esc(qAlt(q))}</p>` : ''}`
     + `<div class="sb">${qVer(q.src)}<span class="qchip">${esc(QUEST_TRADER[q.h])}</span>${q.maps.map(m => `<span class="qchip">${esc(QMAP_NAME(m))}</span>`).join('')}${q.neu ? '<span class="newb">Neu</span>' : ''}${!d && qTracked(q) ? '<span class="stb s-aktiv">Wird verfolgt</span>' : ''}${d ? '<span class="stb s-pause">Erledigt</span>' : ''}</div>`
     + (d ? `<button type="button" class="bs tobtn" id="qDoneTog">Wieder offen setzen</button>`
@@ -7444,7 +7564,7 @@ function projOpen(id, back){
   if (back !== undefined) qBack = back;
   qCur = { t:'p', id }; qShow('pdetail');
   const openMats = p.stufen.some((s, i) => !pDone(p, i) && s.need.some(x => qItem(x.n)));
-  let h = `<div class="subnav"><button type="button" class="back" id="qBackBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(qBack ? qBack.label : 'Projekte')}</button></div>`
+  let h = `<div class="subnav${qBack ? '' : ' own'}"><button type="button" class="back" id="qBackBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>${esc(qBack ? qBack.label : 'Projekte')}</button></div>`
     + `<h3 class="dn">${esc(p.n)}</h3><p class="dalt">${p.st === 'ende' ? 'Lief vom ' + esc(p.von) + ' bis ' + esc(p.bis) : 'Seit ' + esc(p.von) + (p.bis ? ' · bis ' + esc(p.bis) : '') + (p.lvl ? ' · ab Level ' + p.lvl : '')}</p>`
     + `<div class="sb">${stBadge(p)}${qVer(p.src.split(','))}</div><p class="fine">${esc(p.txt)}</p>`;
   if (openMats) h += '<div class="btncol"><button type="button" class="bp" data-pall="1">Alle offenen Stufen auf die Einkaufsliste</button></div>';
@@ -7501,7 +7621,7 @@ $('#qDetail').addEventListener('click', e => {
   const cur = qCur; if (!cur) return;
   const q = cur.t === 'q' ? QUESTS[cur.i] : null, p = cur.t === 'p' ? PROJ_BY.get(cur.id) : null;
   const reopen = () => q ? questOpen(q.i) : projOpen(p.id);
-  const keepScroll = fn => { const pg = $('#pages'), y = pg ? pg.scrollTop : 0; fn(); if (pg) pg.scrollTop = y; };
+  const keepScroll = fn => { const pg = scrollEl(), y = pg ? pg.scrollTop : 0; fn(); const p2 = scrollEl(); if (p2) p2.scrollTop = y; };
   if (e.target.closest('#qDoneTog') && q){ qSetDone(q, !qDone(q)); qRender(); keepScroll(reopen); return; }
   if (e.target.closest('#qTrkTog') && q){ qTrack(q, !qTracked(q)); qRender(); keepScroll(reopen); return; }
   const pd = e.target.closest('[data-pdone]'); if (pd && p){ pToggle(p, +pd.dataset.pdone); keepScroll(reopen); return; }
@@ -7659,7 +7779,7 @@ function rezeptSection(it){
 
 function matRefresh(){
   if (matView === 'bedarf') bedRender(); else if (matView === 'suche') renderList(); else if (matView === 'liste') shopRender();
-  else if (matView === 'detail' && sLast){ const pg = $('#pages'), y = pg ? pg.scrollTop : 0, f = document.activeElement; showDetail(sLast); if (pg) pg.scrollTop = y; if (f && f.focus && document.contains(f)) f.focus(); }
+  else if (matView === 'detail' && sLast){ const pg = scrollEl(), y = pg ? pg.scrollTop : 0, f = document.activeElement; showDetail(sLast); if (pg) pg.scrollTop = y; if (f && f.focus && document.contains(f)) f.focus(); }
 }
 
 var INV_DA = true;   
@@ -7680,12 +7800,13 @@ function wkShow(v){
   if (v !== 'detail') wkRender();
   scrollSetz('werk', v !== 'detail');
 }
-function wkRender(){ if (wkCur) return; ({ st:wkStRender, waf:wkWafRender, her:wkHerRender, bp:wkBpRender })[wkView](); }
+function wkListe(){ ({ st:wkStRender, waf:wkWafRender, her:wkHerRender, bp:wkBpRender })[wkView](); }
+function wkRender(){ if (wkCur && !isMD()) return; wkListe(); }   
 function wkReset(){ wkBack = null; wkShow(wkView); scrollOben('werk'); }
 function wkClose(){ const b = wkBack; wkBack = null; wkShow(wkView); if (b) b.go(); }
 
 function wkGeaendert(){ WST.ok = true; saveWst(); bedarfNeu(); }
-const wkKeep = fn => { const pg = $('#pages'), y = pg ? pg.scrollTop : 0; fn(); if (pg) pg.scrollTop = y; };
+const wkKeep = fn => { const pg = scrollEl(), y = pg ? pg.scrollTop : 0; fn(); const p2 = scrollEl(); if (p2) p2.scrollTop = y; };
 const wkStepper = (label, wert, minus, plus, kannM, kannP) => `<div class="lvlrow"><span>${label}</span><div class="stepper" role="group" aria-label="${label}">`
   + `<button type="button" ${minus} aria-label="${label}: eins weniger"${kannM ? '' : ' disabled'}>−</button><span class="lcdn">${wert}</span><button type="button" ${plus} aria-label="${label}: eins mehr"${kannP ? '' : ' disabled'}>+</button></div></div>`;
 
@@ -7720,7 +7841,7 @@ function wkStOpen(n, back){
   if (back !== undefined) wkBack = back;
   wkCur = { t:'st', n }; wkShow('detail');
   const l = wsStufe(s), z = wsZiel(s), stuf = s.max > s.min;
-  let h = `<div class="subnav"><button type="button" class="back" id="wkBackBtn">${WK_BACK}${esc(wkBack ? wkBack.label : 'Stationen')}</button></div><h3 class="dn">${esc(s.n)}</h3>`
+  let h = `<div class="subnav${wkBack ? '' : ' own'}"><button type="button" class="back" id="wkBackBtn">${WK_BACK}${esc(wkBack ? wkBack.label : 'Stationen')}</button></div><h3 class="dn">${esc(s.n)}</h3>`
     + `<p class="dalt">${stuf ? esc(wkStText(s)) : 'Von Anfang an da, keine Stufen'}</p>`;
   if (stuf){
     h += wkStepper('Meine Stufe', l, 'data-stm="' + esc(s.n) + '"', 'data-stp="' + esc(s.n) + '"', l > s.min, l < s.max)
@@ -7761,7 +7882,7 @@ function wkWafOpen(fam, back){
   if (back !== undefined) wkBack = back;
   wkCur = { t:'waf', n:fam }; wkShow('detail');
   const l = wfStufe(f), w = wfWunsch(f), n = f.stufen.length, typ = WS_TYP[f.typ] ? WS_TYP[f.typ][1] : 'Waffe';
-  let h = `<div class="subnav"><button type="button" class="back" id="wkBackBtn">${WK_BACK}${esc(wkBack ? wkBack.label : 'Waffen')}</button></div><div class="dhead">${symKachel((f.stufen.find(Boolean) || f).n, undefined, true)}<div class="dhtx"><h3 class="dn">${esc(f.n)}</h3>`
+  let h = `<div class="subnav${wkBack ? '' : ' own'}"><button type="button" class="back" id="wkBackBtn">${WK_BACK}${esc(wkBack ? wkBack.label : 'Waffen')}</button></div><div class="dhead">${symKachel((f.stufen.find(Boolean) || f).n, undefined, true)}<div class="dhtx"><h3 class="dn">${esc(f.n)}</h3>`
     + `<p class="dalt">${esc(typ)} · ${n} Stufen (I bis ${ROEM[n - 1]})</p></div></div>` + (w > l ? '<div class="sb"><span class="stb s-aktiv">Wunsch-Waffe</span></div>' : '')
     + wkStepper('Meine Stufe', wfRoem(l), 'data-wfm="1"', 'data-wfp="1"', l > 0, l < n)
     + wkStepper('Wunsch bis Stufe', wfRoem(w), 'data-wwm="1"', 'data-wwp="1"', w > 0, w < n);
@@ -7832,9 +7953,11 @@ $('#pgWerk').addEventListener('click', e => {
   
   if ((b = T('[data-stm], [data-stp]'))){ const s = wsStation(b.dataset.stm || b.dataset.stp); if (!s) return;
     WST.st[s.n] = Math.max(s.min, Math.min(s.max, wsStufe(s) + (b.dataset.stp ? 1 : -1))); wkGeaendert();
-    wkKeep(() => wkCur ? wkStOpen(s.n) : wkStRender()); return; }
+    
+    const offen = wkCur && (!isMD() || (wkCur.t === 'st' && wkCur.n === s.n));
+    wkKeep(() => { if (offen) wkStOpen(s.n); if (!wkCur || isMD()) wkStRender(); }); return; }
   const c = wkCur; if (!c) return;
-  const neu = () => wkKeep(() => c.t === 'st' ? wkStOpen(c.n) : wkWafOpen(c.n));
+  const neu = () => wkKeep(() => { if (c.t === 'st') wkStOpen(c.n); else wkWafOpen(c.n); });
   if ((b = T('[data-ntog]'))){ const n = b.dataset.ntog; if (inList(n)){ LIST = LIST.filter(x => x.n !== n); saveList(); shopRender(); } else qAddList(n, +b.dataset.c); neu(); return; }
   if ((b = T('[data-nopen]'))){ wkItemOpen(b.dataset.nopen); return; }
   if (c.t === 'st'){
@@ -7986,6 +8109,7 @@ function hudSync(){ const on = hudShown(); hudEl.classList.toggle('zu', !on); $(
 
 function hudSpace(){
   const st = $('#stage').getBoundingClientRect();
+
   appEl.dataset.hud = st.width >= 640 ? 'seite' : 'oben';
   const on = hudEl.offsetParent && getComputedStyle(hudEl).visibility !== 'hidden';
   const r = on ? hudEl.getBoundingClientRect() : null;
@@ -8001,7 +8125,8 @@ $('#hudTog').addEventListener('click', () => { if (!hudShown() && HUD.open || (!
 $('#hudBody').addEventListener('click', e => {
   const pin = e.target.closest('[data-hplace]'); if (pin){ const [m, n] = pin.dataset.hplace.split('|'); jumpPlace(m, n, n); return; }
   const q = e.target.closest('[data-hq]');
-  if (q){ questOpen(+q.dataset.hq, { label:'Karte', go:() => { if (!isWide()) setScreen('map'); } }); return; }
+  if (q){ const von = UI.tab === 'run' ? 'run' : 'karten';   
+    questOpen(+q.dataset.hq, { label:'Karte', go:() => { if (!isWide()) setScreen('map'); else setTab(von); } }); return; }
   const a = e.target.closest('[data-hact]');
   if (a && a.dataset.hact === 'wo'){ setTab('mat'); matShow('vorschlag'); }
   if (a && a.dataset.hact === 'run') openRunDlg();
@@ -8722,7 +8847,7 @@ function uiSnap(){
   return { v:1, tab:UI.tab, screen:UI.screen, d:UI.d, insp:UI.insp, hud:HUD.open,
     view:viewId, cur, mode, layers:Object.assign({}, layers),
     route:ROUTE && ROUTE.src ? Object.assign({ i:ROUTE.i }, ROUTE.src) : null,
-    mat:{ v:matView, q:$('#sInput').value, f:sFilter, item:matView === 'detail' && sLast ? sLast.n : null },
+    mat:{ v:matView, prev:matPrev, q:$('#sInput').value, f:sFilter, item:matView === 'detail' && sLast ? sLast.n : null },
     q:{ v:qView, q:$('#qInput').value, tr:qTrader, map:qMapF, done:qShowDone,
       cur:qCur ? (qCur.t === 'q' ? { t:'q', en:QUESTS[qCur.i].en } : { t:'p', id:qCur.id }) : null },
     arc:{ cur:arcCur ? arcCur.n : null }, werk:{ v:wkView, cur:wkCur, f:wkHerF }, wis:{ v:wView }, von:{ wissen:VON.wissen, arc:VON.arc }, navi:!$('#naviDetail').hidden ? NAVI.m : null, scroll:SCROLL };
@@ -8732,13 +8857,17 @@ function uiSoon(){ if (!uiReady) return; clearTimeout(uiT); uiT = setTimeout(uiS
 ['click', 'input', 'change', 'keyup'].forEach(ev => document.addEventListener(ev, uiSoon, true));
 window.addEventListener('pagehide', uiSave);
 document.addEventListener('visibilitychange', () => { if (document.hidden) uiSave(); });
+
+function skey(){ return isMD() ? 'md:' + UI.tab : uiSubKey(); }
 for (const t in SCROLL) if (SCROLL[t] && typeof SCROLL[t].k === 'string') SCROLL_V[SCROLL[t].k] = SCROLL[t].y || 0;
-$('#pages').addEventListener('scroll', () => { if (!uiReady) return; const k = uiSubKey(), y = Math.round($('#pages').scrollTop); SCROLL[UI.tab] = { k, y }; SCROLL_V[k] = y; uiSoon(); }, { passive:true });
+$('#pages').addEventListener('scroll', () => { if (!uiReady) return; const k = skey(), y = Math.round($('#pages').scrollTop); SCROLL[UI.tab] = { k, y }; SCROLL_V[k] = y; uiSoon(); }, { passive:true });
 var MERK_DA = true;   
 
 function uiRestore(hashId, lastId){
   const s = UIS || {}, tryIt = fn => { try { fn(); } catch(_){} };
   const hashView = !!VIEWS[hashId];
+  UI_LADEN = true;   
+  setTimeout(() => { UI_LADEN = false; }, 0);   
   tryIt(() => { if (!s.q) return;
     if (s.q.tr === 'all' || QUEST_TRADER[s.q.tr]) qTrader = s.q.tr;
     if (Q_FIL.groups[1].items().some(o => o.k === s.q.map)) qMapF = s.q.map;
@@ -8753,6 +8882,8 @@ function uiRestore(hashId, lastId){
     if (FILTERS.some(f => f[0] === s.mat.f)) sFilter = s.mat.f;
     $('#sInput').value = s.mat.q || ''; renderList(); filUI(S_FIL, '#sFilBtn', '#sFilN', '#sTok');
     const it = s.mat.item && itemByName(s.mat.item);
+    
+    if (s.mat.v === 'detail' && it && ['suche', 'liste'].includes(s.mat.prev)) matShow(s.mat.prev);
     if (s.mat.v === 'detail' && it) showDetail(it, null);
     else if (s.mat.v === 'liste' || s.mat.v === 'vorschlag' || s.mat.v === 'suche') matShow(s.mat.v);
   });
@@ -8771,6 +8902,8 @@ function uiRestore(hashId, lastId){
   tryIt(() => { if (s.layers) for (const k in layers) if (typeof s.layers[k] === 'boolean') layers[k] = s.layers[k]; });
   const vid = hashView ? hashId : VIEWS[s.view] ? s.view : VIEWS[lastId] ? lastId : 'dam';
   if (hashView) openView(vid, { noHash:true, from:'karten' }); else setView(vid, { noHash:true });
+  
+  if (hashView && isMD() && hashId !== s.view) setTab('karten');
   tryIt(() => { if (s.view !== vid) return;
     if (view.modes && view.modes[s.mode] && s.mode !== mode){ mode = s.mode; cur = 0; renderCard(); renderMapBar(); setCam(steps()[0].cam); }
     if (s.cur > 0 && s.cur < steps().length){ cur = s.cur; renderCard(); setCam(stepCam(steps(), cur)); }
@@ -8792,9 +8925,10 @@ function uiRestore(hashId, lastId){
     if (isWide() && s.insp === false) setInsp(false);
   });
   hudSet(typeof s.hud === 'boolean' ? s.hud : isWide());
+  UI_LADEN = false; mdSync();
   
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-  requestAnimationFrame(() => { tryIt(() => { const sc = SCROLL[UI.tab]; if (sc && sc.k === uiSubKey()) $('#pages').scrollTop = sc.y; }); uiReady = true; });
+  requestAnimationFrame(() => { tryIt(() => { const sc = SCROLL[UI.tab]; if (sc && sc.k === skey()) $('#pages').scrollTop = sc.y; }); uiReady = true; });
 }
 /* @datei app/kern/start.js */
 
