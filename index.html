@@ -421,6 +421,8 @@ a.linkbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:
 .sdet .sb .rar{font-size:12px;padding:6px 10px 5px}
 .sdet .tobtn{margin:0 16px 6px;width:calc(100% - 32px)}
 .sdet h4{margin:20px 0 6px;padding:0 32px;font:600 13px/1.3 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.group > li.grp{padding:16px 16px 6px;font:600 13px/1.3 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}   
+button.lnk{border:0;background:none;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer;min-height:24px}
 .sdet h4.hver{display:flex;align-items:center;gap:8px}   
 .sdet h4.hver .ver{text-transform:none;letter-spacing:.02em}
 .sdet > p,.sdet .fine{margin:0;padding:4px 32px;font-size:13px;line-height:1.42;color:var(--muted)}
@@ -868,7 +870,7 @@ li.qd .row .t1{color:var(--muted)}
           <div id="wkWaf" hidden>
             <p class="foot" id="wkWafInfo"></p>
             <div id="wkWafList"></div>
-            <p class="foot">Stufe I wird hergestellt, die Stufen II bis IV sind Aufwertungen. Die Kosten der Aufwertungen haben erst eine Angabe.</p>
+            <p class="foot">Stufe I wird hergestellt, die Stufen II bis IV sind Aufwertungen. Die Kosten der Aufwertungen haben erst eine Angabe. 15 Waffen haben dazu die Stufe V (Amplified): Sie kostet ein Amplification Module.</p>
           </div>
           <div id="wkHer" hidden>
             <div class="sfrow"><div class="searchf"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
@@ -1238,6 +1240,15 @@ const SRCS = {
   Wwc:['q9'],
   Wts:['q13'],
   Wtr:['q13'],
+  Wao:['q5'],
+  Wgl:['q34'],
+  Wph:['q35'],
+  Wko:['q3'],
+  Akg:['q3'],
+  Agp:['q36'],
+  Ade:['q24'],
+  Agw:['q37'],
+  Ats:['q13'],
   Wah:['q5'],
   Wag:['q5'],
   Wde:['q24'],
@@ -1249,15 +1260,15 @@ const SRCS = {
   Mt2:['q13'],
   Mtp:['q13'],
   Mmf:['q7'],
-  Mem:['q34'],
+  Mem:['q38'],
   Mig:['q32'],
   Mit:['q32'],
-  Mns:['q35'],
-  Mnb:['q36'],
-  Mdv:['q37'],
+  Mns:['q39'],
+  Mnb:['q40'],
+  Mdv:['q41'],
   Mah:['q6'],
-  Mp1:['q38'],
-  Mgr:['q39'],
+  Mp1:['q42'],
+  Mgr:['q43'],
 };
 
 /* @datei wissen/items.js */
@@ -2198,15 +2209,27 @@ const WS_BANK = { G:'Gunsmith', E:'Gear Bench', M:'Medical Lab', X:'Explosives S
 
 const WS_STATIONS = `
 Workbench|1|-|Wrt+Wwg
-Gunsmith|4|MP:20,RP:30/MC:5,Rusted Tools:3,Wasp Driver:8/AM:5,Rusted Gear:3,Sentinel Firing Core:4/Emperor Modulator:1,MA:3,Radial Press:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg/Wwg
+Gunsmith|4|MP:20,RP:30/MC:5,Rusted Tools:3,Wasp Driver:8/AM:5,Rusted Gear:3,Sentinel Firing Core:4/Emperor Modulator:1,MA:3,Radial Press:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg/Wwg+Wao+Wph
 Gear Bench|3|FA:30,PP:25/EC:5,Hornet Driver:5,Power Cable:3/AE:5,Bastion Cell:6,Industrial Battery:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
 Medical Lab|3|AA:6,FA:50/Cracked Bioscanner:2,DC:5,Tick Pod:8/AN:8,Rusted Shut Medical Kit:3,Surveyor Vault:5|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
 Explosives Station|3|AA:6,CH:50/CE:5,Pop Trigger:5,Synthesized Fuel:3/EP:5,Laboratory Reagents:3,Rocketeer Driver:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
 Utility Station|3|AA:6,PP:50/Damaged Heat Sink:2,EC:5,Snitch Scanner:6/AE:5,Fried Motherboard:3,Leaper Pulse Unit:4|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
 Refiner|3|ARC Powercell:5,MP:60/ARC Motion Core:5,Fireball Burner:8,Toaster:3/AC:10,Bombardier Cell:6,Motor:3|Wrt+Wwg/Wrt+Wwg/Wrt+Wwg
-Research Station|4|Battered Paperback:5,Mini Pump:3,Planks:35/Calculator:3,Raider Logbook:3,Skulker Targeter:5/Bully Fragmenter:6,Differential Microphone:3,Exodus Technical Handbook:3/ARC Data Module:3,Frigate Inductor:1,Thermal Shaker:3|Wwg/Wwg/Wwg/Wwg
+Research Station|4|Battered Paperback:5,Mini Pump:3,Planks:35/Calculator:3,Raider Logbook:3,Skulker Targeter:5/Bully Fragmenter:6,Differential Microphone:3,Exodus Technical Handbook:3/ARC Data Module:3,Frigate Inductor:1,Thermal Shaker:3|Wwg+Wao+Wph/Wwg+Wao/Wwg+Wao/Wwg+Wao
+Outpost|4|-/Cable Stripper:3,Sheet Metal:20,Steel Cable:3/Epoxy Bucket:3,Hand Drill:3,Planks:35/Insulation Roll:3,Laser Level:3,Sheet Metal:40|Wao+Wko/Wao/Wao/Wao+Wgl
 Scrappy|5|-/Dog Collar:1/Apricot:3,Lemon:3/Cat Bed:1,Olives:6,Prickly Pear:6/Apricot:12,Mushroom:12,Very Comfortable Pillow:3|Wrt/Wrt/Wrt/Wrt/Wrt+Wah
 `;
+
+const WS_VORAUS = `Research Station|1|Outpost|1|Wao+Wph
+Research Station|2|Outpost|2|Wao+Wph
+Research Station|3|Outpost|3|Wao+Wph
+Research Station|4|Outpost|4|Wao+Wph
+Gunsmith|4|Outpost|4|Wao+Wph`;
+
+const WS_ST_HINWEIS = {
+  Outpost:{ gruppe:'Outpost', x:'Dein eigener Stützpunkt seit Frozen Trail. Die Stufe ist die Zahl der Räume. Stufe 1 ist der Startraum: Er entsteht mit dem Projekt Sheltered Retreat (ab Raider-Level 18). Welche Art Raum du baust, ändert die Kosten nicht.', s:'Wao+Wko' },
+  'Research Station':{ gruppe:'Outpost', x:'Steht im Outpost (in der Vorschau hiess sie «Research Workstation»). Hier erforschst du Baupläne und Möbel-Designs, ab Stufe 4 auch Amplified Research für Waffen der Stufe V.', s:'Wao+Wko' }
+};
 
 const WS_ITEMS = `
 "Leviathan's Crown" Ship Model|TR|L|10000
@@ -2317,6 +2340,7 @@ Burletta III|PI|U|7000|MC:3,SG:3|SG:3||MC:3,SG:1
 Burletta IV|PI|U|10000|MC:4,SG:4|SG:4||LG:1,MC:4
 Burned Arc Circuitry|RC|U|640|AA:2|AA:1
 Burnt-Out Candles|TR|C|640
+Cable Stripper
 Calculator
 Camera Lens|RC|U|640|PP:8|PP:4
 Candle Holder|RC|U|640|MP:8|MP:4
@@ -2395,6 +2419,7 @@ Elephant Obelisk|TR|L|10000
 Emperor Modulator
 Empty Wine Bottle|TR|C|1000
 Energy Clip|AM|R|200|||W1=Advanced ARC Powercell:1,BA:2
+Epoxy Bucket
 Equalizer|LM|L|27500|CG:1,MA:2|MA:1|G3!=CG:3,MA:3,Queen Reactor:1
 Equalizer Blueprint|BP|C|5000
 Equatorial Sundial|TR|R|3000
@@ -2477,6 +2502,7 @@ Hairpin I|PI|C|450|MP:2,RP:1|MP:2|GW1=MP:2,PP:5
 Hairpin II|PI|C|1000|MP:4,RP:3|MP:4||MP:8
 Hairpin III|PI|C|2000|MP:6,SG:1|SG:1||MP:9,SG:1
 Hairpin IV|PI|C|2900|MC:1,SG:2|SG:2||MC:1,SG:1
+Hand Drill
 Headphones|RC|R|1000|RP:7,SC:1|SC:1
 Heavy Ammo|AM|C|12|||W1=CH:2,MP:3
 Heavy Fuze Grenade|QU|R|1600|OI:1,RP:2|CE:1|X3=CA:2,EP:1
@@ -2504,6 +2530,7 @@ Impure ARC Coolant|RC|U|640|CH:12|CH:5
 Industrial Battery|RC|R|1000|BA:2,CH:7|BA:2
 Industrial Charger|RC|R|1000|MP:5,VC:1|VC:1
 Industrial Magnet|RC|R|1000|MN:2,MP:4|MN:2
+Insulation Roll
 Integrated Binoculars|||0
 Ion Sputter|RC|E|6000|EM:1,VC:4|EM:1
 Jolt Mine|QU|R|850|BA:1,PP:2|BA:1|X2!=BA:1,EC:1
@@ -2517,6 +2544,7 @@ Kettle IV|AR|C|5000|MC:2,SG:2|SG:2||MC:3,SG:1
 Kinetic Converter|MD|L|7000|DT:2,MD:1|MC:2
 Laboratory Reagents|RC|R|2000|CH:16,CE:3|CE:3
 Lance's Mixtape (5th Edition)|TR|E|10000
+Laser Level
 Launcher Ammo|AM|R|250|||W1=ARC Motion Core:1,CE:2
 Leaper Pulse Unit|RC|E|3000|AA:3,AM:1|MC:2
 Lemon|NA|U|640|AS:3|AS:2
@@ -2590,6 +2618,7 @@ Pilgrim's Peak Security Code|KY|C|100
 Planks
 Plastic Parts|BM|C|60
 Playing Cards|TR|R|5000
+Pneumatic Actuator||E|5000
 Polluted Air Filter|RC|R|1000|FA:6,OI:2|OI:2
 Pop Trigger|RC|U|640|AA:1,CE:1|CE:1
 Portable TV|RC|R|2000|BA:2,WI:6|WI:4
@@ -2602,6 +2631,7 @@ Power Rod|RM|E|5000|AC:1,AE:1|AE:1|R3=AC:2,AE:2
 Powered Descender|QU|E|10000|AC:2,AE:1|AE:1|U3!=PW:1,Turbine Compressor:1
 Powered Descender Blueprint|BP|C|5000
 Precision Gimbal|TR|C|100
+Pressure Regulator||E|5000
 Prickly Pear|NA|C|640|AS:3|AS:2
 Processor|TM|R|500|PP:1,WI:1|PP:2
 Project Heartwood Blueprints|TR|C|100
@@ -2680,6 +2710,7 @@ Sensors|TM|R|500|MP:1,WI:1|WI:1
 Sentinel Firing Core|RC|R|2000|AA:2,MC:2|MC:2
 Sextant|TR|U|2000
 Shaker|QU|U|1000|PP:10|PP:4|I=AS:7,CA:1
+Sheet Metal
 Shield Recharger|QU|U|520|RP:4|RP:3|IMW1=ARC Powercell:1,RP:5
 Shotgun Ammo|AM|C|20|||W1=CH:2,MP:3
 Shotgun Choke I|MD|C|640|MP:5|MP:3|G1=MP:6,WI:1
@@ -2701,6 +2732,7 @@ Silencer II Blueprint|BP|C|5000
 Silencer III|MD|E|7000|MD:1,WI:3|MD:1
 Silver Teaspoon Set|TR|R|3000
 Simple Gun Parts|TM|U|330|MP:2|MP:1
+Skulker Driver
 Skulker Targeter
 Smoke Grenade|QU|R|1000|CA:1,CH:2|CH:3|U2!=CA:1,CH:14
 Smoke Grenade Blueprint|BP|C|5000
@@ -2726,6 +2758,7 @@ Stable Stock III|MD|R|5000|DT:2,MD:1|MC:2|G3!=DT:5,MD:2
 Stable Stock III Blueprint|BP|C|5000
 Stack of Movie Tapes|TR|C|100
 Statuette|TR|R|3000
+Steel Cable
 Steel Spring|TM|U|300|MP:2|MP:1
 Stella Montis Archives Key|KY|E|100
 Stella Montis Assembly Admin Key|KY|U|100
@@ -2821,7 +2854,7 @@ Yellow Light Stick Blueprint|BP|C|5000
 Zipline|QU|R|1000|MP:1,Rope:1|Rope:1|U2=MC:1,Rope:1
 `;
 
-const WS_NUR = { Wwl:'Advanced Camera;Amplification Module Mk. I;Amplification Module Mk. II;Amplification Module Mk. III;Amplification Module Mk. IV;Amplification Module Mk. V;Amplified Fragments;ARC Conductive Coupler;ARC Data Module;ARC Insulated Coupler;Arcade Duck;Archive Desk Lamp;Basic Camera;Battered Paperback;Integrated Binoculars;Advanced Camera Blueprint;Bantam Blueprint', Wwg:'Bully Fragmenter;Calculator;Differential Microphone;Emperor Modulator;Exodus Technical Handbook;Frigate Inductor;Mini Pump;Planks;Radial Press;Raider Logbook;Skulker Targeter;Thermal Shaker' };
+const WS_NUR = { Wao:'Cable Stripper;Epoxy Bucket;Hand Drill;Insulation Roll;Laser Level;Sheet Metal;Steel Cable', Akg:'Skulker Driver;Pneumatic Actuator;Pressure Regulator', Wwl:'Advanced Camera;Amplification Module Mk. I;Amplification Module Mk. II;Amplification Module Mk. III;Amplification Module Mk. IV;Amplification Module Mk. V;Amplified Fragments;ARC Conductive Coupler;ARC Data Module;ARC Insulated Coupler;Arcade Duck;Archive Desk Lamp;Basic Camera;Battered Paperback;Integrated Binoculars;Advanced Camera Blueprint;Bantam Blueprint', Wwg:'Bully Fragmenter;Calculator;Differential Microphone;Emperor Modulator;Exodus Technical Handbook;Frigate Inductor;Mini Pump;Planks;Radial Press;Raider Logbook;Skulker Targeter;Thermal Shaker' };
 
 const WS_OK = { rezept:{ 'Angled Grip II':'Wts', 'Angled Grip III':'Wts', 'Anvil I':'Wts', 'Aphelion':'Wts', 'Barricade Kit':'Wts', 'Bettina I':'Wts', 'Blaze Grenade':'Wts', 'Blue Light Stick':'Wts', 'Bobcat I':'Wts', 'Burletta I':'Wts', 'Canto I':'Wts', 'Combat Mk. 3 (Aggressive)':'Wts', 'Combat Mk. 3 (Flanking)':'Wts', 'Compensator II':'Wts', 'Compensator III':'Wts', 'Complex Gun Parts':'Wts', 'Crash Mat':'Wts', 'Deadline':'Wts', 'Defibrillator':'Wts', 'Dolabra':'Wts', 'Equalizer':'Wts', 'Explosive Mine':'Wts', 'Extended Barrel II':'Wts', 'Extended Barrel III':'Wts', 'Extended Light Mag II':'Wts', 'Extended Light Mag III':'Wts', 'Extended Medium Mag II':'Wts', 'Extended Medium Mag III':'Wts', 'Extended Shotgun Mag II':'Wts', 'Extended Shotgun Mag III':'Wts', 'Fireworks Box':'Wts', 'Gas Mine':'Wts', 'Green Light Stick':'Wts', 'Heavy Gun Parts':'Wts', 'Hullcracker I':'Wts', 'Il Toro I':'Wts', 'Jolt Mine':'Wts', 'Jupiter':'Wts', 'Light Gun Parts':'Wts', 'Lightweight Stock':'Wts', 'Looting Mk. 3 (Safekeeper)':'Wts', 'Looting Mk. 3 (Survivor)':'Wts', 'Lure Grenade':'Wts', 'Medium Gun Parts':'Wts', 'Muzzle Brake II':'Wts', 'Muzzle Brake III':'Wts', 'Osprey I':'Wts', 'Padded Stock':'Wts', 'Powered Descender':'Wts', 'Pulse Mine':'Wts', 'Rascal I':'Wts', 'Red Light Stick':'Wts', 'Remote Raider Flare':'Wts', 'Seeker Grenade':'Wts', 'Shotgun Choke II':'Wts', 'Shotgun Choke III':'Wts', 'Shotgun Silencer':'Wts', 'Showstopper':'Wts', 'Silencer I':'Wts', 'Silencer II':'Wts', 'Smoke Grenade':'Wts', 'Snap Hook':'Wts', 'Stable Stock II':'Wts', 'Stable Stock III':'Wts', 'Surge Coil':'Wts', 'Tactical Mk. 3 (Defensive)':'Wts', 'Tactical Mk. 3 (Healing)':'Wts', 'Tactical Mk. 3 (Revival)':'Wts', 'Tactical Mk. 3 (Smoke)':'Wts', 'Tagging Grenade':'Wts', 'Tempest I':'Wts', 'Torrente I':'Wts', 'Trailblazer':'Wts', 'Trigger \'Nade':'Wts', 'Venator I':'Wts', 'Vertical Grip II':'Wts', 'Vertical Grip III':'Wts', 'Vita Shot':'Wts', 'Vita Spray':'Wts', 'Vulcano I':'Wts', 'White Flag':'Wts', 'Wolfpack':'Wts', 'Yellow Light Stick':'Wts' },
   wert:{ 'ARC Alloy':'Wwl', 'ARC Circuitry':'Wwl', 'ARC Coolant':'Wwl', 'ARC Flex Rubber':'Wwl', 'ARC Motion Core':'Wwl', 'ARC Performance Steel':'Wwl', 'ARC Powercell':'Wwl', 'ARC Synthetic Resin':'Wwl', 'ARC Thermo Lining':'Wag+Wwl', 'Acoustic Guitar':'Wwl', 'Adrenaline Shot':'Wwl', 'Advanced ARC Powercell':'Wwl', 'Advanced Electrical Components':'Wwl', 'Advanced Mechanical Components':'Wwl', 'Agave':'Wwl', 'Agave Juice':'Wwl', 'Air Freshener':'Wwl', 'Alarm Clock':'Wwl', 'Alien Duck':'Wwl', 'Angled Grip I':'Wwl', 'Angled Grip II':'Wwl', 'Angled Grip II Blueprint':'Wwl', 'Angled Grip III':'Wwl', 'Angled Grip III Blueprint':'Wwl', 'Antiseptic':'Wwl', 'Anvil Blueprint':'Wwl', 'Anvil I':'Wwc', 'Anvil II':'Wwc', 'Anvil III':'Wwc', 'Anvil IV':'Wwc', 'Anvil Splitter':'Wwl', 'Aphelion':'Wwc', 'Aphelion Blueprint':'Wwl', 'Apricot':'Wag+Wwl', 'Arpeggio I':'Wwc', 'Arpeggio II':'Wwc', 'Arpeggio III':'Wwc', 'Arpeggio IV':'Wwc', 'Assessor Matrix':'Wwl', 'Assorted Seeds':'Wwl', 'Bandage':'Wwl', 'Barricade Kit':'Wwl', 'Barricade Kit Blueprint':'Wwl', 'Bastion Cell':'Wwl', 'Battery':'Wag+Wwl', 'Bettina Blueprint':'Wwl', 'Bettina I':'Wwc', 'Bettina II':'Wwc', 'Bettina III':'Wwc', 'Bettina IV':'Wwc', 'Bicycle Pump':'Wwl', 'Binoculars':'Wwl', 'Blaze Grenade':'Wwl', 'Blaze Grenade Blueprint':'Wwl', 'Blaze Grenade Trap':'Wwl', 'Bloated Tuna Can':'Wwl', 'Blue Gate Cellar Key':'Wwl', 'Blue Gate Communication Tower Key':'Wwl', 'Blue Gate Confiscation Room Key':'Wwl', 'Blue Gate Village Key':'Wwl', 'Blue Light Stick':'Wwl', 'Blue Light Stick Blueprint':'Wwl', 'Bobcat Blueprint':'Wwl', 'Bobcat I':'Wwc', 'Bobcat II':'Wwc', 'Bobcat III':'Wwc', 'Bobcat IV':'Wwc', 'Burletta Blueprint':'Wwl', 'Burletta I':'Wwc', 'Burletta II':'Wwc', 'Burletta III':'Wwc', 'Burletta IV':'Wwc', 'Dog Collar':'Wag', 'Equalizer':'Wwc', 'Ferro I':'Wwc', 'Ferro II':'Wwc', 'Ferro III':'Wwc', 'Ferro IV':'Wwc', 'Hairpin I':'Wwc', 'Hairpin II':'Wwc', 'Hairpin III':'Wwc', 'Hairpin IV':'Wwc', 'Hullcracker I':'Wwc', 'Hullcracker II':'Wwc', 'Hullcracker III':'Wwc', 'Hullcracker IV':'Wwc', 'Il Toro I':'Wwc', 'Il Toro II':'Wwc', 'Il Toro III':'Wwc', 'Il Toro IV':'Wwc', 'Jupiter':'Wwc', 'Kettle I':'Wwc', 'Kettle II':'Wwc', 'Kettle III':'Wwc', 'Kettle IV':'Wwc', 'Lemon':'Wag', 'Mushroom':'Wag', 'Olives':'Wag', 'Osprey I':'Wwc', 'Osprey II':'Wwc', 'Osprey III':'Wwc', 'Osprey IV':'Wwc', 'Rattler I':'Wwc', 'Rattler II':'Wwc', 'Rattler III':'Wwc', 'Rattler IV':'Wwc', 'Renegade I':'Wwc', 'Renegade II':'Wwc', 'Renegade III':'Wwc', 'Renegade IV':'Wwc', 'Sample Cleaner':'Wag', 'Silencer III':'Wwc', 'Stitcher I':'Wwc', 'Stitcher II':'Wwc', 'Stitcher III':'Wwc', 'Stitcher IV':'Wwc', 'Tempest I':'Wwc', 'Tempest II':'Wwc', 'Tempest III':'Wwc', 'Tempest IV':'Wwc', 'Torrente I':'Wwc', 'Torrente II':'Wwc', 'Torrente III':'Wwc', 'Torrente IV':'Wwc', 'Venator I':'Wwc', 'Venator II':'Wwc', 'Venator III':'Wwc', 'Venator IV':'Wwc', 'Vulcano I':'Wwc', 'Vulcano II':'Wwc', 'Vulcano III':'Wwc', 'Vulcano IV':'Wwc', 'Wires':'Wag' },
@@ -3202,6 +3235,68 @@ Yellow Light Stick|Gelber Leuchtstab
 Yellow Light Stick Blueprint|Bauplan: Gelber Leuchtstab
 Zipline|Seilrutsche
 `;
+/* @datei wissen/amplified.js */
+
+const AMP_WAFFEN = `Hairpin|1|Semi-Auto;Sprint Shooting;Incendiary Rounds;Tracker Rounds|Akg+Agp+Ade
+Kettle|1|Anti-Shield;Full-Auto;X-Rounds|Akg+Agp+Ade
+Rattler|1|More Reload;Drum Mag;Incendiary Rounds|Akg+Agp+Ade
+Burletta|2|Burst Fire;Increased Burst;Full-Auto;Sprint Shooting|Akg+Agp
+Il Toro|2|More Reload;Slug Rounds|Akg+Agp+Ade
+Anvil|3|Anvil Splitter;X-Rounds|Akg+Agp+Ade
+Canto|3|Carbine Conversion;Incendiary Rounds;Sprint Shooting|Akg+Agp+Ade
+Osprey|3|Anti-Weak Point;Ergonomic Bolt;Tracker Rounds|Akg+Agp+Ade
+Rascal|3|High Velocity;Incendiary Rounds;Sprint Shooting|Akg+Agp+Ade
+Renegade|3|More Reload;Scoped|Akg+Agp+Ade
+Bettina|4|Bigger Mag;Semi-Auto;X-Rounds|Akg+Agp+Ade
+Hullcracker|4|Incendiary Rounds;Mag Reload|Akg+Agp+Ade
+Aphelion|5|Bigger Mag;Charged Burst;Increased Burst;Incendiary Rounds|Akg+Agp+Ade
+Equalizer|5|Anti-Weak Point;Ramping Damage;Bigger Mag|Akg+Agp+Ade
+Jupiter|5|Bigger Mag;Scoped;Ergonomic Bolt|Akg+Agp+Ade`;
+const AMP_WIRKUNG = `Anvil Splitter|Jede Kugel teilt sich in vier schwächere Projektile.||Ade
+Anti-Shield|Mehr Schaden an Schilden.||Ade
+Anti-Weak Point|Mehr Schaden an Schwachpunkten von ARC, weniger an der Panzerung.||Ade
+Bigger Mag|Grösseres Magazin.||Ade
+Burst Fire|||
+Carbine Conversion|Stabiler und genauer.||Ade
+Charged Burst|Halten lädt den Schuss auf.||Ade
+Drum Mag|Grösseres Magazin.||Ade
+Ergonomic Bolt|Repetieren, ohne das Ziel aus dem Visier zu nehmen.|Straight Bolt|Ade
+Full-Auto|Dauerfeuer.||Ade
+High Velocity|Schnellere Projektile.||Ade
+Incendiary Rounds|Treffer setzen in Brand: 5 Schaden pro Sekunde mehr und 2 Sekunden länger.|Incendiary Grenades (bei Hullcracker und Rascal)|Ade
+Increased Burst|Verbessert den Feuerstoss.||Ade
+Mag Reload|Mehr Munition im Magazin.||Ade
+More Reload|Lädt pro Nachladen mehr Patronen.||Ade
+Ramping Damage|Der Schaden steigt, je länger der Strahl gehalten wird.||Ade
+Scoped|Zielfernrohr.||Ade
+Semi-Auto|Einzelfeuer.||Ade
+Slug Rounds|||
+Sprint Shooting|Schiessen im Sprint.||Ade
+Tracker Rounds|Ein Treffer macht das Ziel 5 Sekunden lang sichtbar.||Ade
+X-Rounds|Explosive Kugeln mit mehr Schaden an Raidern und ARC.||Ade`;
+const AMP_FORSCHUNG = `Action Economy|Sentinel Firing Core:8|1000 Schaden mit einer Hairpin machen|Jupiter;Osprey|Akg+Agp|Agp
+Beam Resonance Tech|Queen Reactor:2|In einer Runde 1500 Schaden an Vaporizern mit einem Equalizer machen|Equalizer|Akg+Agp|Agp
+Burst Assembly Recovery|Pop Trigger:20|3 Shredder mit einem Raider Tool zerstören|Burletta|Akg+Agp|Agp
+Compact Combustion Charges|Bombardier Cell:5|3000 Schaden mit Blaze Grenades machen|Hullcracker;Rascal|Akg+Agp|Agp
+Embedded Blast Engineering|Rocketeer Driver:5|1000 Schaden an Fireflies mit Light Impact Grenades machen|Anvil;Bettina;Kettle|Akg+Agp|Agp
+Extended Burst Cycles|Comet Igniter:10|10000 Schaden mit einer Burletta (Burst) oder einem Aphelion (Charged Burst) machen|Aphelion;Burletta|Akg+Agp|Agp
+High-Voltage Exposure|Leaper Pulse Unit:5|5 ARC Turbines zerstören|Aphelion|Akg+Agp|Agp
+Magazine Geometry 101|Bastion Cell:5|15000 Schaden an einer Bastion mit einem Rattler machen|Rattler|Akg+Agp|Agp
+Mobile-Fire Grip Fittings|Skulker Driver:20|Die Electrical Substation besuchen|Burletta;Canto;Hairpin;Rascal|Akg+Agp|Agp
+Shield Stress Testing|Matriarch Reactor:2|700 Schaden an Raidern machen|Kettle|Akg+Agp|Agp
+Solid-Core Casting Tech|Tick Pod:20|50 fliegende ARC mit Schrotflinten zerstören|Il Toro|Akg+Agp|Agp
+Targeted Component Trial|Fireball Burner:20|40 Triebwerke fliegender ARC zerstören|Equalizer;Osprey|Akg+Agp|Agp
+Thermite-Tipped Rounds|Firefly Burner:5|30 Fireballs mit Explosive Mines zerstören|Aphelion;Canto;Hairpin;Rattler|Akg+Agp|Agp
+Top Mounted Optics Retrofittings|Snitch Scanner:14|Pilgrim's Peak auf The Blue Gate besuchen|Jupiter;Renegade|Akg+Agp|Agp
+Trigger Reset Systems|Vaporizer Regulator:4|5 Skulker mit einem Raider Tool zerstören|Bettina;Hairpin|Akg+Agp|Agp`;
+
+const AMP_REGELN = {
+  punkte:5000,   
+  voraus:{ x:'Braucht den Outpost, Gunsmith Stufe 4, Research Station Stufe 4 und die Waffe auf Stufe IV. Der Schritt auf Stufe V kostet ein Amplification Module in der Stufe, die zur ursprünglichen Seltenheit der Waffe passt, und ist endgültig.', s:'Akg+Agp+Agw' },
+  module:{ x:'Amplification Modules liegen auf der ARC Frigate und im Fallen Emperor auf Pendola Pass. Überzählige lassen sich zu Amplified Fragments zerlegen, damit werden Amplified-Waffen repariert.', s:'Akg+Agp' },
+  kosten:{ x:'Was die einzelne Aufwertung kostet, ist nicht bekannt: Sie braucht Pneumatic Actuator und Pressure Regulator (aus Emperor Payloads bei Redirection auf Pendola Pass), die Mengen nennt keine Angabe. Auch welche Aufwertungen sich gegenseitig ausschliessen, ist nicht belegt.', s:'Akg+Agp+Ats' },
+  forschung:{ x:'Jedes Projekt kostet 5000 Research Points, ARC-Teile und eine Aufgabe. Zu welcher Aufwertung ein Projekt gehört, sagt keine Angabe; die App ordnet darum nichts zu.', s:'Akg+Agp' }
+};
 /* @datei wissen/kartenbedingungen.js */
 
 const COND_DATA = `nightraid|Night Raid|G|dam,buried,spaceport,bluegate,riven,stella|HRLP|Dunkelheit und mehr ARC-Aktivität, dafür ist die Beute mehr wert. Eine Angabe nennt auch eine höhere Chance auf Schlüssel.|Eine Angabe führt Night Raid auch für Pendola Pass.|Mad+Mas+Mts+Mt2+Mmf+Mah+k|
@@ -6897,11 +6992,22 @@ const WSD = (() => {
   return { da:true, items, stationen, abw, nur, ok, zutatIn, ausZerl, bps, bpFuer };
 })();
 let INV_BEREIT = false;   
-const ROEM = ['I', 'II', 'III', 'IV'];
+const ROEM = ['I', 'II', 'III', 'IV', 'V'];
 const WS_WAFFEN_TYP = new Set('AR SM PI SP SG BR SR LM HC'.split(' '));
 
 const WS_AUSRUESTUNG = new Set('AR SM PI SP SG BR SR LM HC MD AU SH AM QU'.split(' '));
 
+const AMP = (() => {
+  const leer = { da:false, waffen:new Map(), wirkung:new Map(), forschung:[] };
+  if (typeof AMP_WAFFEN === 'undefined') return leer;
+  const seiten = ks => new Set(String(ks || '').split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
+  const wirkung = new Map(AMP_WIRKUNG.trim().split('\n').map(l => { const z = l.split('|'); return [z[0], { n:z[0], x:z[1] || '', andere:z[2] || '', ver:seiten(z[3]) >= 2 }]; }));
+  const forschung = AMP_FORSCHUNG.trim().split('\n').map(l => { const z = l.split('|'), i = z[1].lastIndexOf(':');
+    return { n:z[0], teile:[{ n:z[1].slice(0, i), c:+z[1].slice(i + 1) }], aufgabe:z[2], fuer:z[3].split(';'), ver:seiten(z[4]) >= 2, verFuer:seiten(z[5]) >= 2 }; });
+  const waffen = new Map(AMP_WAFFEN.trim().split('\n').map(l => { const z = l.split('|');
+    return [z[0], { n:z[0], mk:+z[1], modul:'Amplification Module Mk. ' + ROEM[+z[1] - 1], auf:z[2].split(';'), ver:seiten(z[3]) >= 2, forschung:forschung.filter(p => p.fuer.includes(z[0])) }]; }));
+  return { da:true, waffen, wirkung, forschung };
+})();
 const WAFFEN = (() => {
   const F = new Map();
   for (const o of WSD.items.values()){
@@ -6910,6 +7016,9 @@ const WAFFEN = (() => {
     if (!F.has(fam)) F.set(fam, { n:fam, typ:o.typ, stufen:[] });
     F.get(fam).stufen[t] = o;
   }
+  
+  for (const a of AMP.waffen.values()){ const f = F.get(a.n); if (!f) continue; f.amp = a;
+    f.stufen.push({ n:a.n + ' V', typ:f.typ, r:(f.stufen.find(Boolean) || {}).r || '', wert:null, zerl:[], raid:[], rez:null, bp:false, auf:[{ n:a.modul, c:1 }], amp:true }); }
   return F;
 })();
 
@@ -6924,17 +7033,22 @@ if (WSD.da){
   ITEMS.sort((a, b) => a.n.localeCompare(b.n));
 }
 
-let WST = { ok:false, st:{}, ziel:{}, waffe:{}, wunsch:{}, bp:{} };
+let WST = { ok:false, st:{}, ziel:{}, waffe:{}, wunsch:{}, bp:{}, forsch:{} };
 try { const w = JSON.parse(localStorage.getItem('raider-atlas:werkstatt') || 'null'); if (w && typeof w === 'object') for (const k in WST) if (k in w && typeof w[k] === typeof WST[k]) WST[k] = w[k]; } catch(_){}
 const saveWst = () => { try { localStorage.setItem('raider-atlas:werkstatt', JSON.stringify(WST)); } catch(_){} };
 
 const wsStation = n => WSD.stationen.find(s => s.n === n);
+
+const WS_VOR = new Map();
+if (typeof WS_VORAUS !== 'undefined') for (const l of WS_VORAUS.trim().split('\n')){ const z = l.split('|'); WS_VOR.set(z[0] + '|' + z[1], { st:z[2], stufe:+z[3] }); }
+const wsGruppe = s => typeof WS_ST_HINWEIS !== 'undefined' && WS_ST_HINWEIS[s.n] ? WS_ST_HINWEIS[s.n].gruppe || '' : '';
 const wsStufe = s => Math.max(s.min, Math.min(s.max, WST.st[s.n] == null ? s.min : WST.st[s.n]));
 const wsZiel = s => Math.max(wsStufe(s), Math.min(s.max, WST.ziel[s.n] == null ? s.max : WST.ziel[s.n]));
 
 const wfStufe = f => Math.max(0, Math.min(f.stufen.length, WST.waffe[f.n] || 0));
 const wfWunsch = f => Math.max(0, Math.min(f.stufen.length, WST.wunsch[f.n] || 0));
 
+const wfRoem = (t, f) => !t ? '–' : f && f.stufen[t - 1] && f.stufen[t - 1].amp ? 'V' : ROEM[t - 1];
 const bpName = n => WSD.bpFuer.get(n) || n;
 const bpGelernt = n => !!WST.bp[bpName(n)];
 
@@ -6967,8 +7081,11 @@ function bedarfRechnen(){
     const f = WAFFEN.get(fam); if (!f) continue; const hab = wfStufe(f), zielT = wfWunsch(f); if (zielT <= hab) continue; Z.waffen++;
     for (let t = hab + 1; t <= zielT; t++){ const o = f.stufen[t - 1]; if (!o) continue;
       const kosten = t === 1 ? (o.rez ? o.rez.zut : []) : o.auf;
-      for (const x of kosten) add(x.n, x.c, { t:'Waffe', label:fam + ' ' + ROEM[t - 1], go:'w|' + fam }); }
+      for (const x of kosten) add(x.n, x.c, { t:'Waffe', label:fam + ' ' + wfRoem(t, f), go:'w|' + fam }); }
   }
+  
+  for (const p of AMP.forschung){ if (!WST.forsch[p.n]) continue; const fam = p.fuer.find(n => WAFFEN.has(n)); Z.waffen++;
+    for (const x of p.teile) add(x.n, x.c, { t:'Waffe', label:'Forschung ' + p.n, go:fam ? 'w|' + fam : '' }); }
   
   for (const x of LIST){ if (B.has(x.n)) continue; const c = (x.by ? x.m : x.need) || 0; if (c > 0){ add(x.n, c, { t:'Liste', label:'Einkaufsliste' }); Z.liste++; } }
   return { B, Z };
@@ -7610,13 +7727,13 @@ renderList(); shopRender();
 const FAQ_FUNKTIONEN = [
 {"t":"Karten","b":[{"k":"p","x":"Jede Map gibt es als 3D-Modell und als 2D-Plan, mit Markern, die sich einzeln filtern lassen. Norden ist wie im Spiel fest oben."},{"k":"ul","i":[["Marker","Ausgänge (Lift, Raider-Luke), Waffenkisten, Security-Spinde, Rucksäcke, Startpunkte, Orte und Questziele."],["Ebenen","oben und unten getrennt, wo eine Map mehrere Stockwerke hat."],["Suche","Orte, Items und Quests direkt auf der Karte finden."],["Mini-Karte","kleine Karte mit Position und Route, auch während eines Runs."],["Ausrichtung","Der Kompass-Knopf wechselt zwischen drei Modi. «Norden oben» bleibt starr, zoomt auf das nächste Ziel und wandert mit; Ziehen verschiebt die Karte. «Folgen» dreht die Karte, damit dein Weg nach oben zeigt. «Frei drehen» dreht und neigt die Karte mit einem Finger, verschoben wird mit zwei Fingern."],["Gebäude und Gelände","Alle Maps sind nach dem Kartenbild grob nachgebaut: Gebäude so gedreht wie im Spiel, Hügel und Täler. Die Höhen sind geschätzt. Stella Montis ist eine Innenanlage und bleibt ein flacher Plan."],["Eigene Karte","einen eigenen Screenshot als Unterlage unter die Marker legen."],["Annahmen markiert","Was nicht belegt ist, steht als «Annahme» beim Marker oder Raum."],["3D-Grafik bleibt","Verliert der Browser die 3D-Grafik (zum Beispiel das iPhone im Hintergrund), zeichnet die App einfach weiter und baut die 3D-Ansicht neu auf, sobald es geht."]]}]},
 {"t":"Run planen","b":[{"k":"p","x":"Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Run Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Bereich «Run planen» oder Knopf «Run planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Run», die Mini-Karte und die Knopfspalte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde. Kartenbedingung, Kampf-Puffer, Raider Hatch Key, Security Breach und Uhr stehen unter «Optionen»."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Run","optionale Uhr im LCD-Stil, nächstes Ziel ausgeschrieben mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Run","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Run nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, nur der Startpunkt neu; nach einer Route aus dem Inventar wieder dieselbe Material-Route) oder einen neuen Run planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Run steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps in «Run planen» zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","alle 19 Bedingungen stehen unter «Wissen»; ein Eintrag unten in «Run planen» führt dorthin. Im Navi wählst du unter «Optionen» die aktuelle Bedingung, zuerst stehen die der gewählten Map. Das Navi nennt die Folgen: Sind Raider Hatches nicht aktiv, plant es einen anderen Ausgang; es sagt auch, wenn weniger Return Points aktiv sind oder alle verschlossenen Türen offen stehen."],["Geführte Runs","mit eigener Karte, unten in «Run planen»: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
-{"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat drei Reiter: Bedarf, Einkaufsliste und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte, deinen Werkstatt-Zielen, deinen Wunsch-Waffen und eigenen Einträgen der Einkaufsliste, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan lernen (nach dem Abhaken: Verkaufen). Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann das weg?","der Filter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Entsteht beim Zerlegen von","jedes Material zeigt, welche Items es beim Zerlegen ergeben, beste Ausbeute zuerst, mit der Menge in Speranza und im Raid. Brauchst du eines dieser Items selbst noch, steht das als Warnung in der Zeile."],["Symbole","jedes Item trägt ein eigenes Symbol für seine Art (Waffe, Aufsatz, Munition, Bauplan, Material, Wertsache und weitere), in der Farbe seiner Seltenheit. Die Symbole sind selbst gezeichnet, keine Grafiken aus dem Spiel."],["Alle Items","623 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Rezept auf die Liste","ein Knopf setzt alle Zutaten eines Rezepts auf die Einkaufsliste; damit zählen sie im Bedarf."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
-{"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Vier Reiter: Stationen, Waffen, Herstellen und Baupläne."},{"k":"ul","i":[["Stationen","8 Stationen mit Stufen (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Research Station, Scrappy). Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Herstellen","156 Rezepte, durchsuchbar. Der Knopf «Filter» grenzt nach Station ein, und «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst. Beides lässt sich kombinieren."],["Baupläne","85 Baupläne mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
+{"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat drei Reiter: Bedarf, Einkaufsliste und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte, deinen Werkstatt-Zielen, deinen Wunsch-Waffen und eigenen Einträgen der Einkaufsliste, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan lernen (nach dem Abhaken: Verkaufen). Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann das weg?","der Filter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Entsteht beim Zerlegen von","jedes Material zeigt, welche Items es beim Zerlegen ergeben, beste Ausbeute zuerst, mit der Menge in Speranza und im Raid. Brauchst du eines dieser Items selbst noch, steht das als Warnung in der Zeile."],["Symbole","jedes Item trägt ein eigenes Symbol für seine Art (Waffe, Aufsatz, Munition, Bauplan, Material, Wertsache und weitere), in der Farbe seiner Seltenheit. Die Symbole sind selbst gezeichnet, keine Grafiken aus dem Spiel."],["Alle Items","630 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Rezept auf die Liste","ein Knopf setzt alle Zutaten eines Rezepts auf die Einkaufsliste; damit zählen sie im Bedarf."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
+{"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Vier Reiter: Stationen, Waffen, Herstellen und Baupläne."},{"k":"ul","i":[["Stationen","9 Stationen mit Stufen: sieben in Speranza (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Scrappy) und zwei im Outpost. Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Outpost","eigene Gruppe in der Stationsliste mit dem Outpost (Stufe = Zahl der Räume, Kosten der Räume 2 bis 4) und der Research Station, die darin steht. Bei jeder Stufe steht, welche Outpost-Stufe sie voraussetzt: Research Station Stufe 1 bis 4 braucht Outpost Stufe 1 bis 4, Gunsmith Stufe 4 braucht Outpost Stufe 4."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Amplified (Stufe V)","15 Waffen haben eine fünfte Stufe. Sie kostet ein Amplification Module passend zur Seltenheit der Waffe; mit Wunsch-Stufe V zählt es im Bedarf. Im Detail stehen die Aufwertungen der Waffe mit ihrer Wirkung und die Forschungsprojekte, die für sie gebraucht werden (ARC-Teile, 5000 Research Points, Aufgabe). Ein Haken plant ein Projekt ein: Seine ARC-Teile zählen dann im Bedarf, einmal für alle Waffen."],["Herstellen","156 Rezepte, durchsuchbar. Der Knopf «Filter» grenzt nach Station ein, und «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst. Beides lässt sich kombinieren."],["Baupläne","85 Baupläne mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen. Alle davor werden abgehakt, dazu alles, was sie bei anderen Händlern voraussetzen; die App sagt vorher, wie viele."],["Reihenfolge","jede Quest zeigt, welche Quests vorher erledigt sein müssen («Braucht vorher») und welche sie freischaltet («Schaltet frei»), auch über Händler hinweg. Ein Tipp öffnet die andere Quest, «Zurück» führt wieder her."],["Gesperrt und jetzt machbar","sobald du etwas abgehakt hast, tragen Quests mit offenen Voraussetzungen die Marke «Gesperrt», die Liste nennt, wie viele Quests jetzt machbar sind, und stellt sie zuoberst. Das Navi schlägt dann pro Händler nur noch eine Quest vor, die nicht gesperrt ist. Bei einer gesperrten Quest steht, wie viele offene Quests davor liegen und welche davon du jetzt machen kannst."],["Suche und Filter","nach Name, Ort, Händler oder Material; der Filter «Reihenfolge» zeigt nur, was jetzt machbar oder gesperrt ist."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste. Im Detail steht «Wird verfolgt» als Zustand."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."]]}]},
 {"t":"Wissen","b":[{"k":"p","x":"Der Knopf mit dem Buch öffnet die Seite «Wissen» (am iPhone oben rechts in jedem Bereich, im breiten Fenster unten in der Symbolleiste): alles zum Nachschlagen und alles über die App an einem Ort. «Zurück» führt in den Bereich, aus dem du kamst."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","19 Bedingungen in den Gruppen Gross und Klein: was sie ändern, auf welchen Maps sie laufen, ob Raider Hatches gesperrt sind und ob Trials-Punkte doppelt zählen. Weichen Angaben voneinander ab, stehen beide da."],["Offizieller Zeitplan","welche Bedingung gerade läuft, weiss die App nicht (der Plan wechselt jede Stunde und ist je Region verschoben). Ein Knopf öffnet den offiziellen Zeitplan im Browser. Es ist der einzige Knopf der App, der nach aussen führt."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht und Namen auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
 {"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Werkstatt-Stand, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Eigene Stelle pro Bereich","jeder Bereich merkt sich, wie weit du gescrollt hast. «Zurück» aus einem Detail führt an die alte Stelle der Liste; den Bereich erneut antippen führt nach oben."],["Breites Fenster (PC, iPad quer)","ab 860 px Breite steht links eine schmale Symbolleiste mit den fünf Bereichen und «Wissen», daneben die Liste über die ganze Höhe. In Inventar, Werkstatt, Quests und Wissen steht das Detail rechts neben der Liste: Die Liste bleibt stehen, die gewählte Zeile ist markiert, und was du im Detail abhakst, steht sofort auch in der Liste. Karten und Run planen zeigen Karte und Infobereich. Öffnest du aus einem Detail einen Ort auf der Karte, wechselt die App zu «Karten»; «Zurück» in der Kartenleiste führt wieder zum Detail."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Einstellungen und Updates","stehen unter «Wissen»."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
 {"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein; in der App steht dafür ein kleiner Haken. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
-{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Quest-Reihenfolge","die Voraussetzungen von 100 Quests sind doppelt belegt, die der 22 neusten einfach, bei 2 fehlt die Angabe. Weitere Bedingungen wie eine Zahl gespielter Raids zeigt die App an, prüft sie aber nicht. Du kannst jede Quest jederzeit von Hand abhaken, auch eine gesperrte."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
+{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Amplified","was die einzelne Aufwertung kostet, ist nicht bekannt (Pneumatic Actuator und Pressure Regulator werden gebraucht, die Mengen nennt keine Angabe), darum zählt sie nicht im Bedarf. Auch welche Aufwertungen sich ausschliessen und zu welcher Aufwertung ein Forschungsprojekt gehört, ist nicht belegt; die App ordnet nichts zu. Die Kosten der Outpost-Räume 2 und 3 haben erst eine Angabe."],["Quest-Reihenfolge","die Voraussetzungen von 100 Quests sind doppelt belegt, die der 22 neusten einfach, bei 2 fehlt die Angabe. Weitere Bedingungen wie eine Zahl gespielter Raids zeigt die App an, prüft sie aber nicht. Du kannst jede Quest jederzeit von Hand abhaken, auch eine gesperrte."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
 ];
 /* @datei app/kern/quests.js */
 
@@ -8113,14 +8230,17 @@ function wkStText(s){
   return (l === 0 ? 'Noch nicht gebaut' : `Stufe ${l} von ${s.max}`) + ' · ' + (l >= s.max ? 'fertig ausgebaut' : z <= l ? 'kein Ausbau geplant' : `bis Stufe ${z} fehlen ${wkMat(wkStOffen(s))}`);
 }
 function wkStRender(){
-  const L = WSD.stationen.filter(s => s.max > s.min);
+  const L = WSD.stationen.filter(s => s.max > s.min && !wsGruppe(s)), G = WSD.stationen.filter(s => s.max > s.min && wsGruppe(s)).sort((a, b) => (a.n === 'Outpost' ? 0 : 1) - (b.n === 'Outpost' ? 0 : 1));
   $('#wkStInfo').textContent = (WST.ok ? '' : 'Stell deine Stufen ein. Daraus rechnet die App, was du behalten musst. ') + 'Tippe auf eine Station für Kosten, Ziel und Rezepte.';
-  $('#wkStList').innerHTML = L.map(s => { const l = wsStufe(s), n = esc(s.n);
+  const zeile = s => { const l = wsStufe(s), n = esc(s.n);
     return `<li><div class="row static"><button type="button" class="rowin" data-st="${n}"><span class="rt"><span class="t1">${n}</span><span class="t2">${esc(wkStText(s))}</span><span class="bar"><i style="width:${Math.round(l / s.max * 100)}%"></i></span></span></button>`
-      + `<div class="stepper" role="group" aria-label="Meine Stufe: ${n}"><button type="button" data-stm="${n}" aria-label="${n}: eine Stufe weniger"${l > s.min ? '' : ' disabled'}>−</button><span class="lcdn">${l}</span><button type="button" data-stp="${n}" aria-label="${n}: eine Stufe mehr"${l < s.max ? '' : ' disabled'}>+</button></div></div></li>`; }).join('')
+      + `<div class="stepper" role="group" aria-label="Meine Stufe: ${n}"><button type="button" data-stm="${n}" aria-label="${n}: eine Stufe weniger"${l > s.min ? '' : ' disabled'}>−</button><span class="lcdn">${l}</span><button type="button" data-stp="${n}" aria-label="${n}: eine Stufe mehr"${l < s.max ? '' : ' disabled'}>+</button></div></div></li>`; };
+  $('#wkStList').innerHTML = L.map(zeile).join('')
     
     + WSD.stationen.filter(s => s.max <= s.min).map(s => { const r = wkStRezepte(s).length;
-      return `<li><button type="button" class="row" data-st="${esc(s.n)}"><span class="rt"><span class="t1">${esc(s.n)}</span><span class="t2">Von Anfang an da · ${r === 1 ? '1 Rezept' : r + ' Rezepte'}</span></span>${CHEV}</button></li>`; }).join('');
+      return `<li><button type="button" class="row" data-st="${esc(s.n)}"><span class="rt"><span class="t1">${esc(s.n)}</span><span class="t2">Von Anfang an da · ${r === 1 ? '1 Rezept' : r + ' Rezepte'}</span></span>${CHEV}</button></li>`; }).join('')
+    
+    + (G.length ? `<li class="grp" role="presentation">${esc(wsGruppe(G[0]))}</li>` + G.map(zeile).join('') : '');
 }
 
 function wkStRezepte(s){
@@ -8140,6 +8260,8 @@ function wkStOpen(n, back){
   const l = wsStufe(s), z = wsZiel(s), stuf = s.max > s.min;
   let h = `<div class="subnav${wkBack ? '' : ' own'}"><button type="button" class="back" id="wkBackBtn">${WK_BACK}${esc(wkBack ? wkBack.label : 'Stationen')}</button></div><h3 class="dn">${esc(s.n)}</h3>`
     + `<p class="dalt">${stuf ? esc(wkStText(s)) : 'Von Anfang an da, keine Stufen'}</p>`;
+  const hin = typeof WS_ST_HINWEIS !== 'undefined' ? WS_ST_HINWEIS[s.n] : null;
+  if (hin) h += `<p class="fine">${esc(hin.x)} ${qVer(hin.s.split('+'))}</p>`;
   if (stuf){
     h += wkStepper('Meine Stufe', l, 'data-stm="' + esc(s.n) + '"', 'data-stp="' + esc(s.n) + '"', l > s.min, l < s.max)
       + wkStepper('Ziel', z, 'data-zm="1"', 'data-zp="1"', z > l, z < s.max);
@@ -8150,6 +8272,8 @@ function wkStOpen(n, back){
         + `<h4>Stufe ${i}${d ? '' : i <= z ? ' <span class="stb s-aktiv">zählt im Bedarf</span>' : ' <span class="stb s-pause">über deinem Ziel</span>'}</h4></div>`;
       h += k.length ? '<ul class="group">' + k.map(qNeedRow).join('') + '</ul>' + (!d && k.some(x => qItem(x.n)) ? `<div class="btncol"><button type="button" class="bs" data-ststage="${i}">Stufe ${i} auf die Einkaufsliste</button></div>` : '')
         : '<p class="fine">Kosten nicht bekannt.</p>';
+      const vor = WS_VOR.get(s.n + '|' + i), vs = vor ? wsStation(vor.st) : null;
+      if (vs) h += `<p class="fine vorp">Braucht ${esc(vor.st)} Stufe ${vor.stufe}${vor.stufe <= vs.min ? '' : wsStufe(vs) >= vor.stufe ? ' (hast du)' : ', du hast Stufe ' + wsStufe(vs)}. <button type="button" class="lnk" data-st="${esc(vor.st)}">${esc(vor.st)} zeigen</button></p>`;
       h += `<p class="fine">${s.ver[i - 1] ? VER2 : VER1}</p></div>`;
     }
   }
@@ -8160,7 +8284,22 @@ function wkStOpen(n, back){
   $('#wkDetail').innerHTML = h; $('#wkBackBtn').focus();
 }
 
-const wfRoem = t => t ? ROEM[t - 1] : '–';
+const wfStufenText = f => { const N = f.stufen.map((_, i) => wfRoem(i + 1, f)); return N.length > 2 && N.every((x, i) => x === ROEM[i]) ? N[0] + ' bis ' + N[N.length - 1] : N.join(', '); };
+
+function wkAmpSection(f){
+  const a = f.amp;
+  let h = `<h4 class="hver">Aufwertungen der Stufe V (${a.auf.length}) ${a.ver ? VER2 : VER1}</h4><ul class="group" id="wkAmpAuf">` + a.auf.map(n => { const w = AMP.wirkung.get(n) || { x:'', andere:'' };
+    return `<li><div class="row static"><span class="rt"><span class="t1">${esc(n)}</span><span class="t2">${esc(w.x || 'Wirkung nicht bekannt')}${w.andere ? ' · Andere Angabe: «' + esc(w.andere) + '»' : ''}</span></span></div></li>`; }).join('') + '</ul>'
+    + `<p class="fine">${esc(AMP_REGELN.kosten.x)}</p>`;
+  if (a.forschung.length){
+    h += `<h4>Forschung für diese Waffe (${a.forschung.length})</h4><ul class="group" id="wkAmpForsch">` + a.forschung.map(p => { const on = !!WST.forsch[p.n], x = p.teile[0], it = qItem(x.n);
+      return `<li${it ? rrCls(it.r) : ''}><div class="row static"><button type="button" class="check" data-forsch="${esc(p.n)}" aria-pressed="${on}" aria-label="${on ? 'Nicht mehr einplanen' : 'Einplanen'}: ${esc(p.n)}">${CHECK_SVG}</button>`
+        + `<span class="rt"><span class="t1">${esc(p.n)}${on ? ' <span class="stb s-aktiv">zählt im Bedarf</span>' : ''}</span><span class="t2">${x.c}× ${esc(it ? dispName(it) : x.n)} · ${AMP_REGELN.punkte} Research Points</span>`
+        + `<span class="t2">Aufgabe: ${esc(p.aufgabe)}</span>${p.fuer.length > 1 ? `<span class="t2">Auch für ${esc(undListe(p.fuer.filter(n => n !== f.n)))}</span>` : ''}</span></div></li>`; }).join('') + '</ul>'
+      + `<p class="fine">Der Haken plant ein Projekt ein: Seine ARC-Teile zählen dann im Bedarf, einmal für alle Waffen. ${esc(AMP_REGELN.forschung.x)} ${a.forschung.every(p => p.ver) ? VER2 : VER1}</p>`;
+  }
+  return h + `<p class="fine">${esc(AMP_REGELN.module.x)}</p>`;
+}
 const wfKosten = (f, t) => { const o = f.stufen[t - 1]; return !o ? [] : t === 1 ? (o.rez ? o.rez.zut : []) : o.auf; };
 function wkWafRender(){
   const F = [...WAFFEN.values()], G = new Map();
@@ -8169,8 +8308,8 @@ function wkWafRender(){
   $('#wkWafInfo').textContent = `${F.length} Waffen. ` + (nW ? (nW === 1 ? 'Eine Wunsch-Waffe zählt' : nW + ' Wunsch-Waffen zählen') + ' im Bedarf.' : 'Setz bei einer Waffe eine Wunsch-Stufe, dann zählt ihr Material im Bedarf.');
   $('#wkWafList').innerHTML = [...G.keys()].sort((a, b) => a.localeCompare(b, 'de')).map(k => `<h3 class="gh">${esc(k)}</h3><ul class="group">` + G.get(k).sort((a, b) => a.n.localeCompare(b.n)).map(f => {
     const l = wfStufe(f), w = wfWunsch(f), o = f.stufen.find(Boolean);
-    return `<li${rrCls(o && o.r)}><button type="button" class="row" data-waf="${esc(f.n)}">${symKachel(o ? o.n : f.n)}<span class="rt"><span class="t1">${esc(f.n)}${w > l ? ` <span class="stb s-aktiv">Wunsch ${wfRoem(w)}</span>` : ''}</span>`
-      + `<span class="t2">${l ? 'Meine Stufe ' + wfRoem(l) : 'Habe ich nicht'} · ${f.stufen.length} Stufen</span></span>${CHEV}</button></li>`; }).join('') + '</ul>').join('');
+    return `<li${rrCls(o && o.r)}><button type="button" class="row" data-waf="${esc(f.n)}">${symKachel(o ? o.n : f.n)}<span class="rt"><span class="t1">${esc(f.n)}${w > l ? ` <span class="stb s-aktiv">Wunsch ${wfRoem(w, f)}</span>` : ''}</span>`
+      + `<span class="t2">${l ? 'Meine Stufe ' + wfRoem(l, f) : 'Habe ich nicht'} · ${f.stufen.length === 1 ? '1 Stufe' : f.stufen.length + ' Stufen'}${f.amp ? ', mit Amplified' : ''}</span></span>${CHEV}</button></li>`; }).join('') + '</ul>').join('');
 }
 function wkWafOpen(fam, back){
   const f = WAFFEN.get(fam); if (!f) return;
@@ -8180,21 +8319,23 @@ function wkWafOpen(fam, back){
   wkCur = { t:'waf', n:fam }; wkShow('detail');
   const l = wfStufe(f), w = wfWunsch(f), n = f.stufen.length, typ = WS_TYP[f.typ] ? WS_TYP[f.typ][1] : 'Waffe';
   let h = `<div class="subnav${wkBack ? '' : ' own'}"><button type="button" class="back" id="wkBackBtn">${WK_BACK}${esc(wkBack ? wkBack.label : 'Waffen')}</button></div><div class="dhead">${symKachel((f.stufen.find(Boolean) || f).n, undefined, true)}<div class="dhtx"><h3 class="dn">${esc(f.n)}</h3>`
-    + `<p class="dalt">${esc(typ)} · ${n} Stufen (I bis ${ROEM[n - 1]})</p></div></div>` + (w > l ? '<div class="sb"><span class="stb s-aktiv">Wunsch-Waffe</span></div>' : '')
-    + wkStepper('Meine Stufe', wfRoem(l), 'data-wfm="1"', 'data-wfp="1"', l > 0, l < n)
-    + wkStepper('Wunsch bis Stufe', wfRoem(w), 'data-wwm="1"', 'data-wwp="1"', w > 0, w < n);
+    + `<p class="dalt">${esc(typ)} · ${n === 1 ? '1 Stufe' : n + ' Stufen'} (${esc(wfStufenText(f))})</p></div></div>` + (w > l ? '<div class="sb"><span class="stb s-aktiv">Wunsch-Waffe</span></div>' : '')
+    + wkStepper('Meine Stufe', wfRoem(l, f), 'data-wfm="1"', 'data-wfp="1"', l > 0, l < n)
+    + wkStepper('Wunsch bis Stufe', wfRoem(w, f), 'data-wwm="1"', 'data-wwp="1"', w > 0, w < n);
   if (w > l && Array.from({ length:w - l }, (_, i) => wfKosten(f, l + 1 + i)).some(k => k.some(x => qItem(x.n)))) h += '<div class="btncol"><button type="button" class="bp" data-wfall="1">Alles bis zur Wunsch-Stufe auf die Einkaufsliste</button></div>';
   else if (!w) h += '<p class="fine">Ohne Wunsch-Stufe zählt diese Waffe nicht im Bedarf.</p>';
   for (let t = 1; t <= n; t++){
     const o = f.stufen[t - 1], k = wfKosten(f, t), d = t <= l;
-    h += `<div class="pstage${d ? ' sd' : ''}"><div class="stagehd"><button type="button" class="check done" data-wfdone="${t}" aria-pressed="${d}" aria-label="Stufe ${ROEM[t - 1]} ${d ? 'nicht mehr erledigt' : 'abhaken'}">${CHECK_SVG}</button>`
-      + `<h4>Stufe ${ROEM[t - 1]}: ${t === 1 ? 'herstellen' : 'aufwerten'}${d ? '' : t <= w ? ' <span class="stb s-aktiv">zählt im Bedarf</span>' : ''}</h4></div>`;
-    h += k.length ? '<ul class="group">' + k.map(qNeedRow).join('') + '</ul>' + (!d && k.some(x => qItem(x.n)) ? `<div class="btncol"><button type="button" class="bs" data-wfstage="${t}">Stufe ${ROEM[t - 1]} auf die Einkaufsliste</button></div>` : '')
+    h += `<div class="pstage${d ? ' sd' : ''}"><div class="stagehd"><button type="button" class="check done" data-wfdone="${t}" aria-pressed="${d}" aria-label="Stufe ${wfRoem(t, f)} ${d ? 'nicht mehr erledigt' : 'abhaken'}">${CHECK_SVG}</button>`
+      + `<h4>Stufe ${wfRoem(t, f)}: ${o && o.amp ? 'Amplified' : t === 1 ? 'herstellen' : 'aufwerten'}${d ? '' : t <= w ? ' <span class="stb s-aktiv">zählt im Bedarf</span>' : ''}</h4></div>`;
+    h += k.length ? '<ul class="group">' + k.map(qNeedRow).join('') + '</ul>' + (!d && k.some(x => qItem(x.n)) ? `<div class="btncol"><button type="button" class="bs" data-wfstage="${t}">Stufe ${wfRoem(t, f)} auf die Einkaufsliste</button></div>` : '')
       : '<p class="fine">Kosten nicht bekannt.</p>';
     if (t === 1 && o && o.rez) h += `<p class="fine">Braucht ${esc(o.rez.bank.map(b => WS_BANK[b]).join(' oder ') + (o.rez.stufe ? ' Stufe ' + o.rez.stufe : ''))}${o.bp ? (bpGelernt(o.n) ? ' · Bauplan gelernt' : ' · Bauplan nötig') : ''}. ${WSD.ok('rezept', o.n) ? VER2 : VER1}</p>`;
+    else if (o && o.amp) h += `<p class="fine">${esc(AMP_REGELN.voraus.x)} ${qVer(AMP_REGELN.voraus.s.split('+'))}</p>`;
     else if (k.length) h += `<p class="fine">${VER1}</p>`;
     h += '</div>';
   }
+  if (f.amp) h += wkAmpSection(f);
   const I = f.stufen.filter(o => o && itemByName(o.n));
   if (I.length) h += '<h4>Wert und Zerlegen</h4><ul class="group">' + I.map(o => `<li><button type="button" class="row" data-wkitem="${esc(o.n)}"><span class="rt"><span class="t1">${esc(o.n)}</span><span class="t2">${o.wert != null ? 'Verkaufswert ' + fmtCoins(o.wert) : 'Im Inventar ansehen'}</span></span>${CHEV}</button></li>`).join('') + '</ul>';
   h += '<p class="fine">Nicht im Spiel getestet.</p>';
@@ -8275,6 +8416,7 @@ $('#pgWerk').addEventListener('click', e => {
     const f = WAFFEN.get(c.n), n = f.stufen.length;
     if ((b = T('[data-wfm], [data-wfp]'))){ WST.waffe[f.n] = Math.max(0, Math.min(n, wfStufe(f) + (b.dataset.wfp ? 1 : -1))); wkGeaendert(); neu(); return; }
     if ((b = T('[data-wwm], [data-wwp]'))){ const w = Math.max(0, Math.min(n, wfWunsch(f) + (b.dataset.wwp ? 1 : -1))); if (w) WST.wunsch[f.n] = w; else delete WST.wunsch[f.n]; wkGeaendert(); neu(); return; }
+    if ((b = T('[data-forsch]'))){ const n = b.dataset.forsch; if (WST.forsch[n]) delete WST.forsch[n]; else WST.forsch[n] = 1; wkGeaendert(); neu(); return; }
     if ((b = T('[data-wfdone]'))){ const t = +b.dataset.wfdone; WST.waffe[f.n] = t <= wfStufe(f) ? t - 1 : t; wkGeaendert(); neu(); return; }
     if ((b = T('[data-wfstage]'))){ wkAufListe(wfKosten(f, +b.dataset.wfstage)); neu(); return; }
     if (T('[data-wfall]')){ for (let t = wfStufe(f) + 1; t <= wfWunsch(f); t++) wkAufListe(wfKosten(f, t)); neu(); return; }
@@ -9290,7 +9432,7 @@ uiRestore(startId, lastId);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
-window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN }), cond:() => ({ CONDS, NAVI_COND, HATCH_ZU, maps:Object.keys(MAPS) }), qf:() => ({ QUESTS, qAhnen, qGesperrt, qMachbar, qTiefe, stList, folge:qFolgeF, navi:m => naviQuests(m).map(c => c.q ? c.q.en : c.en) }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
+window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN, AMP, WS_VOR }), cond:() => ({ CONDS, NAVI_COND, HATCH_ZU, maps:Object.keys(MAPS) }), qf:() => ({ QUESTS, qAhnen, qGesperrt, qMachbar, qTiefe, stList, folge:qFolgeF, navi:m => naviQuests(m).map(c => c.q ? c.q.en : c.en) }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
   navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
   marker:() => markers, g3:() => G3, zeiger:() => ptrs.size, ruhig:() => !anim && !dirty, kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
