@@ -427,6 +427,16 @@ a.linkbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:
 .sdet h4{margin:20px 0 6px;padding:0 32px;font:600 13px/1.3 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .group > li.grp{padding:16px 16px 6px;font:600 13px/1.3 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}   
 button.lnk{border:0;background:none;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer;min-height:24px}
+
+.skkopf{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:8px 16px 4px;padding:12px 16px;border-radius:12px;background:var(--cell)}
+.skkopf .skzahl b{font-size:22px;margin-right:4px}
+.skkopf .skfrei{color:var(--muted);font-size:14px;white-space:nowrap}
+#wvSkill .segc button{font-size:13px;gap:4px;padding:0 2px}
+#wvSkill .segc .lcdn{font-size:14px}
+#wvSkill .t2.skz{font-size:13px}
+#wvSkill .t2.skg{color:var(--accent);font-size:13px}
+#wvSkill li.skan{box-shadow:inset 3px 0 0 var(--accent),inset 0 .5px 0 var(--line)}
+#wvSkill .stepper .lcdn{min-width:44px}
 .sdet h4.hver{display:flex;align-items:center;gap:8px}   
 .sdet h4.hver .ver{text-transform:none;letter-spacing:.02em}
 .sdet > p,.sdet .fine{margin:0;padding:4px 32px;font-size:13px;line-height:1.42;color:var(--muted)}
@@ -912,6 +922,7 @@ li.qd .row .t1{color:var(--muted)}
           </ul>
           <h3 class="gh">Über die App</h3>
           <ul class="group">
+            <li><button type="button" class="row" data-wis="skill"><span class="rt"><span class="t1">Skill-Baum</span><span class="t2" id="wSkillSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="faq"><span class="rt"><span class="t1">FAQ</span><span class="t2">Worauf die Infos beruhen, alle Funktionen</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="einst"><span class="rt"><span class="t1">Einstellungen</span><span class="t2">Sparmodus, Abendlicht, Namen</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="upd"><span class="rt"><span class="t1">Updates</span><span class="t2" id="wUpdSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
@@ -924,6 +935,7 @@ li.qd .row .t1{color:var(--muted)}
           <div class="subnav own"><button type="button" class="back" id="wdBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Wissen</span></button></div>
           <h3 class="dn" id="wdTitle" tabindex="-1"></h3>
           <div id="wvCond" hidden><p class="fine">Kartenbedingungen ändern einen Raid: Wetter, Gegner, Beute und Ausgänge. Die aktuelle Bedingung wählst du im Navi unter «Run planen», Optionen.</p><div id="condListW"></div></div>
+          <div id="wvSkill" hidden></div>
           <div id="wvFaq" hidden></div>
           <div id="wvEinst" hidden>
             <ul class="group in">
@@ -1260,6 +1272,10 @@ const SRCS = {
   Ade:['q24'],
   Agw:['q37'],
   Ats:['q13'],
+  Sah:['q5'],
+  Sts:['q13'],
+  Sgg:['q38'],
+  Spn:['q39'],
   Wah:['q5'],
   Wag:['q5'],
   Wde:['q24'],
@@ -1271,15 +1287,15 @@ const SRCS = {
   Mt2:['q13'],
   Mtp:['q13'],
   Mmf:['q7'],
-  Mem:['q38'],
+  Mem:['q40'],
   Mig:['q32'],
   Mit:['q32'],
-  Mns:['q39'],
-  Mnb:['q40'],
-  Mdv:['q41'],
+  Mns:['q41'],
+  Mnb:['q42'],
+  Mdv:['q43'],
   Mah:['q6'],
-  Mp1:['q42'],
-  Mgr:['q43'],
+  Mp1:['q44'],
+  Mgr:['q45'],
 };
 
 /* @datei wissen/items.js */
@@ -3307,6 +3323,68 @@ const AMP_REGELN = {
   module:{ x:'Amplification Modules liegen auf der ARC Frigate und im Fallen Emperor auf Pendola Pass. Überzählige lassen sich zu Amplified Fragments zerlegen, damit werden Amplified-Waffen repariert.', s:'Akg+Agp' },
   kosten:{ x:'Was die einzelne Aufwertung kostet, ist nicht bekannt: Sie braucht Pneumatic Actuator und Pressure Regulator (aus Emperor Payloads bei Redirection auf Pendola Pass), die Mengen nennt keine Angabe. Auch welche Aufwertungen sich gegenseitig ausschliessen, ist nicht belegt.', s:'Akg+Agp+Ats' },
   forschung:{ x:'Jedes Projekt kostet 5000 Research Points, ARC-Teile und eine Aufgabe. Zu welcher Aufwertung ein Projekt gehört, sagt keine Angabe; die App ordnet darum nichts zu.', s:'Akg+Agp' }
+};
+/* @datei wissen/skills.js */
+
+const SKILL_DATA = `C|Used To The Weight|1|S|Schilde bremsen dich weniger.||Sah+Sts+Sgg|Sts+Sgg|
+C|Three Deep Breaths|5|F|Nach einer Aktion, die Ausdauer kostet, endet die Erschöpfung früher.|Erschöpft bis 18 Ausdauer auf Stufe 1, bis 10 auf Stufe 5|Sah+Sts+Sgg|Sgg|
+C|Stubborn Mule|5|F|Überladen bremst die Erholung der Ausdauer weniger.|+10/+15/+20/+25/+30 Gewicht, bevor die Erholung langsamer wird|Sah+Sts+Sgg|Sgg|
+C|Vigorous Vaulter|1|F|Überklettern wird nicht langsamer, wenn du erschöpft bist.||Sah+Sts+Sgg|Sts+Sgg|
+C|Vault 'n' Carry|1|F|Überklettern, ohne einen getragenen Gegenstand abzulegen.||Sah+Sts+Sgg|Sts+Sgg|
+C|Mule's Gallop|1|W|Sprinten, auch wenn du überladen bist.||Sah+Sts+Sgg|Sts+Sgg|
+C|Back On Your Feet|1|W|Bei kritischem Leben erholt es sich bis zu einer Grenze.|Bis 30 Leben|Sah+Sts+Sgg|Sts+Sgg|Eine Angabe nennt 40 statt 30 Leben.
+C|Downed But Determined|5|N|Am Boden dauert es länger, bis du zusammenbrichst.|Verbluten 5/10/15/20/25 % langsamer|Sah+Sts+Sgg|Sah+Sts+Sgg|
+C|Broad Shoulders|5|N|Mehr Tragegewicht.|+2/+4/+6/+8/+10 Tragegewicht|Sah+Sts+Sgg|Sah+Sts+Sgg|
+C|Crawl Before You Walk|5|N|Am Boden kriechst du schneller.|Kriechen 10/20/30/40/50 % schneller|Sah+Sts+Sgg|Sah+Sts+Sgg|
+C|Speedy Mule|5|N|Starke Überladung bremst dich weniger.|10/17,5/25/32,5/40 % mehr Tempo|Sah+Sts+Sgg|Sgg|
+C|Loaded Arms|1|N|Die Waffe in der Hand zählt weniger zur Last.||Sah+Sts+Sgg|Sts+Sgg|
+C|Proficient Pryer|5|N|Türen und Behälter schneller aufbrechen.|Aufbrechen 5/10/15/20/30 % schneller|Sah+Sts+Sgg|Sts+Sgg|
+C|Security Breach|1|E|Security Lockers aufbrechen.||Sah+Sts+Sgg|Sts+Sgg|
+C|Weapon Bash|1|E|Nahkampf-Schlag mit der Waffe in der Hand.||Sah+Sts+Sgg|Sts+Sgg|
+C|Bull Rush|1|E|Im Sprint mit verstauter Waffe stösst du Spieler und ARC zurück.||Sah+Sts+Sgg|Sts+Sgg|
+M|Youthful Lungs|1|S|Mehr Ausdauer.||Sah+Sts+Sgg|Sgg|
+M|Sure-Footed Scrambler|5|F|Du sprintest steile Hänge länger hoch.|+0,5/+0,8/+1,2/+1,6/+2 Sekunden|Sah+Sts+Sgg|Sgg|
+M|Nimble Climber|5|F|Schneller klettern und überklettern.|3/6/9/12/15 % schneller|Sah+Sts+Sgg|Sgg|
+M|Ready To Roll|5|F|Grösseres Zeitfenster für die Recovery Roll nach einem Sturz.|Zeitfenster 10/20/30/40/50 % grösser|Sah+Sts+Sgg|Sgg|
+M|Fight Or Flight|5|F|Wirst du im Kampf verletzt, bekommst du Ausdauer zurück (mit Abklingzeit).|+5/+10/+15/+20/+25 Ausdauer|Sah+Sts+Sgg|Sah+Sgg|
+M|Vault Spring|1|W|Sprung am Ende des Überkletterns.||Sah+Sts+Sgg|Sts+Sgg|
+M|Vaults On Vaults On Vaults|1|W|Überklettern kostet keine Ausdauer.||Sah+Sts+Sgg|Sts+Sgg|
+M|Effortless Roll|5|N|Die Dodge Roll kostet weniger Ausdauer.|7/14/21/27/34 % weniger Ausdauer|Sah+Sts+Sgg|Sah+Sgg|
+M|Right Back At It|1|N|Nach einer harten Landung stehst du schneller wieder.||Sah+Sts+Sgg|Sgg|
+M|Marathon Runner|5|N|Bewegung kostet weniger Ausdauer.|3/6/9/12/15 % weniger Ausdauer|Sah+Sts+Sgg|Sgg|
+M|Slip And Slide|5|N|Du rutschst weiter und schneller.|5/10/15/20/25 % weniger Reibung|Sah+Sts+Sgg|Sgg|
+M|Off The Wall|5|N|Der Wall Leap geht weiter.|10/20/30/40/50 % weiter|Sah+Sts+Sgg|Sgg|
+M|Swift Start|5|N|Der schnelle Antritt beim Sprinten hält länger.||Sah+Sts+Sgg|Sgg|
+M|Sprinting On Fumes|1|E|Beim Sprinten geht die Ausdauer nie ganz aus; jede andere Aktion oder Schaden beendet das.||Sah+Sts+Sgg|Sts+Sgg|
+M|Wall Run|1|E|Im Sprint ein paar Schritte die Wand hochlaufen.||Sah+Sts+Sgg|Sts+Sgg|
+M|In The Flow|1|E|Verkettete Bewegungen im Sprint machen dich schneller und kosten weniger Ausdauer.||Sah+Sts+Sgg|Sts+Sgg|
+S|In-Round Crafting|1|S|Im Raid Gegenstände herstellen.||Sah+Sts+Sgg|Sts+Sgg|
+S|Sturdy Ankles|5|F|Weniger Fallschaden aus nicht tödlicher Höhe.|3/6/9/12/15 % weniger|Sah+Sts+Sgg|Sgg|
+S|Looter's Instincts|5|F|Beim Durchsuchen erscheint die Beute schneller.|5/10/15/20/25 % schneller|Sah+Sts+Sgg|Sah+Sgg|
+S|Agile Croucher|5|F|Geduckt bewegst du dich schneller.|3/6/9/12/15 % schneller|Sah+Sts+Sgg|Sgg|
+S|Silent Scavenger|5|F|Plündern macht weniger Lärm.|10/20/30/40/50 % leiser|Sah+Sts+Sgg|Sgg|
+S|Quick Roll|1|W|Schnellere Dodge Roll, die weniger Ausdauer kostet, aber kürzer ist.||Sah+Sts+Sgg|Sts+Sgg|
+S|Minesweeper|1|W|Minen und Sprengfallen aus der Nähe entschärfen.||Sah+Sts+Sgg|Sts+Sgg|
+S|Stylish Landing|5|N|Die Recovery Roll gelingt aus grösserer Höhe.|+0,5/+0,8/+1/+1,2/+1,5 Meter|Sah+Sts+Sgg|Sgg|
+S|Traveling Tinkerer|1|N|Mehr Gegenstände, die du im Raid herstellen kannst.||Sah+Sts+Sgg|Sts+Sgg|
+S|Turtle Crawl|5|N|Am Boden nimmst du weniger Schaden.|6,6/13,2/19,8/26,4/33 % weniger|Sah+Sts+Sgg|Sts+Sgg|
+S|Looter's Luck|5|N|Chance, beim Aufdecken zwei Gegenstände auf einmal zu zeigen.|6,6/13,2/19,8/26,4/33 %|Sah+Sts+Sgg|Sts+Sgg|
+S|Gentle Pressure|5|N|Aufbrechen macht weniger Lärm.|10/20/30/40/50 % leiser|Sah+Sts+Sgg|Sah+Sgg|
+S|A Little Extra|1|N|Aufbrechen bringt ein bis zwei Materialien.||Sah+Sts+Sgg|Sts+Sgg|
+S|Road Warrior|1|E|Mehr Munition und ARC Powercells von ARC; Zerlegen im Raid mit voller Ausbeute.||Sah+Sts+Sgg|Sts+Sgg|
+S|Nomadic Crafting|1|E|Viel mehr Auswahl beim Herstellen im Raid.||Sah+Sts+Sgg|Sts+Sgg|
+S|Field Repair|1|E|Waffen, Schilde und Gadgets im Raid bis 30 % Haltbarkeit reparieren.||Sah+Sts+Sgg|Sts+Sgg|`;
+
+const SKILL_REGELN = {
+  mitte:10,          
+  ende:[30, 40],     
+  punkte:76,         
+  expJe:5, expMax:15,   
+  reset:2000,        
+  aufbau:{ x:'Drei Zweige mit je 16 Skills. In der Mitte jedes Zweigs wählst du einen von zwei Skills, ab 10 Punkten im Zweig. Am Ende wählst du bis zu zwei von drei Skills: den ersten ab 30, den zweiten ab 40 Punkten im Zweig.', s:'Sah+Sts+Sgg', andere:'Eine Übersicht nennt für die Mitte 15 statt 10 Punkte.' },
+  punkteText:{ x:'76 Punkte gibt es aus Leveln: einen zum Start und einen für jedes Level bis 75. Expeditions brachten bis zu 5 Bonuspunkte, zusammen höchstens 15.', s:'Spn+Sgg+Sts' },
+  resetText:{ x:'Zurücksetzen kostet im Spiel 2000 Coins pro verteilten Punkt und gilt für den ganzen Baum. Danach wählst du auch die Wahl-Skills neu.', s:'Sts+Sgg' },
+  grenze:{ x:'Welcher Skill genau an welchem hängt, ist nicht belegt: Im Spiel braucht jeder Skill mindestens einen Punkt im Skill davor. Der Planer prüft nur den Start-Skill, die Schwellen, die Wahl-Skills, die Höchststufen und deine Punktzahl. Ein Plan kann darum im Spiel eine andere Reihenfolge verlangen.', s:'Sts+Sgg' }
 };
 /* @datei wissen/kartenbedingungen.js */
 
@@ -7759,10 +7837,10 @@ const FAQ_FUNKTIONEN = [
 {"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat drei Reiter: Bedarf, Einkaufsliste und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte, deinen Werkstatt-Zielen, deinen Wunsch-Waffen, deinen Sets und eigenen Einträgen der Einkaufsliste, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan lernen (nach dem Abhaken: Verkaufen). Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann das weg?","der Filter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Entsteht beim Zerlegen von","jedes Material zeigt, welche Items es beim Zerlegen ergeben, beste Ausbeute zuerst, mit der Menge in Speranza und im Raid. Brauchst du eines dieser Items selbst noch, steht das als Warnung in der Zeile."],["Symbole","jedes Item trägt ein eigenes Symbol für seine Art (Waffe, Aufsatz, Munition, Bauplan, Material, Wertsache und weitere), in der Farbe seiner Seltenheit. Die Symbole sind selbst gezeichnet, keine Grafiken aus dem Spiel."],["Alle Items","630 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Rezept auf die Liste","ein Knopf setzt alle Zutaten eines Rezepts auf die Einkaufsliste; damit zählen sie im Bedarf."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
 {"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Fünf Reiter: Stationen, Waffen, Herstellen, Baupläne und Sets."},{"k":"ul","i":[["Stationen","9 Stationen mit Stufen: sieben in Speranza (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Scrappy) und zwei im Outpost. Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Outpost","eigene Gruppe in der Stationsliste mit dem Outpost (Stufe = Zahl der Räume, Kosten der Räume 2 bis 4) und der Research Station, die darin steht. Bei jeder Stufe steht, welche Outpost-Stufe sie voraussetzt: Research Station Stufe 1 bis 4 braucht Outpost Stufe 1 bis 4, Gunsmith Stufe 4 braucht Outpost Stufe 4."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Amplified (Stufe V)","15 Waffen haben eine fünfte Stufe. Sie kostet ein Amplification Module passend zur Seltenheit der Waffe; mit Wunsch-Stufe V zählt es im Bedarf. Im Detail stehen die Aufwertungen der Waffe mit ihrer Wirkung und die Forschungsprojekte, die für sie gebraucht werden (ARC-Teile, 5000 Research Points, Aufgabe). Ein Haken plant ein Projekt ein: Seine ARC-Teile zählen dann im Bedarf, einmal für alle Waffen."],["Herstellen","156 Rezepte, durchsuchbar. Der Knopf «Filter» grenzt nach Station ein, und «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst. Beides lässt sich kombinieren."],["Baupläne","85 Baupläne mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Sets (Ausrüstung planen)","benannte Sets für den Raid: Waffen mit Stufe, Aufsätze, Augment, Schild, Munition und Verbrauchsgüter mit Anzahl. Teile findest du über die Suche (deutsch oder englisch). Die App zählt das Material fürs ganze Set zusammen und setzt es mit einem Tipp auf die Einkaufsliste. Mit dem Schalter «Zählt im Bedarf» steht das Material im Inventar unter «Bedarf», mit dem Zweck «Ausrüstung: Name»."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen. Alle davor werden abgehakt, dazu alles, was sie bei anderen Händlern voraussetzen; die App sagt vorher, wie viele."],["Reihenfolge","jede Quest zeigt, welche Quests vorher erledigt sein müssen («Braucht vorher») und welche sie freischaltet («Schaltet frei»), auch über Händler hinweg. Ein Tipp öffnet die andere Quest, «Zurück» führt wieder her."],["Gesperrt und jetzt machbar","sobald du etwas abgehakt hast, tragen Quests mit offenen Voraussetzungen die Marke «Gesperrt», die Liste nennt, wie viele Quests jetzt machbar sind, und stellt sie zuoberst. Das Navi schlägt dann pro Händler nur noch eine Quest vor, die nicht gesperrt ist. Bei einer gesperrten Quest steht, wie viele offene Quests davor liegen und welche davon du jetzt machen kannst."],["Suche und Filter","nach Name, Ort, Händler oder Material; der Filter «Reihenfolge» zeigt nur, was jetzt machbar oder gesperrt ist."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Run» auf der Karte, ihre Materialien auf der Einkaufsliste. Im Detail steht «Wird verfolgt» als Zustand."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."]]}]},
-{"t":"Wissen","b":[{"k":"p","x":"Der Knopf mit dem Buch öffnet die Seite «Wissen» (am iPhone oben rechts in jedem Bereich, im breiten Fenster unten in der Symbolleiste): alles zum Nachschlagen und alles über die App an einem Ort. «Zurück» führt in den Bereich, aus dem du kamst."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","19 Bedingungen in den Gruppen Gross und Klein: was sie ändern, auf welchen Maps sie laufen, ob Raider Hatches gesperrt sind und ob Trials-Punkte doppelt zählen. Weichen Angaben voneinander ab, stehen beide da."],["Offizieller Zeitplan","welche Bedingung gerade läuft, weiss die App nicht (der Plan wechselt jede Stunde und ist je Region verschoben). Ein Knopf öffnet den offiziellen Zeitplan im Browser. Es ist der einzige Knopf der App, der nach aussen führt."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht und Namen auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
-{"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Werkstatt-Stand, Sets, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Eigene Stelle pro Bereich","jeder Bereich merkt sich, wie weit du gescrollt hast. «Zurück» aus einem Detail führt an die alte Stelle der Liste; den Bereich erneut antippen führt nach oben."],["Breites Fenster (PC, iPad quer)","ab 860 px Breite steht links eine schmale Symbolleiste mit den fünf Bereichen und «Wissen», daneben die Liste über die ganze Höhe. In Inventar, Werkstatt, Quests und Wissen steht das Detail rechts neben der Liste: Die Liste bleibt stehen, die gewählte Zeile ist markiert, und was du im Detail abhakst, steht sofort auch in der Liste. Karten und Run planen zeigen Karte und Infobereich. Öffnest du aus einem Detail einen Ort auf der Karte, wechselt die App zu «Karten»; «Zurück» in der Kartenleiste führt wieder zum Detail."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Einstellungen und Updates","stehen unter «Wissen»."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
+{"t":"Wissen","b":[{"k":"p","x":"Der Knopf mit dem Buch öffnet die Seite «Wissen» (am iPhone oben rechts in jedem Bereich, im breiten Fenster unten in der Symbolleiste): alles zum Nachschlagen und alles über die App an einem Ort. «Zurück» führt in den Bereich, aus dem du kamst."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","19 Bedingungen in den Gruppen Gross und Klein: was sie ändern, auf welchen Maps sie laufen, ob Raider Hatches gesperrt sind und ob Trials-Punkte doppelt zählen. Weichen Angaben voneinander ab, stehen beide da."],["Offizieller Zeitplan","welche Bedingung gerade läuft, weiss die App nicht (der Plan wechselt jede Stunde und ist je Region verschoben). Ein Knopf öffnet den offiziellen Zeitplan im Browser. Es ist der einzige Knopf der App, der nach aussen führt."],["Skill-Baum-Planer","alle 48 Skills des Baums 2.0 in den Zweigen Conditioning, Mobility und Survival, mit Wirkung und den Zahlen je Stufe. Du verteilst Punkte mit Plus und Minus; der Planer zählt «verteilt von verfügbar» und pro Zweig. Er hält die Regeln ein: Start-Skill zuerst, in der Mitte einer von zwei Skills ab 10 Punkten im Zweig, am Ende bis zu zwei von drei ab 30 und 40 Punkten. Steht ein Knopf still, sagt die Zeile warum. Deine Punktzahl stellst du selbst ein (76 aus Leveln, mit Expedition-Punkten bis 91). Der Plan bleibt gespeichert, «Plan zurücksetzen» fragt nach."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht und Namen auf Deutsch oder Englisch."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
+{"t":"Mein Run, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Run","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Run planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Runs heisst er «Zum Run». Im Infobereich wechselt ein Knopf je nach Lage zwischen Run starten, Erledigt und Draussen."],["Run beendet","pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken."],["Merken","Queststand, Werkstatt-Stand, Sets, Skill-Plan, Einkaufsliste, Navi-Plan und laufender Run überstehen ein Neuladen."],["Eigene Stelle pro Bereich","jeder Bereich merkt sich, wie weit du gescrollt hast. «Zurück» aus einem Detail führt an die alte Stelle der Liste; den Bereich erneut antippen führt nach oben."],["Breites Fenster (PC, iPad quer)","ab 860 px Breite steht links eine schmale Symbolleiste mit den fünf Bereichen und «Wissen», daneben die Liste über die ganze Höhe. In Inventar, Werkstatt, Quests und Wissen steht das Detail rechts neben der Liste: Die Liste bleibt stehen, die gewählte Zeile ist markiert, und was du im Detail abhakst, steht sofort auch in der Liste. Karten und Run planen zeigen Karte und Infobereich. Öffnest du aus einem Detail einen Ort auf der Karte, wechselt die App zu «Karten»; «Zurück» in der Kartenleiste führt wieder zum Detail."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche."],["Einstellungen und Updates","stehen unter «Wissen»."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
 {"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein; in der App steht dafür ein kleiner Haken. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Montag um 04:33 (Zürich) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
-{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Sets","gerechnet wird jedes Teil ab null (Waffe herstellen und aufwerten, alles andere so oft herstellen wie gewählt). Zutaten, die selbst hergestellt werden, zerlegt die App nicht weiter. Werte, Schaden und ob ein Aufsatz auf die Waffe passt, prüft sie nicht, und sie empfiehlt keine Ausrüstung."],["Amplified","was die einzelne Aufwertung kostet, ist nicht bekannt (Pneumatic Actuator und Pressure Regulator werden gebraucht, die Mengen nennt keine Angabe), darum zählt sie nicht im Bedarf. Auch welche Aufwertungen sich ausschliessen und zu welcher Aufwertung ein Forschungsprojekt gehört, ist nicht belegt; die App ordnet nichts zu. Die Kosten der Outpost-Räume 2 und 3 haben erst eine Angabe."],["Quest-Reihenfolge","die Voraussetzungen von 100 Quests sind doppelt belegt, die der 22 neusten einfach, bei 2 fehlt die Angabe. Weitere Bedingungen wie eine Zahl gespielter Raids zeigt die App an, prüft sie aber nicht. Du kannst jede Quest jederzeit von Hand abhaken, auch eine gesperrte."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
+{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Skill-Baum","welcher Skill genau an welchem hängt, ist nicht belegt; der Planer prüft nur Start-Skill, Schwellen, Wahl-Skills, Höchststufen und deine Punktzahl. Im Spiel kann ein Plan darum eine andere Reihenfolge verlangen. Die Zahlen je Stufe und die Höchststufe von 16 Skills haben erst eine Angabe. Der Planer empfiehlt keine Builds."],["Sets","gerechnet wird jedes Teil ab null (Waffe herstellen und aufwerten, alles andere so oft herstellen wie gewählt). Zutaten, die selbst hergestellt werden, zerlegt die App nicht weiter. Werte, Schaden und ob ein Aufsatz auf die Waffe passt, prüft sie nicht, und sie empfiehlt keine Ausrüstung."],["Amplified","was die einzelne Aufwertung kostet, ist nicht bekannt (Pneumatic Actuator und Pressure Regulator werden gebraucht, die Mengen nennt keine Angabe), darum zählt sie nicht im Bedarf. Auch welche Aufwertungen sich ausschliessen und zu welcher Aufwertung ein Forschungsprojekt gehört, ist nicht belegt; die App ordnet nichts zu. Die Kosten der Outpost-Räume 2 und 3 haben erst eine Angabe."],["Quest-Reihenfolge","die Voraussetzungen von 100 Quests sind doppelt belegt, die der 22 neusten einfach, bei 2 fehlt die Angabe. Weitere Bedingungen wie eine Zahl gespielter Raids zeigt die App an, prüft sie aber nicht. Du kannst jede Quest jederzeit von Hand abhaken, auch eine gesperrte."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
 ];
 /* @datei app/kern/quests.js */
 
@@ -8541,7 +8619,7 @@ var WK_DA = true;
 wkShow('st');
 /* @datei app/kern/wissen-seite.js */
 
-const W_TITEL = { cond:'Kartenbedingungen', faq:'FAQ', einst:'Einstellungen', upd:'Updates' };
+const W_TITEL = { cond:'Kartenbedingungen', skill:'Skill-Baum', faq:'FAQ', einst:'Einstellungen', upd:'Updates' };
 let wView = 'liste', wDirekt = false;   
 function wissenRender(){
   $('#wBack').lastElementChild.textContent = TAB_NAME[VON.wissen] || 'Zurück';
@@ -8558,6 +8636,7 @@ function wissenShow(v){
     $('#wdTitle').textContent = W_TITEL[wView];
     $('#wdBack').lastElementChild.textContent = wDirekt ? (TAB_NAME[VON.wissen] || 'Zurück') : 'Wissen';
     if (wView === 'faq') faqRender();
+    if (wView === 'skill') skillRender();
   }
   scrollSetz('wissen', wView === 'liste');
 }
@@ -8575,6 +8654,96 @@ $('#wBack').addEventListener('click', () => tabZurueck('wissen'));
 $('#wdBack').addEventListener('click', () => { if (wDirekt){ wissenShow('liste'); tabZurueck('wissen'); } else { wissenShow('liste'); $('#wBack').focus(); } });
 var WIS_DA = true;   
 wissenRender();
+/* @datei app/kern/skills.js */
+
+const SK_ZWEIG = { C:'Conditioning', M:'Mobility', S:'Survival' };
+const SK_GRUPPEN = [['S', 'Start'], ['F', 'Vor der Mitte'], ['W', 'Mitte: einer von zwei'], ['N', 'Nach der Mitte'], ['E', 'Ende: bis zwei von drei']];
+const SKILLS = (() => {
+  if (typeof SKILL_DATA === 'undefined') return [];
+  const seiten = ks => new Set(String(ks || '').split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
+  return SKILL_DATA.trim().split('\n').map(l => { const z = l.split('|');
+    return { z:z[0], n:z[1], max:+z[2], art:z[3], x:z[4], zahl:z[5] || '', ver:seiten(z[6]) >= 2, verMax:seiten(z[7]) >= 2, andere:z[8] || '' }; });
+})();
+const SK_R = typeof SKILL_REGELN === 'undefined' ? { mitte:10, ende:[30, 40], punkte:76, expJe:5, expMax:15, reset:2000 } : SKILL_REGELN;
+const SK_MAX = SK_R.punkte + SK_R.expMax;
+let SKP = { p:{}, max:SK_R.punkte, z:'C' }, skFrage = false;
+try { const s = JSON.parse(localStorage.getItem('raider-atlas:skills') || 'null');
+  if (s && typeof s === 'object'){ if (s.p && typeof s.p === 'object') for (const k of SKILLS) { const v = +s.p[k.n]; if (v > 0) SKP.p[k.n] = Math.min(k.max, Math.floor(v)); }
+    if (+s.max >= 1) SKP.max = Math.min(SK_MAX, Math.floor(+s.max)); if (SK_ZWEIG[s.z]) SKP.z = s.z; } } catch(_){}
+const saveSkp = () => { try { localStorage.setItem('raider-atlas:skills', JSON.stringify(SKP)); } catch(_){} };
+const skP = n => SKP.p[n] || 0;
+const skZweig = z => SKILLS.filter(s => s.z === z);
+const skSumme = z => skZweig(z).reduce((a, s) => a + skP(s.n), 0);
+const skGesamt = () => SKILLS.reduce((a, s) => a + skP(s.n), 0);
+
+const skStand = z => { const Z = skZweig(z); return { n:Z.filter(s => s.art !== 'W' && s.art !== 'E').reduce((a, s) => a + skP(s.n), 0), w:Z.filter(s => s.art === 'W' && skP(s.n)).length, e:Z.filter(s => s.art === 'E' && skP(s.n)).length }; };
+
+const skGueltig = t => (!t.w || t.n >= SK_R.mitte) && (t.e < 1 || t.n + t.w >= SK_R.ende[0]) && (t.e < 2 || t.n + t.w + 1 >= SK_R.ende[1]);
+
+function skSperre(s){
+  if (skP(s.n) >= s.max) return 'Höchststufe erreicht';
+  if (skGesamt() >= SKP.max) return 'Keine Punkte mehr frei';
+  const Z = skZweig(s.z), start = Z.find(x => x.art === 'S'), sum = skSumme(s.z), t = skStand(s.z);
+  if (s.art !== 'S' && start && !skP(start.n)) return 'Zuerst ' + start.n;
+  if (s.art === 'W'){ if (t.w) return 'Der andere Skill der Mitte ist gewählt'; if (sum < SK_R.mitte) return `Ab ${SK_R.mitte} Punkten im Zweig (jetzt ${sum})`; }
+  if (s.art === 'E'){ if (t.e >= 2) return 'Zwei End-Skills sind gewählt'; if (sum < SK_R.ende[t.e]) return `Ab ${SK_R.ende[t.e]} Punkten im Zweig (jetzt ${sum})`; }
+  return '';
+}
+
+function skWeg(s){
+  if (!skP(s.n)) return 'Kein Punkt gesetzt';
+  const Z = skZweig(s.z), t = skStand(s.z);
+  if (s.art === 'S' && skP(s.n) === 1 && Z.some(x => x !== s && skP(x.n))) return 'Andere Skills dieses Zweigs bauen darauf auf';
+  if (s.art === 'E') return '';
+  const neu = s.art === 'W' ? { n:t.n, w:0, e:t.e } : { n:t.n - 1, w:t.w, e:t.e };
+  if (!skGueltig(neu)) return neu.w && neu.n < SK_R.mitte ? 'Der Skill der Mitte braucht diese Punkte' : 'Ein End-Skill braucht diese Punkte';
+  return '';
+}
+function skillSub(){ const el = $('#wSkillSub'); if (el) el.textContent = `${SKILLS.length} Skills planen · ${skGesamt()} von ${SKP.max} Punkten verteilt`; }
+function skZeile(s){
+  const p = skP(s.n), zu = skSperre(s), weg = skWeg(s), n = esc(s.n);
+  const grund = p >= s.max ? '' : zu && zu !== 'Keine Punkte mehr frei' ? zu : '';
+  return `<li class="${p ? 'skan' : ''}"><div class="row static"><span class="rt"><span class="t1">${n}${p >= s.max ? ' <span class="stb s-aktiv">voll</span>' : ''}</span><span class="t2">${esc(s.x)}</span>`
+    + (s.zahl ? `<span class="t2 skz">${s.max > 1 ? 'Je Stufe: ' : ''}${esc(s.zahl)}</span>` : '') + (s.andere ? `<span class="t2 skz">Andere Angabe: ${esc(s.andere)}</span>` : '')
+    + (grund ? `<span class="t2 skg">${esc(grund)}</span>` : '') + (p && weg ? `<span class="t2 skg">Bleibt: ${esc(weg)}</span>` : '') + '</span>'
+    + `<div class="stepper" role="group" aria-label="Punkte: ${n}"><button type="button" data-skm="${n}" aria-label="${n}: ein Punkt weniger"${weg ? ' disabled' : ''}>−</button><span class="lcdn">${p}/${s.max}</span><button type="button" data-skp="${n}" aria-label="${n}: ein Punkt mehr"${zu ? ' disabled' : ''}>+</button></div></div></li>`;
+}
+function skillRender(){
+  const el = $('#wvSkill'); if (!el) return;
+  const ges = skGesamt(), frei = SKP.max - ges, Z = skZweig(SKP.z), sum = skSumme(SKP.z);
+  let h = `<p class="fine">Plane, wie du deine Skill-Punkte verteilst. Der Plan bleibt in deinem Browser gespeichert und ändert nichts im Spiel.</p>`
+    + `<div class="skkopf" role="status"><span class="skzahl"><b class="lcdn">${ges}</b> von ${SKP.max} Punkten verteilt</span><span class="skfrei">${frei === 1 ? '1 Punkt frei' : frei + ' Punkte frei'}</span></div>`
+    + wkStepper('Meine Punkte', SKP.max, 'data-skmaxm="1"', 'data-skmaxp="1"', SKP.max > Math.max(1, ges), SKP.max < SK_MAX)
+    + `<p class="fine">${esc(SK_R.punkteText ? SK_R.punkteText.x : '')} ${SK_R.punkteText ? qVer(SK_R.punkteText.s.split('+')) : ''}</p>`
+    + '<div class="segc" role="group" aria-label="Zweig">' + Object.keys(SK_ZWEIG).map(z => `<button type="button" data-skz="${z}" aria-pressed="${z === SKP.z}">${SK_ZWEIG[z]} <span class="lcdn">${skSumme(z)}</span></button>`).join('') + '</div>'
+    + `<p class="foot" id="skInfo">${SK_ZWEIG[SKP.z]}: ${sum === 1 ? '1 Punkt' : sum + ' Punkte'} im Zweig. Mitte ab ${SK_R.mitte}, Ende ab ${SK_R.ende[0]} und ${SK_R.ende[1]} Punkten.</p>`;
+  for (const [art, titel] of SK_GRUPPEN){ const L = Z.filter(s => s.art === art); if (!L.length) continue;
+    const zusatz = art === 'W' ? `, ab ${SK_R.mitte} Punkten` : art === 'E' ? `, ab ${SK_R.ende[0]} und ${SK_R.ende[1]} Punkten` : '';
+    h += `<h4 class="hver">${titel}${zusatz} ${L.every(s => s.ver && s.verMax) ? VER2 : VER1}</h4><ul class="group" data-skgr="${art}">` + L.map(skZeile).join('') + '</ul>'; }
+  h += (skFrage ? '<div class="btnrow"><button type="button" class="bs" data-skreset="0">Abbrechen</button><button type="button" class="bp" data-skreset="2">Wirklich alles zurücksetzen</button></div>'
+      : `<div class="btncol"><button type="button" class="bs" data-skreset="1"${ges ? '' : ' disabled'}>Plan zurücksetzen</button></div>`)
+    + (SK_R.aufbau ? `<p class="fine">${esc(SK_R.aufbau.x)} ${qVer(SK_R.aufbau.s.split('+'))}${SK_R.aufbau.andere ? ' Andere Angabe: ' + esc(SK_R.aufbau.andere) : ''}</p>` : '')
+    + (SK_R.grenze ? `<div class="annbox"><b>Annahme:</b> ${esc(SK_R.grenze.x)} Für die Schwellen zählt der Planer die Punkte, die vor dem Wählen im Zweig stecken.</div>` : '')
+    + (SK_R.resetText ? `<p class="fine">${esc(SK_R.resetText.x)} Die Zahlen je Stufe haben erst eine Angabe. Nicht im Spiel getestet.</p>` : '');
+  el.innerHTML = h; skillSub();
+}
+
+function skNeu(merk){
+  const pg = scrollEl(), y = pg ? pg.scrollTop : 0; skillRender(); const p2 = scrollEl(); if (p2) p2.scrollTop = y;
+  if (merk){ const b = $('#wvSkill').querySelector(merk); if (b && !b.disabled) b.focus(); else { const st = b && b.closest('.stepper'); const a = st && st.querySelector('button:not([disabled])'); if (a) a.focus(); } }
+}
+document.addEventListener('click', e => {
+  const T = sel => e.target.closest(sel); let b;
+  if (!T('#wvSkill')) return;
+  const q = n => n.replace(/["\\]/g, '\\$&');
+  if ((b = T('[data-skp], [data-skm]'))){ const plus = b.dataset.skp != null, n = plus ? b.dataset.skp : b.dataset.skm, s = SKILLS.find(x => x.n === n); if (!s) return;
+    if (plus){ if (skSperre(s)) return; SKP.p[n] = skP(n) + 1; } else { if (skWeg(s)) return; if (skP(n) <= 1) delete SKP.p[n]; else SKP.p[n] = skP(n) - 1; }
+    skFrage = false; saveSkp(); skNeu(`[data-sk${plus ? 'p' : 'm'}="${q(n)}"]`); return; }
+  if ((b = T('[data-skz]'))){ SKP.z = b.dataset.skz; skFrage = false; saveSkp(); skNeu(`[data-skz="${SKP.z}"]`); return; }
+  if ((b = T('[data-skmaxm], [data-skmaxp]'))){ const plus = b.dataset.skmaxp != null; SKP.max = Math.max(Math.max(1, skGesamt()), Math.min(SK_MAX, SKP.max + (plus ? 1 : -1))); saveSkp(); skNeu(`[data-skmax${plus ? 'p' : 'm'}]`); return; }
+  if ((b = T('[data-skreset]'))){ const k = b.dataset.skreset; if (k === '2'){ SKP.p = {}; skFrage = false; saveSkp(); skNeu('[data-skz="' + SKP.z + '"]'); return; } skFrage = k === '1'; skNeu(skFrage ? '[data-skreset="0"]' : '[data-skreset="1"]'); return; }
+});
+skillSub();
 /* @datei app/kern/queststand.js */
 
 const stDlg = $('#stDlg');
@@ -9547,7 +9716,7 @@ uiRestore(startId, lastId);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
-window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN, AMP, WS_VOR }), sets:() => ({ SET_WAHL, setMaterial, setTeilKosten, wkSetOpen }), cond:() => ({ CONDS, NAVI_COND, HATCH_ZU, maps:Object.keys(MAPS) }), qf:() => ({ QUESTS, qAhnen, qGesperrt, qMachbar, qTiefe, stList, folge:qFolgeF, navi:m => naviQuests(m).map(c => c.q ? c.q.en : c.en) }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
+window.__atlas = { ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN, AMP, WS_VOR }), sets:() => ({ SET_WAHL, setMaterial, setTeilKosten, wkSetOpen }), skill:() => ({ SKILLS, SKP, skSperre, skWeg, skSumme, skGesamt, R:SK_R }), cond:() => ({ CONDS, NAVI_COND, HATCH_ZU, maps:Object.keys(MAPS) }), qf:() => ({ QUESTS, qAhnen, qGesperrt, qMachbar, qTiefe, stList, folge:qFolgeF, navi:m => naviQuests(m).map(c => c.q ? c.q.en : c.en) }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
   navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
   marker:() => markers, g3:() => G3, zeiger:() => ptrs.size, ruhig:() => !anim && !dirty, kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
