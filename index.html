@@ -3503,13 +3503,13 @@ const SKILL_REGELN = {
 };
 /* @datei wissen/kartenbedingungen.js */
 
-const COND_DATA = `nightraid|Night Raid|G|dam,buried,spaceport,bluegate,riven,stella|HRLF|Dunkelheit und mehr ARC-Aktivität, dafür ist die Beute mehr wert. Eine Angabe nennt auch eine höhere Chance auf Schlüssel.|Eine Angabe führt Night Raid auch für Pendola Pass.|Mad+Mas+Mts+Mt2+Mmf+Mah+k|
+const COND_DATA = `nightraid|Night Raid|G|dam,buried,spaceport,bluegate,riven,stella|HRL|Dunkelheit und mehr ARC-Aktivität, dafür ist die Beute mehr wert. Eine Angabe nennt auch eine höhere Chance auf Schlüssel.|Eine Angabe führt Night Raid auch für Pendola Pass.|Mad+Mas+Mts+Mt2+Mmf+Mah+k|
 emstorm|Electromagnetic Storm|G|dam,spaceport,bluegate|HRL|Gewitter: Blitze treffen Raider und ARC, ein blaues Leuchten am Boden kündigt den Einschlag an. Die Sicht ist schlecht, der Donner überdeckt Geräusche.||Mad+Mas+Mts+Mt2+Mmf|
 hurricane|Hurricane|G|dam,buried,spaceport,bluegate|L|Sturm und Regen: schlechte Sicht, gedämpfte Geräusche, der Wind bremst. Trümmer beschädigen im Freien den Schild, und stärkere ARC sind unterwegs.||Mad+Mas+Mts+Mt2+Mmf|
 bunker|Hidden Bunker|G|spaceport|HR|Der Bunker am Rand von Spaceport ist offen: Antennen auf den Dächern einschalten und im Bunker Daten holen. An den Engstellen ist mit anderen Raidern zu rechnen.||Mad+Mas+Mts+Mmf|
 gate|Locked Gate|G|bluegate|HR|Das Tor ist abgeriegelt. Wer vier Sicherheitscodes sammelt, öffnet die Tunnel darunter mit hochwertiger Beute.|Zwei Angaben nennen dazu vier Schlüsselkarten.|Mad+Mas+Mts+Mt2+Mmf|
-scrutiny|Close Scrutiny|O|dam,buried,spaceport,bluegate|TlF|ARC überwachen die Map dichter und holen schnell Verstärkung. Gewöhnliche Beute ist weniger wert, ARC lassen mehr fallen: Assessor-Sonden zum Beispiel die Assessor Matrix.||Mad+Mas+Mts+Mmf+Mnb+b|
-frigate|ARC Frigate|O|dam,buried,spaceport,bluegate,riven,pendola|HTlF|Die ARC Frigate erscheint über der Map. Die Beute am Boden ist weniger wert.||Mad+Mts+Mtp+w|Fregatte-Run öffnen=squad
+scrutiny|Close Scrutiny|O|dam,buried,spaceport,bluegate|Tl|ARC überwachen die Map dichter und holen schnell Verstärkung. Gewöhnliche Beute ist weniger wert, ARC lassen mehr fallen: Assessor-Sonden zum Beispiel die Assessor Matrix.||Mad+Mas+Mts+Mmf+Mnb+b|
+frigate|ARC Frigate|O|dam,buried,spaceport,bluegate,riven,pendola|HTl|Die ARC Frigate erscheint über der Map. Die Beute am Boden ist weniger wert.||Mad+Mts+Mtp+w|Fregatte-Run öffnen=squad
 -coldsnap|Cold Snap|G|dam,buried,spaceport,bluegate|L|Kälte schadet im Freien. Dafür lassen sich Candleberries ernten.||Mad+Mas+Mmf+Mts+Mt2|
 redirection|Redirection|K|pendola||Emperor Beacons werden aktiv: einsammeln und aufstellen lenkt die Harvester Payloads zu dir um. Daraus kommen der Bauplan und die drei Coupler für den Emperor Gateway Conduit (gebaut an der Workbench Stufe 1). Kein Flash Freeze, dafür fallen Trümmer.||Mad+Mts+Mtp+Mdv+c|Emperor-Run öffnen=emperor
 blooms|Lush Blooms|K|dam,buried,spaceport,bluegate,riven||Ruhiges Wetter und viel mehr Natur-Beute: Zitronen, Oliven, Agave und Pilze.||Mad+Mas+Mts+Mmf|
@@ -3531,6 +3531,8 @@ const COND_REGELN = {
 };
 
 const COND_DAUER = { min:{ bunker:40, gate:40 }, s:'Mts' };
+
+const COND_OHNE_FREE = { ids:['nightraid', 'scrutiny', 'frigate'], s:'Mts' };
 /* @datei wissen/haendler.js */
 
 const HAENDLER = {
@@ -6416,7 +6418,7 @@ const CONDS = COND_DATA.trim().split('\n').map(l => {
   
   const seiten = new Set(z[7].split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
   return { id:aus ? z[0].slice(1) : z[0], t:z[1], kl:z[2], aus, gross:z[2] === 'G' || z[2] === 'O', maps:z[3] === '*' ? null : z[3].split(','),
-    f:z[4].split(''), x:z[5], abw:z[6], ver:seiten >= 2, a:run[0] || '', go:run[1] || '' };
+    f:z[4].split('').concat(typeof COND_OHNE_FREE !== 'undefined' && COND_OHNE_FREE.ids.includes(aus ? z[0].slice(1) : z[0]) ? ['F'] : []), x:z[5], abw:z[6], ver:seiten >= 2, a:run[0] || '', go:run[1] || '' };
 });
 const COND_BY = new Map(CONDS.map(c => [c.id, c]));
 
