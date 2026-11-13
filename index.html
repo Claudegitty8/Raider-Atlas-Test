@@ -724,6 +724,8 @@ li.more{padding:12px 16px;font-size:14px;color:var(--muted);list-style:none}
 .navnext{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:12px;background:var(--fill);box-shadow:inset 3px 0 0 var(--neon2)}
 .navnext b{font:600 19px/1.25 var(--display)}
 .navtime{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:15px}
+.fine.err{color:var(--warn);font-weight:600}   
+#naviZuBox p,#naviZuBox select{flex-basis:100%}
 .navin{width:92px;min-height:44px;padding:0 10px;border:0;border-radius:10px;background:var(--cell2);color:var(--ink);font:400 22px/1 var(--lcd);text-align:center}
 .navbar{flex:1 1 auto;height:6px;border-radius:3px}
 .navbar i{height:6px}
@@ -8176,7 +8178,7 @@ renderList(); shopRender();
 const FAQ_FUNKTIONEN = [
 {"t":"Aufbau und Suche","b":[{"k":"p","x":"Der Aufbau folgt dem Ablauf eines Raids: vorher planen, im Raid navigieren, danach eintragen, zwischendurch nachschlagen. Was du oft brauchst, liegt höchstens einen Tipp entfernt."},{"k":"ul","i":[["Fünf Reiter","Raid (Start der App), Inventar, Quests, Werkstatt und Wissen, am iPhone unten, im breiten Fenster links. Jeder Reiter trägt seinen Namen."],["Marken an den Reitern","Raid zeigt die Restzeit eines laufenden Raids in Minuten, Inventar die Zahl offener Einträge der Einkaufsliste, Wissen «neu», sobald neue Wochen-Trials da sind und du sie noch nicht angesehen hast."],["Suche für alles","die Lupe oben in jedem Bereich (am PC auch die Taste «/») findet Funktionen, Maps, Items, Quests, Orte, ARC-Gegner und Händler-Angebote. Ohne Eingabe stehen die häufigsten Funktionen da. Ein eingefügter Link oder Code eines geteilten Plans wird erkannt. Enter öffnet den ersten Treffer."],["Erste Schritte","beim ersten Start steht oben im Reiter Raid eine Checkliste: Queststand einrichten, Werkstatt eintragen, ersten Raid planen. Erledigtes hakt sich selbst ab. «Ausblenden» versteckt sie, unter Wissen, «Erste Schritte» kommt sie zurück."],["Zurück","führt «Zurück» in einen anderen Bereich, nennt der Knopf den Bereich, zum Beispiel «Inventar: Akku»."]]}]},
 {"t":"Karten","b":[{"k":"p","x":"Jede Map gibt es als 3D-Modell und als 2D-Plan, mit Markern, die sich einzeln filtern lassen. Norden ist wie im Spiel fest oben. Zu den Karten kommst du im Reiter Raid über «Karten erkunden», über das Navi oder über die Suche."},{"k":"ul","i":[["Marker","Ausgänge (Lift, Raider-Luke), Waffenkisten, Security-Spinde, Rucksäcke, Startpunkte, Orte und Questziele."],["Ebenen","oben und unten getrennt, wo eine Map mehrere Stockwerke hat."],["Suche","die Lupe findet Orte und Schlüsselräume aller Maps und springt auf der Karte hin."],["Kartenmenü","der Knopf oben rechts auf der Karte öffnet ein Menü in zwei Gruppen: Ebenen (Marker ein- und ausblenden) und Karte (Eigene Karte, Infos zur Ansicht). Am PC nennt jeder Symbolknopf seinen Namen, wenn die Maus darauf zeigt."],["Mini-Karte","kleine Karte mit Position und Route, auch während eines Raids."],["Ausrichtung","Der Kompass-Knopf wechselt zwischen drei Modi. «Norden oben» bleibt starr, zoomt auf das nächste Ziel und wandert mit; Ziehen verschiebt die Karte. «Folgen» dreht die Karte, damit dein Weg nach oben zeigt. «Frei drehen» dreht und neigt die Karte mit einem Finger, verschoben wird mit zwei Fingern. Nach jedem Tipp nennt eine kurze Meldung den neuen Modus."],["Gebäude und Gelände","Alle Maps sind nach dem Kartenbild grob nachgebaut: Gebäude so gedreht wie im Spiel, Hügel und Täler. Die Höhen sind geschätzt. Stella Montis ist eine Innenanlage und bleibt ein flacher Plan."],["Eigene Karte","einen eigenen Screenshot als Unterlage unter die Marker legen."],["Annahmen markiert","Was nicht belegt ist, steht als «Annahme» beim Marker oder Raum."],["3D-Grafik bleibt","Verliert der Browser die 3D-Grafik (zum Beispiel das iPhone im Hintergrund), zeichnet die App einfach weiter und baut die 3D-Ansicht neu auf, sobald es geht."]]}]},
-{"t":"Raid","b":[{"k":"p","x":"Der Reiter Raid ist der Start der App. Zuoberst steht ein laufender Raid mit Restzeit und dem Knopf zurück ins Navi, darunter die Maps zum Planen, «Raid beendet: Gefundenes eintragen», «Karten erkunden», die geführten Raids und die Kartenbedingungen. Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Raid Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten."},{"k":"ol","i":[["Planen","Map wählen (Reiter Raid oder Knopf «Raid planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Raid», die Mini-Karte und die Knopfspalte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde. Die Kartenbedingung steht gleich darunter, weil sie die Route am stärksten ändert. Kampf-Puffer, Raider Hatch Key, Security Breach und Uhr stehen unter «Optionen»."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Raid","optionale Uhr im LCD-Stil, nächstes Ziel ausgeschrieben mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang» und Zeit nachstellen."],["Nach dem Raid","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Raid nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, bei Hidden Bunker und Locked Gate 40:00, nur der Startpunkt neu; nach einer Route aus dem Inventar wieder dieselbe Material-Route) oder einen neuen Raid planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Raid steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps im Reiter Raid zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus."],["Kartenbedingungen","alle 19 Bedingungen stehen unter «Wissen»; ein Eintrag unten im Reiter Raid führt dorthin. Im Navi wählst du oben die aktuelle Bedingung, zuerst stehen die der gewählten Map. Das Navi nennt die Folgen: Sind Raider Hatches nicht aktiv, plant es einen anderen Ausgang; es sagt auch, wenn weniger Return Points aktiv sind oder alle verschlossenen Türen offen stehen."],["Geführte Raids","mit eigener Karte, unten im Reiter Raid: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
+{"t":"Raid","b":[{"k":"p","x":"Der Reiter Raid ist der Start der App. Zuoberst steht ein laufender Raid mit Restzeit und dem Knopf zurück ins Navi, darunter die Maps zum Planen, «Raid beendet: Gefundenes eintragen», «Karten erkunden», die geführten Raids und die Kartenbedingungen. Das Navi plant pro Map eine Route von deinem Startpunkt über Quests, Einkaufsliste und Loot bis zu einem Ausgang und führt dich im Raid Ziel für Ziel. Jede Route endet an einem Ausgang und dauert höchstens 29 Minuten; ist die Zeit des Ausgangs kürzer, gilt sie."},{"k":"ol","i":[["Planen","Map wählen (Reiter Raid oder Knopf «Raid planen» oben links auf der Karte), Startpunkt auf der Karte antippen: Draufsicht mit allen Startpunkten und Ortsnamen (138 Punkte auf allen Maps); der Kasten «Mein Raid», die Mini-Karte und die Knopfspalte sind dabei ausgeblendet, damit jeder Punkt frei liegt. Restzeit eingeben, auch beim Einstieg in eine laufende Runde. Die Kartenbedingung steht gleich darunter, weil sie die Route am stärksten ändert. Kampf-Puffer, Früh raus, Raider Hatch Key, Security Breach und Uhr stehen unter «Optionen»."],["Auswählen","verfolgte Quests plus die nächste offene Quest pro Händler, Einkaufsliste und Top-Loot in der Nähe. Liegt Material für deine Quests auf der Map, fragt die App, ob sie es einplanen soll (später per Schalter änderbar). Alles einzeln an- und abwählbar."],["Rechnen","Gehzeit, Zeit pro Stopp, kurze Kämpfe je nach ARC-Bedrohung (0,5 bis 5 Minuten) und ein Puffer von 0, 3 oder 6 Minuten."],["Kürzen","reicht die Zeit nicht, fällt zuerst Loot weg, dann Material, dann die nächste Quest, zuletzt die verfolgte."],["Im Raid","optionale Uhr im LCD-Stil, nächstes Ziel ausgeschrieben mit Richtung, Distanz und Zeit, Erledigt oder Überspringen, Hinweis bei Rückstand, «Jetzt zum Ausgang», «Ausgang ist zu» und Zeit nachstellen. Rückstand und «Jetzt zum Ausgang» rechnen mit der Zeit deines Ausgangs, nicht nur mit dem Rundenende."],["Nach dem Raid","gefundene Materialien und erledigte Quests eintragen; das passt Einkaufsliste und Queststand an. Danach fragt die App: denselben Raid nochmal (gleiche Map und Auswahl, Restzeit wieder 30:00, bei Hidden Bunker und Locked Gate 40:00, Startpunkt, Ausgang und Ausgangszeit neu; nach einer Route aus dem Inventar wieder dieselbe Material-Route) oder einen neuen Raid planen (Auswahl, Startpunkte, Kartenbedingung und eigene Materialien zurück, der Quest-Bedarf bleibt). Der Dialog sagt vorher, wie viele Materialien wegfallen, danach gibt es 10 Sekunden «Rückgängig». Nach dem Raid steht die Route wieder am Start."]]},{"k":"p","x":"Weitere Funktionen:"},{"k":"ul","i":[["Aktuelle Liste","Die Maps im Reiter Raid zeigen immer den aktuellen Stand von Quests und Einkaufsliste."],["Stopps","überall gleich gezählt, zum Beispiel «8 Stopps, davon 6 Top-Loot»."],["Ausgang mit Zeit","Die Karte im Spiel zeigt beim Start die aktiven Ausgänge mit ihrem Timer, denn jeder schliesst zu einer zufälligen Zeit. Du wählst im Plan einen Ausgang und trägst bei «schliesst in» seine Zeit ein (leer = bis zum Schluss offen). Das Navi plant, dass du 2 Minuten («entspannt») oder 1 Minute («knapp») vor dem Schliessen dort bist, und zeigt, bei welcher Restzeit du ankommst. Unsinnige Zeiten (keine Zeit, länger als der Raid) meldet es und übernimmt sie nicht."],["Früh raus","ohne Ausgangszeit plant das Navi, dass du spätestens bei Restzeit 8:00 am Ausgang bist, bei Bedingungen mit weniger Return Points (zum Beispiel Night Raid) bei 15:00, weil gegen Ende oft nur noch wenige Ausgänge offen sind. Abschaltbar unter «Optionen». Für eine Raider Hatch gilt das nicht, sie hat keinen Timer."],["Ausgang ist zu","im Raid wählst du einen anderen offenen Ausgang und optional seine Zeit; das Navi führt die offenen Ziele dorthin. Geschlossene Ausgänge stehen danach nicht mehr zur Wahl."],["Ersatzausgang","das Navi nennt zusätzlich den nächsten freien Ausgang vom letzten Stopp aus (Zeit unbekannt)."],["Kartenbedingungen","alle 19 Bedingungen stehen unter «Wissen»; ein Eintrag unten im Reiter Raid führt dorthin. Im Navi wählst du oben die aktuelle Bedingung, zuerst stehen die der gewählten Map. Das Navi nennt die Folgen: Sind Raider Hatches nicht aktiv, plant es einen anderen Ausgang; es sagt auch, wenn weniger Return Points aktiv sind oder alle verschlossenen Türen offen stehen."],["Geführte Raids","mit eigener Karte, unten im Reiter Raid: Fregatte Squad (16 Stationen), Fregatte Solo (6 Stationen, ohne Puzzle) und Emperor-Dungeon im Fallen Emperor auf Pendola Pass (11 Stationen)."]]}]},
 {"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat vier Reiter: Bedarf, Liste (die Einkaufsliste mit der Zahl ihrer Einträge), Kann weg und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte, deinen Werkstatt-Zielen, deinen Wunsch-Waffen, deinen Sets und eigenen Einträgen der Einkaufsliste, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Die Liste ist nach Zweck gruppiert: zuoberst «Jetzt gesucht» (verfolgte Quests und die Einkaufsliste), dann Quests, Projekte, Werkstatt, Wunsch-Waffen, Ausrüstung und Einträge von Hand. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan lernen (nach dem Abhaken: Verkaufen). Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann weg","der eigene Reiter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Entsteht beim Zerlegen von","jedes Material zeigt, welche Items es beim Zerlegen ergeben, beste Ausbeute zuerst, mit der Menge in Speranza und im Raid. Brauchst du eines dieser Items selbst noch, steht das als Warnung in der Zeile."],["Symbole","jedes Item trägt ein eigenes Symbol für seine Art (Waffe, Aufsatz, Munition, Bauplan, Material, Wertsache und weitere), in der Farbe seiner Seltenheit. Die Symbole sind selbst gezeichnet, keine Grafiken aus dem Spiel."],["Alle Items","630 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Rezept auf die Liste","ein Knopf setzt alle Zutaten eines Rezepts auf die Einkaufsliste; damit zählen sie im Bedarf."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang, höchstens 29 Minuten."],["Kaufen","führt ein Händler das Item, steht im Detail, bei wem, zu welchem Preis und wie oft pro Tag; ein Knopf öffnet den Händler. Bedarf und Einkaufsliste nennen dazu «kaufbar bei …»."],["Liste teilen","das Teilen-Symbol oben rechts in der Einkaufsliste schickt sie als Link ans Squad (siehe «Teilen per Link»)."],["Item-Detail","oben eine Zeile mit allen Abschnitten (Wofür, Kaufen, Zutat in, Wo am besten suchen und weitere); ein Tipp springt hin. Jeder Abschnitt lässt sich einklappen, die App merkt sich, was du zugeklappt hast."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
 {"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Fünf Reiter: Stationen, Waffen, Herstellen (mit den Bauplänen), Ausrüstung und Skills."},{"k":"ul","i":[["Stationen","9 Stationen mit Stufen: sieben in Speranza (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Scrappy) und zwei im Outpost. Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Outpost","eigene Gruppe in der Stationsliste mit dem Outpost (Stufe = Zahl der Räume, Kosten der Räume 2 bis 4) und der Research Station, die darin steht. Bei jeder Stufe steht, welche Outpost-Stufe sie voraussetzt: Research Station Stufe 1 bis 4 braucht Outpost Stufe 1 bis 4, Gunsmith Stufe 4 braucht Outpost Stufe 4."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Amplified (Stufe V)","15 Waffen haben eine fünfte Stufe. Sie kostet ein Amplification Module passend zur Seltenheit der Waffe; mit Wunsch-Stufe V zählt es im Bedarf. Im Detail stehen die Aufwertungen der Waffe mit ihrer Wirkung und die Forschungsprojekte, die für sie gebraucht werden (ARC-Teile, 5000 Research Points, Aufgabe). Ein Haken plant ein Projekt ein: Seine ARC-Teile zählen dann im Bedarf, einmal für alle Waffen."],["Herstellen","156 Rezepte, durchsuchbar. Der Knopf «Filter» grenzt nach Station ein, und «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst. Beides lässt sich kombinieren."],["Baupläne","oben in «Herstellen» führt eine Zeile zu 85 Bauplänen mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Ausrüstung","benannte Sets für den Raid: Waffen mit Stufe, Aufsätze, Augment, Schild, Munition und Verbrauchsgüter mit Anzahl. Teile findest du über die Suche (deutsch oder englisch). Die App zählt das Material fürs ganze Set zusammen und setzt es mit einem Tipp auf die Einkaufsliste. Mit dem Schalter «Zählt im Bedarf» steht das Material im Inventar unter «Bedarf», mit dem Zweck «Ausrüstung: Name»."],["Set teilen","das Teilen-Symbol oben rechts im Set schickt es als Link ans Squad; wer ihn öffnet, bekommt es als neues Set (siehe «Teilen per Link»)."],["Skills (Skill-Baum-Planer)","alle 48 Skills des Baums 2.0 in den Zweigen Conditioning, Mobility und Survival, mit Wirkung und den Zahlen je Stufe. Du verteilst Punkte mit Plus und Minus; der Planer zählt «verteilt von verfügbar» und pro Zweig. Er hält die Regeln ein: Start-Skill zuerst, in der Mitte einer von zwei Skills ab 10 Punkten im Zweig, am Ende bis zu zwei von drei ab 30 und 40 Punkten. Steht ein Knopf still, sagt die Zeile warum. Deine Punktzahl stellst du selbst ein (76 aus Leveln, mit Expedition-Punkten bis 91). Der Plan bleibt gespeichert, das Teilen-Symbol oben rechts gibt ihn als Link weiter, «Plan zurücksetzen» fragt nach. Im breiten Fenster steht der Plan rechts, links die drei Zweige mit ihren Punkten."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen. Alle davor werden abgehakt, dazu alles, was sie bei anderen Händlern voraussetzen; die App sagt vorher, wie viele."],["Reihenfolge","jede Quest zeigt, welche Quests vorher erledigt sein müssen («Braucht vorher») und welche sie freischaltet («Schaltet frei»), auch über Händler hinweg. Ein Tipp öffnet die andere Quest, «Zurück» führt wieder her."],["Gesperrt und jetzt machbar","sobald du etwas abgehakt hast, tragen Quests mit offenen Voraussetzungen die Marke «Gesperrt», und die Liste öffnet mit dem Filter «Jetzt machbar», bis du die Reihenfolge selbst wählst. Das Navi schlägt dann pro Händler nur noch eine Quest vor, die nicht gesperrt ist. Bei einer gesperrten Quest steht, wie viele offene Quests davor liegen und welche davon du jetzt machen kannst."],["Suche und Filter","nach Name, Ort, Händler oder Material; der Filter «Reihenfolge» zeigt nur, was jetzt machbar oder gesperrt ist."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Raid» auf der Karte, ihre Materialien auf der Einkaufsliste. Im Detail steht «Wird verfolgt» als Zustand."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt»."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."]]}]},
@@ -9557,9 +9559,11 @@ HUD_OK = true;
 /* @datei app/kern/navi.js */
 
 const NAVI_KEY = 'raider-atlas:navi';
-let NAVI = { m:null, start:{}, exit:{}, rest:'30:00', cond:'normal', puffer:1, key:false, sb:false, uhr:false, sel:{}, qi:{}, run:null };
+
+let NAVI = { m:null, start:{}, exit:{}, ezeit:{}, reserve:2, frueh:true, rest:'30:00', cond:'normal', puffer:1, key:false, sb:false, uhr:false, sel:{}, qi:{}, run:null };
 try { const s = JSON.parse(localStorage.getItem(NAVI_KEY) || 'null'); if (s && typeof s === 'object') Object.assign(NAVI, s); } catch(_){}
-['start', 'exit', 'sel', 'qi'].forEach(k => { if (!NAVI[k] || typeof NAVI[k] !== 'object') NAVI[k] = {}; });
+if (NAVI.reserve !== 1 && NAVI.reserve !== 2) NAVI.reserve = 2;
+['start', 'exit', 'ezeit', 'sel', 'qi'].forEach(k => { if (!NAVI[k] || typeof NAVI[k] !== 'object') NAVI[k] = {}; });
 const saveNavi = () => { try { localStorage.setItem(NAVI_KEY, JSON.stringify(NAVI)); } catch(_){} naviHudSync(); if (typeof LEISTE_DA !== 'undefined' && LEISTE_DA) leisteMarken(); };
 
 const NZ = { anlauf:.5, anlaufOhne:1.5, quest:2, unterwegs:1, wcase:1, slock:1, pack:.5, nah:1, maxLoot:6, sicher:1, merge:3 };
@@ -9654,10 +9658,21 @@ function naviExits(m){
 }
 const exitMin = E => E ? (E.t === 'hatch' ? RZ.hatch : E.t === 'gondel' ? RZ.gondel : RZ.aus) : 0;
 
+const naviFrueh = c => { const b = COND_BY.get(c); return b && b.f.includes('R') ? 15 : 8; };
+const naviEz = m => { const v = NAVI.exit[m] && NAVI.ezeit[m] ? parseRest(NAVI.ezeit[m]) : null; return v != null && v <= (parseRest(NAVI.rest) || 1800) ? v : null; };
+function naviBudgetFor(m, E){
+  const b = naviBudget(), roh = (parseRest(NAVI.rest) || 1800) / 60;
+  if (!E || E.t === 'hatch') return b;
+  const ez = NAVI.exit[m] === E.name ? naviEz(m) : null;
+  if (ez != null) return Math.min(b, ez / 60 - NAVI.reserve + exitMin(E));
+  if (NAVI.frueh !== false) return Math.min(b, roh - naviFrueh(NAVI.cond) + exitMin(E));
+  return b;
+}
+
 const naviIsQ = x => !!(x && x.by && Object.values(x.by).some(v => v > 0));
 function naviQuestOf(x){ const k = Object.keys(x.by || {}).find(k => x.by[k] > 0); const q = k && QUESTS.find(q => qTrackSrc(q) === k); return q ? qName(q) : 'Quest'; }
 function naviPlan(m){
-  const budget = naviBudget(), st = naviStart(m), A = st ? { x:st.x, z:st.z } : null;
+  const st = naviStart(m), A = st ? { x:st.x, z:st.z } : null, budgetOf = E => naviBudgetFor(m, E);
   const on = (key, def) => NAVI.sel[key] === undefined ? def : !!NAVI.sel[key];
   
   const QC = naviQuests(m);
@@ -9697,12 +9712,13 @@ function naviPlan(m){
   const exits = naviExits(m), want = exits.find(e => e.name === NAVI.exit[m]);
   const total = (S0, E) => { const o = naviOrder(A, S0, E); const L = pathOf(A, o, E);
     return { o, E, L, T:(A ? NZ.anlauf : NZ.anlaufOhne) + walkMin(m, L) + o.reduce((a, s) => a + stopMin(s), 0) + extra() + exitMin(E) + PUFFER[NAVI.puffer] }; };
-  const best = S0 => { if (want) return total(S0, want); let b = null; for (const E of (exits.length ? exits : [null])){ const r = total(S0, E); if (!b || r.T < b.T) b = r; } return b; };
+  
+  const best = S0 => { if (want) return total(S0, want); let b = null; for (const E of (exits.length ? exits : [null])){ const r = total(S0, E); if (!b || budgetOf(r.E) - r.T > budgetOf(b.E) - b.T) b = r; } return b; };
   let P = best(S);
   
   const cut = [];
   const cutQuest = key => { const c = QC.find(x => x.key === key); if (c) c.cut = true; };
-  while (P.T > budget){
+  while (P.T > budgetOf(P.E)){
     const cands = [];
     S.forEach((s, i) => cands.push({ i, prio:Math.max(...s.items.map(x => x.prio)), n:s.items.length }));
     QC.forEach(c => { if (c.on && !c.cut && !c.orte.length && (c.fight || 1)) cands.push({ q:c, prio:c.prio, n:1 }); });
@@ -9722,7 +9738,7 @@ function naviPlan(m){
   for (const s of S) s.items = s.items.filter(x => !(x.kind === 'q' && QC.find(c => c.key === x.key && c.cut)));
   S = S.filter(s => s.items.length); P = best(S);
   
-  const order = P.o.slice(), E = P.E;
+  const order = P.o.slice(), E = P.E, budget = budgetOf(E);
   let T = P.T, nLoot = order.filter(s => s.loot).length;
   const ins = l => { const pts = [A, ...order, E]; let bi = -1, bd = 1e9;
     for (let i = 0; i < pts.length - 1; i++){ const a = pts[i], b = pts[i + 1]; if (!a && !b) continue;
@@ -9752,7 +9768,8 @@ function naviPlan(m){
   
   const last = fin.length ? fin[fin.length - 1] : A;
   const alt = E && last ? naviExits(m).filter(e => e.name !== E.name && EXIT_FREI[e.t]).sort((a, b) => dist2(a, last) - dist2(b, last))[0] : null;
-  return { m, st, A, stops:fin, E, alt, T, budget, L, fights:extra(), cut, quests, mats:MC, loot:LC, missing:MS.missing, other:MS.other, exits, qiOn, qiHere:[...new Set(qiHere)] };
+  const roh = (parseRest(NAVI.rest) || 1800) / 60, ez = E && NAVI.exit[m] === E.name ? naviEz(m) : null;
+  return { m, st, A, stops:fin, E, alt, T, budget, L, ankunft:roh - (T - exitMin(E)), zuBei:ez != null ? roh - ez / 60 : null, frueh:!ez && E && E.t !== 'hatch' && NAVI.frueh !== false ? naviFrueh(NAVI.cond) : 0, fights:extra(), cut, quests, mats:MC, loot:LC, missing:MS.missing, other:MS.other, exits, qiOn, qiHere:[...new Set(qiHere)] };
 }
 
 function naviMapValue(m){
@@ -9851,7 +9868,7 @@ function naviRefresh(force){
 }
 const chk = (on, attr, label) => `<button type="button" class="check" ${attr} aria-pressed="${on}" aria-label="${esc(label)}">${CHECK_SVG}</button>`;
 const STATE_TXT = { plan:'', cut:'passt nicht mehr in die Zeit', aus:'abgewählt', zeit:'passt nicht mehr in die Zeit', weit:'zu weit weg' };
-let naviOptAuf = false;   
+let naviOptAuf = false, naviEzFehler = '', naviZuAuf = false;   
 
 function naviCondOpt(m){
   const opt = ([k, t]) => `<option value="${k}"${NAVI.cond === k ? ' selected' : ''}>${esc(t)}</option>`;
@@ -9880,9 +9897,10 @@ function naviRender(){
     + (condNaviHinweis(NAVI.cond, NAVI.key) ? `<p class="fine" id="naviCondH">${esc(condNaviHinweis(NAVI.cond, NAVI.key))}</p>` : '')
     + (COND_BY.has(NAVI.cond) && !condAuf(COND_BY.get(NAVI.cond), m) ? `<p class="fine" id="naviCondM">Den Daten nach läuft ${esc(COND_BY.get(NAVI.cond).t)} auf dieser Map nicht, sondern auf: ${esc(condMaps(COND_BY.get(NAVI.cond)))}.</p>` : '');
   
-  const opt = ['Puffer ' + ['0', '3', '6'][NAVI.puffer] + ' min', NAVI.key ? 'Hatch Key' : '', NAVI.sb ? 'Security Breach' : '', NAVI.uhr ? 'Uhr an' : ''].filter(Boolean).join(' · ');
+  const opt = ['Puffer ' + ['0', '3', '6'][NAVI.puffer] + ' min', NAVI.frueh === false ? 'ohne Früh raus' : '', NAVI.key ? 'Hatch Key' : '', NAVI.sb ? 'Security Breach' : '', NAVI.uhr ? 'Uhr an' : ''].filter(Boolean).join(' · ');
   h += `<details class="cond nopt" id="naviOpt"${naviOptAuf ? ' open' : ''}><summary><span class="rt"><span class="t1">Optionen</span><span class="t2">${esc(opt)}</span></span></summary><ul class="group in">`
     + `<li class="srow"><span>Kampf-Puffer (Min.)</span><div class="segc mini" id="naviPuf" role="group" aria-label="Puffer für Kämpfe in Minuten">${['0', '3', '6'].map((t, i) => `<button type="button" data-puf="${i}" aria-pressed="${NAVI.puffer === i}">${t}</button>`).join('')}</div></li>`
+    + `<li class="srow"><label for="naviFrueh">Früh raus, wenn die Ausgangszeit fehlt</label><input type="checkbox" class="switch" id="naviFrueh" role="switch"${NAVI.frueh !== false ? ' checked' : ''}></li>`
     + `<li class="srow"><label for="naviKey">Raider Hatch Key dabei</label><input type="checkbox" class="switch" id="naviKey" role="switch"${NAVI.key ? ' checked' : ''}></li>`
     + `<li class="srow"><label for="naviSb">Skill Security Breach</label><input type="checkbox" class="switch" id="naviSb" role="switch"${NAVI.sb ? ' checked' : ''}></li>`
     + `<li class="srow"><label for="naviUhr">Uhr im Raid mitlaufen lassen</label><input type="checkbox" class="switch" id="naviUhr" role="switch"${NAVI.uhr ? ' checked' : ''}></li>`
@@ -9914,9 +9932,26 @@ function naviRender(){
       return `<li${on ? '' : ' class="qd"'}><div class="row static">${chk(on, `data-nloot="${esc(l.key)}" data-on="${on}"`, (on ? 'Abwählen: ' : 'Mitnehmen: ') + l.label)}<span class="num ex lootic">${MARK_IMG[l.kind] ? `<img src="${MARK_IMG[l.kind].src}" alt="">` : ''}</span><span class="rt"><span class="t1">${esc(l.label)}</span><span class="t2">${esc(sub)}</span></span></div></li>`; }).join('') + '</ul>';
   } else h += '<p class="fine">Keine Waffenkiste und kein Rucksack in der Nähe der Route' + (NAVI.sb ? '' : ' (Security-Spinde nur mit Security Breach)') + '.</p>';
   
-  h += '<h4>Ausgang</h4><ul class="group">' + `<li><button type="button" class="row" data-nexit=""><span class="num${NAVI.exit[m] ? '' : ' on'}">${NAVI.exit[m] ? '' : '✓'}</span><span class="rt"><span class="t1">Automatisch</span><span class="t2">${esc(P.E ? 'Jetzt: ' + P.E.name + ' (' + EXIT_ART[P.E.t] + ')' : 'Kein Ausgang bekannt')}</span></span></button></li>`
-    + P.exits.map(e => `<li><button type="button" class="row" data-nexit="${esc(e.name)}"><span class="num ex${NAVI.exit[m] === e.name ? ' on' : ''}">${MARK_IMG[e.t] ? `<img src="${MARK_IMG[e.t].src}" alt="">` : ''}</span><span class="rt"><span class="t1">${esc(e.name)}</span><span class="t2">${esc(EXIT_ART[e.t] + (NAVI.exit[m] === e.name ? ' · gewählt' : ''))}</span></span></button></li>`).join('') + '</ul>'
-    + (P.alt ? `<p class="fine">Falls der Ausgang schon zu ist: ${esc(P.alt.name)} (${esc(EXIT_ART[P.alt.t])}), ca. ${meters(m, dist2(P.alt, P.E))} m weiter.</p>` : '');
+  const ezAkt = NAVI.exit[m] ? P.exits.find(e => e.name === NAVI.exit[m]) : null, condB = COND_BY.get(NAVI.cond);
+  h += '<h4>Ausgang</h4>'
+    + `<p class="fine" id="naviExitH">Schau beim Start auf die Karte im Spiel: Dort stehen die aktiven Ausgänge mit ihrem Timer. Wähle den, zu dem du willst, und trag seine Zeit ein.${condB && condB.f.includes('R') ? (NAVI.cond === 'nightraid' ? ' Bei Night Raid sind nur 2 Ausgänge aktiv, und welche, wechselt jede Runde.' : ' Mit ' + condB.t + ' sind nicht alle Ausgänge aktiv.') : ''}</p>`
+    + '<ul class="group">' + `<li><button type="button" class="row" data-nexit=""><span class="num${NAVI.exit[m] ? '' : ' on'}">${NAVI.exit[m] ? '' : '✓'}</span><span class="rt"><span class="t1">Automatisch</span><span class="t2">${esc(P.E ? 'Jetzt: ' + P.E.name + ' (' + EXIT_ART[P.E.t] + ')' : 'Kein Ausgang bekannt')}</span></span></button></li>`
+    + P.exits.map(e => `<li><button type="button" class="row" data-nexit="${esc(e.name)}"><span class="num ex${NAVI.exit[m] === e.name ? ' on' : ''}">${MARK_IMG[e.t] ? `<img src="${MARK_IMG[e.t].src}" alt="">` : ''}</span><span class="rt"><span class="t1">${esc(e.name)}</span><span class="t2">${esc(EXIT_ART[e.t] + (NAVI.exit[m] === e.name ? ' · gewählt' + (e.t === 'hatch' ? ', kein Timer' : naviEz(m) != null ? ', schliesst in ' + mmss(naviEz(m)) : ', bis zum Schluss offen') : ''))}</span></span></button></li>`).join('') + '</ul>';
+  if (ezAkt && ezAkt.t !== 'hatch'){
+    h += '<ul class="group">'
+      + `<li class="srow"><label for="naviEz">${esc(ezAkt.name)} schliesst in</label><input class="navin" id="naviEz" type="text" inputmode="numeric" value="${esc(NAVI.ezeit[m] || '')}" placeholder="bis Schluss" aria-describedby="naviEzH"></li>`
+      + `<li class="srow"><span>Am Ausgang vor dem Schliessen</span><div class="segc mini" id="naviRes" role="group" aria-label="Wie viele Minuten vor dem Schliessen am Ausgang">${[[2, '2 min entspannt'], [1, '1 min knapp']].map(([v, t]) => `<button type="button" data-nres="${v}" aria-pressed="${NAVI.reserve === v}">${t}</button>`).join('')}</div></li>`
+      + '</ul>'
+      + (naviEzFehler ? `<p class="fine err" id="naviEzF" role="alert">${esc(naviEzFehler)}</p>` : '')
+      + `<p class="fine" id="naviEzH">Leer lassen, wenn der Ausgang bis zum Schluss offen bleibt. Die Zeit zählt ab demselben Moment wie die Restzeit oben.</p>`;
+  }
+  if (P.E){
+    const ank = 'Am Ausgang ca. bei Restzeit ' + mmss(Math.max(0, P.ankunft) * 60);
+    h += `<p class="fine" id="naviAnk">${esc(P.zuBei != null ? ank + ', er schliesst bei ' + mmss(Math.max(0, P.zuBei) * 60) + ' (' + NAVI.reserve + ' min Reserve).'
+      : P.frueh ? ank + '. Ohne Ausgangszeit plant das Navi, dass du spätestens bei Restzeit ' + P.frueh + ':00 dort bist (Optionen: «Früh raus»).'
+      : ank + '.')}</p>`;
+  }
+  h += (P.alt ? `<p class="fine">Falls der Ausgang schon zu ist: ${esc(P.alt.name)} (${esc(EXIT_ART[P.alt.t])}), ca. ${meters(m, dist2(P.alt, P.E))} m weiter, Zeit unbekannt. Im Raid hilft der Knopf «Ausgang ist zu».</p>` : '');
   if (P.cut.length) h += `<div class="warn">Passt nicht mehr in die Zeit: ${esc(P.cut.join(', '))}.</div>`;
   if (P.T > P.budget + .01) h += `<div class="warn">Auch ohne weitere Stopps wird es knapp: ca. ${fmin(P.T)} min bis zum Ausgang. Geh direkt raus oder wähle einen anderen Startpunkt.</div>`;
   h += `<div class="annbox"><b>Annahme:</b> Alle Zeiten sind geschätzt: Laufen im Mittel 5 m/s mit 30 % Umweg (aus Sprint- und Ausdauerwerten), Quest-Aufgabe 2 min, Fundort 1,5 min, Waffenkiste und Spind 1 min, Rucksack 0,5 min, Lift 2 min (fährt 90 s nach dem Ruf), Kampf nach Gefahrenstufe des ARC 0,5 bis 5 min, Quest ohne Ort 1 min. Der Massstab ist nur für Dam und Spaceport abgeleitet, sonst geschätzt. Startpunkte: an interaktiven Karten abgelesen, Lage auf 1 bis 2 Einheiten genau.</div>`;
@@ -9930,7 +9965,8 @@ $('#naviDetail').addEventListener('click', e => {
   if (t.closest('[data-npick]')){ naviPick(NAVI.m); return; }
   const s = t.closest('[data-nsel]'); if (s){ const k = s.dataset.nsel, cur = s.getAttribute('aria-pressed') === 'true'; naviSet(() => { NAVI.sel[k] = !cur; }); return; }
   const l = t.closest('[data-nloot]'); if (l){ const k = l.dataset.nloot, cur = l.dataset.on === 'true'; naviSet(() => { NAVI.sel[k] = !cur; }); return; }
-  const x = t.closest('[data-nexit]'); if (x){ naviSet(() => { NAVI.exit[NAVI.m] = x.dataset.nexit; }); return; }
+  const x = t.closest('[data-nexit]'); if (x){ naviEzFehler = ''; naviSet(() => { if (NAVI.exit[NAVI.m] !== x.dataset.nexit) delete NAVI.ezeit[NAVI.m]; NAVI.exit[NAVI.m] = x.dataset.nexit; }); return; }
+  const rs = t.closest('[data-nres]'); if (rs){ naviSet(() => { NAVI.reserve = +rs.dataset.nres; }); return; }
   const p = t.closest('[data-puf]'); if (p){ naviSet(() => { NAVI.puffer = +p.dataset.puf; }); return; }
 });
 $('#naviDetail').addEventListener('toggle', e => { if (e.target.id === 'naviOpt') naviOptAuf = e.target.open; }, true);
@@ -9939,6 +9975,14 @@ $('#naviDetail').addEventListener('change', e => {
   
   if (t.id === 'naviCond') naviSet(() => { if (NAVI.rest === mmss(condDauer(NAVI.cond) * 60)) NAVI.rest = mmss(condDauer(t.value) * 60); NAVI.cond = t.value; });
   if (t.id === 'naviKey') naviSet(() => { NAVI.key = t.checked; });
+  if (t.id === 'naviFrueh') naviSet(() => { NAVI.frueh = t.checked; });
+  if (t.id === 'naviEz'){
+    const roh = String(t.value).trim(), v = parseRest(roh), rest = parseRest(NAVI.rest) || 1800;
+    naviEzFehler = !roh ? '' : v == null ? '«' + roh.slice(0, 12) + '» ist keine Zeit. Schreib sie wie im Spiel, zum Beispiel 18:30.'
+      : v > rest ? 'Der Ausgang kann nicht länger offen sein als der Raid (Restzeit ' + NAVI.rest + '). Leer lassen heisst: bis zum Schluss offen.' : '';
+    naviSet(() => { if (!roh) delete NAVI.ezeit[NAVI.m]; else if (!naviEzFehler) NAVI.ezeit[NAVI.m] = mmss(v); });
+    if (naviEzFehler){ const f = $('#naviEz'); if (f){ f.value = roh; f.focus(); } }
+  }
   if (t.id === 'naviSb') naviSet(() => { NAVI.sb = t.checked; });
   if (t.id === 'naviQi') naviSet(() => { NAVI.qi[NAVI.m] = t.checked; });
   if (t.id === 'naviUhr'){ NAVI.uhr = t.checked; saveNavi(); }
@@ -9982,6 +10026,14 @@ function naviRemaining(){
 }
 const naviClock = () => NAVI.run && NAVI.run.uhr ? NAVI.run.rest0 - (Date.now() - NAVI.run.t0) / 1000 : null;
 
+function naviAvail(clk, E){
+  const r = NAVI.run; let a = clk / 60;
+  if (!r || !E || E.exit === 'hatch') return a;
+  if (r.zu != null) return Math.min(a, (clk - r.zu) / 60 - (r.reserve || 2) + exitMin({ t:E.exit }));
+  if (r.frueh) return Math.min(a, clk / 60 - r.frueh + exitMin({ t:E.exit }));
+  return a;
+}
+
 function renderNaviPanel(){
   const R = ROUTE, m = R.view, box = $('#naviBox');
   if (R.pick){
@@ -10007,7 +10059,8 @@ function renderNaviPanel(){
   } else {
     const clk = naviClock(), need = naviRemaining(), t = naviTarget(), tg = t >= 0 ? R.stops[t] : null, pos = naviPos();
     if (clk != null) $('#num').textContent = mmss(clk);
-    if (clk != null) h += `<div class="navclock"><span class="lcd big" id="naviLcd">${mmss(clk)}</span><span class="sub2">Restzeit · geplant noch ca. ${fmin(need)} min</span></div>`;
+    const Ex = R.stops.find(s => s.exit), avail = clk != null ? naviAvail(clk, Ex) : null;
+    if (clk != null) h += `<div class="navclock"><span class="lcd big" id="naviLcd">${mmss(clk)}</span><span class="sub2">Restzeit · geplant noch ca. ${fmin(need)} min${run.zu != null && Ex ? ' · ' + esc(Ex.name) + ' schliesst in ' + mmss(Math.max(0, clk - run.zu)) : ''}</span></div>`;
     if (tg){
       const d = pos ? dist2(pos, tg) : 0, dir = pos && d > .5 ? DIR8[dirIdx(tg.x - pos.x, tg.z - pos.z)] : '';
       h += `<div class="navnext"><span class="sub2">${tg.exit ? 'Zum Ausgang' : 'Nächstes Ziel'}</span><b>${esc(tg.name)}</b>`
@@ -10019,16 +10072,24 @@ function renderNaviPanel(){
     
     if (clk != null && tg){
       const E = R.stops.find(s => s.exit), direct = pos && E ? walkMin(m, dist2(pos, E)) + exitMin({ t:E.exit }) : 0;
-      if (clk / 60 < direct + 1) h += `<div class="warn">Jetzt zum Ausgang: ${esc(E.name)}, ca. ${fmin(direct)} min.</div><div class="btncol"><button type="button" class="bp" id="naviGoExit">Direkt zum Ausgang</button></div>`;
-      else if (clk / 60 < need){
+      
+      if (avail < direct + 1) h += `<div class="warn">Jetzt zum Ausgang: ${esc(E.name)}, ca. ${fmin(direct)} min.${run.zu != null ? ' Er schliesst in ' + mmss(Math.max(0, clk - run.zu)) + '.' : run.frueh ? ' Gegen Ende sind oft nur noch wenige Ausgänge offen.' : ''}</div><div class="btncol"><button type="button" class="bp" id="naviGoExit">Direkt zum Ausgang</button></div>`;
+      else if (avail < need){
         const rest = R.stops.filter(s => !s.start && !s.done && !s.exit);
         const prio = s => Math.max(...s.items.map(x => x.prio || 1));
         const pick = rest.slice().sort((a, b) => prio(a) - prio(b) || stopMin(a) - stopMin(b))[0];
-        h += `<div class="warn">Du liegst ca. ${fmin(need - clk / 60)} min hinter dem Plan.${pick ? ' Vorschlag: ' + esc(pick.name) + ' weglassen (' + esc(PRIO_NAME[prio(pick)] || 'Stopp') + ').' : ''}</div>`
+        h += `<div class="warn">Du liegst ca. ${fmin(need - avail)} min hinter dem Plan${avail < clk / 60 - .01 ? ' (gemessen an der Zeit deines Ausgangs)' : ''}.${pick ? ' Vorschlag: ' + esc(pick.name) + ' weglassen (' + esc(PRIO_NAME[prio(pick)] || 'Stopp') + ').' : ''}</div>`
           + (pick ? `<div class="btncol"><button type="button" class="bs" data-nskip="${esc(pick.key)}">${esc(pick.name)} weglassen</button></div>` : '');
       }
     }
-    h += `<div class="btnrow"><button type="button" class="bs" id="naviTime">${clk != null ? 'Zeit anpassen' : 'Uhr starten'}</button><button type="button" class="bs" id="naviStop">Run abbrechen</button></div>`
+    const zuWahl = naviExits(m).filter(e => !(run.zuList || []).includes(e.name) && !(Ex && Ex.name === e.name));
+    h += `<div class="btnrow"><button type="button" class="bs" id="naviZu" aria-expanded="${naviZuAuf}" aria-controls="naviZuBox">Ausgang ist zu</button><button type="button" class="bs" id="naviTime">${clk != null ? 'Zeit anpassen' : 'Uhr starten'}</button><button type="button" class="bs" id="naviStop">Run abbrechen</button></div>`
+      + `<div class="navtime" id="naviZuBox"${naviZuAuf ? '' : ' hidden'}><p class="sub2">Welcher Ausgang ist auf der Karte im Spiel noch offen? Die Route führt ab deinem letzten Ziel dorthin.</p>`
+      + (zuWahl.length ? `<label for="naviZuSel">Neuer Ausgang</label><select class="stsel" id="naviZuSel">${zuWahl.map(e => `<option value="${esc(e.name)}">${esc(e.name + ' (' + EXIT_ART[e.t] + ')')}</option>`).join('')}</select>`
+        + `<label for="naviZuIn">Schliesst in</label><input class="navin" id="naviZuIn" type="text" inputmode="numeric" placeholder="bis Schluss">`
+        + (clk == null ? `<label for="naviZuRest">Restzeit im Spiel</label><input class="navin" id="naviZuRest" type="text" inputmode="numeric" placeholder="mm:ss">` : '')
+        + `<p class="fine err" id="naviZuF" role="alert" hidden></p><button type="button" class="pill tint" id="naviZuOk">Zum neuen Ausgang</button>`
+        : '<p class="fine">Kein anderer Ausgang mehr bekannt. Bei einer Raider Hatch hilft ein Raider Hatch Key (unter «Plan ändern», Optionen).</p>') + '</div>'
       + `<div class="navtime" id="naviTimeBox" hidden><label for="naviTimeIn">Restzeit im Spiel</label><input class="navin" id="naviTimeIn" type="text" inputmode="numeric" placeholder="mm:ss" value="${clk != null ? mmss(clk) : esc(NAVI.rest)}"><button type="button" class="pill tint" id="naviTimeOk">Übernehmen</button></div>`;
   }
   box.innerHTML = h;
@@ -10055,18 +10116,57 @@ function renderNaviPanel(){
 $('#naviBox').addEventListener('click', e => {
   const t = e.target, m = ROUTE && ROUTE.view;
   if (!m) return;
-  if (t.closest('#naviStart')){ NAVI.run = { m, t0:Date.now(), rest0:parseRest(NAVI.rest) || 1800, uhr:NAVI.uhr, done:[], skip:[], quests:naviPlanCache ? naviPlanCache.quests.filter(c => c.state === 'plan').map(c => c.q.en) : [] };
+  if (t.closest('#naviStart')){
+    
+    const rest0 = parseRest(NAVI.rest) || 1800, E0 = naviPlanCache && naviPlanCache.E, ez = E0 && E0.t !== 'hatch' && NAVI.exit[m] === E0.name ? naviEz(m) : null;
+    NAVI.run = { m, t0:Date.now(), rest0, uhr:NAVI.uhr || ez != null, done:[], skip:[], zu:ez != null ? rest0 - ez : null, zuList:[], reserve:NAVI.reserve,
+      frueh:ez == null && E0 && E0.t !== 'hatch' && NAVI.frueh !== false ? naviFrueh(NAVI.cond) : 0,
+      quests:naviPlanCache ? naviPlanCache.quests.filter(c => c.state === 'plan').map(c => c.q.en) : [] };
     saveNavi(); RUN = { m, at:Date.now() }; saveRun(); naviMarkDone(); const i = naviTarget(); if (i >= 0) selectStop(i, true); renderCard(); naviTickOn(); return; }
   if (t.closest('#naviEdit')){ naviOpen(m); return; }
   const d = t.closest('[data-ndone]'); if (d){ naviDone(d.dataset.ndone, 'done'); return; }
   const s = t.closest('[data-nskip]'); if (s){ naviDone(s.dataset.nskip, 'skip'); return; }
   if (t.closest('#naviGoExit')){ for (const st of ROUTE.stops) if (!st.start && !st.exit && !st.done) NAVI.run.skip.push(st.key); saveNavi(); naviMarkDone(); const i = naviTarget(); if (i >= 0) selectStop(i, true); renderCard(); return; }
+  if (t.closest('#naviZu')){ const b = $('#naviZuBox'); b.hidden = !b.hidden; naviZuAuf = !b.hidden; t.closest('#naviZu').setAttribute('aria-expanded', String(!b.hidden)); if (!b.hidden){ const f = $('#naviZuSel') || $('#naviZuBox'); if (f.focus) f.focus(); } return; }
+  if (t.closest('#naviZuOk')){
+    const roh = $('#naviZuIn').value.trim(), ez = roh ? parseRest(roh) : null, rIn = $('#naviZuRest'), rv = rIn ? parseRest(rIn.value) : null, f = $('#naviZuF');
+    const clk = naviClock(), rest = clk != null ? clk : rv;
+    const fehler = roh && ez == null ? '«' + roh.slice(0, 12) + '» ist keine Zeit. Schreib sie wie im Spiel, zum Beispiel 4:30.'
+      : rIn && rIn.value.trim() && rv == null ? 'Die Restzeit ist keine Zeit. Schreib sie wie im Spiel, zum Beispiel 12:00.'
+      : ez != null && rest == null ? 'Für die Zeit des Ausgangs braucht es auch die Restzeit im Spiel.'
+      : ez != null && ez > rest ? 'Der Ausgang kann nicht länger offen sein als der Raid. Leer lassen heisst: bis zum Schluss offen.' : '';
+    if (fehler){ f.textContent = fehler; f.hidden = false; return; }
+    naviExitWechsel($('#naviZuSel').value, ez, clk == null ? rv : null); return; }
   if (t.closest('#naviTime')){ const b = $('#naviTimeBox'); b.hidden = !b.hidden; if (!b.hidden) $('#naviTimeIn').focus(); return; }
   if (t.closest('#naviTimeOk')){ const v = parseRest($('#naviTimeIn').value); if (!v) { $('#naviTimeIn').value = ''; $('#naviTimeIn').focus(); return; }
     Object.assign(NAVI.run, { uhr:true, t0:Date.now(), rest0:v }); saveNavi(); renderCard(); naviTickOn(); return; }
-  if (t.closest('#naviStop')){ NAVI.run = null; saveNavi(); naviMarkDone(); renderCard(); return; }
+  if (t.closest('#naviStop')){ naviZuAuf = false; NAVI.run = null; saveNavi(); naviMarkDone(); renderCard(); return; }
 });
-$('#naviBox').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'naviTimeIn'){ e.preventDefault(); $('#naviTimeOk').click(); } });
+$('#naviBox').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'naviTimeIn'){ e.preventDefault(); $('#naviTimeOk').click(); }
+  if (e.key === 'Enter' && (e.target.id === 'naviZuIn' || e.target.id === 'naviZuRest')){ e.preventDefault(); $('#naviZuOk').click(); } });
+
+function naviExitWechsel(name, ez, restNeu){
+  const r = NAVI.run, m = ROUTE && ROUTE.view; if (!r || !m) return;
+  const E = naviExits(m).find(e => e.name === name); if (!E) return;
+  
+  const vorher = { stops:ROUTE.stops.slice(), run:JSON.stringify(r), exit:NAVI.exit[m] };
+  const alt = ROUTE.stops.find(s => s.exit); r.zuList = r.zuList || []; if (alt && !r.zuList.includes(alt.name)) r.zuList.push(alt.name);
+  if (restNeu) Object.assign(r, { uhr:true, t0:Date.now(), rest0:restNeu });
+  const clk = naviClock();
+  r.zu = ez != null && clk != null ? clk - ez : null;
+  if (r.zu == null && E.t !== 'hatch' && !r.frueh && NAVI.frueh !== false) r.frueh = naviFrueh(NAVI.cond);
+  if (E.t === 'hatch') r.frueh = 0;
+  naviZuAuf = false; NAVI.exit[m] = name; delete NAVI.ezeit[m]; saveNavi(); if (r.uhr) naviTickOn();
+  const fest = ROUTE.stops.filter(s => s.start || s.done), offen = ROUTE.stops.filter(s => !s.start && !s.done && !s.exit);
+  const pos = naviPos(), ersatz = naviExits(m).filter(e => e.name !== name && EXIT_FREI[e.t] && !r.zuList.includes(e.name)).sort((a, b) => dist2(a, E) - dist2(b, E))[0];
+  ROUTE.stops = fest.concat(naviOrder(pos, offen, E), [{ name:E.name, x:E.x, z:E.z, h:0, r:4, items:[], exit:E.t, key:'exit',
+    alt:ersatz ? ersatz.name + ' (' + EXIT_ART[ersatz.t] + '), ca. ' + meters(m, dist2(ersatz, E)) + ' m weiter' : '' }]);
+  naviMarkDone(); const i = naviTarget(); if (i >= 0) selectStop(i, true); renderCard(); dirty = true; wake();
+  snackShow('Neuer Ausgang: ' + name + (r.zu != null ? ', schliesst in ' + mmss(ez) : '') + '.', () => {
+    if (!NAVI.run || !ROUTE || ROUTE.view !== m) return;
+    NAVI.run = JSON.parse(vorher.run); if (vorher.exit) NAVI.exit[m] = vorher.exit; else delete NAVI.exit[m]; saveNavi();
+    ROUTE.stops = vorher.stops; naviMarkDone(); const j = naviTarget(); if (j >= 0) selectStop(j, true); renderCard(); dirty = true; wake(); });
+}
 
 function naviMiniLabel(){ if (!NAVI.run || NAVI.run.m !== ROUTE.view) return 'Raid starten'; const t = naviTarget(); return t >= 0 && ROUTE.stops[t].exit ? 'Draussen' : 'Erledigt'; }
 function naviMini(){
@@ -10087,7 +10187,8 @@ function naviTickOn(){
     if (!NAVI.run || !NAVI.run.uhr){ clearInterval(naviTimer); naviTimer = null; return; }
     if (document.hidden || !ROUTE || !ROUTE.navi || ROUTE.view !== NAVI.run.m) return;
     const el = $('#naviLcd'), c = naviClock(); if (el){ el.textContent = mmss(c); $('#num').textContent = mmss(c); }
-    if (++naviTicks % 10 === 0 && !(document.activeElement && document.activeElement.id === 'naviTimeIn')) renderCard();
+    
+    if (++naviTicks % 10 === 0 && !(document.activeElement && (document.activeElement.id === 'naviTimeIn' || document.activeElement.closest('#naviZuBox')))) renderCard();
   }, 1000);
 }
 if (NAVI.run && NAVI.run.uhr) naviTickOn();
@@ -10125,7 +10226,8 @@ function naviAfterRun(){
   openModal(nxDlg, same ? '#nxSame' : '#nxNew');
 }
 function naviAgain(m){
-  NAVI.m = m; delete NAVI.start[m]; NAVI.run = null; NAVI.rest = mmss(condDauer(NAVI.cond) * 60); saveNavi();
+  
+  NAVI.m = m; delete NAVI.start[m]; delete NAVI.exit[m]; delete NAVI.ezeit[m]; NAVI.run = null; NAVI.rest = mmss(condDauer(NAVI.cond) * 60); saveNavi();
   naviPick(m);
 }
 function naviMatAgain(m){ if (!isWide()) setScreen('map'); openRoute(m); }
@@ -10142,7 +10244,7 @@ function naviResetNew(){
   const n = naviOwnCount();
   const snap = { navi:JSON.stringify(NAVI), list:JSON.stringify(LIST), run:JSON.stringify(RUN),
     route:ROUTE && !ROUTE.pick ? (ROUTE.navi ? { k:'navi', m:ROUTE.view } : ROUTE.src && ROUTE.src.k === 'route' ? { k:'route', m:ROUTE.view } : null) : null };
-  NAVI.sel = {}; NAVI.start = {}; NAVI.exit = {}; NAVI.qi = {}; NAVI.rest = '30:00'; NAVI.cond = 'normal'; NAVI.m = null; NAVI.run = null; saveNavi();
+  NAVI.sel = {}; NAVI.start = {}; NAVI.exit = {}; NAVI.ezeit = {}; NAVI.qi = {}; NAVI.rest = '30:00'; NAVI.cond = 'normal'; NAVI.m = null; NAVI.run = null; saveNavi();
   LIST = LIST.filter(x => { if (!naviIsQ(x)) return false; x.m = 0; listFix(x); return true; });
   saveList(); shopRender(); hudRender();
   RUN = null; saveRun();
@@ -10486,7 +10588,7 @@ uiRestore(startId, lastId);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
-window.__atlas = { hd:() => ({ HD, HD_H, hdWo }), trials:() => ({ TR, stand:trStand }), teil:() => ({ teilLesen, teilPruefen, teilSet, teilSkill, teilListe }), ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN, AMP, WS_VOR }), sets:() => ({ SET_WAHL, setMaterial, setTeilKosten, wkSetOpen }), skill:() => ({ SKILLS, SKP, skSperre, skWeg, skSumme, skGesamt, R:SK_R }), cond:() => ({ CONDS, NAVI_COND, HATCH_ZU, maps:Object.keys(MAPS), dauer:condDauer, hinweis:condNaviHinweis, exitMin, naviAgain }), qf:() => ({ QUESTS, qAhnen, qGesperrt, qMachbar, qTiefe, stList, folge:qFolgeF, navi:m => naviQuests(m).map(c => c.q ? c.q.en : c.en) }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
+window.__atlas = { hd:() => ({ HD, HD_H, hdWo }), trials:() => ({ TR, stand:trStand }), teil:() => ({ teilLesen, teilPruefen, teilSet, teilSkill, teilListe }), ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN, AMP, WS_VOR }), sets:() => ({ SET_WAHL, setMaterial, setTeilKosten, wkSetOpen }), skill:() => ({ SKILLS, SKP, skSperre, skWeg, skSumme, skGesamt, R:SK_R }), cond:() => ({ CONDS, NAVI_COND, HATCH_ZU, maps:Object.keys(MAPS), dauer:condDauer, hinweis:condNaviHinweis, exitMin, naviAgain, budgetFor:naviBudgetFor, avail:naviAvail, wechsel:naviExitWechsel, exits:naviExits, frueh:naviFrueh }), qf:() => ({ QUESTS, qAhnen, qGesperrt, qMachbar, qTiefe, stList, folge:qFolgeF, navi:m => naviQuests(m).map(c => c.q ? c.q.en : c.en) }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
   navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
   marker:() => markers, g3:() => G3, zeiger:() => ptrs.size, ruhig:() => !anim && !dirty, kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
