@@ -2,6 +2,7 @@
 <html lang="de-CH">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-o7wckJw83TQIZ5bMk2DdsQxyo+5hvvdHLz0GLVyARJc=' 'sha256-Tq/tocdzCrMTfGrx8QUvcO1N0plndFqcb+kLyq47Bqk=' 'sha256-iDZI4d0gMeY+nRfzZqBWnxPonXY/iN9caud8kJAyZx4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
 <title>Raider-Atlas 3D</title>
@@ -780,15 +781,111 @@ li.qd .row .t1{color:var(--muted)}
 .einr .ck svg{width:16px;height:16px;fill:none;stroke:var(--bg);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 
 .app:not([data-md="1"]) #wkSkillL{display:none}   
+
+/* Etappe 2: Hinweis oben (defekte Daten, Speicherfehler, anderes Fenster), Datensicherung */
+.sphinweis{position:fixed;left:12px;right:12px;top:calc(10px + var(--sat));z-index:70;max-width:560px;margin:0 auto;padding:12px 12px 10px 16px;border-radius:14px;background:rgba(13,10,7,.95);color:#F3E9D2;font:400 15px/1.35 var(--body);box-shadow:0 10px 28px rgba(0,0,0,.35);border-left:4px solid var(--ann)}
+.sphinweis[hidden]{display:none}
+.sphinweis .sph-t b{display:block;margin-bottom:2px}
+.sphinweis .sph-k{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:8px}
+.sphinweis button{min-height:44px;padding:0 14px;border:0;border-radius:10px;background:transparent;color:#2CE6FF;font:700 15px/1 var(--body);cursor:pointer}
+.sphinweis button.b{background:#2CE6FF;color:#0D0A07}
+.sphinweis button:focus-visible{outline:2px solid #F3E9D2;outline-offset:2px}
+.btncol.sich{display:flex;flex-direction:column;gap:8px}
+.bs.gefahr,.alertbtns button.gefahr{color:var(--warn)}
+.sichliste{margin:8px 0 0;padding-left:20px}
+#sichStatus:empty{display:none}
+
+/* ===== Etappe 5: Barrierefreiheit (Werte aus GESTALTUNG.md, Teil 2) ===== */
+/* ===== Barrierefreiheit 1: Farbwerte ===== */
+:root{
+  --focus:var(--neon2);              /* Fokusring, wie bisher */
+  --sw-ring:var(--muted);            /* Rand der Schalter-Spur */
+  --sw-on:var(--ok);                 /* Spur eingeschaltet */
+  --sw-knob-ring-off:transparent;    /* Rand um den Knopf, aus */
+  --sw-knob-ring-on:#17110D;         /* Rand um den Knopf, an (dunkel) */
+}
+:root[data-theme="light"]{
+  --rarU:#1D6527;                    /* war #23762E */
+  --ann:#7A4F00;                     /* war #8A5A00 */
+  --ann-bg:rgba(122,79,0,.07);       /* Ton folgt --ann */
+  --sw-on:#23762E;                   /* = --thr-g, statt --ok */
+  --sw-knob-ring-off:#6B5843;        /* = --muted */
+  --sw-knob-ring-on:transparent;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --rarU:#1D6527;
+    --ann:#7A4F00;
+    --ann-bg:rgba(122,79,0,.07);
+    --sw-on:#23762E;
+    --sw-knob-ring-off:#6B5843;
+    --sw-knob-ring-on:transparent;
+  }
+}
+/* ===== Barrierefreiheit 2: Fokus ===== */
+/* A3: Ring am ganzen Suchfeld-Kasten, das Feld selbst bleibt ohne eigenen Ring */
+.searchf:focus-within{outline:2px solid var(--focus);outline-offset:2px}
+.searchf input:focus-visible{outline:none}
+
+/* A4: .group schneidet mit overflow:hidden ab – Ring nach innen legen */
+.group .row:focus-visible,
+.group .rowin:focus-visible,
+.group summary:focus-visible{outline:2px solid var(--focus);outline-offset:-3px;border-radius:10px}
+
+/* Reiterknöpfe: unten (Handy) und Seitenleiste (ab 860 px, overflow-y:auto schneidet ab) */
+.tb:focus-visible{outline:2px solid var(--focus);outline-offset:-4px;border-radius:12px}
+.sn:focus-visible,.railb:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+/* ===== Barrierefreiheit 3: Schalter ===== */
+.switch{
+  background:radial-gradient(circle at 15.5px 15.5px,#fff 0 11px,var(--sw-knob-ring-off) 11.5px 13px,transparent 13.5px) var(--fill);
+  box-shadow:inset 0 0 0 1.5px var(--sw-ring);
+}
+.switch:checked{
+  background:radial-gradient(circle at 35.5px 15.5px,#fff 0 11px,var(--sw-knob-ring-on) 11.5px 13px,transparent 13.5px) var(--sw-on);
+  box-shadow:inset 0 0 0 1.5px var(--sw-on);
+}
+/* Windows-Kontrastmodus: Systemschalter zeigen */
+@media (forced-colors: active){
+  .switch{appearance:auto;-webkit-appearance:auto;background:none;box-shadow:none}
+}
+/* ===== Barrierefreiheit 4: Segment ===== */
+.segc button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--accent),0 1px 3px rgba(0,0,0,.25)}
+/* ===== Barrierefreiheit 5: Suchfeld und Segmente ===== */
+.searchf{position:relative;padding:0}
+.searchf svg{position:absolute;left:10px;top:50%;margin-top:-9px;pointer-events:none}
+.searchf input{align-self:stretch;min-height:44px;padding:0 10px 0 34px;border-radius:10px;cursor:text}
+
+/* Werkstatt- und Händler-Segmente: unter 381 px in zwei Reihen (3 + 2) statt 11-px-Schrift */
+@media (max-width:380px){
+  .segc.seg5{flex-wrap:wrap;gap:2px}
+  .segc.seg5 button{flex:1 1 calc(33.333% - 2px);min-height:44px;font-size:13px;padding:0 4px;letter-spacing:0}
+}
+/* A6: fokussierte Zeile nicht unter der Reiterleiste */
+.pages{scroll-padding-bottom:calc(var(--tabh, 64px) + 16px)}
+/* A17: Kartentitel darf umbrechen statt abgeschnitten zu werden */
+@media (max-width:420px){ .shtitle h2{white-space:normal} }
+
+/* ===== Prüfrunde: Barrierefreiheit ===== */
+.sdet h3.h4{margin:20px 0 6px;padding:0 32px;font:600 13px/1.3 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+/* B4: Hinweis oben verdeckt nichts – die App rückt um seine Höhe nach unten */
+.sphinweis{left:0;right:0;top:0;max-width:none;margin:0;border-radius:0 0 14px 14px;padding-top:calc(12px + var(--sat))}
+/* B7: Fokusring untereinander stehender Dialogknöpfe und der Kartenknöpfe nicht abschneiden */
+.alertbtns.col button:focus-visible,#zIn:focus-visible,#zOut:focus-visible,#btnReset:focus-visible{outline:2px solid var(--focus,#2CE6FF);outline-offset:-3px}
+/* B8: «Alle Daten löschen» im hellen Modus mit 4,5:1 */
+:root[data-theme="light"] .bs.gefahr{color:#A8231B}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .bs.gefahr{color:#A8231B} }
+/* Nachprüfung: Fokusring von Ausrichtung und «Mein Raid» innen; Zählung bei «Mein Raid» nicht abschneiden */
+#btnCam:focus-visible,#hudTog:focus-visible,.hqb:focus-visible{outline:2px solid var(--focus,#2CE6FF);outline-offset:-3px}
+.hudn{white-space:normal;overflow:visible;text-overflow:clip}
 /* @ende-dateien */
 </style>
 </head>
 <body>
 <div class="app" id="app" data-tab="run" data-screen="list" data-d="mini" data-insp="1">
 
-    <aside class="side" id="side" aria-label="Bereiche">
+    <aside class="side" id="side" role="main" aria-label="Inhalt">
     <div class="brandrow"><span class="brand">Raider-Atlas</span><span class="stripes" aria-hidden="true"></span></div>
-    <nav class="sidenav" aria-label="Bereiche">
+    <nav class="sidenav" aria-label="Reiter">
       <button type="button" class="sn" data-tab="run"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg><span>Raid</span><span class="tbm" aria-hidden="true" hidden></span></button>
       <button type="button" class="sn" data-tab="mat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8 12 3.5 20.5 8v8L12 20.5 3.5 16z"/><path d="M3.5 8 12 12.5 20.5 8M12 12.5v8"/></svg><span>Inventar</span><span class="tbm" aria-hidden="true" hidden></span></button>
       <button type="button" class="sn" data-tab="quests"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15l-3-2-3 2-3-2-3 2V5A1.5 1.5 0 0 1 7 3.5zM9 8.5h6M9 12h6"/></svg><span>Quests</span><span class="tbm" aria-hidden="true" hidden></span></button>
@@ -810,7 +907,7 @@ li.qd .row .t1{color:var(--muted)}
           <header class="lt"><h1 id="hMat">Inventar</h1><button type="button" class="ib such" aria-label="Suchen: Items, Quests, Orte, ARC, Funktionen" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></button></header>
           <div class="segc" role="group" aria-label="Ansicht">
             <button type="button" id="segBedarf" aria-pressed="true">Bedarf</button>
-            <button type="button" id="segListe" aria-pressed="false" aria-label="Einkaufsliste">Liste <span class="lcdn" id="shopN">0</span></button>
+            <button type="button" id="segListe" aria-pressed="false" aria-label="Liste: Einkaufsliste">Liste <span class="lcdn" id="shopN">0</span></button>
             <button type="button" id="segWeg" aria-pressed="false">Kann weg</button>
             <button type="button" id="segSuche" aria-pressed="false">Alle Items</button>
           </div>
@@ -858,19 +955,20 @@ li.qd .row .t1{color:var(--muted)}
         <header class="lt"><h1 id="hRun">Raid</h1><button type="button" class="ib such" aria-label="Suchen: Items, Quests, Orte, ARC, Funktionen" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></button></header>
         <div id="raidLauf" hidden></div>
         <section id="einr" class="einr" aria-labelledby="einrH" hidden></section>
-        <h3 class="gh">Raid planen</h3>
+        <h2 class="gh">Raid planen</h2>
         <p class="foot">Wähle die Map für deinen nächsten Raid. Das Navi plant deine Quests, die Einkaufsliste und Top-Loot in der Nähe, vom Startpunkt bis zum Ausgang, in höchstens 29 Minuten.</p>
         <ul class="group" id="naviMaps"></ul>
-        <h3 class="gh">Nach dem Raid und Erkunden</h3>
+        <h2 class="gh">Nach dem Raid und Erkunden</h2>
         <ul class="group">
           <li><button type="button" class="row" id="raidEnde"><span class="rt"><span class="t1">Raid beendet: Gefundenes eintragen</span><span class="t2" id="raidEndeSub">Materialien und erledigte Quests abhaken</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
           <li><button type="button" class="row" id="raidKarten"><span class="rt"><span class="t1">Karten erkunden</span><span class="t2">Schlüsselräume, Orte, Ausgänge und die ARC Frigate</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
         </ul>
                 <div class="runextra">
-          <h3 class="gh">Geführte Raids</h3>
+          <h2 class="gh">Geführte Raids</h2>
           <ul class="group" id="runListK"></ul>
           <ul class="group"><li><button type="button" class="row" data-wis="cond"><span class="rt"><span class="t1">Kartenbedingungen</span><span class="t2">Was Night Raid, Hurricane und die anderen ändern</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li></ul>
         </div>
+        <p class="foot">Inoffizielles Fan-Projekt. Nicht mit Embark Studios AB verbunden und nicht von ihr unterstützt. ARC Raiders und Embark sind Marken von Embark Studios AB.</p>
         </div>
         <div class="sdet" id="naviDetail" hidden></div>
       </section>
@@ -878,9 +976,9 @@ li.qd .row .t1{color:var(--muted)}
       <section class="page" id="pgRaids" data-page="raids" aria-labelledby="hRaids" hidden>
         <div id="raidsRoot">
         <header class="lt"><h1 id="hRaids">Raids</h1><button type="button" class="ib such" aria-label="Suchen: Items, Quests, Orte, ARC, Funktionen" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></button></header>
-        <h3 class="gh">Geführte Raids</h3>
+        <h2 class="gh">Geführte Raids</h2>
         <ul class="group" id="runList"></ul>
-        <h3 class="gh">Kartenbedingungen</h3>
+        <h2 class="gh">Kartenbedingungen</h2>
         <div id="condList"></div>
         <p class="foot">Weitere Kategorien lassen sich als neue Bereiche ergänzen.</p>
         </div>
@@ -981,27 +1079,27 @@ li.qd .row .t1{color:var(--muted)}
         <div id="wRoot">
           <div class="subnav own"><button type="button" class="back" id="wBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Zurück</span></button></div>
           <header class="lt"><h1 id="hWissen">Wissen</h1><button type="button" class="ib such" aria-label="Suchen: Items, Quests, Orte, ARC, Funktionen" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></button></header>
-          <h3 class="gh">Nachschlagen</h3>
+          <h2 class="gh">Nachschlagen</h2>
           <ul class="group">
             <li><button type="button" class="row" data-wis="arc"><span class="rt"><span class="t1">ARC-Gegner</span><span class="t2" id="wArcSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="cond"><span class="rt"><span class="t1">Kartenbedingungen</span><span class="t2" id="wCondSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="haendler"><span class="rt"><span class="t1">Händler</span><span class="t2" id="wHdSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="trials"><span class="rt"><span class="t1">Wochen-Trials</span><span class="t2" id="wTrSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
           </ul>
-          <h3 class="gh">Über die App</h3>
+          <h2 class="gh">Über die App</h2>
           <ul class="group">
             <li><button type="button" class="row" id="wEinr"><span class="rt"><span class="t1">Erste Schritte</span><span class="t2" id="wEinrSub">Checkliste: Queststand, Werkstatt, erster Raid</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="faq"><span class="rt"><span class="t1">FAQ</span><span class="t2">Worauf die Infos beruhen, alle Funktionen</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
-            <li><button type="button" class="row" data-wis="einst"><span class="rt"><span class="t1">Einstellungen</span><span class="t2">Sparmodus, Abendlicht, Namen, geteilter Plan</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
+            <li><button type="button" class="row" data-wis="einst"><span class="rt"><span class="t1">Einstellungen</span><span class="t2">Sparmodus, Abendlicht, Namen, Daten sichern, geteilter Plan</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
+            <li><button type="button" class="row" data-wis="schutz"><span class="rt"><span class="t1">Datenschutz und Quellen</span><span class="t2">Was gespeichert wird, woher die Angaben stammen</span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
             <li><button type="button" class="row" data-wis="upd"><span class="rt"><span class="t1">Updates</span><span class="t2" id="wUpdSub"></span></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></li>
           </ul>
           <p class="foot">Wissen ist ein eigener Reiter. Die Lupe oben in jedem Bereich sucht in allem: Items, Quests, Orte, ARC-Gegner und Funktionen.</p>
-            <p class="foot">Inoffizielles Fan-Projekt ohne Verbindung zu Embark Studios. ARC Raiders und alle Namen aus dem Spiel gehören Embark Studios. Die App enthält keine Grafiken aus dem Spiel.</p>
-            <p class="foot">Datenschutz: Die App setzt keine Cookies, sammelt keine Daten und lädt nichts von fremden Servern nach. Dein Fortschritt (Quests, Einkaufsliste, Einstellungen) bleibt nur in diesem Browser auf deinem Gerät. Der Anbieter der Webadresse sieht beim Aufruf wie bei jeder Website deine IP-Adresse.</p>
+            <p class="foot">Der Raider Atlas ist ein inoffizielles Fan-Projekt. Er ist nicht mit Embark Studios AB verbunden und wird nicht von ihr unterstützt. ARC Raiders und Embark sind Marken von Embark Studios AB. Die App enthält keine Grafiken aus dem Spiel; Karten und Symbole sind selbst gezeichnet.</p>
         </div>
         <div class="sdet" id="wDetail" hidden>
           <div class="subnav own"><button type="button" class="back" id="wdBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Wissen</span></button></div>
-          <h3 class="dn" id="wdTitle" tabindex="-1"></h3>
+          <h2 class="dn" id="wdTitle" tabindex="-1"></h2>
           <div id="wvCond" hidden><p class="fine">Kartenbedingungen ändern einen Raid: Wetter, Gegner, Beute und Ausgänge. Die aktuelle Bedingung wählst du im Navi unter «Raid planen», Optionen.</p><div id="condListW"></div></div>
           <div id="wvHaendler" hidden></div>
           <div id="wvTrials" hidden></div>
@@ -1013,22 +1111,36 @@ li.qd .row .t1{color:var(--muted)}
               <li class="srow"><span>Namen</span><div class="segc mini" id="sLang" role="group" aria-label="Namen anzeigen auf"><button type="button" data-l="de">Deutsch</button><button type="button" data-l="en">English</button></div></li>
             </ul>
             <p class="foot">Sparmodus für nebenbei beim Zocken: keine Animationen, die Karte wird nur neu gezeichnet, wenn du sie bedienst.</p>
-            <h4>Geteilten Plan öffnen</h4>
+            <h3 class="h4">Deine Daten</h3>
+            <p class="foot">Dein Stand liegt nur in diesem Browser. Mit einer Sicherung nimmst du ihn auf ein anderes Gerät mit oder holst ihn zurück.</p>
+            <div class="btncol sich">
+              <button type="button" class="bs" id="sichSichern">Daten sichern</button>
+              <button type="button" class="bs" id="sichLaden">Daten laden</button>
+              <button type="button" class="bs" id="sichVorher" hidden>Vorherigen Stand wiederherstellen</button>
+              <button type="button" class="bs" id="sichAufbewahrt" hidden>Aufbewahrte Kopien löschen</button>
+              <button type="button" class="bs gefahr" id="sichLoeschen">Alle Daten löschen</button>
+              <input type="file" id="sichDatei" accept=".json,application/json" hidden>
+            </div>
+            <p class="foot" id="sichZuletzt"></p>
+            <p class="foot" id="sichStatus" role="status" aria-live="polite"></p>
+            <p class="foot">«Daten sichern» speichert deinen ganzen Stand als Datei, auch eigene Karten. «Daten laden» ersetzt den jetzigen Stand durch eine Sicherung. «Alle Daten löschen» setzt die App auf diesem Gerät auf Anfang zurück. Beschädigte Inhalte und der Stand vor dem letzten Laden werden 30 Tage aufbewahrt und dann von selbst gelöscht.</p>
+            <h3 class="h4">Geteilten Plan öffnen</h3>
             <div class="sfrow"><div class="searchf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><input id="teilEin" type="text" placeholder="Link oder Code einfügen" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Geteilten Link oder Code einfügen" enterkeyhint="go"></div></div>
             <div class="btncol"><button type="button" class="bs" id="teilOeffnen">Öffnen</button></div>
             <p class="foot" id="teilEinInfo" role="status"></p>
             <p class="foot">Ein Set, einen Skill-Plan oder eine Einkaufsliste teilst du mit dem Knopf «teilen» an der jeweiligen Stelle. Am iPhone öffnet ein angetippter Link Safari, nicht die App vom Home-Bildschirm: Link kopieren und hier einfügen. Das geht auch, wenn der Link bei jemandem nicht ankommt.</p>
           </div>
+          <div id="wvSchutz" hidden></div>
           <div id="wvUpd" hidden>
             <ul class="group in">
               <li class="srow"><span>Letztes Update</span><span class="sval" id="updLast"></span></li>
               <li class="srow"><span>Daten zuletzt geändert</span><span class="sval" id="updData"></span></li>
               <li class="srow" id="updNextRow"><span>Nächstes Update</span><span class="sval" id="updNext"></span></li>
             </ul>
-            <p class="foot">Jeden Mittwoch früh werden die Spieldaten geprüft, auch die Trials der neuen Woche. «Letztes Update» ist die letzte Prüfung, auch wenn sich dabei nichts geändert hat. Das nächste Datum ist geplant, nicht garantiert.</p>
+            <p class="foot">Die Daten werden von Hand nachgeführt, nicht automatisch und nicht an festen Tagen. Nach einem Patch kann eine Angabe veraltet sein, bis sie geprüft ist. Im Zweifel gilt, was du im Spiel siehst.</p>
             <p class="foot" id="gfxTxt"></p>
             <p class="foot" id="standTxt"></p>
-            <p class="foot">Was nicht belegt ist, steht als «Annahme» da. Der kleine Haken heisst «verifiziert»: von mindestens zwei unabhängigen Angaben bestätigt, nicht im Spiel getestet. Woher die Infos stammen, erklärt das FAQ.</p>
+            <p class="foot">Was nicht belegt ist, steht als «Annahme» da. Der kleine Haken heisst «gesichert»: von mindestens drei voneinander unabhängigen Websites bestätigt, nicht im Spiel getestet. Woher die Infos stammen, erklärt das FAQ.</p>
           </div>
         </div>
       </section>
@@ -1037,9 +1149,9 @@ li.qd .row .t1{color:var(--muted)}
   </aside>
     <div id="mdLeer" aria-hidden="true"></div>
 
-    <main class="stage" id="stage">
+    <main class="stage" id="stage" role="region" aria-label="Karte">
     <canvas id="gl3d" aria-hidden="true"></canvas>
-    <canvas id="cv" aria-label="3D-Karte. Die nummerierten Stationen stehen auch in der Liste im Infobereich."></canvas>
+    <canvas id="cv" role="img" aria-label="3D-Karte. Die nummerierten Stationen stehen auch in der Liste im Infobereich."></canvas>
     <div class="mapbar" id="mapBar">
       <button type="button" class="back" id="mapBack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span id="mapBackL">Karten</span></button>
       <div class="mtitle"><span id="mapTitle"></span><span id="mapSub"></span></div>
@@ -1049,7 +1161,7 @@ li.qd .row .t1{color:var(--muted)}
     </div>
     <div class="menu" id="layerMenu" role="menu" aria-label="Kartenmenü" hidden></div>
     <div class="minimap" id="miniWrap">
-      <canvas id="mini" width="256" height="256" role="img" aria-label="Mini-Karte. Das helle Feld zeigt deinen Ausschnitt. Tippen springt dorthin."></canvas>
+      <canvas id="mini" width="256" height="256" role="img" aria-label="Mini-Karte. Das helle Feld zeigt deinen Ausschnitt. Wählen springt dorthin."></canvas>
       <span class="mini-n" aria-hidden="true">N</span><span class="mini-cap" id="miniCap" aria-hidden="true"></span>
     </div>
         <section class="hud" id="hud" aria-label="Mein Raid">
@@ -1062,7 +1174,7 @@ li.qd .row .t1{color:var(--muted)}
     <div class="ctl" role="group" aria-label="Kartensteuerung">
       <button type="button" id="zIn" aria-label="Hineinzoomen">+</button>
       <button type="button" id="zOut" aria-label="Herauszoomen">−</button>
-      <button type="button" id="btnCam" class="camb" aria-pressed="false" aria-label="Ausrichtung: Norden oben. Tippen: der Laufrichtung folgen"><svg class="i-nord" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l4.5 10h-9z" class="nf"/><path d="M7.5 13h9L12 21z"/></svg><svg class="i-folgen" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z" class="nf"/></svg><svg class="i-frei" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6"/><path d="M17.7 3v3.6h-3.6M6.3 21v-3.6h3.6"/></svg></button>
+      <button type="button" id="btnCam" class="camb" aria-pressed="false" aria-label="Ausrichtung: Norden oben. Wechseln zu: der Laufrichtung folgen"><svg class="i-nord" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l4.5 10h-9z" class="nf"/><path d="M7.5 13h9L12 21z"/></svg><svg class="i-folgen" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z" class="nf"/></svg><svg class="i-frei" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6"/><path d="M17.7 3v3.6h-3.6M6.3 21v-3.6h3.6"/></svg></button>
       <button type="button" id="btnReset" aria-label="Ganze Karte zeigen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
     </div>
   </main>
@@ -1157,7 +1269,7 @@ li.qd .row .t1{color:var(--muted)}
 
 <div class="dlg sheetdlg" id="stDlg" hidden>
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="stTitle">
-    <header><button type="button" class="tbtn" id="stCancel">Abbrechen</button><h3 id="stTitle">Mein Stand</h3><button type="button" class="tbtn b" id="stSave">Sichern</button></header>
+    <header><button type="button" class="tbtn" id="stCancel">Abbrechen</button><h3 id="stTitle" tabindex="-1">Mein Stand</h3><button type="button" class="tbtn b" id="stSave">Sichern</button></header>
     <div class="cardbody">
       <p class="foot">Wähle pro Händler die Quest, an der du gerade bist. Alle Quests davor werden abgehakt, dazu alles, was sie bei anderen Händlern voraussetzen. Die gewählte Quest und alle danach gelten als offen.</p>
       <ul class="group in" id="stRows"></ul>
@@ -1170,12 +1282,12 @@ li.qd .row .t1{color:var(--muted)}
 
 <div class="dlg sheetdlg" id="runDlg" hidden>
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="runTitle">
-    <header><button type="button" class="tbtn" id="runCancel">Abbrechen</button><h3 id="runTitle">Was hast du gefunden?</h3><button type="button" class="tbtn b" id="runSave">Sichern</button></header>
+    <header><button type="button" class="tbtn" id="runCancel">Abbrechen</button><h3 id="runTitle" tabindex="-1">Was hast du gefunden?</h3><button type="button" class="tbtn b" id="runSave">Sichern</button></header>
     <div class="cardbody">
-      <div id="runHatch" hidden><h3 class="gh">Raider Hatch</h3><ul class="group in" id="runHList"></ul><p class="foot" id="runHFoot"></p></div>
+      <div id="runHatch" hidden><h2 class="gh">Raider Hatch</h2><ul class="group in" id="runHList"></ul><p class="foot" id="runHFoot"></p></div>
       <p class="foot" id="runQFoot" hidden>Hake die Quests ab, die du in diesem Run erledigt hast.</p>
       <ul class="group in" id="runQList" hidden></ul>
-      <h3 class="gh" id="runMH" hidden>Materialien</h3>
+      <h4 class="gh" id="runMH" hidden>Materialien</h4>
       <p class="foot">Trag pro Material ein, wie viele du in diesem Raid gefunden hast, oder hake es ganz ab.</p>
       <ul class="group in" id="runList2"></ul>
       <p class="foot" id="runEmpty" hidden>Alles auf deiner Liste ist erledigt.</p>
@@ -1227,9 +1339,23 @@ li.qd .row .t1{color:var(--muted)}
 </div>
 <div class="dlg center" id="teilAusDlg" hidden>
   <div class="alert" role="dialog" aria-modal="true" aria-labelledby="teilAusTitle">
-    <div class="alertbody"><h3 id="teilAusTitle">Teilen</h3><p>Schick diesen Link an dein Squad. Wer ihn öffnet, sieht den Plan und kann ihn übernehmen. Wer die App vom Home-Bildschirm nutzt, fügt den Link dort unter Wissen, Einstellungen ein.</p>
+    <div class="alertbody"><h3 id="teilAusTitle">Teilen</h3><p>Schick diesen Link an dein Squad. Wer ihn öffnet, sieht den Plan und kann ihn übernehmen. Wer die App vom Home-Bildschirm nutzt, fügt den Link dort unter Wissen, Einstellungen ein. Bei einem Set steht sein Name im Link.</p>
       <textarea id="teilFeld" class="teilfeld" rows="3" readonly aria-label="Link zum Teilen"></textarea><p class="teilst" id="teilStatus" role="status"></p></div>
     <div class="alertbtns col"><button type="button" class="b" id="teilKopie">Link kopieren</button><button type="button" id="teilSys">Teilen …</button><button type="button" id="teilFertig">Fertig</button></div>
+  </div>
+</div>
+
+<div class="dlg center" id="qFolgeDlg" hidden>
+  <div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="qfTitel" aria-describedby="qfText">
+    <div class="alertbody"><h3 id="qfTitel">Auch die Voraussetzungen abhaken?</h3><p id="qfText"></p></div>
+    <div class="alertbtns col"><button type="button" class="b" id="qfAlle">Alle abhaken</button><button type="button" id="qfNur">Nur diese Quest</button><button type="button" id="qfNein">Abbrechen</button></div>
+  </div>
+</div>
+
+<div class="dlg center" id="sichDlg" hidden>
+  <div class="alert" role="alertdialog" aria-modal="true" aria-labelledby="sichTitel" aria-describedby="sichText">
+    <div class="alertbody"><h3 id="sichTitel">Sicherung laden?</h3><p id="sichText"></p><ul class="sichliste" id="sichListe"></ul></div>
+    <div class="alertbtns col"><button type="button" class="b" id="sichJa">Sicherung laden</button><button type="button" id="sichErst">Erst sichern</button><button type="button" id="sichNein">Abbrechen</button></div>
   </div>
 </div>
 
@@ -1244,11 +1370,11 @@ li.qd .row .t1{color:var(--muted)}
 'use strict';
 /* @datei wissen/stand.js */
 
-const DATA_STAND = '13.11.2026';
+const DATA_STAND = '22.11.2026';
 
 const WISSEN_TIEF = {
   materialien:'06.11.2026', orte:'06.11.2026', schluessel:'06.11.2026', karten:'06.11.2026',
-  fregatte:'06.11.2026', emperor:'06.11.2026', kartenbedingungen:'13.11.2026', deutsch:'06.11.2026',
+  fregatte:'06.11.2026', emperor:'06.11.2026', kartenbedingungen:'22.11.2026', deutsch:'06.11.2026',
   arc:'07.11.2026', quests:'07.11.2026', projekte:'07.11.2026',
   
   werkstatt:'11.11.2026', rezepte:'11.11.2026', bauplaene:'11.11.2026', werte:'18.08.2026',
@@ -1263,6 +1389,8 @@ const CAT = { C:['Commercial','Gewerbe'], R:['Residential','Wohnen'], I:['Indust
 const RAR = { C:'Gewöhnlich', U:'Ungewöhnlich', R:'Selten', E:'Episch', L:'Legendär' };
 /* @datei wissen/quellen.js */
 const SRCS = {
+  // Etappe 8 (22.11.2026): Update 2.6.0 vom 17.11.2026
+  U26o:['q54'], U26g:['q8'], U26t:['q52'], U26w:['q53'], U26d:['q55'], U26u:['q56'],
   p:['q1'],
   b:['q2'],
   k:['q3'],
@@ -1423,6 +1551,15 @@ const SRCS = {
   Tco:['q51'],
 };
 
+/* @datei wissen/quellen-namen.js */
+// Namen der Quellen-Kennungen (Etappe 7, Entscheid E-14). Aus der Git-Historie der alten Version
+// rekonstruiert (recht-lizenzen, 22.11.2026). q33 ist vermutlich RaidTheory (Annahme); q34 bis q51 sind nicht mehr zuzuordnen.
+const QUELLEN_NAMEN = { q1:'PC Gamer', q2:'Beebom', q3:'KeenGamer', q4:'Prima Games', q5:'allthings.how', q6:'Arc Raiders Hub',
+  q7:'MetaForge', q8:'GAMES.GG', q9:'ARC Raiders Wiki (arcraiders.wiki)', q10:'Dot Esports', q11:'AltChar', q12:"Deltia's Gaming",
+  q13:'Timesaver', q14:'DVING', q15:'FinalBoss', q16:'Mein-MMO', q17:'wzstats', q18:'Sportskeeda', q19:'OP.GG', q20:'GIGA',
+  q21:'GamingBolt', q22:'Nerdschalk', q23:'Gamerant', q24:'Destructoid', q25:'CFNBoost', q26:'GameBrief', q27:'senseos.gg',
+  q28:'Cloudspress', q29:'Shacknews', q30:'TechStory', q31:'ARC Tracker', q32:'Insider Gaming', q33:'vermutlich Datensatz arcraiders-data von RaidTheory (Annahme)',
+  q52:'Twisted Voxel', q53:'Gamewave', q54:'Out of Games', q55:'Guided News', q56:'U4N' };
 /* @datei wissen/items.js */
 const ITEM_DATA = `Advanced ARC Powercell|R||A|A|a:Bastion,Sentinel,Bombardier,Leaper,Rocketeer,Queen,Matriarch
 Advanced Electrical Components|R|E|E|ES|
@@ -3524,7 +3661,7 @@ bunker|Hidden Bunker|G|spaceport|HR|Der Bunker am Rand von Spaceport ist offen: 
 gate|Locked Gate|G|bluegate|HR|Das Tor ist abgeriegelt. Wer vier Sicherheitscodes sammelt, öffnet die Tunnel darunter mit hochwertiger Beute.|Zwei Angaben nennen dazu vier Schlüsselkarten.|Mad+Mas+Mts+Mt2+Mmf|
 scrutiny|Close Scrutiny|O|dam,buried,spaceport,bluegate|Tl|ARC überwachen die Map dichter und holen schnell Verstärkung. Gewöhnliche Beute ist weniger wert, ARC lassen mehr fallen: Assessor-Sonden zum Beispiel die Assessor Matrix.||Mad+Mas+Mts+Mmf+Mnb+b|
 frigate|ARC Frigate|O|dam,buried,spaceport,bluegate,riven,pendola|HTl|Die ARC Frigate erscheint über der Map. Die Beute am Boden ist weniger wert.||Mad+Mts+Mtp+w|Fregatte-Run öffnen=squad
--coldsnap|Cold Snap|G|dam,buried,spaceport,bluegate|L|Kälte schadet im Freien. Dafür lassen sich Candleberries ernten.||Mad+Mas+Mmf+Mts+Mt2|
+coldsnap|Cold Snap|G|dam,buried,spaceport,bluegate|L|Kälte schadet im Freien. Dafür lassen sich Candleberries ernten.|Seit Update 2.6.0 vom 17.11.2026 wieder im Wechsel. Auf welchen Maps Cold Snap jetzt läuft, ist noch nicht belegt; die Liste stammt von vorher (Annahme).|Mad+Mas+Mmf+Mts+Mt2+U26o+U26g+U26t+U26w|
 redirection|Redirection|K|pendola||Emperor Beacons werden aktiv: einsammeln und aufstellen lenkt die Harvester Payloads zu dir um. Daraus kommen der Bauplan und die drei Coupler für den Emperor Gateway Conduit (gebaut an der Workbench Stufe 1). Kein Flash Freeze, dafür fallen Trümmer.||Mad+Mts+Mtp+Mdv+c|Emperor-Run öffnen=emperor
 blooms|Lush Blooms|K|dam,buried,spaceport,bluegate,riven||Ruhiges Wetter und viel mehr Natur-Beute: Zitronen, Oliven, Agave und Pilze.||Mad+Mas+Mts+Mmf|
 caches|Uncovered Caches|K|dam,buried,spaceport,bluegate,riven||Das Wetter hat Verstecke von Raidern freigelegt. Schnell plündern: Nach kurzer Zeit explodieren sie und locken Raider und ARC an.||Mad+Mas+Mts+Mt2+Mmf|
@@ -3532,7 +3669,7 @@ husks|Husk Graveyard|K|dam,buried,spaceport,bluegate,riven||Wracks von ARC der F
 probes|Prospecting Probes|K|dam,buried,spaceport,riven||Mehr ARC Probes: Die Absturzstellen kommen in Wellen und sind bewacht. Gut für Motion Cores und Circuitry.|Eine ältere Angabe nennt Dam und Blue Gate.|Mad+Mas+Mts+Mmf|
 harvester|Harvester|K|dam,spaceport,bluegate||Ein grosser ARC-Harvester steht im Freien, bewacht von einer Queen. Wer die Feuer-Phasen übersteht, kommt an hochwertige Beute und legendäre Baupläne.||Mas+Mts+Mt2+Mmf|
 matriarch|Matriarch|K|dam,spaceport,bluegate||Die Matriarch ist unterwegs: ein Boss für ein volles Squad mit schwerer Munition und Sprengstoff.||Mas+Mts+Mt2+Mmf|
-beach|Beachcombing|K|riven||Wertsachen liegen im Sand vergraben. Du findest sie mit dem Dockmaster's Detector, den es in dieser Zeit in Behältern gibt. Dazu sind mehr Vögel da.||Mem+Mad+Mig+Mts|
+-beach|Beachcombing|K|riven||Seit Update 2.6.0 vom 17.11.2026 keine eigene Bedingung mehr: Vergrabene Wertsachen gibt es auf allen Maps. Du findest sie mit dem Dockmaster's Detector, auf Pendola Pass mit dem Mountaineer's Detector.|Vor 2.6.0 nur auf Riven Tides, mit mehr Vögeln.|Mem+Mad+Mig+Mts+U26d+U26u|
 birdcity|Bird City|K|buried||Mehr Wertsachen, Vögel und Seilrutschen. Vogelnester sitzen in den Kaminen auf den Dächern.|Zwei ältere Angaben beschreiben stattdessen sehr dichte Gruppen von ARC.|Mad+Mts+Mit+Mas+Mmf|
 launch|Launch Tower Loot|K|spaceport||Am Startturm: Fuel Cells sammeln, Generatoren versorgen, Seilrutschen nehmen und Drohnen abwehren. Oben stehen Waffenkisten der höchsten Stufe.||Mas+Mts+Mmf|
 aftermath|Storm Aftermath|?|*||Weniger Raider und schwächere ARC. Nur für neue Spieler: Das Matchmaking bringt sie unter sich.||Mad|`;
@@ -3773,8 +3910,8 @@ const FAQ_GRUNDLAGE = [
   { t:'Woher stammen die Infos?', x:[
     'Aus öffentlich zugänglichen Angaben: offizielle Ankündigungen und Patchnotes des Herstellers, Item- und Quest-Datenbanken, Wikis und Spieler-Guides der Community sowie interaktive Community-Karten.',
     'Jede Angabe ist in der Datenbank der App mit ihrer Herkunft hinterlegt. In der App selbst werden die Quellen nicht angezeigt.' ] },
-  { t:'Was heisst «Verifiziert»?', x:[
-    '«Verifiziert» heisst: Mindestens zwei voneinander unabhängige Angaben stimmen überein. In der App steht dafür ein kleiner Haken. «Einfach belegt» heisst: Es gibt nur eine Angabe.',
+  { t:'Was heisst «Gesichert»?', x:[
+    '«Gesichert» heisst: Mindestens drei voneinander unabhängige Websites stimmen überein. In der App steht dafür ein kleiner Haken. «Einfach belegt» heisst: Es gibt eine oder zwei Angaben. «Annahme» heisst: keine Quelle oder eine eigene Schätzung.',
     'Getestet im Spiel ist nichts davon. Widersprechen sich Angaben, nennt die App beide Möglichkeiten.' ] },
   { t:'Was heisst «Annahme»?', x:[
     '«Annahme» markiert, was nicht belegt ist: eigene Schätzungen wie Zeiten, Höhen und Gebäudeformen, oder Zuordnungen von Hand, etwa neue ARC in eine Gruppe.' ] },
@@ -3782,7 +3919,7 @@ const FAQ_GRUNDLAGE = [
     'Die 3D-Modelle sind eigene Nachbauten, keine Kopie der offiziellen Karten und ohne Grafiken aus dem Spiel. Die Lage der Orte, Ausgänge und Loot-Marker ist an interaktiven Community-Karten abgemessen, auf rund 1 bis 2 Einheiten genau.',
     'Gemessen wird nur, was die Karten sichtbar zeigen. Gebäudeformen, Hügel und Täler sind grob nach dem Kartenbild nachgezeichnet, die Höhen geschätzt.' ] },
   { t:'Startpunkte, Ausgänge und Top-Loot', x:[
-    'Startpunkte stammen von zwei unabhängigen interaktiven Karten. Zeigen beide denselben Punkt, gilt er als verifiziert. Offizielle Angaben zu Startpunkten gibt es nicht.',
+    'Startpunkte stammen von zwei unabhängigen interaktiven Karten. Zeigen beide denselben Punkt, gilt er als einfach belegt (zwei Quellen). Offizielle Angaben zu Startpunkten gibt es nicht.',
     'Ausgänge, Waffenkisten, Security-Spinde und Rucksäcke sind mögliche Fundorte. Kein Spawn ist garantiert.' ] },
   { t:'Quests und Projekte', x:[
     'Ziele, Orte, Materialien und Belohnungen stammen aus Quest-Datenbanken und Guides und sind auf Deutsch zusammengefasst. Die Reihenfolge pro Händler folgt den bekannten Quest-Listen.',
@@ -3791,19 +3928,19 @@ const FAQ_GRUNDLAGE = [
     'Namen auf Deutsch und Englisch kommen aus Item-Datenbanken, Seltenheit und Loot-Kategorien aus Loot-Übersichten. Fundorte gelten, wenn ein Guide den Ort für das Item gezielt nennt.',
     'Die Rangliste der besten Fundorte ist eine eigene Gewichtung: gezielt genannte Orte zuerst, danach Orte, deren Loot-Symbol zur Kategorie passt.' ] },
   { t:'ARC-Gegner', x:[
-    'Drops, Schwachpunkte, Gefahrenstufe und Vorkommen sind aus mehreren Gegner-Übersichten zusammengeführt. Ein Drop ist verifiziert, wenn ihn mindestens zwei unabhängige Seiten nennen. Was genau fällt, ist Zufall.' ] },
+    'Drops, Schwachpunkte, Gefahrenstufe und Vorkommen sind aus mehreren Gegner-Übersichten zusammengeführt. Ein Drop ist gesichert, wenn ihn mindestens drei unabhängige Websites nennen. Was genau fällt, ist Zufall.' ] },
   { t:'Zeiten im Navi', x:[
     'Die Laufzeit ist aus gemessenen Sprint- und Ausdauerwerten der Community abgeleitet: im Mittel 5 m/s mit 30 % Umweg. Alle übrigen Zeiten sind Schätzungen (Annahme): Stopps, Kämpfe nach Gefahrenstufe, Ausgänge.' ] },
   { t:'Wie aktuell sind die Daten?', x:[
-    'Jeden Mittwoch früh prüft ein automatisches Update zuerst die offiziellen Ankündigungen, dann die übrigen Angaben, und prüft jede Woche ein Thema gründlich. Das Datum der letzten Prüfung steht unter Wissen, Updates.' ] },
+    'Die Daten werden von Hand nachgeführt, nicht automatisch und nicht an festen Tagen. Das Datum der letzten Prüfung steht unter Wissen, Updates. Nach einem Patch kann eine Angabe veraltet sein, bis sie geprüft ist. Im Zweifel gilt, was du im Spiel siehst.' ] },
   { t:'Was weiss die App nicht?', x:[
-    'Sie hat keine Verbindung zum Spiel. Deinen Stand kennt sie nur aus deinen Eingaben. Nach Patches kann eine Angabe kurz veraltet sein, bis das nächste Update sie prüft.',
+    'Sie hat keine Verbindung zum Spiel. Deinen Stand kennt sie nur aus deinen Eingaben. Nach Patches kann eine Angabe kurz veraltet sein, bis sie geprüft ist.',
     'Welche Kartenbedingung gerade läuft, weiss sie auch nicht: Der Zeitplan wechselt jede Stunde und ist je Region verschoben. Unter Wissen, Kartenbedingungen führt ein Knopf zum offiziellen Zeitplan.' ] },
   { t:'Wo bleiben meine Daten?', x:[
     'Alles bleibt in deinem Browser: Queststand, Einkaufsliste und Run-Plan. Keine Anmeldung, keine Cookies, kein Tracking, nichts wird von fremden Servern geladen.',
     'Die App hat genau einen Knopf, der nach aussen führt: «Offizieller Zeitplan» bei den Kartenbedingungen. Er öffnet die Seite des Herstellers erst, wenn du ihn antippst.' ] },
   { t:'Offene Daten und Lizenzen', x:[
-    "Die Angaben zur Werkstatt (Stationen, Rezepte, Aufwertungen, Verkaufswerte und Zerlegen) stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt, dass dieser Hinweis mitgeliefert wird:",
+    "Die Angaben zur Werkstatt (Stationen, Rezepte, Aufwertungen, Verkaufswerte und Zerlegen) stammen zu einem grossen Teil aus dem offenen Datensatz «arcraiders-data» von RaidTheory (github.com/RaidTheory/arcraiders-data, siehe auch arctracker.io). Die Spieldaten selbst gehören Embark Studios AB. Die Lizenz des Datensatzes verlangt, dass dieser Hinweis mitgeliefert wird:",
     "MIT License",
     "Copyright (c) 2025 RaidTheory",
     "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
@@ -4562,10 +4699,277 @@ Object.assign(CHECK.steps, {
 (() => {
 'use strict';
 if (typeof DATA_STAND === 'undefined'){ document.body.innerHTML = '<p style="padding:24px;font:17px/1.4 system-ui;color:#F3E9D2;background:#17110D">Die Wissensdatenbank (wissen.js) konnte nicht geladen werden. Bitte die Seite neu laden.</p>'; return; }
+/* @datei app/kern/version.js */
+const APP_VERSION = '2.7.1';
+const SIEGEL_MIN = 3;   // «Gesichert» erst ab 3 verschiedenen Websites (Firmenregel, Entscheid E-09)
+/* @datei app/logik/speicher-pruefung.js */
+// Prüft gespeicherte Werte (localStorage) beim Start, bevor die App sie liest.
+// Reine Funktionen ohne Zugriff auf die Seite: in Node testbar (tests/speicher.test.mjs).
+// Regel: Was gültig ist, bleibt unverändert. Ungültige Teile werden durch Grundwerte ersetzt,
+// gültige Teile daneben bleiben erhalten. Der ursprüngliche Text wird vom Aufrufer aufbewahrt.
+const SP_PRAEFIX = 'raider-atlas:';
+const SP_ANSICHTEN = ['dam', 'buried', 'spaceport', 'bluegate', 'stella', 'riven', 'pendola', 'fregatte', 'emperor'];
+const SP_NAME = { quests:'Queststand', liste:'Einkaufsliste', werkstatt:'Werkstatt und Sets', skills:'Skill-Plan', navi:'Navi und laufender Raid',
+  run:'Letzte Route', ui:'Ansicht', 'abschnitte-zu':'Zugeklappte Abschnitte', karte:'Eigene Karte' };
+
+const spObj = v => !!v && typeof v === 'object' && !Array.isArray(v);
+const spZahl = v => typeof v === 'number' && isFinite(v);
+// Objekt mit Zahlenwerten (Name → Zahl); ungültige Einträge fallen weg
+function spZahlMap(v, min, max){
+  const o = {}; let weg = 0;
+  if (!spObj(v)) return { o, weg: 0, kaputt: true };
+  for (const [k, x] of Object.entries(v)){ const n = typeof x === 'boolean' ? +x : x; if (spZahl(n) && n >= min && n <= max) o[k] = n; else weg++; }
+  return { o, weg, kaputt: false };
+}
+
+// Je Schlüssel: (wert) → { wert, fehler:[…] }. wert === undefined heisst «Schlüssel entfernen».
+const SP_REGELN = {
+  quests(v){
+    const f = []; if (!spObj(v)) return { wert: undefined, fehler: ['kein Objekt'] };
+    const w = Object.assign({}, v);
+    if (!spObj(w.q)){ if ('q' in v) f.push('q'); w.q = {}; }
+    if (!spObj(w.p)){ if ('p' in v) f.push('p'); w.p = {}; }
+    else for (const [k, a] of Object.entries(w.p)) if (!Array.isArray(a) || a.some(i => !Number.isInteger(i) || i < 0)){
+      f.push('p.' + k); if (Array.isArray(a)) w.p[k] = a.filter(i => Number.isInteger(i) && i >= 0); else delete w.p[k]; }
+    if (!Array.isArray(w.t)){ if ('t' in v) f.push('t'); w.t = []; }
+    else if (w.t.some(x => typeof x !== 'string')){ f.push('t'); w.t = w.t.filter(x => typeof x === 'string'); }
+    return { wert: w, fehler: f };
+  },
+  liste(v){
+    if (!Array.isArray(v)) return { wert: undefined, fehler: ['keine Liste'] };
+    const f = [], aus = [], namen = new Map();
+    for (const x of v){
+      if (!spObj(x) || typeof x.n !== 'string' || !x.n.trim()){ f.push('Eintrag'); continue; }
+      const need = Math.round(+x.need), have = Math.round(+x.have);
+      const e = Object.assign({}, x, { need: isFinite(need) && need >= 1 ? Math.min(need, 9999) : 1, have: isFinite(have) && have >= 0 ? have : 0 });
+      if (e.need !== x.need || e.have !== x.have) f.push(x.n + ': Menge');
+      if ('m' in e){ const m = Math.round(+e.m); if (!isFinite(m) || m < 0){ f.push(x.n + ': m'); e.m = 0; } else e.m = m; }
+      if ('by' in e){ const z = spZahlMap(e.by, 0, 9999); if (z.weg || z.kaputt) f.push(x.n + ': by'); e.by = z.o; }
+      if (namen.has(e.n)){ const a = namen.get(e.n); a.need = Math.max(a.need, e.need); a.have = Math.max(a.have, e.have); f.push(e.n + ': doppelt'); continue; }
+      namen.set(e.n, e); aus.push(e);
+    }
+    return { wert: aus, fehler: f };
+  },
+  werkstatt(v){
+    if (!spObj(v)) return { wert: undefined, fehler: ['kein Objekt'] };
+    const f = [], w = Object.assign({}, v);
+    if ('ok' in w && typeof w.ok !== 'boolean'){ f.push('ok'); w.ok = !!w.ok; }
+    for (const k of ['st', 'ziel', 'waffe', 'wunsch', 'bp', 'forsch']) if (k in w){
+      const z = spZahlMap(w[k], 0, 99); if (z.weg || z.kaputt) f.push(k); w[k] = z.o; }
+    if ('sets' in w){
+      if (!Array.isArray(w.sets)){ f.push('sets'); w.sets = []; }
+      else w.sets = w.sets.filter(s => { const ok = spObj(s) && typeof s.n === 'string' && Array.isArray(s.teile); if (!ok) f.push('Set'); return ok; }).map((s, i) => {
+        const teile = s.teile.filter(t => spObj(t) && typeof t.n === 'string' && spZahl(t.c) && t.c >= 1);
+        if (teile.length !== s.teile.length) f.push('Set ' + s.n + ': Teile');
+        const id = typeof s.id === 'string' && s.id ? s.id : (f.push('Set ' + s.n + ': id'), 's-repariert-' + i);
+        return Object.assign({}, s, { id, an: !!s.an, teile }); });
+    }
+    return { wert: w, fehler: f };
+  },
+  skills(v){
+    if (!spObj(v)) return { wert: undefined, fehler: ['kein Objekt'] };
+    const f = [], w = Object.assign({}, v);
+    if ('p' in w){ const z = spZahlMap(w.p, 0, 99); if (z.weg || z.kaputt) f.push('p'); w.p = z.o; }
+    if ('max' in w && !(spZahl(w.max) && w.max > 0)){ f.push('max'); delete w.max; }
+    if ('z' in w && typeof w.z !== 'string'){ f.push('z'); delete w.z; }
+    return { wert: w, fehler: f };
+  },
+  navi(v){
+    if (!spObj(v)) return { wert: undefined, fehler: ['kein Objekt'] };
+    const f = [], w = Object.assign({}, v);
+    for (const k of ['start', 'exit', 'ezeit', 'sel', 'qi']) if (k in w && !spObj(w[k])){ f.push(k); w[k] = {}; }
+    if ('m' in w && w.m !== null && typeof w.m !== 'string'){ f.push('m'); w.m = null; }
+    if ('rest' in w && typeof w.rest !== 'string'){ f.push('rest'); w.rest = '30:00'; }
+    if ('cond' in w && typeof w.cond !== 'string'){ f.push('cond'); w.cond = 'normal'; }
+    if ('puffer' in w && !(Number.isInteger(w.puffer) && w.puffer >= 0 && w.puffer <= 2)){ f.push('puffer'); w.puffer = 1; }
+    for (const k of ['frueh', 'sb', 'uhr']) if (k in w && typeof w[k] !== 'boolean'){ f.push(k); w[k] = !!w[k]; }
+    if ('run' in w && w.run !== null){
+      const r = w.run;
+      if (!spObj(r) || typeof r.m !== 'string' || !spZahl(r.t0) || r.t0 > Date.now() + 3600e3){ f.push('run'); w.run = null; }   // Start in der Zukunft = falsche Uhr
+      else {
+        const n = Object.assign({}, r);
+        for (const k of ['done', 'skip', 'zuList', 'quests']) if (!Array.isArray(n[k])){ f.push('run.' + k); n[k] = []; }
+        if ('rest0' in n && !(spZahl(n.rest0) && n.rest0 > 0 && n.rest0 <= 2700)){ f.push('run.rest0'); n.rest0 = 1800; }
+        if ('frueh' in n && !(spZahl(n.frueh) && n.frueh >= 0)){ f.push('run.frueh'); n.frueh = 0; }
+        w.run = n;
+      }
+    }
+    return { wert: w, fehler: f };
+  },
+  run(v){
+    if (v === null) return { wert: null, fehler: [] };
+    if (!spObj(v) || typeof v.m !== 'string') return { wert: undefined, fehler: ['ungültig'] };
+    if (!spZahl(v.at)) return { wert: Object.assign({}, v, { at: 0 }), fehler: ['at'] };
+    return { wert: v, fehler: [] };
+  },
+  ui(v){ return spObj(v) ? { wert: v, fehler: [] } : { wert: undefined, fehler: ['kein Objekt'] }; },
+  'abschnitte-zu'(v){
+    if (!Array.isArray(v)) return { wert: undefined, fehler: ['keine Liste'] };
+    const w = v.filter(x => typeof x === 'string'); return { wert: w, fehler: w.length === v.length ? [] : ['Eintrag'] };
+  },
+  karte(v){
+    if (!spObj(v)) return { wert: undefined, fehler: ['kein Objekt'] };
+    const f = [], w = Object.assign({}, v);
+    if ('cal' in w){ if (!spObj(w.cal)){ f.push('cal'); delete w.cal; }
+      else { const c = Object.assign({}, w.cal); for (const k of Object.keys(c)) if (!spZahl(c[k])){ f.push('cal.' + k); delete c[k]; } w.cal = c; } }
+    if ('moved' in w){ if (!spObj(w.moved)){ f.push('moved'); w.moved = {}; }
+      else { const m = {}; for (const [k, p] of Object.entries(w.moved)) if (Array.isArray(p) && p.length === 2 && p.every(spZahl)) m[k] = p; else f.push('moved.' + k); w.moved = m; } }
+    return { wert: w, fehler: f };
+  }
+};
+// Einfache Textwerte: erlaubte Werte (null = jeder nicht leere Text)
+const SP_TEXT = { cam:['nord', 'folgen', 'frei'], eco:['0', '1'], eve:['0', '1'], lang:['de', 'en'], last:null, haendler:null,
+  'quest-reihenfolge-gewaehlt':null, 'trials-gesehen':null, 'einrichtung-zu':null, 'erster-raid':null };
+
+/** Welche Regel gilt für einen Speicherschlüssel? null = Schlüssel gehört nicht zur App oder wird nicht geprüft. */
+function speicherArt(schluessel){
+  if (typeof schluessel !== 'string' || !schluessel.startsWith(SP_PRAEFIX)) return null;
+  const n = schluessel.slice(SP_PRAEFIX.length);
+  const eigen = (o, k) => Object.prototype.hasOwnProperty.call(o, k);   // keine eingebauten Namen wie toString (S1)
+  if (eigen(SP_REGELN, n)) return { n, art: 'json', regel: n };
+  if (SP_ANSICHTEN.includes(n)) return { n, art: 'json', regel: 'karte' };
+  if (eigen(SP_TEXT, n)) return { n, art: 'text' };
+  return null;
+}
+
+/** Prüft einen gespeicherten Text. Ergebnis: { ok:true } oder { ok:false, neu:string|undefined, fehler:[…] }. */
+function speicherPruefen(schluessel, roh){
+  const a = speicherArt(schluessel); if (!a || roh == null) return { ok: true };
+  if (a.art === 'text'){
+    const erlaubt = SP_TEXT[a.n];
+    const gut = typeof roh === 'string' && roh.length <= 200 && (erlaubt ? erlaubt.includes(roh) : roh.trim().length > 0);
+    return gut ? { ok: true } : { ok: false, neu: undefined, fehler: ['ungültiger Text'] };
+  }
+  let v; try { v = JSON.parse(roh); } catch (_){ return { ok: false, neu: undefined, fehler: ['kein JSON'] }; }
+  const r = SP_REGELN[a.regel](v);
+  if (!r.fehler.length) return { ok: true };
+  return { ok: false, neu: r.wert === undefined ? undefined : JSON.stringify(r.wert), fehler: r.fehler };
+}
+
+/** Anzeigename eines Speicherschlüssels für Hinweise. */
+function speicherName(schluessel){ const a = speicherArt(schluessel); if (!a) return schluessel; return SP_NAME[a.regel || a.n] || 'Einstellungen'; }
+/* @datei app/logik/zeit.js */
+// Datum und Zeit (Etappe 3): alle Tagesrechnungen in der Zeitzone Europe/Zurich (Entscheid E-10),
+// unabhängig von der Zeitzone des Geräts. Reine Funktionen, in Node testbar (tests/logik.test.mjs).
+const ZEIT_TAG = 864e5;
+/** Kalendertag in Zürich als UTC-Mitternacht in Millisekunden. */
+let ZEIT_FORMAT = null;   // einmal anlegen und wiederverwenden (Prüfrunde L9)
+function zuerichTag(jetzt){
+  const d = jetzt instanceof Date ? jetzt : new Date(jetzt == null ? Date.now() : jetzt);
+  try { const p = {}; (ZEIT_FORMAT = ZEIT_FORMAT || new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Zurich', year:'numeric', month:'2-digit', day:'2-digit' })).formatToParts(d).forEach(x => { p[x.type] = +x.value; });
+    return Date.UTC(p.year, p.month - 1, p.day); } catch(_){ return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); }
+}
+/** 'TT.MM.JJJJ' → UTC-Mitternacht dieses Tages, sonst null. */
+function datumTag(t){ const m = /^(\d\d)\.(\d\d)\.(\d{4})$/.exec(String(t || '').trim()); return m ? Date.UTC(+m[3], +m[2] - 1, +m[1]) : null; }
+/** Verbleibende Tage bis und mit 'bis' (am letzten Tag 1); nach Ablauf -1; ohne Datum null. */
+function tageBis(bis, jetzt){ const b = datumTag(bis); if (b == null) return null; const d = Math.round((b - zuerichTag(jetzt)) / ZEIT_TAG); return d >= 0 ? d + 1 : -1; }
+/** Zählt ein Projekt im Bedarf? Laufend: «aktiv», oder «saison» bis und mit Enddatum (Fund C2). */
+function projektLaeuft(p, jetzt){
+  if (!p) return false;
+  if (p.st === 'aktiv') return true;
+  if (p.st !== 'saison') return false;
+  const d = tageBis(p.bis, jetzt); return d == null || d >= 1;
+}
+/** Restzeit-Eingabe → Sekunden (1 s bis 45:00) oder null. «12:30», «12.30», «12,30» = 12 min 30 s;
+ *  «12,5» oder «12.5» = 12,5 Minuten; «25» = 25 Minuten. Sekunden über 59 sind ungültig (Fund T6). */
+function restLesen(t){
+  const m = /^\s*(\d{1,2})(?:([:.,])(\d{1,2}))?\s*$/.exec(String(t == null ? '' : t)); if (!m) return null;
+  let s = +m[1] * 60;
+  if (m[3] != null){
+    if (m[2] !== ':' && m[3].length === 1) s += Math.round(+m[3] * 6);   // Dezimalminuten
+    else { if (+m[3] > 59) return null; s += +m[3]; }
+  }
+  return s > 0 && s <= 45 * 60 ? s : null;
+}
+/** Ist ein laufender Raid seit Restzeit plus 10 Minuten vorbei? (Fund C8, Entscheid E-11) */
+const RAID_NACHLAUF = 10 * 60 * 1000;
+function raidAbgelaufen(run, jetzt){
+  if (!run || typeof run.t0 !== 'number') return false;
+  const dauer = (typeof run.rest0 === 'number' && run.rest0 > 0 ? run.rest0 : 1800) * 1000;
+  return (jetzt == null ? Date.now() : jetzt) > run.t0 + dauer + RAID_NACHLAUF;
+}
+/** «vor wenigen Minuten», «vor 25 Minuten», «vor 3 Stunden», «vor mehr als einem Tag» */
+function dauerText(ms){ const m = Math.round(ms / 60000);
+  return m < 5 ? 'wenigen Minuten' : m < 120 ? m + ' Minuten' : m < 24 * 60 ? Math.round(m / 60) + ' Stunden' : 'mehr als einem Tag'; }
+/* @datei app/kern/speicher.js */
+// Speicher-Schutz (Etappe 2): läuft vor allen anderen Teilen.
+// 1. Prüft alle gespeicherten Werte; defekte Werte werden aufbewahrt und repariert (Fund C1, C6, C9).
+// 2. Meldet, wenn Speichern scheitert (Fund C11).
+// 3. Meldet Änderungen aus einem anderen Fenster (Fund C10).
+const SP_DEFEKT = 'raider-atlas:defekt:';
+const SP_REPARIERT = []; let SP_NICHT_AUFBEWAHRT = 0;
+try {
+  const ls = window.localStorage, schluessel = [];
+  for (let i = 0; i < ls.length; i++) schluessel.push(ls.key(i));
+  for (const k of schluessel){
+    const r = speicherPruefen(k, ls.getItem(k)); if (r.ok) continue;
+    try { ls.setItem(SP_DEFEKT + k.slice(SP_PRAEFIX.length), JSON.stringify({ zeit: new Date().toISOString(), roh: ls.getItem(k), fehler: r.fehler })); } catch(_){ SP_NICHT_AUFBEWAHRT++; }
+    if (r.neu === undefined) ls.removeItem(k); else ls.setItem(k, r.neu);
+    SP_REPARIERT.push(k);
+  }
+} catch(_){}
+
+let spFehlerGemeldet = false;
+try {
+  const orig = Storage.prototype.setItem;
+  Storage.prototype.setItem = function(k, v){
+    try { return orig.call(this, k, v); }
+    catch (e){ if (String(k).startsWith(SP_PRAEFIX) && !spFehlerGemeldet){ spFehlerGemeldet = true; setTimeout(() => speicherFehlerZeigen(e), 0); } throw e; }
+  };
+} catch(_){}
+
+// Prüfrunde B4/B5: Das Feld steht vor der App (zuerst in der Tab-Reihenfolge) und ist schon beim Start
+// leer vorhanden, damit Vorleseprogramme den Inhalt ansagen. Die App rückt um seine Höhe nach unten.
+function spHinweisFeld(){
+  let el = document.getElementById('spHinweis');
+  if (!el){ el = document.createElement('div'); el.id = 'spHinweis'; el.className = 'sphinweis'; el.setAttribute('role', 'status'); el.hidden = true;
+    const app = document.getElementById('app'); document.body.insertBefore(el, app || document.body.firstChild);
+    if (window.ResizeObserver && app) new ResizeObserver(() => { app.style.top = el.hidden ? '' : el.offsetHeight + 'px'; }).observe(el); }
+  return el;
+}
+spHinweisFeld();
+/** Ruhiger Hinweis oben (nimmt den Fokus nicht weg). knoepfe: [[Text, Funktion, hauptknopf?], …] */
+/** Blendet den Hinweis aus, ohne eine Knopf-Aktion auszuführen (Escape); der nächste wartende folgt. */
+function spHinweisZu(){ const el = document.getElementById('spHinweis'); if (!el || el.hidden) return; const fokus = el.contains(document.activeElement); el.hidden = true;
+  const app = document.getElementById('app'); if (app) app.style.top = '';
+  if (fokus && app){ const z = app.querySelector('.page:not([hidden]) h1, .page:not([hidden]) button'); if (z){ if (!z.matches('button')) z.tabIndex = -1; z.focus(); } }   // Fokus nicht auf body (Prüfrunde N1)
+  const n = SP_WARTEN.shift(); if (n) setTimeout(() => spHinweis(...n), 600); }   // kurze Pause, damit ein zweites Escape nicht den nächsten trifft (N3)
+const SP_WARTEN = [];   // Prüfrunde K3: Hinweise nacheinander statt sich gegenseitig zu überschreiben
+function spHinweis(titel, text, knoepfe){
+  const el = spHinweisFeld();
+  if (!el.hidden && el.dataset.titel !== titel){ if (!SP_WARTEN.some(w => w[0] === titel)) SP_WARTEN.push([titel, text, knoepfe]); return; }
+  el.dataset.titel = titel;
+  el.innerHTML = '<div class="sph-t"><b></b><span></span></div><div class="sph-k"></div>';
+  el.querySelector('b').textContent = titel; el.querySelector('span').textContent = text;
+  const k = el.querySelector('.sph-k');
+  for (const [t, f, haupt] of knoepfe){ const b = document.createElement('button'); b.type = 'button'; b.textContent = t; if (haupt) b.className = 'b';
+    b.addEventListener('click', () => { spHinweisZu(true); if (f) f(); }); k.appendChild(b); }
+  el.hidden = false; const app = document.getElementById('app'); if (app) requestAnimationFrame(() => { app.style.top = el.hidden ? '' : el.offsetHeight + 'px'; });
+}
+function speicherFehlerZeigen(e){
+  const voll = e && (e.name === 'QuotaExceededError' || e.code === 22);
+  spHinweis('Nicht gespeichert', 'Deine letzte Änderung konnte nicht gespeichert werden. ' + (voll ? 'Der Speicher dieses Browsers ist voll.' : 'Im privaten Fenster speichert der Browser nichts dauerhaft.'),
+    [['Daten sichern', () => typeof sicherungHerunterladen === 'function' && sicherungHerunterladen(), true], ['Später', null]]);
+}
+window.addEventListener('storage', e => {
+  if (!e.key || !e.key.startsWith(SP_PRAEFIX) || e.key.startsWith(SP_DEFEKT)) return;
+  // Prüfrunde K2: Ansicht und Kleinigkeiten nicht melden, nur echte Nutzerdaten
+  if (!['quests', 'liste', 'werkstatt', 'skills', 'navi', 'run', ...SP_ANSICHTEN].includes(e.key.slice(SP_PRAEFIX.length))) return;
+  spHinweis('In einem anderen Fenster geändert', 'Dein Stand wurde in einem anderen Fenster geändert. Lade neu, damit nichts überschrieben wird.',
+    [['Neu laden', () => location.reload(), true], ['Später', null]]);
+});
+if (SP_REPARIERT.length) setTimeout(() => {
+  const namen = [...new Set(SP_REPARIERT.map(speicherName))];
+  const liste = namen.length === 1 ? namen[0] : namen.slice(0, -1).join(', ') + ' und ' + namen[namen.length - 1];
+  spHinweis('Ein Teil deiner Daten liess sich nicht lesen', liste + (namen.length === 1 ? ' war beschädigt und wurde' : ' waren beschädigt und wurden') + ', wo nötig, zurückgesetzt. ' + (SP_NICHT_AUFBEWAHRT ? 'Der alte Inhalt liess sich nicht aufbewahren, weil der Speicher voll ist.' : 'Der alte Inhalt ist aufbewahrt.'),
+    SP_NICHT_AUFBEWAHRT === SP_REPARIERT.length ? [['Verstanden', null, true]]   // nichts aufbewahrt: keine leere Datei anbieten
+      : [['Alten Inhalt sichern', () => typeof sicherungHerunterladen === 'function' && sicherungHerunterladen('defekt'), true], ['Verstanden', null]]);
+}, 0);
 /* @datei app/kern/grundlagen.js */
 const $ = s => document.querySelector(s);
 const cv = $('#cv'), ctx = cv.getContext('2d');
-const reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+let reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+try { matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e => { reduce = e.matches; });   } catch(_){}   // Etappe 5 (A20)
 const APP = /[?&]app=1\b/.test(location.search);
 let eco = APP;
 try { const v = localStorage.getItem('raider-atlas:eco'); if (v === '1') eco = true; else if (v === '0') eco = false; } catch(_){}
@@ -4714,7 +5118,7 @@ const ZONE_TEX = { 'Red Lakes':'redwater', 'Swamp':'swamp', 'Wüste':'sand', 'Vi
 function buildTerrain(){
   const gr = view.ground, ww = gr.x1 - gr.x0, hh = gr.z1 - gr.z0, k = 1024/Math.max(ww, hh);
   const c = document.createElement('canvas'); c.width = Math.round(ww*k); c.height = Math.round(hh*k);
-  const g = c.getContext('2d');
+  let g = c.getContext('2d');
   const P = (x,z) => [(x - gr.x0)*k, (z - gr.z0)*k];
   const pat = name => { const p = g.createPattern(TEX[name], 'repeat'); if (p && p.setTransform && HAS_DM) p.setTransform(new DOMMatrix([.8,0,0,.8,0,0])); return p; };
   g.fillStyle = pat(gr.base || 'dirt'); g.fillRect(0, 0, c.width, c.height);
@@ -4744,8 +5148,12 @@ function buildTerrain(){
     for (const sh of groundShapes){ const isW = sh.tex === 'water' || sh.tex === 'redwater', isI = sh.tex === 'ice'; if (!isW && !isI) continue;
       mg.beginPath(); sh.p.forEach(([x,z], i) => { const [px,py] = P(x,z); i ? mg.lineTo(px/2, py/2) : mg.moveTo(px/2, py/2); }); mg.closePath(); mg.fillStyle = isW ? '#f00' : '#0f0'; mg.fill(); } }
   if (shadows.length){
+    // Etappe 6 (Fund P1): Weiche Schatten ohne den teuren Filter blur(5px). Die Schatten werden auf eine
+    // Fläche mit einem Viertel der Auflösung gezeichnet und vergrössert eingesetzt; die Glättung beim
+    // Vergrössern ergibt die weiche Kante (ähnlich wie vorher, deutlich schneller).
+    const SF = 4, sc = document.createElement('canvas'); sc.width = Math.max(1, Math.ceil(c.width / SF)); sc.height = Math.max(1, Math.ceil(c.height / SF));
+    const gAlt = g; g = sc.getContext('2d'); g.scale(1 / SF, 1 / SF);
     g.save(); g.fillStyle = 'rgba(4,6,10,.34)';
-    try { g.filter = 'blur(5px)'; } catch(_){}
     const ox = -L[0]/L[1]*.6, oz = -L[2]/L[1]*.6;
     for (const s of shadows){
       if (s.e){ const [x,y] = P(s.e[0] + ox*s.h, s.e[1] + oz*s.h); g.beginPath(); g.ellipse(x, y, s.e[2]*k, s.e[3]*k, 0, 0, Math.PI*2); g.fill(); continue; }
@@ -4753,6 +5161,8 @@ function buildTerrain(){
       for (let t=0; t<=1.001; t+=.2){ const [x,y] = P(s.x - s.w/2 + ox*s.h*t, s.z - s.d/2 + oz*s.h*t); g.fillRect(x, y, s.w*k, s.d*k); }
     }
     g.restore();
+    g = gAlt; g.save(); g.imageSmoothingEnabled = true; try { g.imageSmoothingQuality = 'high'; } catch(_){}
+    g.drawImage(sc, 0, 0, sc.width * SF, sc.height * SF); g.restore();
   }
   const vg = g.createRadialGradient(c.width/2, c.height/2, Math.min(c.width, c.height)*.38, c.width/2, c.height/2, Math.max(c.width, c.height)*.72);
   vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(6,9,14,.6)'); g.fillStyle = vg; g.fillRect(0, 0, c.width, c.height);
@@ -5905,8 +6315,9 @@ function draw(t){
       if (y === null) continue;
       const by = y - h/2;
       placed.push([bx,by,w,h]);
-      if (!l.zone){ ctx.fillStyle = l.compass ? 'rgba(240,138,60,.2)' : 'rgba(23,17,13,.78)'; ctx.fillRect(bx,by,w,h); }
-      ctx.fillStyle = l.compass ? '#F08A3C' : l.zone ? 'rgba(243,233,210,.7)' : l.land ? '#B7A88F' : '#F3E9D2'; ctx.fillText(lt, bx+5, y+.5);
+      ctx.fillStyle = 'rgba(23,17,13,.86)'; ctx.fillRect(bx,by,w,h);   // Etappe 5 (A11): Plakette auch für Gebietsnamen und Kompass
+      if (l.compass){ ctx.strokeStyle = '#F08A3C'; ctx.lineWidth = 1; ctx.strokeRect(bx+.5,by+.5,w-1,h-1); }
+      ctx.fillStyle = l.compass ? '#F08A3C' : l.zone ? '#E3D6BC' : l.land ? '#B7A88F' : '#F3E9D2'; ctx.fillText(lt, bx+5, y+.5);
     }
   }
 
@@ -6425,6 +6836,7 @@ try { G3 = makeG3(); } catch(_){ G3 = null; }
     if (neu){ G3 = neu; dirty = true; if (typeof wake === 'function') wake(); }
   }); }
 /* @datei app/kern/schleife.js */
+let lastLive = 0;
 function loop(t){
   if (anim){
     const k = clamp((t - anim.t0)/anim.dur, 0, 1), e = 1 - Math.pow(1-k, 3);
@@ -6437,9 +6849,10 @@ function loop(t){
   const cus = CUS[viewId];
   const live = !eco && !reduce && !ptrs.size && (view.route || (cur > 0 && !(cus && cus.img)) || (ROUTE && ROUTE.view === viewId));
   if (dirty || anim || ptrs.size) lastActive = t;
-  if (live || dirty){ draw(t); dirty = false; }
-  
-  if (eco && !anim && !ptrs.size && t - lastActive > 1200){ sleepT = setTimeout(() => { sleepT = null; requestAnimationFrame(loop); }, 250); return; }
+  // Etappe 6 (P2): Die pulsierende Markierung braucht keine 60 Bilder pro Sekunde; ohne Änderung höchstens 15
+  if (dirty || (live && t - lastLive >= 66)){ draw(t); dirty = false; if (live) lastLive = t; }
+  // Etappe 6 (P7): Ruht die Karte, schläft die Schleife (auch ohne Sparmodus); jede Eingabe weckt sie mit wake()
+  if (!live && !anim && !ptrs.size && t - lastActive > 1200){ sleepT = setTimeout(() => { sleepT = null; requestAnimationFrame(loop); }, 250); return; }
   requestAnimationFrame(loop);
 }
 /* @datei app/kern/bedingungen.js */
@@ -6454,7 +6867,7 @@ const CONDS = COND_DATA.trim().split('\n').map(l => {
   
   const seiten = new Set(z[7].split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
   return { id:aus ? z[0].slice(1) : z[0], t:z[1], kl:z[2], aus, gross:z[2] === 'G' || z[2] === 'O', maps:z[3] === '*' ? null : z[3].split(','),
-    f:z[4].split('').concat(typeof COND_OHNE_FREE !== 'undefined' && COND_OHNE_FREE.ids.includes(aus ? z[0].slice(1) : z[0]) ? ['F'] : []), x:z[5], abw:z[6], ver:seiten >= 2, a:run[0] || '', go:run[1] || '' };
+    f:z[4].split('').concat(typeof COND_OHNE_FREE !== 'undefined' && COND_OHNE_FREE.ids.includes(aus ? z[0].slice(1) : z[0]) ? ['F'] : []), x:z[5], abw:z[6], ver:seiten >= SIEGEL_MIN, a:run[0] || '', go:run[1] || '' };
 });
 const COND_BY = new Map(CONDS.map(c => [c.id, c]));
 
@@ -6487,14 +6900,14 @@ function condHtml(){
     + (c.f.length || condDauer(c.id) !== 30 ? `<ul class="cfl">${c.f.map(k => `<li>${e(COND_FOLGE[k])}</li>`).join('')}${condDauer(c.id) !== 30 ? `<li>Raid dauert ${condDauer(c.id)} Minuten</li>` : ''}</ul>` : '')
     + (c.abw ? `<p class="cs">Andere Angabe: ${e(c.abw)} <span class="ver v0">Widerspruch</span></p>` : '')
     + (c.go ? `<p><button type="button" class="pill" data-run="${c.go}">${e(c.a)}</button></p>` : '') + '</div></details>';
-  const gruppe = (titel, L) => L.length ? `<h4>${titel} (${L.length})</h4><div class="group">${L.map(zeile).join('')}</div>` : '';
+  const gruppe = (titel, L) => L.length ? `<h3 class="h4">${titel} (${L.length})</h3><div class="group">${L.map(zeile).join('')}</div>` : '';
   const lauf = CONDS.filter(c => !c.aus);
   return `<div class="btncol"><a class="bp linkbtn" href="${ZEITPLAN_URL}" target="_blank" rel="noopener noreferrer">Offizieller Zeitplan<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8M11 7H6a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-5"/></svg></a></div>`
     + `<p class="fine">${e(COND_REGELN.zeitplan.x)} Der Knopf öffnet die Seite des Herstellers im Browser.</p>`
     + gruppe('Gross', lauf.filter(c => c.gross)) + gruppe('Klein', lauf.filter(c => c.kl === 'K')) + gruppe('Weitere', lauf.filter(c => c.kl === '?'))
     + gruppe('Zurzeit nicht im Umlauf', CONDS.filter(c => c.aus))
     + `<p class="fine">${e(COND_REGELN.trials.x)}</p>`
-    + '<p class="fine">Der Haken heisst «verifiziert»: Mindestens zwei unabhängige Angaben beschreiben die Bedingung so. Auf welchen Maps eine Bedingung läuft, stammt meist aus einer einzigen Liste. Nicht im Spiel getestet.</p>';
+    + '<p class="fine">Der Haken heisst «gesichert»: Mindestens drei voneinander unabhängige Websites beschreiben die Bedingung so. Auf welchen Maps eine Bedingung läuft, stammt meist aus einer einzigen Liste. Nicht im Spiel getestet.</p>';
 }
 /* @datei app/kern/abschnitte.js */
 
@@ -6529,7 +6942,7 @@ function abschnitte(root, nach){
   if (secs.length < 3) return;
   const nav = document.createElement('div');
   nav.className = 'dsprung'; nav.setAttribute('role', 'navigation'); nav.setAttribute('aria-label', 'Abschnitte dieser Seite');
-  nav.innerHTML = secs.map((d, i) => { const k = ABS_KURZ[d.name]; return `<button type="button" class="pill" data-absgo="${i}"${k ? ` aria-label="${esc(d.name)}"` : ''}>${esc(k || d.name)}</button>`; }).join('');
+  nav.innerHTML = secs.map((d, i) => { const k = ABS_KURZ[d.name]; return `<button type="button" class="pill" data-absgo="${i}"${k ? ` aria-label="${esc(k)}: ${esc(d.name)}"` : ''}>${esc(k || d.name)}</button>`; }).join('');
   nav.addEventListener('click', e => { const g = e.target.closest('[data-absgo]'); if (!g) return; const sec = secs[+g.dataset.absgo];
     if (sec.h.classList.contains('zu')) sec.b.click();
     sec.h.scrollIntoView({ block:'start', behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
@@ -6554,7 +6967,25 @@ const UI = { tab:'karten', screen:'list', d:'mini', insp:true, from:'list' };
 const escH = t => String(t).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 const CHEV = '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
 
-function setScreen(s){ UI.screen = s; appEl.dataset.screen = s; dirty = true; wake(); requestAnimationFrame(measureTop); }
+let listeFokus = null;
+function setScreen(s){ const vorher = UI.screen;
+  if (s === 'map' && vorher !== 'map' && document.activeElement && document.activeElement !== document.body) listeFokus = document.activeElement;
+  UI.screen = s; appEl.dataset.screen = s; dirty = true; wake(); requestAnimationFrame(measureTop); a11yInert();
+  // Etappe 5 (A7): Fokus auf «Zurück» der Karte, beim Zurückkehren auf die Zeile, von der man kam
+  if (!isWide() && s !== vorher && UI_LADEN === false) requestAnimationFrame(() => {
+    if (appEl.inert) return;   // ein Dialog ist offen: Fokus nicht wegnehmen
+    const akt = document.activeElement, frei = !akt || akt === document.body;
+    if (s === 'map'){ const b = $('#mapBack'); if (b && (frei || akt.closest('#side'))) b.focus(); }
+    else if (s === 'list' && (frei || akt.closest('#stage, #sheet')) && listeFokus && listeFokus.isConnected && listeFokus.offsetParent){ listeFokus.focus(); listeFokus = null; }
+  });
+}
+// Etappe 5 (A1): Am Handy ist nur Liste oder Karte sichtbar; der verdeckte Teil ist nicht fokussierbar
+function a11yInert(){
+  if (isWide()){ $('#side').inert = false; if (!isMD()){ $('#stage').inert = false; $('#sheet').inert = false; } return; }
+  const karte = UI.screen === 'map';
+  $('#side').inert = !karte ? false : true; $('#stage').inert = !karte; $('#sheet').inert = !karte;
+}
+addEventListener('resize', () => a11yInert());
 
 const MD_TABS = ['mat', 'werk', 'quests', 'wissen', 'arc'];
 const MD_TEXT = { mat:'Wähle links ein Item. Hier stehen dann Urteil, Wofür, Wert und Fundorte.', werk:'Wähle links eine Station, eine Waffe, ein Rezept oder einen Bauplan.', quests:'Wähle links eine Quest oder ein Projekt.', wissen:'Wähle links ein Thema.', arc:'Wähle links einen ARC-Gegner.' };
@@ -6566,6 +6997,7 @@ function mdSync(){
   const liste = UI.tab === 'mat' && typeof INV_DA !== 'undefined' && INV_DA && matView === 'liste';
   appEl.dataset.md = md ? '1' : '0'; $('#mdLeer').textContent = liste ? 'Tippe links auf «Wo suchen?»: Hier steht dann, auf welcher Map du am meisten von deiner Liste findest. Ein Item öffnest du unter «Bedarf» oder «Alle Items».' : MD_TEXT[UI.tab] || '';
   $('#stage').inert = md; $('#sheet').inert = md;   
+  if (!md) a11yInert();
 }
 
 function scrollEl(){ const d = isMD() ? document.querySelector('.page:not([hidden]) > .sdet:not([hidden]), #vVorschlag:not([hidden])') : null; return d || $('#pages'); }
@@ -6844,14 +7276,20 @@ function renderLayers(){
 }
 function closeLayers(){ $('#layerMenu').hidden = true; $('#btnLayers').setAttribute('aria-expanded', 'false'); }
 $('#btnLayers').addEventListener('click', () => { const m = $('#layerMenu'); m.hidden = !m.hidden; $('#btnLayers').setAttribute('aria-expanded', String(!m.hidden));
-  if (m.hidden) return; renderLayers();
+  if (m.hidden) return; renderLayers(); const f0 = m.querySelector('button'); if (f0) f0.focus();   // Etappe 5 (A5)
   
   if (!isWide() && UI.d !== 'mini'){ const mb = m.getBoundingClientRect().bottom, sh = $('#sheet'), sr = sh.getBoundingClientRect();
     const topMittel = sr.bottom - (sh.offsetParent ? sh.offsetParent.clientHeight : innerHeight) * .46;
     if (UI.d === 'gross' || mb > sr.top - 6) setDetent(mb > topMittel - 6 ? 'mini' : 'mittel'); } });
+$('#layerMenu').addEventListener('keydown', e => {
+  const b = [...$('#layerMenu').querySelectorAll('button')], i = b.indexOf(document.activeElement);
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); const n = b[(i + (e.key === 'ArrowDown' ? 1 : -1) + b.length) % b.length]; if (n) n.focus(); }
+  if (e.key === 'Home'){ e.preventDefault(); b[0].focus(); } if (e.key === 'End'){ e.preventDefault(); b[b.length - 1].focus(); }
+  if (e.key === 'Tab'){ closeLayers(); }
+});
 $('#layerMenu').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
-  if (b.dataset.layer){ const k = b.dataset.layer; layers[k] = !layers[k]; renderLayers(); dirty = true; wake(); return; }
+  if (b.dataset.layer){ const k = b.dataset.layer; layers[k] = !layers[k]; renderLayers(); const n = $('#layerMenu [data-layer="' + k + '"]'); if (n) n.focus(); dirty = true; wake(); return; }
   closeLayers();
   if (b.dataset.act === 'cal'){ openCal(); revealSheet(); }
   if (b.dataset.act === 'info') openDlg();
@@ -6886,7 +7324,7 @@ $('#btnReset').addEventListener('click', () => { if (typeof ROUTE !== 'undefined
 
 const CAM_TXT = { nord:'Norden oben', folgen:'folgt der Laufrichtung', frei:'frei drehen' }, CAM_NEXT = { nord:'folgen', folgen:'frei', frei:'nord' };
 function camBtnSync(){ const b = $('#btnCam'); b.dataset.mode = CAM_MODE; b.setAttribute('aria-pressed', String(CAM_MODE !== 'nord'));
-  b.setAttribute('aria-label', 'Ausrichtung: ' + CAM_TXT[CAM_MODE] + '. Tippen: ' + CAM_TXT[CAM_NEXT[CAM_MODE]]); b.title = 'Ausrichtung: ' + CAM_TXT[CAM_MODE]; }
+  b.setAttribute('aria-label', 'Ausrichtung: ' + CAM_TXT[CAM_MODE] + '. Wechseln zu: ' + CAM_TXT[CAM_NEXT[CAM_MODE]]); b.title = 'Ausrichtung: ' + CAM_TXT[CAM_MODE]; }
 function camRefocus(){
   if (typeof ROUTE !== 'undefined' && ROUTE && ROUTE.view === viewId){ if (ROUTE.pick) fitRoute(); else flyTo(stopCam(ROUTE.i)); }
   else flyTo({ t:[cam.tx, cam.ty, cam.tz], yaw:0, pitch:cam.pitch, dist:cam.dist });
@@ -6905,8 +7343,21 @@ window.addEventListener('hashchange', () => { const id = location.hash.slice(1);
 
 const dlg = $('#dlg');
 let dlgReturn = null;
-function openModal(el, focusSel){ dlgReturn = document.activeElement; el.hidden = false; const f = el.querySelector(focusSel || '.tbtn.b'); if (f) f.focus(); }
-function closeModal(el){ el.hidden = true; if (dlgReturn && dlgReturn.focus) dlgReturn.focus(); }
+const DLG_STAPEL = [];   // offene Dialoge in der Reihenfolge des Öffnens
+function openModal(el, focusSel){ dlgReturn = document.activeElement; if (el.hidden) el._zurueck = document.activeElement; el.hidden = false; const i = DLG_STAPEL.indexOf(el); if (i >= 0) DLG_STAPEL.splice(i, 1); DLG_STAPEL.push(el); dlgInert(); const f = el.querySelector(focusSel || '.tbtn.b'); if (f) f.focus(); }
+function closeModal(el){ el.hidden = true; dlgInert(); const z = el._zurueck || dlgReturn; el._zurueck = null;
+  const oben = DLG_STAPEL[DLG_STAPEL.length - 1];   // Prüfrunde B1: Rücksprung pro Dialog; liegt noch ein Dialog offen, Fokus dorthin
+  if (oben && !oben.hidden && !(z && oben.contains(z))){ const f = oben.querySelector('button, input, [tabindex]'); if (f) f.focus(); return; }
+  if (z && z.focus && z.isConnected) z.focus(); }
+// Etappe 5 (A2): Solange ein Dialog offen ist, ist alles dahinter nicht erreichbar; nur der zuletzt geöffnete ist bedienbar
+function dlgInert(){
+  for (let i = DLG_STAPEL.length - 1; i >= 0; i--) if (DLG_STAPEL[i].hidden) DLG_STAPEL.splice(i, 1);
+  const offen = [...document.querySelectorAll('.dlg')].filter(d => !d.hidden);
+  for (const d of offen) if (!DLG_STAPEL.includes(d)) DLG_STAPEL.unshift(d);
+  const oben = DLG_STAPEL[DLG_STAPEL.length - 1];
+  appEl.inert = offen.length > 0; document.querySelectorAll('.dlg').forEach(d => { d.inert = !!oben && d !== oben; });
+  const h = document.getElementById('spHinweis'); if (h) h.inert = offen.length > 0;   // Prüfrunde B4
+}
 const openDlg = () => { const m = view.mapId ? MAPS[view.mapId] : null;
   $('#dlgTitle').textContent = m && innerWidth < 420 ? view.title.replace(m.name, m.short) : view.title; $('#dlgBody').innerHTML = view.info; openModal(dlg); };
 const closeDlg = () => closeModal(dlg);
@@ -6918,18 +7369,25 @@ document.querySelectorAll('.such').forEach(b => b.addEventListener('click', () =
 $('#kBack').addEventListener('click', () => tabZurueck('karten'));
 document.addEventListener('click', e => { const b = e.target.closest('[data-wis]'); if (b) wissenOpen(b.dataset.wis); });
 document.addEventListener('keydown', e => {
-  const open = [...document.querySelectorAll('.dlg')].find(d => !d.hidden);
+  const open = (() => { const s = DLG_STAPEL.filter(d => !d.hidden); return s[s.length - 1] || [...document.querySelectorAll('.dlg')].find(d => !d.hidden); })();   // Prüfrunde B1: oberster Dialog
   if (open){
     if (e.key === 'Escape'){
 
       if (open.id === 'qiDlg'){ closeModal(open); return; }
-      const c = open.querySelector('#runCancel, #stCancel, #askLater, #naviAskCancel, #nxLater, #teilNein, #teilFertig, #suchZu') || open.querySelector('.tbtn.b'); if (c) c.click();
+      const c = open.querySelector('#qfNein, #runCancel, #stCancel, #askLater, #naviAskCancel, #nxLater, #teilNein, #teilFertig, #suchZu') || open.querySelector('.tbtn.b'); if (c) c.click();
     }
     return;
   }
   if (!$('#layerMenu').hidden && e.key === 'Escape'){ closeLayers(); $('#btnLayers').focus(); return; }
   if (e.target.closest && e.target.closest('input, textarea')) { if (e.key === 'Escape' && typeof backToList === 'function' && !$('#sDetail').hidden) backToList(); return; }
   if (e.key === '/'){ e.preventDefault(); openSuche(); return; }
+  if (e.key === 'Escape' && UI.screen === 'map' && !isWide()){ const b = $('#mapBack'); if (b){ b.click(); return; } }   // Etappe 4 (H3)
+  if (e.key === 'Escape'){   // Prüfrunde B2–B4: Escape schliesst Leiste und Hinweis, sonst «Zurück» der Unterseite
+    if (!$('#snack').hidden){ snackHide(); return; }
+    const h = document.getElementById('spHinweis'); if (h && !h.hidden){ spHinweisZu(); return; }   // nur ausblenden, keine Aktion auslösen
+    const seite = document.querySelector('.page:not([hidden])'), zb = seite && [...seite.querySelectorAll('.subnav .back')].find(b => b.offsetParent && b.id !== 'wBack');
+    if (zb){ zb.click(); return; }
+  }
   if (e.target.closest && e.target.closest('button, summary') && (e.key === ' ' || e.key === 'Enter')) return;
   if ((UI.screen === 'list' && !isWide()) || isMD()) return;   
   if (e.key === 'ArrowRight') stepNext();
@@ -6942,6 +7400,22 @@ function knopfTipps(){
   document.querySelectorAll('.ib.such').forEach(b => { b.title = 'Suchen (Taste /)'; });
 }
 knopfTipps();
+
+// Prüfrunde B2: Wer eine Zeile öffnet und mit «Zurück» zurückkommt, landet wieder auf dieser Zeile
+let zeileFokus = null;
+document.addEventListener('click', e => {
+  const z = e.target.closest && e.target.closest('#side .row, #side [data-qopen], #side [data-proj], #side [data-wis]');
+  if (z && !z.closest('.subnav')){ const liste = z.closest('ul, .group, [id]'), alle = liste ? [...liste.querySelectorAll('.row, [data-qopen], [data-proj], [data-wis]')] : [];
+    zeileFokus = { el:z, key:z.dataset.qopen || z.dataset.proj || z.dataset.wis || z.id || '', liste: liste && liste.id, pos: alle.indexOf(z), text: z.textContent.trim().slice(0, 60) }; }
+  const b = e.target.closest && e.target.closest('.subnav .back');
+  if (b && b.id !== 'mapBack' && zeileFokus){ const ziel = zeileFokus; requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (appEl.inert) return; const a = document.activeElement; if (a && a !== document.body && a.isConnected && a.offsetParent && !a.closest('.subnav')) return;
+    let el = ziel.el.isConnected && ziel.el.offsetParent ? ziel.el : null;
+    if (!el && ziel.key) el = [...document.querySelectorAll('#side [data-qopen="' + ziel.key + '"], #side [data-proj="' + ziel.key + '"], #side [data-wis="' + ziel.key + '"]')].find(x => x.offsetParent);
+    if (!el) el = [...document.querySelectorAll('#side .row')].find(x => x.offsetParent && x.textContent.trim().slice(0, 60) === ziel.text);   // neu gezeichnete Zeilen über ihren Text
+    if (!el){ const s = document.querySelector('.page:not([hidden]) h1'); if (s){ s.tabIndex = -1; el = s; } }
+    if (el) el.focus(); })); }
+}, true);
 /* @datei app/kern/filter.js */
 
 let FIL = null;
@@ -7060,7 +7534,7 @@ cv.addEventListener('pointerup', up);
 cv.addEventListener('pointercancel', up);
 cv.addEventListener('lostpointercapture', e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (!ptrs.size) down = null; });
 window.addEventListener('blur', () => { ptrs.clear(); pinch = null; down = null; });
-cv.addEventListener('wheel', e => { e.preventDefault(); anim = null; cam.dist = clamp(cam.dist*Math.exp(e.deltaY*.0012), 10, 200); dirty = true; }, { passive:false });
+cv.addEventListener('wheel', e => { e.preventDefault(); anim = null; cam.dist = clamp(cam.dist*Math.exp(e.deltaY*.0012), 10, 200); dirty = true; wake(); }, { passive:false });
 /* @datei app/kern/eigene-karte.js */
 
 let calOpen = false, moveMode = false, dragB = null, handles = [];
@@ -7301,7 +7775,7 @@ for (const a of ARCS) if (a.de) ARC_DE[a.n] = a.de;
 const arcName = a => sLang === 'de' && a.de ? a.de : (a.en || a.n);
 const arcDropName = d => { const it = ARC_ITEM.get(d); return it ? dispName(it) : d; };
 const arcThr = t => `<span class="thr" data-t="${t}" role="img" aria-label="Gefahr: ${ARC_THREAT[t]}"><i></i><i></i><i></i><i></i><i></i></span>`;
-const arcVer = n => n >= 2 ? VER2 : VER1;
+const arcVer = n => n >= SIEGEL_MIN ? VER2 : VER1;
 const RAR_ORDER = { L:5, E:4, R:3, U:2, C:1 };
 const CHECK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path class="tick" d="M7.5 12.5l3 3 6-6.5"/></svg>';
 function arcDrops(a){
@@ -7311,7 +7785,7 @@ function arcDrops(a){
     const x = { d, ss, n:arcOutlets(ss), it, r:(it ? it.r : (ARC_DROP_RAR[d] || [])[0]) || '' };
     (ARC_AMMO.test(d) ? out.mun : arcSpecial(a, d) ? out.spez : out.mat).push(x);
   }
-  const by = (p, q) => (q.n >= 2) - (p.n >= 2) || (RAR_ORDER[q.r] || 0) - (RAR_ORDER[p.r] || 0) || q.n - p.n || arcDropName(p.d).localeCompare(arcDropName(q.d), 'de');
+  const by = (p, q) => (q.n >= SIEGEL_MIN) - (p.n >= SIEGEL_MIN) || (RAR_ORDER[q.r] || 0) - (RAR_ORDER[p.r] || 0) || q.n - p.n || arcDropName(p.d).localeCompare(arcDropName(q.d), 'de');
   out.spez.sort(by); out.mat.sort(by); out.mun.sort(by);
   return out;
 }
@@ -7321,7 +7795,7 @@ function arcRank(){
   const out = [];
   for (const a of ARCS){
     let sc = 0; const hit = [];
-    for (const x of open){ const ss = a.drops.get(x.n); if (!ss) continue; const c = arcOutlets(ss) >= 2; sc += c ? 1 : .5; hit.push({ n:x.n, c }); }
+    for (const x of open){ const ss = a.drops.get(x.n); if (!ss) continue; const c = arcOutlets(ss) >= SIEGEL_MIN; sc += c ? 1 : .5; hit.push({ n:x.n, c }); }
     if (hit.length) out.push({ a, sc, hit });
   }
   return out.sort((p, q) => q.sc - p.sc || p.a.t - q.a.t || arcName(p.a).localeCompare(arcName(q.a), 'de'));
@@ -7340,10 +7814,10 @@ function arcForRow(r){
 function arcRender(){
   const rk = arcRank().slice(0, 5), open = openItems().length;
   $('#arcFor').innerHTML = rk.length
-    ? '<h3 class="gh">Für deine Einkaufsliste</h3><ul class="group">' + rk.map(arcForRow).join('') + '</ul>'
-      + '<div class="annbox"><b>Annahme:</b> Die Reihenfolge ist eine Gewichtung: Ein verifizierter Drop zählt 1, ein einfach belegter halb. Bei Gleichstand kommt zuerst der ungefährlichere ARC. Was genau fällt, ist Zufall.</div>'
+    ? '<h2 class="gh">Für deine Einkaufsliste</h2><ul class="group">' + rk.map(arcForRow).join('') + '</ul>'
+      + '<div class="annbox"><b>Annahme:</b> Die Reihenfolge ist eine Gewichtung: Ein gesicherter Drop zählt 1, ein einfach belegter halb. Bei Gleichstand kommt zuerst der ungefährlichere ARC. Was genau fällt, ist Zufall.</div>'
     : open ? '<p class="foot">Keines deiner offenen Materialien ist als ARC-Drop bekannt.</p>' : '';
-  $('#arcGroups').innerHTML = ARC_GROUPS.map(([g, lab]) => `<h3 class="gh">${lab}</h3><ul class="group">${ARCS.filter(a => a.g === g).map(arcRow).join('')}</ul>`).join('');
+  $('#arcGroups').innerHTML = ARC_GROUPS.map(([g, lab]) => `<h2 class="gh">${lab}</h2><ul class="group">${ARCS.filter(a => a.g === g).map(arcRow).join('')}</ul>`).join('');
 }
 const arcRefresh = () => { if ($('#arcDetail').hidden) arcRender(); };
 
@@ -7375,26 +7849,27 @@ function arcOpen(n, back){
   if (a.neu) h += `<p class="fine">${esc(a.neu[0])}.</p>`;
   if (dd.spez.length) h += '<h4>Spezialteil</h4><ul class="group">' + dd.spez.map(arcDropRow).join('') + '</ul>';
   if (dd.mat.length) h += '<h4>Materialien</h4><ul class="group">' + dd.mat.map(arcDropRow).join('') + '</ul>';
-  if (dd.mun.length) h += '<h4>Munition und Sonstiges</h4><ul class="notes"><li>' + dd.mun.map(x => esc(arcDropName(x.d)) + (x.n >= 2 ? '' : ' (einfach belegt)')).join(' · ') + '</li></ul>';
+  if (dd.mun.length) h += '<h4>Munition und Sonstiges</h4><ul class="notes"><li>' + dd.mun.map(x => esc(arcDropName(x.d)) + (x.n >= SIEGEL_MIN ? '' : ' (einfach belegt)')).join(' · ') + '</li></ul>';
   if (a.hin) h += `<p class="fine">Hinweis: ${esc(a.hin[0])}.</p>`;
-  h += '<p class="fine">Kreis antippen: auf die Einkaufsliste. Der Haken heisst «verifiziert»: mindestens zwei unabhängige Angaben nennen den Drop. Was genau fällt, ist Zufall. Nicht im Spiel getestet.</p>';
+  h += '<p class="fine">Kreis antippen: auf die Einkaufsliste. Der Haken heisst «gesichert»: mindestens drei voneinander unabhängige Websites nennen den Drop. Was genau fällt, ist Zufall. Nicht im Spiel getestet.</p>';
   h += arcInfoBlock('Schwachpunkt', a.w) + arcInfoBlock('Vorkommen', a.o);
   $('#arcRoot').hidden = true;
   const el = $('#arcDetail'); el.hidden = false; el.innerHTML = h;
   scrollSetz('arc', false);
   $('#arcBack').focus();
+  requestAnimationFrame(() => { const f = document.querySelector('#arcDetail .back, #arcDetail h3, #arcDetail h2'); if (f && f.offsetParent){ if (!f.matches('button')) f.tabIndex = -1; f.focus(); } });   // Prüfrunde B2
 }
 function arcReset(){ arcCur = null; arcBack = null; $('#arcDetail').hidden = true; $('#arcRoot').hidden = false; arcRender(); scrollSetz('arc', true); }
 function arcClose(){ const b = arcBack; arcReset(); if (b) b.go(); }
 
 function arcSection(it){
-  const L = (ARC_OF.get(it.n) || []).slice().sort((p, q) => (q.n >= 2) - (p.n >= 2) || arcSpecial(q.a, it.n) - arcSpecial(p.a, it.n) || q.n - p.n || p.a.t - q.a.t);
+  const L = (ARC_OF.get(it.n) || []).slice().sort((p, q) => (q.n >= SIEGEL_MIN) - (p.n >= SIEGEL_MIN) || arcSpecial(q.a, it.n) - arcSpecial(p.a, it.n) || q.n - p.n || p.a.t - q.a.t);
   if (!L.length) return '';
   const row = x => `<li class="prow"><div class="pinfo"><b>${esc(arcName(x.a))}</b>${arcSpecial(x.a, it.n) ? ' <span class="pm">Spezialteil</span>' : ''}<div class="pe">${arcVer(x.n)}${x.a.t ? ' · Gefahr ' + ARC_THREAT[x.a.t] : ' · Wrack'}</div></div><button class="pill go" type="button" data-arcgo="${esc(x.a.n)}">ARC zeigen</button></li>`;
   const top = L.slice(0, 6), rest = L.slice(6);
   return '<h4>Droppt von diesen ARC</h4><ul class="plist">' + top.map(row).join('') + '</ul>'
     + (rest.length ? `<details class="arcmore"><summary>Alle ${L.length} ARC zeigen</summary><ul class="plist">${rest.map(row).join('')}</ul></details>` : '')
-    + '<p class="fine">Der Haken heisst «verifiziert»: mindestens zwei unabhängige Angaben nennen den Drop.</p>';
+    + '<p class="fine">Der Haken heisst «gesichert»: mindestens drei voneinander unabhängige Websites nennen den Drop.</p>';
 }
 
 $('#arcGroups').addEventListener('click', e => { const b = e.target.closest('[data-arc]'); if (b) arcOpen(b.dataset.arc); });
@@ -7429,12 +7904,12 @@ const WSD = (() => {
   
   const seiten = ks => new Set(ks.split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
   const stationen = WS_STATIONS.trim().split('\n').map(l => { const s = l.split('|');
-    const st = { n:s[0], max:+s[1], stufen:s[2].split('/').map(mengen), ver:s[3].split('/').map(k => seiten(k) >= 2), min:0 };
+    const st = { n:s[0], max:+s[1], stufen:s[2].split('/').map(mengen), ver:s[3].split('/').map(k => seiten(k) >= SIEGEL_MIN), min:0 };
     
     while (st.min < st.max && !(st.stufen[st.min] || []).length) st.min++;
     return st; });
   
-  const bps = WS_BLUEPRINTS.trim().split('\n').map(l => { const z = l.split('|'); return { n:z[0], frei:z[1] || z[0], woher:z[2] || '', ver:seiten(z[3] || '') >= 2 }; });
+  const bps = WS_BLUEPRINTS.trim().split('\n').map(l => { const z = l.split('|'); return { n:z[0], frei:z[1] || z[0], woher:z[2] || '', ver:seiten(z[3] || '') >= SIEGEL_MIN }; });
   const bpFuer = new Map(bps.map(b => [b.frei, b.n]));
   const nur = new Set(Object.values(WS_NUR).join(';').split(';').filter(Boolean));
   const abw = new Map();
@@ -7461,11 +7936,11 @@ const AMP = (() => {
   const leer = { da:false, waffen:new Map(), wirkung:new Map(), forschung:[] };
   if (typeof AMP_WAFFEN === 'undefined') return leer;
   const seiten = ks => new Set(String(ks || '').split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
-  const wirkung = new Map(AMP_WIRKUNG.trim().split('\n').map(l => { const z = l.split('|'); return [z[0], { n:z[0], x:z[1] || '', andere:z[2] || '', ver:seiten(z[3]) >= 2 }]; }));
+  const wirkung = new Map(AMP_WIRKUNG.trim().split('\n').map(l => { const z = l.split('|'); return [z[0], { n:z[0], x:z[1] || '', andere:z[2] || '', ver:seiten(z[3]) >= SIEGEL_MIN }]; }));
   const forschung = AMP_FORSCHUNG.trim().split('\n').map(l => { const z = l.split('|'), i = z[1].lastIndexOf(':');
-    return { n:z[0], teile:[{ n:z[1].slice(0, i), c:+z[1].slice(i + 1) }], aufgabe:z[2], fuer:z[3].split(';'), ver:seiten(z[4]) >= 2, verFuer:seiten(z[5]) >= 2 }; });
+    return { n:z[0], teile:[{ n:z[1].slice(0, i), c:+z[1].slice(i + 1) }], aufgabe:z[2], fuer:z[3].split(';'), ver:seiten(z[4]) >= SIEGEL_MIN, verFuer:seiten(z[5]) >= SIEGEL_MIN }; });
   const waffen = new Map(AMP_WAFFEN.trim().split('\n').map(l => { const z = l.split('|');
-    return [z[0], { n:z[0], mk:+z[1], modul:'Amplification Module Mk. ' + ROEM[+z[1] - 1], auf:z[2].split(';'), ver:seiten(z[3]) >= 2, forschung:forschung.filter(p => p.fuer.includes(z[0])) }]; }));
+    return [z[0], { n:z[0], mk:+z[1], modul:'Amplification Module Mk. ' + ROEM[+z[1] - 1], auf:z[2].split(';'), ver:seiten(z[3]) >= SIEGEL_MIN, forschung:forschung.filter(p => p.fuer.includes(z[0])) }]; }));
   return { da:true, waffen, wirkung, forschung };
 })();
 const WAFFEN = (() => {
@@ -7542,15 +8017,23 @@ function bedarfRechnen(){
     if (hat) Z.quests++;
   }
   for (const p of PROJS){
-    if (p.st !== 'aktiv' && p.st !== 'saison') continue;
+    if (!projektLaeuft(p)) continue;   // abgelaufene Saisonprojekte zählen nicht (Fund C2)
     p.stufen.forEach((s, i) => { if (pDone(p, i)) return; let hat = false;
       for (const x of s.need){ if (!qItem(x.n)) continue; add(x.n, x.c, { t:'Projekt', label:p.n + ', Stufe ' + (i + 1), go:'p|' + p.id }); hat = true; }
       if (hat) Z.proj++; });
   }
   
+  // Etappe 3 (Fund C7): Ziele über die Voraussetzungen anderer Stationen anheben (z. B. Research Station 2 braucht Outpost 2)
+  const zielEff = new Map(WSD.stationen.map(s => [s.n, wsZiel(s)])), zielGrund = new Map();
+  for (let runde = 0, mehr = true; mehr && runde < 20; runde++){ mehr = false;
+    for (const s of WSD.stationen) for (let l = wsStufe(s) + 1; l <= zielEff.get(s.n); l++){
+      const v = WS_VOR.get(s.n + '|' + l), t = v && wsStation(v.st); if (!t) continue;
+      const soll = Math.min(t.max, v.stufe); if (soll > zielEff.get(t.n)){ zielEff.set(t.n, soll); zielGrund.set(t.n, s.n + ' Stufe ' + l); mehr = true; } } }
   for (const s of WSD.stationen){
-    const von = wsStufe(s), bis = wsZiel(s);
-    for (let l = von + 1; l <= bis; l++){ const k = s.stufen[l - 1] || []; if (!k.length) continue; Z.werk++; for (const x of k) add(x.n, x.c, { t:'Werkstatt', label:s.n + ' Stufe ' + l, go:'s|' + s.n }); }
+    const von = wsStufe(s), bis = zielEff.get(s.n), eigen = wsZiel(s);
+    for (let l = von + 1; l <= bis; l++){ const k = s.stufen[l - 1] || []; if (!k.length) continue; Z.werk++;
+      const label = s.n + ' Stufe ' + l + (l > eigen && zielGrund.has(s.n) ? ' (nötig für ' + zielGrund.get(s.n) + ')' : '');
+      for (const x of k) add(x.n, x.c, { t:'Werkstatt', label, go:'s|' + s.n }); }
   }
   for (const fam in WST.wunsch){
     const f = WAFFEN.get(fam); if (!f) continue; const hab = wfStufe(f), zielT = wfWunsch(f); if (zielT <= hab) continue; Z.waffen++;
@@ -7638,7 +8121,7 @@ const altName = it => sLang === 'de' ? (it.de ? it.n : '') : it.de;
 const esc = escH;
 const catLabel = c => CAT[c][0] === CAT[c][1] ? CAT[c][0] : `${CAT[c][0]} (${CAT[c][1]})`;
 
-const VER2 = '<span class="ver v2" title="Verifiziert"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4.2 4.2L18.5 7.8"/></svg><span class="vh">Verifiziert</span></span>', VER1 = '<span class="ver v1">Einfach belegt</span>';
+const VER2 = '<span class="ver v2" title="Gesichert: mindestens 3 Websites"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4.2 4.2L18.5 7.8"/></svg><span class="vh">Gesichert</span></span>', VER1 = '<span class="ver v1">Einfach belegt</span>';
 const FILTERS = [['all','Alle'],['N','Natur'],['A','ARC'],['ET','Technik'],['D','Medizin'],['MI','Mechanik'],['key','Schlüssel'],['spec','Fregatte · Emperor'],
   ['#TR','Wertsachen'],['#RC','Zum Zerlegen'],['#WF','Waffen und Aufsätze'],['#BP','Baupläne'],['#weg','Kann weg']];
 for (const it of ITEMS){
@@ -7783,7 +8266,8 @@ const S_FIL = { title:'Filter', unit:'Einträge', unit1:'Eintrag', groups:[
   changed:() => { matShow('suche'); scrollOben('mat'); filUI(S_FIL, '#sFilBtn', '#sFilN', '#sTok'); } };
 $('#sFilBtn').addEventListener('click', () => filOpen(S_FIL));
 const sInput = $('#sInput');
-sInput.addEventListener('input', () => { if (matView !== 'suche') matShow('suche'); else renderList(); scrollOben('mat'); });   
+let sInputT = null;   // Etappe 6 (P6): erst 120 ms nach der letzten Taste suchen
+sInput.addEventListener('input', () => { clearTimeout(sInputT); sInputT = setTimeout(() => { if (matView !== 'suche') matShow('suche'); else renderList(); scrollOben('mat'); }, 120); });   // auch der Ansichtswechsel wartet (Prüfrunde L7)   
 sInput.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const r = searchItems(sInput.value).res; if (r.length) showDetail(r[0], null); } });
 
 const sDetail = $('#sDetail');
@@ -7889,16 +8373,29 @@ function shopRender(){
   $('#shopList').hidden = !LIST.length;
   $('#shopList').innerHTML = LIST.map((x, i) => { const it = itemByName(x.n), ok = x.have >= x.need, nm = esc(dispName(it));
     return `<li${rrCls(it.r)}><div class="row static">${symKachel(it.n, it)}<span class="rt"><span class="t1"${ok ? ' style="color:var(--muted)"' : ''}>${nm}</span><span class="t2">${rTag(it.r)}${ok ? 'Erledigt · ' + x.have + ' von ' + x.need : 'Gefunden ' + x.have + ' von ' + x.need + ' · noch ' + (x.need - x.have)}</span><span class="t2">${esc(zweck(x))}</span><span class="bar"><i style="width:${Math.min(100, Math.round(x.have / Math.max(1, x.need) * 100))}%"></i></span></span>`
-      + `<div class="stepper" role="group" aria-label="Brauche ${x.need} Stück ${nm}"><button type="button" data-act="minus" data-i="${i}" aria-label="Eins weniger">−</button><span class="lcdn">${x.need}</span><button type="button" data-act="plus" data-i="${i}" aria-label="Eins mehr">+</button></div>`
-      + `<button type="button" class="rm" data-act="rm" data-i="${i}" aria-label="Entfernen: ${nm}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></li>`; }).join('');
+      + `<div class="stepper" role="group" aria-label="Brauche ${x.need} Stück ${nm}"><button type="button" data-act="minus" data-n="${esc(x.n)}" aria-label="Eins weniger">−</button><span class="lcdn">${x.need}</span><button type="button" data-act="plus" data-n="${esc(x.n)}" aria-label="Eins mehr">+</button></div>`
+      + `<button type="button" class="rm" data-act="rm" data-n="${esc(x.n)}" aria-label="Entfernen: ${nm}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></li>`; }).join('');
   arcRefresh(); hudRender();
   if (typeof naviRefresh === 'function') naviRefresh();
   if (typeof LEISTE_DA !== 'undefined' && LEISTE_DA) leisteMarken();
 }
-$('#shopList').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; const x = LIST[+b.dataset.i]; if (!x) return;
-  if (b.dataset.act === 'minus'){ x.need = Math.max(1, x.need - 1); x.have = Math.min(x.have, x.need); if (x.by) x.m = x.need; }
+// Etappe 4: Einträge über den Namen statt die Zeilennummer (C4), Sperre gegen Doppeltipp, Rückgängig
+let listSperre = 0;
+function listeEntfernen(n){
+  const i = LIST.findIndex(x => x.n === n); if (i < 0) return;
+  const alt = LIST[i], warFokus = document.activeElement && document.activeElement.closest && document.activeElement.closest('#shopList');
+  LIST.splice(i, 1); saveList(); shopRender();
+  if (warFokus){ const k = [...document.querySelectorAll('#shopList [data-act="rm"]')]; const f = k[Math.min(i, k.length - 1)] || $('#snackB'); if (f) f.focus(); }   // Prüfrunde B3
+  const it = itemByName(n);
+  snackShow((it ? dispName(it) : n) + ' von der Einkaufsliste entfernt.', () => { if (!inList(n)){ LIST.splice(Math.min(i, LIST.length), 0, alt); saveList(); shopRender(); } });
+}
+$('#shopList').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (!b) return; const x = LIST.find(y => y.n === b.dataset.n); if (!x) return;
+  if (b.dataset.act === 'rm'){ if (Date.now() < listSperre) return; listSperre = Date.now() + 500; listeEntfernen(x.n); return; }
+  if (b.dataset.act === 'minus'){
+    const quellen = x.by ? Object.values(x.by).reduce((a, c) => a + (+c || 0), 0) : 0, min = Math.max(1, quellen);   // C16: nicht unter den Bedarf der Quellen
+    if (x.need <= min && quellen){ snackShow('Deine verfolgten Quests und Ziele brauchen ' + quellen + ' Stück. Weniger geht erst, wenn du sie nicht mehr verfolgst.'); return; }
+    x.need = Math.max(min, x.need - 1); x.have = Math.min(x.have, x.need); if (x.by) x.m = x.need; }
   if (b.dataset.act === 'plus'){ x.need++; if (x.by) x.m = x.need; }
-  if (b.dataset.act === 'rm') LIST.splice(+b.dataset.i, 1);
   saveList(); shopRender(); });
 
 let ROUTE = null, routePins = [];
@@ -8145,8 +8642,9 @@ function drawRoute(t){
       const [cx0, by, dn] = cand.find(c => !clash(c[0], c[1], c[2])) || cand[0], mx = cx0 + lw/2;
       ctx.fillStyle = 'rgba(23,17,13,.9)'; ctx.fillRect(mx - w/2, by, w, 20);
       ctx.fillStyle = '#F3E9D2'; ctx.fillText(txt, mx, by + 10);
-      ctx.font = '500 10.5px "Barlow", system-ui, sans-serif'; ctx.fillStyle = 'rgba(243,233,210,.8)';
-      ctx.fillText('Lage im Modell: Annahme', mx, dn ? by + 30 : by - 10);
+      ctx.font = '500 10.5px "Barlow", system-ui, sans-serif';
+      { const ty = dn ? by + 30 : by - 10, tw = ctx.measureText('Lage im Modell: Annahme').width + 8;   // Plakette für Lesbarkeit (Prüfrunde B10)
+        ctx.fillStyle = 'rgba(23,17,13,.86)'; ctx.fillRect(mx - tw/2, ty - 8, tw, 16); ctx.fillStyle = '#E3D6BC'; ctx.fillText('Lage im Modell: Annahme', mx, ty); }
     }
     ctx.globalAlpha = 1;
     routePins.push({ idx:i, x:x1, y:y1 - r });
@@ -8160,7 +8658,7 @@ function drawRoute(t){
 
 const runDlg = $('#runDlg');
 let runFound = {}, runDone = {};
-function openRunDlg(){ runFound = {}; runDone = {}; naviRunOpen(); renderRun(); openModal(runDlg, '#runSave'); }
+function openRunDlg(){ runFound = {}; runDone = {}; naviRunOpen(); renderRun(); openModal(runDlg, '#runTitle'); }
 function renderRun(){
   const op = openItems(), nq = naviRunRender();
   $('#runEmpty').hidden = !!op.length || nq > 0; $('#runList2').hidden = !op.length; $('#runMH').hidden = !op.length || !nq;
@@ -8191,6 +8689,7 @@ let askDone = false, hiddenAt = 0;
 function maybeAsk(){
   if (askDone || !RUN || !openItems().length) return;
   if ([...document.querySelectorAll('.dlg')].some(d => !d.hidden)) return;
+  const h = document.getElementById('spHinweis'); if (h && !h.hidden){ setTimeout(maybeAsk, 2000); return; }   // Prüfrunde K5: nicht gleichzeitig mit einem Hinweis
   const m = MAPS[RUN.m];
   $('#askText').textContent = `Deine Route${m ? ' auf ' + m.short : ''} ist noch offen. Auf der Einkaufsliste fehlen noch ${openItems().length} Materialien. Willst du eintragen, was du im letzten Run gefunden hast?`;
   askDone = true; openModal(askDlg, '#askYes');
@@ -8226,10 +8725,10 @@ const FAQ_FUNKTIONEN = [
 {"t":"Inventar","b":[{"k":"p","x":"Das Inventar sagt dir, was du behalten musst und was weg kann, zeigt, wo ein Material vorkommt, und baut daraus eine Sammelroute. Es hat vier Reiter: Bedarf, Liste (die Einkaufsliste mit der Zahl ihrer Einträge), Kann weg und Alle Items."},{"k":"ul","i":[["Bedarf","rechnet aus deinen offenen Quests, den offenen Stufen deiner Projekte, deinen Werkstatt-Zielen, deinen Wunsch-Waffen, deinen Sets und eigenen Einträgen der Einkaufsliste, wie viel du von welchem Material noch brauchst, mit dem Zweck pro Zeile. Die Liste ist nach Zweck gruppiert: zuoberst «Jetzt gesucht» (verfolgte Quests und die Einkaufsliste), dann Quests, Projekte, Werkstatt, Wunsch-Waffen, Ausrüstung und Einträge von Hand. Du musst keinen Bestand eintragen."],["Urteil pro Item","zuoberst im Detail steht, was du mit dem Item tun sollst: Behalten (mit Anzahl und Zweck), Vorrat halten (kein fester Bedarf, aber Zutat in Rezepten), Zerlegen (ergibt etwas, das du noch brauchst), Verkaufen, Ausrüstung oder Bauplan lernen (nach dem Abhaken: Verkaufen). Ist zu wenig belegt, steht dort «Keine Angaben» statt eines Rats."],["Kann weg","der eigene Reiter «Kann weg» zeigt alle Items ohne Bedarf, die auch in keinem Rezept Zutat sind; in der Liste trägt jede Zeile ihre Marke (Behalten mit Anzahl, Vorrat, Zerlegen, Verkaufen)."],["Zutat in","jedes Material zeigt, in welchen Rezepten und Aufwertungen es gebraucht wird, mit Anzahl und Station."],["Entsteht beim Zerlegen von","jedes Material zeigt, welche Items es beim Zerlegen ergeben, beste Ausbeute zuerst, mit der Menge in Speranza und im Raid. Brauchst du eines dieser Items selbst noch, steht das als Warnung in der Zeile."],["Symbole","jedes Item trägt ein eigenes Symbol für seine Art (Waffe, Aufsatz, Munition, Bauplan, Material, Wertsache und weitere), in der Farbe seiner Seltenheit. Die Symbole sind selbst gezeichnet, keine Grafiken aus dem Spiel."],["Alle Items","630 Items und Schlüssel nach Name (deutsch oder englisch), Kategorie, Art und Seltenheit, mit Filtern für Wertsachen, Zum Zerlegen, Waffen und Aufsätze und Baupläne."],["Wert und Zerlegen","Verkaufswert, was beim Zerlegen in Speranza und im Raid herauskommt, und das Rezept mit Station und Stufe. Weichen zwei Angaben ab, zeigt die App beide."],["Rezept auf die Liste","ein Knopf setzt alle Zutaten eines Rezepts auf die Einkaufsliste; damit zählen sie im Bedarf."],["Fundorte","Zeile antippen zeigt Details und die besten Fundorte, auf der Karte markiert."],["Einkaufsliste","Materialien mit Zielmenge und gefundener Menge; verfolgte Quests und Projektstufen setzen ihre Materialien automatisch drauf. Jede Zeile nennt ihren Zweck, zum Beispiel «Für 6 Quests» oder «Von Hand gesetzt»."],["Route","«Wo suchen?» vergleicht alle Maps und zeigt, wo am meisten von deiner offenen Liste liegt. Ein Tipp auf die Map baut die Route: Stopps in sinnvoller Reihenfolge, Gehzeit mit 5 m/s und 30 % Umweg, Ende immer an einem Ausgang. Sie rechnet wie das Navi mit Restzeit, Kartenbedingung, «Früh raus», Ausgangszeit und Hatch Keys und nennt diese Werte; «Im Navi planen» führt zu den Einstellungen."],["Kaufen","führt ein Händler das Item, steht im Detail, bei wem, zu welchem Preis und wie oft pro Tag; ein Knopf öffnet den Händler. Bedarf und Einkaufsliste nennen dazu «kaufbar bei …»."],["Liste teilen","das Teilen-Symbol oben rechts in der Einkaufsliste schickt sie als Link ans Squad (siehe «Teilen per Link»)."],["Item-Detail","oben eine Zeile mit allen Abschnitten (Wofür, Kaufen, Zutat in, Wo am besten suchen und weitere); ein Tipp springt hin. Jeder Abschnitt lässt sich einklappen, die App merkt sich, was du zugeklappt hast."],["Item-Infos","jedes Item zeigt seine Art, etwa Kategorie, Projekt-Material, ARC-Drop mit Gegner oder Schlüssel mit den Maps seiner Räume, dazu «Verifiziert» oder «Einfach belegt»."]]}]},
 {"t":"Werkstatt","b":[{"k":"p","x":"In der Werkstatt stellst du ein, wie weit du bist und wohin du willst. Daraus rechnet das Inventar, was du behalten musst. Fünf Reiter: Stationen, Waffen, Herstellen (mit den Bauplänen), Ausrüstung und Skills."},{"k":"ul","i":[["Stationen","9 Stationen mit Stufen: sieben in Speranza (Gunsmith, Gear Bench, Medical Lab, Explosives Station, Utility Station, Refiner, Scrappy) und zwei im Outpost. Pro Station stellst du deine Stufe und ein Ziel ein und siehst die Kosten jeder Stufe und die Rezepte der Station. Ohne Angabe gilt als Ziel die höchste Stufe."],["Outpost","eigene Gruppe in der Stationsliste mit dem Outpost (Stufe = Zahl der Räume, Kosten der Räume 2 bis 4) und der Research Station, die darin steht. Bei jeder Stufe steht, welche Outpost-Stufe sie voraussetzt: Research Station Stufe 1 bis 4 braucht Outpost Stufe 1 bis 4, Gunsmith Stufe 4 braucht Outpost Stufe 4."],["Waffen","24 Waffen mit den Stufen I bis IV: Rezept für Stufe I, Kosten jeder Aufwertung. Mit einer Wunsch-Stufe zählt das Material der Waffe im Bedarf."],["Amplified (Stufe V)","15 Waffen haben eine fünfte Stufe. Sie kostet ein Amplification Module passend zur Seltenheit der Waffe; mit Wunsch-Stufe V zählt es im Bedarf. Im Detail stehen die Aufwertungen der Waffe mit ihrer Wirkung und die Forschungsprojekte, die für sie gebraucht werden (ARC-Teile, 5000 Research Points, Aufgabe). Ein Haken plant ein Projekt ein: Seine ARC-Teile zählen dann im Bedarf, einmal für alle Waffen."],["Herstellen","156 Rezepte, durchsuchbar. Der Knopf «Filter» grenzt nach Station ein, und «Geht jetzt» zeigt, was du mit deinen Stufen und Bauplänen herstellen kannst. Beides lässt sich kombinieren."],["Baupläne","oben in «Herstellen» führt eine Zeile zu 85 Bauplänen mit Fundort zum Abhaken. Ein abgehakter Bauplan schaltet sein Rezept unter «Herstellen» frei."],["Ausrüstung","benannte Sets für den Raid: Waffen mit Stufe, Aufsätze, Augment, Schild, Munition und Verbrauchsgüter mit Anzahl. Teile findest du über die Suche (deutsch oder englisch). Die App zählt das Material fürs ganze Set zusammen und setzt es mit einem Tipp auf die Einkaufsliste. Mit dem Schalter «Zählt im Bedarf» steht das Material im Inventar unter «Bedarf», mit dem Zweck «Ausrüstung: Name»."],["Set teilen","das Teilen-Symbol oben rechts im Set schickt es als Link ans Squad; wer ihn öffnet, bekommt es als neues Set (siehe «Teilen per Link»)."],["Skills (Skill-Baum-Planer)","alle 48 Skills des Baums 2.0 in den Zweigen Conditioning, Mobility und Survival, mit Wirkung und den Zahlen je Stufe. Du verteilst Punkte mit Plus und Minus; der Planer zählt «verteilt von verfügbar» und pro Zweig. Er hält die Regeln ein: Start-Skill zuerst, in der Mitte einer von zwei Skills ab 10 Punkten im Zweig, am Ende bis zu zwei von drei ab 30 und 40 Punkten. Steht ein Knopf still, sagt die Zeile warum. Deine Punktzahl stellst du selbst ein (76 aus Leveln, mit Expedition-Punkten bis 91). Der Plan bleibt gespeichert, das Teilen-Symbol oben rechts gibt ihn als Link weiter, «Plan zurücksetzen» fragt nach. Im breiten Fenster steht der Plan rechts, links die drei Zweige mit ihren Punkten."],["Einkaufsliste","eine Stufe, alles bis zum Ziel oder einzelne Materialien mit einem Tipp auf die Einkaufsliste setzen."],["Verbunden","aus jedem Material kommst du zum Item im Inventar und zurück; «Zeigen» im Inventar öffnet die Station oder Waffe, die das Material braucht."]]}]},
 {"t":"Quests und Projekte","b":[{"k":"p","x":"Der Quests-Bereich führt deinen Fortschritt bei 122 Quests von 6 Händlern und bei 11 Projekten."},{"k":"ul","i":[["Stand einrichten","pro Händler die aktuelle Quest wählen. Alle davor werden abgehakt, dazu alles, was sie bei anderen Händlern voraussetzen; die App sagt vorher, wie viele."],["Reihenfolge","jede Quest zeigt, welche Quests vorher erledigt sein müssen («Braucht vorher») und welche sie freischaltet («Schaltet frei»), auch über Händler hinweg. Ein Tipp öffnet die andere Quest, «Zurück» führt wieder her."],["Gesperrt und jetzt machbar","sobald du etwas abgehakt hast, tragen Quests mit offenen Voraussetzungen die Marke «Gesperrt», und die Liste öffnet mit dem Filter «Jetzt machbar», bis du die Reihenfolge selbst wählst. Das Navi schlägt dann pro Händler nur noch eine Quest vor, die nicht gesperrt ist. Bei einer gesperrten Quest steht, wie viele offene Quests davor liegen und welche davon du jetzt machen kannst."],["Suche und Filter","nach Name, Ort, Händler oder Material; der Filter «Reihenfolge» zeigt nur, was jetzt machbar oder gesperrt ist."],["Abhaken und verfolgen","Kreis hakt ab, Zielscheibe verfolgt. Verfolgte Quests stehen in «Mein Raid» auf der Karte, ihre Materialien auf der Einkaufsliste. Im Detail steht «Wird verfolgt» als Zustand."],["Details","Ziel, Ort und benötigte Materialien pro Quest, dazu «Verifiziert» oder «Einfach belegt». Geht eine Quest nur bei einer Kartenbedingung, steht das in der Liste und im Detail, mit den Maps, auf denen sie läuft."],["Projekte","Stufen abhaken und Materialien mit Anzahl auf die Einkaufsliste setzen; saisonale Projekte mit Enddatum."]]}]},
-{"t":"Wissen","b":[{"k":"p","x":"Wissen ist ein eigener Reiter: alles zum Nachschlagen und alles über die App an einem Ort. Wer eine Seite daraus aus einem anderen Bereich öffnet, kommt mit «Zurück» dorthin zurück."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","19 Bedingungen in den Gruppen Gross und Klein: was sie ändern, auf welchen Maps sie laufen, ob Raider Hatches gesperrt sind, ob Free Loadouts erlaubt sind und ob der Raid länger dauert. Weichen Angaben voneinander ab, stehen beide da."],["Offizieller Zeitplan","welche Bedingung gerade läuft, weiss die App nicht (der Plan wechselt jede Stunde und ist je Region verschoben). Ein Knopf öffnet den offiziellen Zeitplan im Browser. Es ist der einzige Knopf der App, der nach aussen führt."],["Händler","das Angebot von Celeste, Tian Wen, Shani, Apollo und Lance seit Frozen Trail: Preis, Menge je Kauf und wie oft pro Tag. Was du laut Bedarf brauchst, steht zuoberst und ist markiert; jede Zeile öffnet das Item. Wo sich seit dem letzten Stand vor Frozen Trail etwas geändert hat, steht der alte Wert dabei. Ermal (Nomadic Envoys) wechselt jede Woche und fehlt darum."],["Wochen-Trials","die fünf Aufgaben der laufenden Woche mit Erklärung, Ort, nötiger Waffe und Punkten pro Aktion, dazu Belohnungen und Regeln. Ein Knopf führt zur Waffe in der Werkstatt, einer zu den Kartenbedingungen. Ist die Woche vorbei, steht die Liste als abgelaufen da, bis das Wochen-Update die neue einträgt."],["Erste Schritte","holt die Checkliste im Reiter Raid zurück und zeigt, wie viel davon erledigt ist."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht, Namen auf Deutsch oder Englisch und «Geteilten Plan öffnen» (Link oder Code einfügen)."],["Teilen per Link","ein Set, den Skill-Plan oder die Einkaufsliste als Link weitergeben, ohne Konto und ohne Server: Der Plan steckt im Link selbst. Wer ihn öffnet, sieht zuerst, was drin ist, und entscheidet, ob er ihn übernimmt. Ein Set kommt als neues Set dazu, ein Skill-Plan ersetzt den eigenen, eine Liste wird zusammengeführt (die grössere Menge gilt). Unbekanntes fällt weg, ein Skill-Plan gegen die Regeln des Baums wird abgelehnt. Kommt der Link nicht an, geht auch der Code allein."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
+{"t":"Wissen","b":[{"k":"p","x":"Wissen ist ein eigener Reiter: alles zum Nachschlagen und alles über die App an einem Ort. Wer eine Seite daraus aus einem anderen Bereich öffnet, kommt mit «Zurück» dorthin zurück."},{"k":"ul","i":[["ARC-Gegner","32 ARC-Gegner und welcher was droppt, mehrfach abgeglichen. Antippen zeigt Loot, Schwachpunkt und Vorkommen; jeder Drop ist «Verifiziert» oder «Einfach belegt»."],["Gefahr und Gruppen","Balken von grün (niedrig) bis rot (extrem); Gruppen Klein und Späher, Flieger, Schwer am Boden, Bosse; neue ARC und Wracks von Hand zugeordnet (Annahme). Im Navi bestimmt die Gefahr die eingeplante Kampfzeit von 0,5 bis 5 Minuten."],["Kartenbedingungen","19 Bedingungen in den Gruppen Gross und Klein: was sie ändern, auf welchen Maps sie laufen, ob Raider Hatches gesperrt sind, ob Free Loadouts erlaubt sind und ob der Raid länger dauert. Weichen Angaben voneinander ab, stehen beide da."],["Offizieller Zeitplan","welche Bedingung gerade läuft, weiss die App nicht (der Plan wechselt jede Stunde und ist je Region verschoben). Ein Knopf öffnet den offiziellen Zeitplan im Browser. Es ist der einzige Knopf der App, der nach aussen führt."],["Händler","das Angebot von Celeste, Tian Wen, Shani, Apollo und Lance seit Frozen Trail: Preis, Menge je Kauf und wie oft pro Tag. Was du laut Bedarf brauchst, steht zuoberst und ist markiert; jede Zeile öffnet das Item. Wo sich seit dem letzten Stand vor Frozen Trail etwas geändert hat, steht der alte Wert dabei. Ermal (Nomadic Envoys) wechselt jede Woche und fehlt darum."],["Wochen-Trials","die fünf Aufgaben der laufenden Woche mit Erklärung, Ort, nötiger Waffe und Punkten pro Aktion, dazu Belohnungen und Regeln. Ein Knopf führt zur Waffe in der Werkstatt, einer zu den Kartenbedingungen. Ist die Woche vorbei, steht die Liste als abgelaufen da, bis die neue Woche von Hand eingetragen ist."],["Erste Schritte","holt die Checkliste im Reiter Raid zurück und zeigt, wie viel davon erledigt ist."],["FAQ","erklärt, worauf die Infos beruhen, was «Verifiziert» und «Annahme» heissen, und enthält diese Feature-Liste."],["Einstellungen","Sparmodus, Abendlicht, Namen auf Deutsch oder Englisch und «Geteilten Plan öffnen» (Link oder Code einfügen)."],["Teilen per Link","ein Set, den Skill-Plan oder die Einkaufsliste als Link weitergeben, ohne Konto und ohne Server: Der Plan steckt im Link selbst. Wer ihn öffnet, sieht zuerst, was drin ist, und entscheidet, ob er ihn übernimmt. Ein Set kommt als neues Set dazu, ein Skill-Plan ersetzt den eigenen, eine Liste wird zusammengeführt (die grössere Menge gilt). Unbekanntes fällt weg, ein Skill-Plan gegen die Regeln des Baums wird abgelehnt. Kommt der Link nicht an, geht auch der Code allein."],["Updates","letzte Prüfung, letzte Datenänderung und nächstes geplantes Update."]]}]},
 {"t":"Mein Raid, Einstellungen und Offline","b":[{"k":"p","x":"Dein Fortschritt bleibt nur in deinem Browser; die App setzt keine Cookies und lädt nichts von fremden Servern."},{"k":"ul","i":[["Mein Raid","Kasten oben links auf der Karte mit verfolgten Quests und Einkaufsliste. Der Knopf «Raid planen» fragt nach der Map (die offene steht zuerst) und öffnet die Planung; während eines Raids heisst er «Zum Raid». Im Infobereich wechselt ein Knopf je nach Lage zwischen Raid starten, Erledigt und Draussen."],["Raid beendet","im Reiter Raid oder in der Einkaufsliste: pro Material die gefundene Menge eintragen oder ganz abhaken, erledigte Quests abhaken und benutzte Raider Hatch Keys abziehen."],["Merken","Queststand, Werkstatt-Stand, Sets, Skill-Plan, Einkaufsliste, Navi-Plan und laufender Raid überstehen ein Neuladen."],["Eigene Stelle pro Bereich","jeder Bereich merkt sich, wie weit du gescrollt hast. «Zurück» aus einem Detail führt an die alte Stelle der Liste; den Bereich erneut antippen führt nach oben."],["Breites Fenster (PC, iPad quer)","ab 860 px Breite steht links eine schmale Leiste mit den fünf Reitern und «Suchen», daneben die Liste über die ganze Höhe. In Inventar, Werkstatt, Quests und Wissen steht das Detail rechts neben der Liste: Die Liste bleibt stehen, die gewählte Zeile ist markiert, und was du im Detail abhakst, steht sofort auch in der Liste. Die Karten zeigen Karte und Infobereich. Öffnest du aus einem Detail einen Ort auf der Karte, wechselt die App zu den Karten; «Zurück» in der Kartenleiste führt wieder zum Detail."],["Sparmodus","keine Animationen, die Karte zeichnet nur neu, wenn du sie bedienst."],["Abendlicht","warmes Licht für die 3D-Ansicht."],["Namen","Items, Quests und ARC auf Deutsch oder Englisch. Der Wechsel lässt eine laufende Route stehen."],["Tastatur","Escape bricht Dialoge ab, Pfeiltasten blättern durch Räume und Stopps, «/» öffnet die Suche für alles."],["Einstellungen und Updates","stehen unter Wissen."],["Offline und iPhone","über GitHub Pages zum Home-Bildschirm hinzufügen; danach läuft die App ohne Netz."]]}]},
-{"t":"Daten und Wochen-Update","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. In der App sind die Quellen unsichtbar; das FAQ erklärt, worauf die Infos beruhen."},{"k":"ul","i":[["Verifiziert","mindestens zwei unabhängige Angaben stimmen überein; in der App steht dafür ein kleiner Haken. «Einfach belegt»: nur eine. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Wochen-Update","jeden Mittwoch um 04:33 (Zürich, bis 11.11.2026 montags) prüft eine geplante Aufgabe zuerst die offizielle Seite, dann die übrigen Angaben, trägt die Trials der neuen Woche ein (sie wechseln dienstags), passt die Daten an, testet die App und aktualisiert GitHub."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit und eine Prüfung, dass keine Quelle in der App sichtbar ist."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, ohne Verbindung zu Embark Studios und ohne Grafiken aus dem Spiel."]]}]},
-{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Gondel 2,5 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Raider Hatch Key","ob der Key direkt aus der sicheren Tasche geht oder vorher in den Rucksack muss, ist nicht geprüft."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["iPhone-Fehler bei Apps vom Home-Bildschirm","ab iOS 26.1 (wieder ab 26.5 und in iOS 27) gibt iOS der App eine zu kleine Fläche und legt eine milchige Leiste über den oberen Rand. Die App rückt dann ihren oberen Rand selbst nach unten. Den leeren Streifen unten zeichnet iOS, die App kann ihn nicht nutzen. Auf einem echten iPhone nicht geprüft."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Skill-Baum","welcher Skill genau an welchem hängt, ist nicht belegt; der Planer prüft nur Start-Skill, Schwellen, Wahl-Skills, Höchststufen und deine Punktzahl. Im Spiel kann ein Plan darum eine andere Reihenfolge verlangen. Die Zahlen je Stufe und die Höchststufe von 16 Skills haben erst eine Angabe. Der Planer empfiehlt keine Builds."],["Sets","gerechnet wird jedes Teil ab null (Waffe herstellen und aufwerten, alles andere so oft herstellen wie gewählt). Zutaten, die selbst hergestellt werden, zerlegt die App nicht weiter. Werte, Schaden und ob ein Aufsatz auf die Waffe passt, prüft sie nicht, und sie empfiehlt keine Ausrüstung."],["Amplified","was die einzelne Aufwertung kostet, ist nicht bekannt (Pneumatic Actuator und Pressure Regulator werden gebraucht, die Mengen nennt keine Angabe), darum zählt sie nicht im Bedarf. Auch welche Aufwertungen sich ausschliessen und zu welcher Aufwertung ein Forschungsprojekt gehört, ist nicht belegt; die App ordnet nichts zu. Die Kosten der Outpost-Räume 2 und 3 haben erst eine Angabe."],["Quest-Reihenfolge","die Voraussetzungen von 100 Quests sind doppelt belegt, die der 22 neusten einfach, bei 2 fehlt die Angabe. Weitere Bedingungen wie eine Zahl gespielter Raids zeigt die App an, prüft sie aber nicht. Du kannst jede Quest jederzeit von Hand abhaken, auch eine gesperrte."],["Händler","die Preise gelten für den Stand Frozen Trail; verifiziert sind die, die schon vor Frozen Trail gleich waren. Ab welchem Level ein Angebot freigeschaltet wird, ist seit Frozen Trail nicht belegt und fehlt darum. Drei Preise sind nur gerundet bekannt (Ferro I mit 1400, Binoculars und Basic Camera mit 1900 Coins)."],["Wochen-Trials","die Liste ist nur so frisch wie das letzte Wochen-Update; von Dienstag bis Mittwoch früh zeigt die App die alte Woche als abgelaufen. Punkte pro Aktion sind gerundete Angaben von Fan-Seiten."],["Teilen","der Link führt zur Adresse, unter der du die App geöffnet hast. Ist sie für andere nicht erreichbar (Vorschau in Claude), geht der Code über «Geteilten Plan öffnen». Am iPhone hat die App vom Home-Bildschirm eine eigene Ablage: Ein angetippter Link öffnet Safari, darum den Link kopieren und in der App unter Wissen, Einstellungen einfügen."],["Stash-Wert","bewusst nicht gebaut: Die Bonuspunkte der Expeditions hingen zuletzt an einer Schadens-Aufgabe statt am Stash-Wert, und der Wert verlangte, den ganzen Bestand einzutippen."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
+{"t":"Daten und Quellen","b":[{"k":"p","x":"Jede Spielinfo ist in der Datenbank mit ihrer Herkunft hinterlegt. Unter Wissen, «Datenschutz und Quellen», stehen die Websites, auf denen die Angaben beruhen."},{"k":"ul","i":[["Gesichert","mindestens drei voneinander unabhängige Websites stimmen überein; in der App steht dafür ein kleiner Haken. «Einfach belegt»: eine oder zwei. Nichts davon ist im Spiel getestet."],["Annahme","eigene Schätzungen und Zuordnungen von Hand sind als «Annahme» markiert."],["Aktualisierung","von Hand nach Spiel-Updates, nicht an festen Tagen; das Datum der letzten Prüfung steht unter Wissen, Updates."],["Tests","Datenprüfung pro Map, Routen-Regel (Ausgang, höchstens 29 Minuten), Navi-Plan bei 30 und 12 Minuten Restzeit."],["Koordinaten","gemessen an dem, was interaktive Karten sichtbar zeigen, keine Rohdaten."],["Offene Daten","Die Werkstatt-Daten stammen zu einem grossen Teil aus einem offenen Datensatz der Community. Seine Lizenz verlangt einen Hinweis, er steht im FAQ unter «Offene Daten und Lizenzen»."],["Fan-Projekt","inoffiziell, nicht mit Embark Studios AB verbunden und nicht von ihr unterstützt; ARC Raiders und Embark sind Marken von Embark Studios AB; keine Grafiken aus dem Spiel."]]}]},
+{"t":"Grenzen und Annahmen","b":[{"k":"p","x":"Die Zeiten im Navi sind Schätzungen; alles hier ist nicht im Spiel getestet."},{"k":"ul","i":[["Zeitmodell (Annahme)","5 m/s Gehtempo, 30 % Umweg, Lift 2 Minuten, Gondel 2,5 Minuten, Luke 0,5 Minuten, feste Zeiten pro Stopp und Kampf."],["Raider Hatch Key","ob der Key direkt aus der sicheren Tasche geht oder vorher in den Rucksack muss, ist nicht geprüft."],["Gebäude und Hügel (Annahme)","grob nach dem Kartenbild nachgezeichnet, Höhen geschätzt. Wo das Kartenbild das Modell nicht abdeckt (Ostrand von Spaceport und Blue Gate, Westrand von Riven Tides), bleibt es bei einfachen Rechtecken."],["Startpunkte","von zwei interaktiven Karten, die teils abweichen; für Pendola Pass gibt es nur eine."],["Kartenrand","Startpunkte ausserhalb des Modells werden am Rand gezeichnet, gerechnet wird mit der echten Distanz."],["Nur Browser","es gibt keine native App; das iPhone nutzt die Web-App vom Home-Bildschirm."],["iPhone-Fehler bei Apps vom Home-Bildschirm","ab iOS 26.1 (wieder ab 26.5 und in iOS 27) gibt iOS der App eine zu kleine Fläche und legt eine milchige Leiste über den oberen Rand. Die App rückt dann ihren oberen Rand selbst nach unten. Den leeren Streifen unten zeichnet iOS, die App kann ihn nicht nutzen. Auf einem echten iPhone nicht geprüft."],["Kein Live-Abgleich","die App kennt deinen Spielstand nur aus deinen Eingaben."],["Bedarf ohne Bestand","der Bedarf zählt, was deine offenen Ziele insgesamt verlangen, nicht was du schon im Lager hast. Solange du in der Werkstatt nichts einstellst, zählen alle Stufen aller Stationen mit."],["Herstellen","«Geht jetzt» prüft Station und Bauplan, nicht ob du die Zutaten hast."],["Skill-Baum","welcher Skill genau an welchem hängt, ist nicht belegt; der Planer prüft nur Start-Skill, Schwellen, Wahl-Skills, Höchststufen und deine Punktzahl. Im Spiel kann ein Plan darum eine andere Reihenfolge verlangen. Die Zahlen je Stufe und die Höchststufe von 16 Skills haben erst eine Angabe. Der Planer empfiehlt keine Builds."],["Sets","gerechnet wird jedes Teil ab null (Waffe herstellen und aufwerten, alles andere so oft herstellen wie gewählt). Zutaten, die selbst hergestellt werden, zerlegt die App nicht weiter. Werte, Schaden und ob ein Aufsatz auf die Waffe passt, prüft sie nicht, und sie empfiehlt keine Ausrüstung."],["Amplified","was die einzelne Aufwertung kostet, ist nicht bekannt (Pneumatic Actuator und Pressure Regulator werden gebraucht, die Mengen nennt keine Angabe), darum zählt sie nicht im Bedarf. Auch welche Aufwertungen sich ausschliessen und zu welcher Aufwertung ein Forschungsprojekt gehört, ist nicht belegt; die App ordnet nichts zu. Die Kosten der Outpost-Räume 2 und 3 haben erst eine Angabe."],["Quest-Reihenfolge","die Voraussetzungen von 100 Quests sind doppelt belegt, die der 22 neusten einfach, bei 2 fehlt die Angabe. Weitere Bedingungen wie eine Zahl gespielter Raids zeigt die App an, prüft sie aber nicht. Du kannst jede Quest jederzeit von Hand abhaken, auch eine gesperrte."],["Händler","die Preise gelten für den Stand Frozen Trail; verifiziert sind die, die schon vor Frozen Trail gleich waren. Ab welchem Level ein Angebot freigeschaltet wird, ist seit Frozen Trail nicht belegt und fehlt darum. Drei Preise sind nur gerundet bekannt (Ferro I mit 1400, Binoculars und Basic Camera mit 1900 Coins)."],["Wochen-Trials","die Liste ist nur so frisch wie die letzte Prüfung von Hand; nach dem Wochenwechsel zeigt die App die alte Woche als abgelaufen, bis die neue eingetragen ist. Punkte pro Aktion sind gerundete Angaben von Fan-Seiten."],["Teilen","der Link führt zur Adresse, unter der du die App geöffnet hast. Ist sie für andere nicht erreichbar (Vorschau in Claude), geht der Code über «Geteilten Plan öffnen». Am iPhone hat die App vom Home-Bildschirm eine eigene Ablage: Ein angetippter Link öffnet Safari, darum den Link kopieren und in der App unter Wissen, Einstellungen einfügen."],["Stash-Wert","bewusst nicht gebaut: Die Bonuspunkte der Expeditions hingen zuletzt an einer Schadens-Aufgabe statt am Stash-Wert, und der Wert verlangte, den ganzen Bestand einzutippen."],["Vorrat (Annahme)","welche Rezepte du wirklich herstellst, weiss die App nicht. Darum rät sie bei jeder Zutat zum Vorrat statt zum Verkaufen und nennt keine Menge."],["Werkstatt-Daten","der offene Datensatz stammt vom August 2026; neuere Items können fehlen. Waffen-Aufwertungen haben erst eine Angabe."]]}]}
 ];
 /* @datei app/kern/quests.js */
 
@@ -8287,6 +8786,28 @@ function qTrack(q, on){
   if (!on && was){ QS.t = QS.t.filter(e => e !== q.en); listDropFrom(qTrackSrc(q)); }
   saveQS(); saveList(); shopRender();
 }
+// Etappe 4 (Fund C5, Entscheid E-12): keine erledigte Quest mit offener Voraussetzung.
+function qNachfahren(q){ const S = new Set(), st = [...q.nach]; while (st.length){ const v = st.pop(); if (!S.has(v)){ S.add(v); st.push(...v.nach); } } return [...S]; }
+let qFolgeWeiter = null;
+function qUmschalten(q, danach){
+  const neu = !qDone(q);
+  const mit = neu ? qAhnen(q).filter(v => !qDone(v)) : qNachfahren(q).filter(v => qDone(v));
+  const los = alle => { const vorher = JSON.stringify({ q:QS.q, t:QS.t, l:LIST }); qSetDone(q, neu); if (alle) for (const v of mit) qSetDone(v, neu); danach();
+    const n = 1 + (alle ? mit.length : 0);   // Prüfrunde: Rückgängig nach Abhaken und Öffnen
+    snackShow((n === 1 ? '«' + qName(q) + '» ' : n + ' Quests ') + (neu ? 'abgehakt.' : 'wieder geöffnet.'), () => { const v = JSON.parse(vorher); QS.q = v.q; QS.t = v.t; saveQS(); LIST = v.l; saveList(); hudRender(); qRender(); if (typeof stHint === 'function') stHint(); if (typeof shopRender === 'function') shopRender(); });
+    requestAnimationFrame(() => { const f = [document.querySelector('#qDoneTog'), document.querySelector('[data-qdone="' + q.i + '"]'), document.querySelector('#qList [data-qdone]'), document.querySelector('#qInput')].find(x => x && x.offsetParent); if (f) f.focus(); }); };   // Prüfrunde B6
+  if (!mit.length){ los(false); return; }
+  const n = mit.length, eins = n === 1;
+  $('#qfTitel').textContent = neu ? 'Auch die Voraussetzungen abhaken?' : 'Auch die Folge-Quests öffnen?';
+  $('#qfText').textContent = neu
+    ? `«${qName(q)}» setzt ${eins ? 'eine Quest' : n + ' Quests'} voraus, die noch offen ${eins ? 'ist' : 'sind'}: ${mit.slice(0, 5).map(qName).join(', ')}${n > 5 ? ' …' : ''}.`
+    : `${eins ? 'Eine erledigte Quest baut' : n + ' erledigte Quests bauen'} auf «${qName(q)}» auf: ${mit.slice(0, 5).map(qName).join(', ')}${n > 5 ? ' …' : ''}.`;
+  $('#qfAlle').textContent = neu ? (eins ? 'Beide abhaken' : 'Alle abhaken') : (eins ? 'Beide öffnen' : 'Alle öffnen');
+  qFolgeWeiter = los; openModal($('#qFolgeDlg'), '#qfAlle');
+}
+$('#qfAlle').addEventListener('click', () => { const f = qFolgeWeiter; qFolgeWeiter = null; closeModal($('#qFolgeDlg')); if (f) f(true); });
+$('#qfNur').addEventListener('click', () => { const f = qFolgeWeiter; qFolgeWeiter = null; closeModal($('#qFolgeDlg')); if (f) f(false); });
+$('#qfNein').addEventListener('click', () => { qFolgeWeiter = null; closeModal($('#qFolgeDlg')); });
 function qSetDone(q, d){
   if (d){ qTrack(q, false); QS.q[q.en] = 1; } else delete QS.q[q.en];
   saveQS(); hudRender();
@@ -8299,7 +8820,7 @@ const qItem = n => ARC_ITEM.get(n) || itemByName(n);
 const qNeedName = x => { const it = x.quest ? null : qItem(x.n); return it ? dispName(it) : x.n; };
 
 const qOutlets = keys => new Set(keys.filter(k => SRCS[k]).map(k => SRCS[k][0].split(':')[0])).size;
-const qVer = keys => qOutlets(keys) >= 2 ? VER2 : VER1;
+const qVer = keys => qOutlets(keys) >= SIEGEL_MIN ? VER2 : VER1;
 const qReward = s => s.split(',').map(x => { x = x.trim(); const m = x.match(/^(.*?) x(\d+)$/); const n = m ? m[1] : x, it = itemByName(n);
   return esc((it ? dispName(it) : n) + (m ? ' ×' + m[2] : '')); }).join(' · ');
 function qAddList(n, c){
@@ -8307,11 +8828,11 @@ function qAddList(n, c){
   if (x){ if (x.by){ x.m = Math.max(x.m || 0, c || 1); listFix(x); } else x.need = Math.max(x.need, c || 1); } else LIST.push({ n, need:c || 1, have:0 });
   saveList(); shopRender();
 }
-function qDays(bis){ const m = /^(\d\d)\.(\d\d)\.(\d{4})$/.exec(bis || ''); if (!m) return null;
-  const end = new Date(+m[3], +m[2] - 1, +m[1], 23, 59); return Math.ceil((end - Date.now()) / 864e5); }
+// Tage bis und mit Enddatum, in Zürcher Zeit (Etappe 3, Fund C14); nach Ablauf -1
+const qDays = bis => tageBis(bis);
 const ST_LABEL = { aktiv:'Läuft', saison:'Saisonal', pause:'Pausiert', ende:'Beendet' };
 function stBadge(p){ const d = qDays(p.bis);
-  return `<span class="stb s-${p.st}">${ST_LABEL[p.st]}${p.st === 'saison' && d != null && d >= 0 ? ' · noch ' + d + (d === 1 ? ' Tag' : ' Tage') : ''}</span>`; }
+  return `<span class="stb s-${p.st}">${ST_LABEL[p.st]}${p.st === 'saison' && d != null && d >= 1 ? ' · noch ' + d + (d === 1 ? ' Tag' : ' Tage') : ''}</span>`; }
 const qNeedDots = need => need.filter(x => !x.quest).map(x => { const it = qItem(x.n), r = it && it.r && RAR[it.r] ? it.r : '';
   return `<span class="ri${r ? ' r' + r : ''}">${esc(qNeedName(x))}${x.c ? ' ×' + x.c : ''}${r ? `<span class="vh"> (${RAR[r]})</span>` : ''}</span>`; }).join(', ');
 for (const q of QUESTS) q._k = norm([q.en, q.de, q.ziel, QUEST_TRADER[q.h], ...q.need.map(x => x.n + ' ' + (DE[x.n] || '')), ...q.orte.map(o => o.n), ...q.maps.map(m => m + ' ' + (MAP_DE[m] || ''))].join(' '));
@@ -8334,7 +8855,7 @@ function qShow(v){
 }
 function qReset(){ qBack = null; qCur = null; qShow(qView === 'projekte' || qView === 'pdetail' ? 'projekte' : 'quests'); scrollOben('quests'); }
 function qSeason(){
-  const s = PROJS.filter(p => p.st === 'saison' && (qDays(p.bis) == null || qDays(p.bis) >= 0));
+  const s = PROJS.filter(p => p.st === 'saison' && projektLaeuft(p));
   $('#qSeason').innerHTML = s.map(p => { const done = p.stufen.filter((_, i) => pDone(p, i)).length;
     return `<button type="button" class="season" data-proj="${p.id}"><span class="rt"><span class="t1">${esc(p.n)} ${stBadge(p)}</span><span class="t2">Bis ${esc(p.bis)} · ${done} von ${p.stufen.length} Stufen erledigt</span></span>${CHEV}</button>`; }).join('');
   $('#qSeason').hidden = !s.length || qView !== 'quests';   
@@ -8350,11 +8871,11 @@ function faqRender(){
   const zahlen = [[ITEMS.filter(x => x.kind === 'item' && !x.arcOnly && !x.projOnly && !x.wsOnly).length, 'Materialien'], [ITEMS.filter(x => x.wsOnly).length, 'weitere Items'], [ITEMS.filter(x => x.kind === 'key').length, 'Schlüssel'], [QUESTS.length, 'Quests'], [ARCS.length, 'ARC-Gegner'],
     [PROJS.length, 'Projekte'], [MAP_ORDER.length, 'Maps'], [nStart, 'Startpunkte'], [CONDS.length, 'Kartenbedingungen']].filter(z => z[0]);
   let h = `<p class="foot">${esc(FAQ_INTRO)}</p>`
-    + '<h3 class="gh">Worauf die Infos beruhen</h3><div class="group">' + FAQ_GRUNDLAGE.map(f => acc(f.t, f.x.map(para).join(''))).join('') + '</div>'
-    + '<h3 class="gh">Funktionen</h3>'
+    + '<h2 class="gh">Worauf die Infos beruhen</h2><div class="group">' + FAQ_GRUNDLAGE.map(f => acc(f.t, f.x.map(para).join(''))).join('') + '</div>'
+    + '<h2 class="gh">Funktionen</h2>'
     + `<p class="foot">Datenstand ${esc(DATA_STAND)}: ${zahlen.map(z => z[0] + ' ' + z[1]).join(', ')}.</p>`
     + '<div class="group">' + FAQ_FUNKTIONEN.map(s => acc(s.t, s.b.map(b => b.k === 'p' ? para(b.x) : list(b)).join(''))).join('') + '</div>'
-    + '<p class="foot">Inoffizielles Fan-Projekt, nicht im Spiel getestet. Fehler gefunden? Das wöchentliche Update prüft die Angaben laufend nach.</p>';
+    + '<p class="foot">Inoffizielles Fan-Projekt, nicht im Spiel getestet. Fehler gefunden? Die Angaben werden von Hand nachgeführt.</p>';
   $('#wvFaq').innerHTML = h;
 }
 
@@ -8397,8 +8918,8 @@ function pRow(p){
   return `<li><button type="button" class="row" data-proj="${p.id}"><span class="rt"><span class="t1">${esc(p.n)} ${stBadge(p)}</span><span class="t2">${t2}</span>${n ? `<span class="bar"><i style="width:${Math.round(done / n * 100)}%"></i></span>` : ''}</span>${CHEV}</button></li>`;
 }
 function pRender(){
-  const g = (lab, arr) => arr.length ? `<h3 class="gh">${lab}</h3><ul class="group">${arr.map(pRow).join('')}</ul>` : '';
-  $('#pList').innerHTML = g('Laufend', PROJS.filter(p => p.st === 'aktiv' || p.st === 'saison')) + g('Pausiert', PROJS.filter(p => p.st === 'pause')) + g('Frühere Projekte', PROJS.filter(p => p.st === 'ende'));
+  const g = (lab, arr) => arr.length ? `<h2 class="gh">${lab}</h2><ul class="group">${arr.map(pRow).join('')}</ul>` : '';
+  $('#pList').innerHTML = g('Laufend', PROJS.filter(p => projektLaeuft(p))) + g('Pausiert', PROJS.filter(p => p.st === 'pause')) + g('Frühere Projekte', PROJS.filter(p => p.st === 'ende' || (p.st === 'saison' && !projektLaeuft(p))));
 }
 
 function qNeedRow(x){
@@ -8504,7 +9025,7 @@ function questUseSection(it){
 
 $('#segQuests').addEventListener('click', () => qShow('quests'));
 $('#segProj').addEventListener('click', () => qShow('projekte'));
-$('#qInput').addEventListener('input', qRender);
+let qInputT = null; $('#qInput').addEventListener('input', () => { clearTimeout(qInputT); qInputT = setTimeout(qRender, 120); });   // Etappe 6 (P6)
 $('#qDoneBtn').addEventListener('click', () => { qShowDone = !qShowDone; qRender(); });
 
 const TR_COL = { S:'#3FB45A', C:'#2E8BE6', T:'#E5402F', A:'#F4C21F', L:'#E57AEA', N:'#B8B1A4' };
@@ -8523,7 +9044,7 @@ $('#qList').addEventListener('click', e => {
   if (tk){ const q = QUESTS[+tk.dataset.qtrk]; qTrack(q, !qTracked(q)); const on = qTracked(q);
     tk.setAttribute('aria-pressed', on); tk.setAttribute('aria-label', (on ? 'Nicht mehr verfolgen' : 'Verfolgen') + ': ' + qName(q)); return; }
   const d = e.target.closest('[data-qdone]');
-  if (d){ const q = QUESTS[+d.dataset.qdone]; qSetDone(q, !qDone(q)); qRender(); stHint(); return; }
+  if (d){ const q = QUESTS[+d.dataset.qdone]; qUmschalten(q, () => { qRender(); stHint(); }); return; }
   const o = e.target.closest('[data-qopen]'); if (o) questOpen(+o.dataset.qopen, null);
 });
 $('#pList').addEventListener('click', e => { const b = e.target.closest('[data-proj]'); if (b) projOpen(b.dataset.proj, null); });
@@ -8536,11 +9057,11 @@ $('#qDetail').addEventListener('click', e => {
   const keepScroll = fn => { const pg = scrollEl(), y = pg ? pg.scrollTop : 0; fn(); const p2 = scrollEl(); if (p2) p2.scrollTop = y; };
   const qg = e.target.closest('[data-qgo]');   
   if (qg && q){ const back = qBack; questOpen(+qg.dataset.qgo, { tab:'quests', label:qName(q), go:() => { qBack = back; questOpen(q.i); } }); return; }
-  if (e.target.closest('#qDoneTog') && q){ qSetDone(q, !qDone(q)); qRender(); keepScroll(reopen); return; }
+  if (e.target.closest('#qDoneTog') && q){ qUmschalten(q, () => { qRender(); keepScroll(reopen); }); return; }
   if (e.target.closest('#qTrkTog') && q){ qTrack(q, !qTracked(q)); qRender(); keepScroll(reopen); return; }
   const pd = e.target.closest('[data-pdone]'); if (pd && p){ pToggle(p, +pd.dataset.pdone); keepScroll(reopen); return; }
   const t = e.target.closest('[data-ntog]');
-  if (t){ const n = t.dataset.ntog; if (inList(n)){ LIST = LIST.filter(x => x.n !== n); saveList(); shopRender(); } else qAddList(n, +t.dataset.c);
+  if (t){ const n = t.dataset.ntog; if (inList(n)) listeEntfernen(n); else qAddList(n, +t.dataset.c);
     keepScroll(reopen); return; }
   if (e.target.closest('[data-qall]') && q){ q.need.filter(x => !x.quest && qItem(x.n)).forEach(x => qAddList(x.n, x.c)); keepScroll(reopen); return; }
   const ps = e.target.closest('[data-pstage]'); if (ps && p){ p.stufen[+ps.dataset.pstage].need.filter(x => qItem(x.n)).forEach(x => qAddList(x.n, x.c)); keepScroll(reopen); return; }
@@ -8623,7 +9144,7 @@ function bedRender(){
   const G = [['jetzt', 'Jetzt gesucht'], ['Quest', 'Für Quests'], ['Projekt', 'Für Projekte'], ['Werkstatt', 'Für die Werkstatt'], ['Waffe', 'Für Wunsch-Waffen'], ['Ausrüstung', 'Für Ausrüstung'], ['Liste', 'Von Hand auf der Liste']];
   const gruppe = x => jetzt(x) ? 'jetzt' : (G.find(([k]) => k !== 'jetzt' && x.e.wofuer.some(w => w.t === k)) || ['Liste'])[0];
   $('#bedList').innerHTML = G.map(([k, titel]) => { const T = L.filter(x => gruppe(x) === k); if (!T.length) return '';
-    return `<h3 class="gh">${titel} <span class="ghn">${T.length}</span></h3><ul class="group" data-bedgr="${k}">` + T.map(zeile).join('') + '</ul>'; }).join('');
+    return `<h2 class="gh">${titel} <span class="ghn">${T.length}</span></h2><ul class="group" data-bedgr="${k}">` + T.map(zeile).join('') + '</ul>'; }).join('');
   $('#bedWerk').hidden = WST.ok || !Z.werk;   
 }
 $('#bedList').addEventListener('click', e => { const b = e.target.closest('[data-bed]'); if (b) showDetail(ITEMS[+b.dataset.bed], null); });
@@ -8658,7 +9179,7 @@ function wofuerSection(it){
   
   for (const q of QUESTS){ if (!qDone(q)) continue; const x = q.need.find(y => !y.quest && y.n === it.n); if (x) rows.push({ t:'Quest', n:qName(q), c:x.c, d:true, go:'q|' + q.i }); }
   for (const p of PROJS) p.stufen.forEach((s, i) => { const x = s.need.find(y => y.n === it.n); if (!x) return;
-    const laeuft = p.st === 'aktiv' || p.st === 'saison', fertig = pDone(p, i); if (laeuft && !fertig) return;
+    const laeuft = projektLaeuft(p), fertig = pDone(p, i); if (laeuft && !fertig) return;
     rows.push({ t:'Projekt' + (p.st === 'ende' ? ', beendet' : p.st === 'pause' ? ', pausiert' : ''), n:`${p.n}, Stufe ${i + 1}`, c:x.c, d:fertig, ruht:!fertig, go:'p|' + p.id }); });
   if (!rows.length) return '';
   return `<h4>Wofür${b ? ` (${b.mind ? 'mindestens ' : ''}${b.sum} Stück offen)` : ''}</h4><ul class="plist">` + rows.map(r => `<li class="prow${r.d || r.ruht ? ' qd' : ''}"><div class="pinfo"><b>${esc(r.n)}</b> <span class="pm">${esc(r.t)}</span>`
@@ -8809,7 +9330,7 @@ function wkStOpen(n, back){
   }
   const R = wkStRezepte(s);
   if (R.length){ h += `<h4>Rezepte an dieser Station (${R.length})</h4>`;
-    for (const st of [...new Set(R.map(w => w.rez.stufe))]) h += `<h3 class="gh">${st ? 'Ab Stufe ' + st : 'Ohne Stufe'}</h3><ul class="group">` + R.filter(w => w.rez.stufe === st).map(w => wkItemRow(w, '')).join('') + '</ul>'; }
+    for (const st of [...new Set(R.map(w => w.rez.stufe))]) h += `<h2 class="gh">${st ? 'Ab Stufe ' + st : 'Ohne Stufe'}</h2><ul class="group">` + R.filter(w => w.rez.stufe === st).map(w => wkItemRow(w, '')).join('') + '</ul>'; }
   h += '<p class="fine">Nicht im Spiel getestet.</p>';
   $('#wkDetail').innerHTML = h; $('#wkBackBtn').focus();
 }
@@ -8836,7 +9357,7 @@ function wkWafRender(){
   for (const f of F){ const k = WS_TYP[f.typ] ? WS_TYP[f.typ][1] : 'Waffe'; if (!G.has(k)) G.set(k, []); G.get(k).push(f); }
   const nW = F.filter(f => wfWunsch(f) > wfStufe(f)).length;
   $('#wkWafInfo').textContent = `${F.length} Waffen. ` + (nW ? (nW === 1 ? 'Eine Wunsch-Waffe zählt' : nW + ' Wunsch-Waffen zählen') + ' im Bedarf.' : 'Setz bei einer Waffe eine Wunsch-Stufe, dann zählt ihr Material im Bedarf.');
-  $('#wkWafList').innerHTML = [...G.keys()].sort((a, b) => a.localeCompare(b, 'de')).map(k => `<h3 class="gh">${esc(k)}</h3><ul class="group">` + G.get(k).sort((a, b) => a.n.localeCompare(b.n)).map(f => {
+  $('#wkWafList').innerHTML = [...G.keys()].sort((a, b) => a.localeCompare(b, 'de')).map(k => `<h2 class="gh">${esc(k)}</h2><ul class="group">` + G.get(k).sort((a, b) => a.n.localeCompare(b.n)).map(f => {
     const l = wfStufe(f), w = wfWunsch(f), o = f.stufen.find(Boolean);
     return `<li${rrCls(o && o.r)}><button type="button" class="row" data-waf="${esc(f.n)}">${symKachel(o ? o.n : f.n)}<span class="rt"><span class="t1">${esc(f.n)}${w > l ? ` <span class="stb s-aktiv">Wunsch ${wfRoem(w, f)}</span>` : ''}</span>`
       + `<span class="t2">${l ? 'Meine Stufe ' + wfRoem(l, f) : 'Habe ich nicht'} · ${f.stufen.length === 1 ? '1 Stufe' : f.stufen.length + ' Stufen'}${f.amp ? ', mit Amplified' : ''}</span></span>${CHEV}</button></li>`; }).join('') + '</ul>').join('');
@@ -8894,7 +9415,7 @@ function wkHerRender(){
   $('#wkHerList').hidden = !L.length;
   $('#wkHerList').innerHTML = L.map(w => wkItemRow(w, w.rez.bank.map(b => WS_BANK[b]).join(' oder ') + (w.rez.stufe ? ' Stufe ' + w.rez.stufe : ''))).join('');
 }
-$('#wkHerQ').addEventListener('input', wkHerRender);
+let wkHerT = null; $('#wkHerQ').addEventListener('input', () => { clearTimeout(wkHerT); wkHerT = setTimeout(wkHerRender, 120); });   // Etappe 6 (P6)
 $('#wkHerFilBtn').addEventListener('click', () => filOpen(WK_HER_FIL));
 
 const bpWoher = s => s.replace(/\ball maps\b/g, 'alle Maps').replace(/\bAny container\b/g, 'jeder Container').replace(/\bany major map condition\b/gi, 'jede grosse Kartenbedingung')
@@ -9009,7 +9530,7 @@ $('#pgWerk').addEventListener('click', e => {
     wkKeep(() => { if (offen) wkStOpen(s.n); if (!wkCur || isMD()) wkStRender(); }); return; }
   const c = wkCur; if (!c) return;
   const neu = () => wkKeep(() => { if (c.t === 'st') wkStOpen(c.n); else if (c.t === 'set'){ wkSetOpen(c.n); if (isMD()) wkSetRender(); } else wkWafOpen(c.n); });
-  if ((b = T('[data-ntog]'))){ const n = b.dataset.ntog; if (inList(n)){ LIST = LIST.filter(x => x.n !== n); saveList(); shopRender(); } else qAddList(n, +b.dataset.c); neu(); return; }
+  if ((b = T('[data-ntog]'))){ const n = b.dataset.ntog; if (inList(n)) listeEntfernen(n); else qAddList(n, +b.dataset.c); neu(); return; }
   if ((b = T('[data-nopen]'))){ wkItemOpen(b.dataset.nopen); return; }
   if (c.t === 'st'){
     const s = wsStation(c.n);
@@ -9043,7 +9564,7 @@ $('#wkBpGo').addEventListener('click', () => { wkShow('bp'); scrollOben('werk');
 $('#wkBpBack').addEventListener('click', () => { wkShow('her'); scrollOben('werk'); const f = $('#wkBpGo'); if (f) f.focus(); });
 /* @datei app/kern/wissen-seite.js */
 
-const W_TITEL = { cond:'Kartenbedingungen', haendler:'Händler', trials:'Wochen-Trials', faq:'FAQ', einst:'Einstellungen', upd:'Updates' };
+const W_TITEL = { cond:'Kartenbedingungen', haendler:'Händler', trials:'Wochen-Trials', faq:'FAQ', einst:'Einstellungen', schutz:'Datenschutz und Quellen', upd:'Updates' };
 let wView = 'liste', wDirekt = false;   
 function wissenRender(){
   $('#wBack').parentElement.hidden = true;   
@@ -9064,6 +9585,7 @@ function wissenShow(v){
     if (wView === 'faq') faqRender();
     if (wView === 'haendler') hdRender();
     if (wView === 'trials') trialsRender();
+    if (wView === 'schutz') schutzRender();
   }
   scrollSetz('wissen', wView === 'liste');
 }
@@ -9081,6 +9603,31 @@ $('#wBack').addEventListener('click', () => tabZurueck('wissen'));
 $('#wdBack').addEventListener('click', () => { if (wDirekt){ wissenShow('liste'); tabZurueck('wissen'); } else { wissenShow('liste'); const r = $('#wRoot [data-wis]'); if (r) r.focus(); } });
 var WIS_DA = true;   
 wissenRender();
+
+// Etappe 7 (D3, R3, R6, E-14): Datenschutz und Quellen unter Wissen
+function schutzRender(){
+  const el = $('#wvSchutz'); if (!el || el.dataset.fertig) return;
+  const abschn = (t, x) => `<h3 class="h4">${t}</h3><p class="fine">${x}</p>`;
+  let h = abschn('Keine Cookies, keine Anmeldung', 'Die App setzt keine Cookies, braucht kein Konto und zählt nicht mit, was du tust. Sie lädt nichts von fremden Servern nach. Links zu arcraiders.com öffnen eine fremde Seite mit eigenen Datenschutzregeln.')
+    + abschn('Wo deine Daten liegen', 'Dein Stand bleibt im Browser auf diesem Gerät: Queststand, Einkaufsliste, Werkstatt, Sets, Skill-Plan, Navi mit laufendem Raid und letzter Route, eigene Kartenbilder, Einstellungen und das Datum der letzten Sicherung. Beschädigte Inhalte und der Stand vor dem letzten Laden einer Sicherung werden 30 Tage aufbewahrt und dann gelöscht. Andere Seiten unter derselben Adresse (zum Beispiel weitere Projekte unter derselben github.io-Adresse) können diesen Speicher technisch mitlesen.')
+    + abschn('Sicherungsdatei', 'Mit «Daten sichern» entsteht eine Datei mit deinem ganzen Stand und deinen Kartenbildern in deinen Downloads. Sie ist nicht verschlüsselt. Gib sie nur weiter, wenn alle sie sehen dürfen; Kartenbilder können zum Beispiel deinen Spielernamen zeigen.')
+    + abschn('Am iPhone', 'Die App auf dem Home-Bildschirm und die Seite in Safari haben je einen eigenen Speicher; was du an einem Ort einträgst, fehlt am anderen. Safari kann gespeicherte Daten löschen, wenn du die Seite 7 Tage lang nicht öffnest; sichere deshalb ab und zu unter Einstellungen, «Daten sichern».')
+    + abschn('Wer die Seite bereitstellt', 'Wird die App über GitHub Pages bereitgestellt, einen Dienst von GitHub (USA), sieht GitHub wie bei jeder Website beim Aufruf deine IP-Adresse, also die Nummer, unter der dein Gerät im Internet erreichbar ist.')
+    + abschn('Teilen-Links', 'Ein Teilen-Link enthält das Set, den Skill-Plan oder die Einkaufsliste lesbar, nicht verschlüsselt, bei einem Set auch seinen Namen. Der Teil nach # wird beim Öffnen nicht an den Server geschickt. Gib deinem Set keinen Namen, den nicht alle sehen sollen.')
+    + abschn('Daten löschen', 'Unter Einstellungen, «Alle Daten löschen», entfernst du alles auf diesem Gerät. Du kannst auch im Browser die Website-Daten für diese Seite löschen oder am iPhone die App vom Home-Bildschirm entfernen.')
+    + abschn('Deine Rechte', 'Die App schickt dem Betreiber keine Daten; alles liegt bei dir. Auskunft und Löschung erledigst du selbst: unter Einstellungen siehst, sicherst und löschst du alles. Für Daten, die GitHub beim Aufruf erfasst, gilt die Datenschutzerklärung von GitHub.')
+    + abschn('Fan-Projekt', 'Der Raider Atlas ist ein inoffizielles Fan-Projekt. Er ist nicht mit Embark Studios AB verbunden und wird nicht von ihr unterstützt. ARC Raiders und Embark sind Marken von Embark Studios AB. Die App enthält keine Grafiken aus dem Spiel; Karten und Symbole sind selbst gezeichnet.');
+  // Quellen: wie viele Angaben stützen sich auf welche Website?
+  const zahl = new Map();
+  for (const v of Object.values(SRCS)){ const q = String((v || [])[0] || '').split(':')[0]; if (q) zahl.set(q, (zahl.get(q) || 0) + 1); }
+  const nr = q => +q.slice(1) || 0, alle = [...zahl.entries()].sort((a, b) => b[1] - a[1] || nr(a[0]) - nr(b[0]));
+  const reihen = alle.filter(([q]) => QUELLEN_NAMEN[q]), unbekannt = alle.filter(([q]) => !QUELLEN_NAMEN[q]);
+  if (unbekannt.length) reihen.push(['?', unbekannt.reduce((a, [, n]) => a + n, 0), unbekannt.length]);   // Prüfrunde H10
+  h += '<h3 class="h4">Quellen</h3><p class="fine">Hier steht, woher die Angaben stammen und wie gut sie belegt sind. Getestet im Spiel ist nichts davon. «Gesichert»: mindestens 3 voneinander unabhängige Websites nennen dasselbe. «Einfach belegt»: 1 oder 2 Websites. «Annahme»: keine Quelle gefunden, eigene Schätzung. Widersprechen sich Quellen, nennt die App beide. Die Zahl rechts zählt die Belegstellen in den Daten; ein Beleg kann viele Einträge abdecken.</p>'
+    + '<ul class="group in">' + reihen.map(([q, n, m]) => `<li class="srow"><span>${esc(q === '?' ? m + ' weitere Quellen, deren Namen nicht mehr bekannt sind' : QUELLEN_NAMEN[q])}</span><span class="sval">${n} ${n === 1 ? 'Beleg' : 'Belege'}</span></li>`).join('') + '</ul>'
+    + '<p class="fine">Weitere Grundlagen: offizielle Seite arcraiders.com (Patch-Notes, Kartenbedingungen), interaktive Karten als Vorlage für die selbst gezeichneten Kartenskizzen, und der offene Datensatz «arcraiders-data» von RaidTheory (github.com/RaidTheory/arcraiders-data; Lizenz im FAQ unter «Offene Daten und Lizenzen»).</p>';
+  el.innerHTML = h; el.dataset.fertig = '1';
+}
 /* @datei app/kern/skills.js */
 
 const SK_ZWEIG = { C:'Conditioning', M:'Mobility', S:'Survival' };
@@ -9089,7 +9636,7 @@ const SKILLS = (() => {
   if (typeof SKILL_DATA === 'undefined') return [];
   const seiten = ks => new Set(String(ks || '').split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
   return SKILL_DATA.trim().split('\n').map(l => { const z = l.split('|');
-    return { z:z[0], n:z[1], max:+z[2], art:z[3], x:z[4], zahl:z[5] || '', ver:seiten(z[6]) >= 2, verMax:seiten(z[7]) >= 2, andere:z[8] || '' }; });
+    return { z:z[0], n:z[1], max:+z[2], art:z[3], x:z[4], zahl:z[5] || '', ver:seiten(z[6]) >= SIEGEL_MIN, verMax:seiten(z[7]) >= SIEGEL_MIN, andere:z[8] || '' }; });
 })();
 const SK_R = typeof SKILL_REGELN === 'undefined' ? { mitte:10, ende:[30, 40], punkte:76, expJe:5, expMax:15, reset:2000 } : SKILL_REGELN;
 const SK_MAX = SK_R.punkte + SK_R.expMax;
@@ -9186,7 +9733,7 @@ const HD = (() => {
   if (typeof HAENDLER_DATA === 'undefined' || typeof HAENDLER === 'undefined') return leer;
   const seiten = ks => new Set(String(ks || '').split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
   const angebote = HAENDLER_DATA.trim().split('\n').map((l, i) => { const z = l.split('|'), a = z[6] ? z[6].split('/') : null;
-    return { i, h:z[0], n:z[1], menge:+z[2] || 1, preis:+z[3], vorrat:z[4] ? +z[4] : 0, ver:seiten(z[5]) >= 2,
+    return { i, h:z[0], n:z[1], menge:+z[2] || 1, preis:+z[3], vorrat:z[4] ? +z[4] : 0, ver:seiten(z[5]) >= SIEGEL_MIN,
       alt:a ? { preis:a[0] ? +a[0] : null, vorrat:a[1] === '-' ? 0 : a[1] ? +a[1] : null } : null }; });
   const fuer = new Map(); for (const a of angebote){ if (!fuer.has(a.n)) fuer.set(a.n, []); fuer.get(a.n).push(a); }
   return { da:true, namen:Object.keys(HAENDLER), angebote, fuer };
@@ -9254,15 +9801,12 @@ const TR = (() => {
   if (typeof TRIALS_DATA === 'undefined' || typeof TRIALS_WOCHE === 'undefined') return { da:false, liste:[], woche:null };
   const seiten = ks => new Set(String(ks || '').split('+').filter(Boolean).map(k => String((SRCS[k] || [k])[0]).split(':')[0])).size;
   const liste = TRIALS_DATA.trim().split('\n').map(l => { const z = l.split('|');
-    return { en:z[0], de:z[1], wo:z[2], waffe:z[3] || '', pkt:z[4] || '', ver:seiten(z[5]) >= 2, verPkt:seiten(z[6]) >= 2 }; });
-  return { da:true, liste, woche:TRIALS_WOCHE, ver:seiten(TRIALS_WOCHE.s) >= 2 };
+    return { en:z[0], de:z[1], wo:z[2], waffe:z[3] || '', pkt:z[4] || '', ver:seiten(z[5]) >= SIEGEL_MIN, verPkt:seiten(z[6]) >= SIEGEL_MIN }; });
+  return { da:true, liste, woche:TRIALS_WOCHE, ver:seiten(TRIALS_WOCHE.s) >= SIEGEL_MIN };
 })();
 const TR_R = typeof TRIALS_REGELN === 'undefined' ? {} : TRIALS_REGELN;
 
-function trHeute(now){
-  try { const p = {}; new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Zurich', year:'numeric', month:'2-digit', day:'2-digit' }).formatToParts(now || new Date()).forEach(x => { p[x.type] = +x.value; });
-    return Date.UTC(p.year, p.month - 1, p.day); } catch(_){ const d = now || new Date(); return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); }
-}
+function trHeute(now){ return zuerichTag(now); }
 
 function trStand(now){ if (!TR.da) return 'alt'; const h = trHeute(now), von = updZahl(TR.woche.von), bis = updZahl(TR.woche.bis); return h > bis ? 'alt' : h < von ? 'bald' : 'jetzt'; }
 
@@ -9270,13 +9814,13 @@ const TR_TAG = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag',
 const trText = s => { const ms = updZahl(s); if (!ms) return s; const d = new Date(ms); return TR_TAG[d.getUTCDay()] + ', ' + s; };
 const trWo = t => t.wo === 'alle' ? 'Alle Karten' : t.wo;
 function trSub(){ const el = $('#wTrSub'); if (!el) return;
-  el.textContent = !TR.da ? 'Keine Daten' : trStand() === 'alt' ? 'Abgelaufen: die neue Woche folgt mit dem nächsten Update' : `${TR.liste.length} Aufgaben bis ${trText(TR.woche.bis)}`; }
+  el.textContent = !TR.da ? 'Keine Daten' : trStand() === 'alt' ? 'Abgelaufen: die neue Woche ist noch nicht eingetragen' : trStand() === 'bald' ? `${TR.liste.length} Aufgaben ab ${trText(TR.woche.von)}` : `${TR.liste.length} Aufgaben bis ${trText(TR.woche.bis)}`; }
 function trialsRender(){
   const el = $('#wvTrials'); if (!el) return;
   if (!TR.da){ el.innerHTML = '<p class="fine">Keine Trials-Daten geladen.</p>'; return; }
   const W = TR.woche, st = trStand(), regel = r => r ? `<p class="fine">${esc(r.x)} ${qVer(r.s.split('+'))}</p>` : '';
   let h = `<p class="foot" id="trKopf">Saison ${W.saison}, Woche ${W.woche}: ${esc(trText(W.von))} bis ${esc(trText(W.bis))} ${TR.ver ? VER2 : VER1}</p>`;
-  if (st === 'alt') h += `<div class="annbox" id="trAlt"><b>Abgelaufen:</b> Diese Aufgaben galten bis ${esc(trText(W.bis))}. Im Spiel laufen schon die nächsten. Das Wochen-Update trägt sie mittwochs früh ein.</div>`;
+  if (st === 'alt') h += `<div class="annbox" id="trAlt"><b>Abgelaufen:</b> Diese Aufgaben galten bis ${esc(trText(W.bis))}. Im Spiel laufen schon die nächsten. Sie werden von Hand nachgeführt; bis dahin gilt, was du im Spiel siehst.</div>`;
   if (st === 'bald') h += `<div class="annbox"><b>Noch nicht gestartet:</b> Diese Aufgaben beginnen am ${esc(trText(W.von))}.</div>`;
   h += '<ul class="plist" id="trList">' + TR.liste.map(t => {
     const f = t.waffe && typeof WAFFEN !== 'undefined' ? WAFFEN.get(t.waffe) : null;
@@ -9306,11 +9850,12 @@ const teilAus64 = s => { s = s.replace(/-/g, '+').replace(/_/g, '/'); while (s.l
 const teilLink = code => location.href.split('#')[0] + '#t=' + code;
 
 function teilLesen(txt){
-  const m = String(txt || '').trim().match(/(?:#t=|^)([A-Za-z0-9_-]{8,})$/); if (!m) return null;
+  const m = String(txt || '').trim().slice(0, 20000).replace(/[.,;:!?)\]}>»«"'\s]+$/, '').match(/(?:#t=|^)([A-Za-z0-9_-]{8,})$/); if (!m) return null;   // Satzzeichen am Ende (C15), Längengrenze (S2)
   try { const o = JSON.parse(teilAus64(m[1])); return o && typeof o === 'object' && typeof o.v === 'number' && (o.v !== TEIL_V || ['s', 'k', 'l'].includes(o.k)) ? o : null; } catch(_){ return null; }
 }
 const teilZahl = (v, min, max) => { v = Math.floor(+v); return isFinite(v) ? Math.max(min, Math.min(max, v)) : min; };
-const teilPaare = a => Array.isArray(a) ? a.slice(0, TEIL_MAX).filter(x => Array.isArray(x) && typeof x[0] === 'string') : [];
+const teilPaare = a => Array.isArray(a) ? a.slice(0, TEIL_MAX).filter(x => Array.isArray(x) && typeof x[0] === 'string' && isFinite(Math.floor(+x[1]))) : [];   // ungültige Mengen fallen weg (C15)
+const teilUngueltig = a => Array.isArray(a) ? a.slice(0, TEIL_MAX).length - teilPaare(a).length : 0;
 
 function teilSet(s){ return { v:TEIL_V, k:'s', n:s.n, t:s.teile.map(t => [t.n, t.c]) }; }
 function teilSkill(){ return { v:TEIL_V, k:'k', m:SKP.max, p:SKILLS.filter(s => skP(s.n)).map(s => [s.n, skP(s.n)]) }; }
@@ -9319,7 +9864,7 @@ function teilListe(){ return { v:TEIL_V, k:'l', t:LIST.map(x => [x.n, x.need]) }
 function teilPruefen(o){
   if (!o) return { ok:false, text:'Das ist kein gültiger Link oder Code aus dem Raider-Atlas.' };
   if (o.v !== TEIL_V) return { ok:false, text:'Dieser Plan stammt aus einer anderen Version des Raider-Atlas. Lade die App neu und versuch es noch einmal.' };
-  let weg = 0;
+  let weg = teilUngueltig(o.t) + teilUngueltig(o.p);   // ungültige Einträge mitzählen (C15)
   if (o.k === 's'){
     const teile = [];
     for (const [n, c] of teilPaare(o.t)){ if (teile.some(t => t.n === n)) continue; const f = WAFFEN.get(n);
@@ -9439,7 +9984,8 @@ const SU_FUNK = [
   ['Eigene Karte', 'Eigenen Screenshot unter die Marker legen', 'eigene karte screenshot unterlage kalibrieren', suKarte(() => { openCal(); revealSheet(); })],
   ['Marker filtern', 'Ebenen der Karte ein- und ausblenden', 'ebenen marker filtern layer anzeigen', suKarte(() => { const b = $('#btnLayers'); if (b && $('#layerMenu').hidden) b.click(); })],
   ['Geteilten Plan öffnen', 'Link oder Code von deinem Squad einfügen', 'teilen geteilt code link einfugen squad offnen', suWis('einst')],
-  ['Einstellungen', 'Sparmodus, Abendlicht, Namen deutsch oder englisch', 'einstellungen sparmodus abendlicht sprache namen englisch deutsch', suWis('einst')],
+  ['Datenschutz und Quellen', 'Was gespeichert wird, woher die Angaben stammen', 'datenschutz quellen cookies daten speicher herkunft lizenz fan inoffiziell embark', suWis('schutz')],
+  ['Einstellungen', 'Sparmodus, Abendlicht, Namen deutsch oder englisch', 'einstellungen sparmodus abendlicht sprache namen englisch deutsch daten sichern laden loschen sicherung', suWis('einst')],
   ['Hilfe und alle Funktionen', 'Worauf die Infos beruhen, was die App kann', 'faq hilfe funktionen anleitung help', suWis('faq')],
   ['Updates', 'Letzte Prüfung und nächstes Update', 'updates datenstand aktualisierung', suWis('upd')]
 ];
@@ -9481,11 +10027,11 @@ function suRender(){
     const n = SU_TREFFER.length;
     $('#suchInfo').textContent = n ? (n === 1 ? '1 Treffer' : n + ' Treffer') + (its.length > SU_MAX || qs.length > SU_MAX ? '. Genauer tippen zeigt weitere.' : '.') : 'Nichts gefunden. Versuch einen Teil des Namens, deutsch oder englisch.';
   }
-  $('#suchRes').innerHTML = G.map(g => `<h3 class="gh">${esc(g.titel)}</h3><ul class="group in">${g.L.join('')}</ul>`).join('');
+  $('#suchRes').innerHTML = G.map(g => `<h2 class="gh">${esc(g.titel)}</h2><ul class="group in">${g.L.join('')}</ul>`).join('');
 }
 function openSuche(){ $('#suchQ').value = ''; suRender(); openModal($('#suchDlg'), '#suchQ'); }
-$('#suchQ').addEventListener('input', suRender);
-$('#suchQ').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const b = $('#suchRes [data-su]'); if (b) b.click(); } });
+let suchQT = null; $('#suchQ').addEventListener('input', () => { clearTimeout(suchQT); suchQT = setTimeout(suRender, 100); });   // Etappe 6 (P6)
+$('#suchQ').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); if (suchQT){ clearTimeout(suchQT); suchQT = null; suRender(); } const b = $('#suchRes [data-su]'); if (b) b.click(); } });
 $('#suchRes').addEventListener('click', e => { const b = e.target.closest('[data-su]'); if (!b) return; const fn = SU_TREFFER[+b.dataset.su]; if (fn) suGo(fn)(); });
 $('#suchZu').addEventListener('click', () => closeModal($('#suchDlg')));
 $('#suchDlg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal($('#suchDlg')); });
@@ -9517,13 +10063,16 @@ function stPlan(){
   const muss = new Set();
   for (const x of plan.values()) if (x.neu && (x.done || x.cur)) for (const v of qAhnen(x.q)) muss.add(v);
   for (const v of muss){ const x = plan.get(v); if (!x) plan.set(v, { q:v, done:true, cur:false, neu:false, vor:true }); else if (!x.done){ x.done = true; x.cur = false; x.vor = true; } }
+  // Prüfrunde K6 (Fund C5): wieder geöffnete Quests öffnen auch erledigte Folge-Quests anderer Händler
+  const offen = [...plan.values()].filter(x => x.neu && !x.done);
+  for (const x of offen) for (const n of qNachfahren(x.q)){ const y = plan.get(n); if (!y){ if (qDone(n)) plan.set(n, { q:n, done:false, cur:false, neu:false, folge:true }); } else if (!y.neu && y.done){ y.done = false; y.cur = false; y.folge = true; } }
   return [...plan.values()];
 }
 function stInfo(){
   const p = stPlan(), abL = p.filter(x => x.done && !qDone(x.q)), ab = abL.length, vor = abL.filter(x => x.vor).length, auf = p.filter(x => !x.done && qDone(x.q)).length;
-  $('#stInfo').textContent = (ab || auf) ? `${ab} ${ab === 1 ? 'Quest wird' : 'Quests werden'} abgehakt` + (vor ? `, davon ${vor} als Voraussetzung bei anderen Händlern` : '') + (auf ? `, ${auf} wieder geöffnet` : '') + '.' : 'Keine Änderung an den Haken.';
+  $('#stInfo').textContent = (ab || auf) ? `${ab} ${ab === 1 ? 'Quest wird' : 'Quests werden'} abgehakt` + (vor ? `, davon ${vor} als Voraussetzung bei anderen Händlern` : '') + (auf ? `, ${auf} wieder geöffnet` : '') + (p.filter(x => x.folge).length ? ` (davon ${p.filter(x => x.folge).length} Folge-Quests bei anderen Händlern)` : '') + '.' : 'Keine Änderung an den Haken.';
 }
-function stOpen(){ stRender(); openModal(stDlg, '#stSave'); }
+function stOpen(){ stRender(); openModal(stDlg, '#stTitle'); }
 function stApply(){
   const p = stPlan(), verfolgen = $('#stTrack').checked;
   for (const x of p){ if (x.done !== qDone(x.q)) qSetDone(x.q, x.done); }
@@ -9556,7 +10105,7 @@ function hudRender(){
   if (op.length) parts.push(op.length + (op.length === 1 ? ' Material' : ' Materialien'));
   
   $('#hudN').textContent = parts.join(' · ') || 'leer';
-  $('#hudTog').setAttribute('aria-label', 'Mein Raid, ' + (parts.join(', ') || 'leer') + (hudShown() ? ', einklappen' : ', ausklappen'));
+  $('#hudTog').setAttribute('aria-label', 'Mein Raid, ' + (parts.join(', ') || 'leer') );
   let h = '';
   for (const q of T){
     const mats = q.need.filter(x => !x.quest && qItem(x.n));
@@ -9635,8 +10184,13 @@ const LOOT_ART = { w:['wcase', 'Waffenkiste', NZ.wcase], b:['pack', 'Rucksack', 
 const PRIO_NAME = { 4:'verfolgte Quest', 3:'nächste Quest', 2:'Material', 1:'Top-Loot' };
 
 const mmss = s => { const v = Math.max(0, Math.round(s)); return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0'); };
-function parseRest(t){ const m = /^\s*(\d{1,2})(?:[:.,](\d{1,2}))?\s*$/.exec(String(t || '')); if (!m) return null;
-  const s = (+m[1]) * 60 + (+(m[2] || 0)); return s > 0 && s <= 45 * 60 ? s : null; }
+const parseRest = restLesen;   // Etappe 3: Sekunden über 59 ungültig, «12,5» = 12:30 (Fund T6)
+function restFehlerText(t){ const r = String(t == null ? '' : t).trim(), m = /^(\d{1,2})(?:[:.,](\d{1,2}))?$/.exec(r);
+  if (!r) return 'Bitte trag die Restzeit ein, zum Beispiel 30:00.';
+  if (!m) return 'Bitte als Minuten:Sekunden eingeben, zum Beispiel 24:30.';
+  if (m[2] && m[2].length === 2 && +m[2] > 59) return 'Sekunden gehen nur bis 59, zum Beispiel 24:59.';
+  if (+m[1] * 60 + (+m[2] || 0) <= 0) return 'Die Zeit ist schon abgelaufen. Trag eine Restzeit über 0:00 ein.';
+  return 'Höchstens 45:00. Länger dauert ein Raid nicht.'; }
 const naviBudget = () => (parseRest(NAVI.rest) || 1800) / 60 - NZ.sicher;
 const fmin = x => (Math.round(x * 2) / 2).toString().replace('.', ',');
 const walkMin = (m, L) => L * (MAP_M[m] || 12) * RZ.umweg / RZ.lauf / 60;
@@ -9660,7 +10214,7 @@ function whereText(m, x, z){
 }
 
 const startsOf = m => (typeof MAP_START !== 'undefined' && MAP_START[m]) || [];
-const SRC_TXT = { hw:'Verifiziert', h:'Einfach belegt', w:'Einfach belegt' };   
+const SRC_TXT = { hw:'Einfach belegt (2 Karten)', h:'Einfach belegt', w:'Einfach belegt' };   
 function startInfo(m, i){
   const s = startsOf(m)[i]; if (!s) return null;
   const aus = Math.abs(s[0]) > 54 || Math.abs(s[1]) > 54;
@@ -9886,7 +10440,7 @@ function raidLaufRender(){
   const el = $('#raidLauf'), r = NAVI.run && MAPS[NAVI.run.m] ? NAVI.run : null;
   if (el){ el.hidden = !r;
     if (r){ const s = typeof raidRest === 'function' ? raidRest() : 0, nd = (r.done || []).length;
-      el.innerHTML = `<h3 class="gh">Laufender Raid</h3><ul class="group"><li><button type="button" class="row" id="raidZum"><span class="thumb">${thumbSVG(r.m)}</span><span class="rt"><span class="t1">Raid auf ${esc(MAPS[r.m].short)}</span>`
+      el.innerHTML = `<h2 class="gh">Laufender Raid</h2><ul class="group"><li><button type="button" class="row" id="raidZum"><span class="thumb">${thumbSVG(r.m)}</span><span class="rt"><span class="t1">Raid auf ${esc(MAPS[r.m].short)}</span>`
         + `<span class="t2">${s > 0 ? 'Noch etwa ' + raidRestTxt(s) + ' Minuten' : 'Zeit abgelaufen'}${nd ? ' · ' + nd + ' erledigt' : ''} · zurück zum Navi</span></span>${CHEV}</button></li></ul>`; }
     else el.innerHTML = ''; }
   const sub = $('#raidEndeSub'); if (sub){ const n = openItems().length, t = typeof hudTracked === 'function' ? hudTracked().length : 0, T = [];
@@ -10107,7 +10661,7 @@ $('#naviDetail').addEventListener('change', e => {
   if (t.id === 'naviSb') naviSet(() => { NAVI.sb = t.checked; });
   if (t.id === 'naviQi') naviSet(() => { NAVI.qi[NAVI.m] = t.checked; });
   if (t.id === 'naviUhr'){ NAVI.uhr = t.checked; saveNavi(); }
-  if (t.id === 'naviRest'){ const v = parseRest(t.value); if (v) naviSet(() => { NAVI.rest = mmss(v); }); else { t.value = NAVI.rest; } }
+  if (t.id === 'naviRest'){ const v = parseRest(t.value); if (v) naviSet(() => { NAVI.rest = mmss(v); }); else { snackShow(restFehlerText(t.value)); t.value = NAVI.rest; } }
 });
 
 function naviPick(m){
@@ -10245,7 +10799,7 @@ $('#naviBox').addEventListener('click', e => {
       quests:naviPlanCache ? naviPlanCache.quests.filter(c => c.state === 'plan').map(c => c.q.en) : [] };
     saveNavi(); RUN = { m, at:Date.now() }; saveRun(); naviMarkDone(); const i = naviTarget(); if (i >= 0) selectStop(i, true); renderCard(); naviTickOn(); return; }
   if (t.closest('#naviEdit')){ naviOpen(m); return; }
-  const d = t.closest('[data-ndone]'); if (d){ naviDone(d.dataset.ndone, 'done'); return; }
+  const d = t.closest('[data-ndone]'); if (d){ if (Date.now() < naviMiniSperre) return; naviMiniSperre = Date.now() + 600; naviDone(d.dataset.ndone, 'done'); return; }   // Prüfrunde: Doppeltipp-Sperre auch hier
   const s = t.closest('[data-nskip]'); if (s){ naviDone(s.dataset.nskip, 'skip'); return; }
   if (t.closest('#naviGoExit')){ for (const st of ROUTE.stops) if (!st.start && !st.exit && !st.done) NAVI.run.skip.push(st.key); saveNavi(); naviMarkDone(); const i = naviTarget(); if (i >= 0) selectStop(i, true); renderCard(); return; }
   if (t.closest('#naviZu')){ const b = $('#naviZuBox'); b.hidden = !b.hidden; naviZuAuf = !b.hidden; t.closest('#naviZu').setAttribute('aria-expanded', String(!b.hidden)); if (!b.hidden){ const f = $('#naviZuSel') || $('#naviZuBox'); if (f.focus) f.focus(); } return; }
@@ -10259,9 +10813,10 @@ $('#naviBox').addEventListener('click', e => {
     if (fehler){ f.textContent = fehler; f.hidden = false; return; }
     naviExitWechsel($('#naviZuSel').value, ez, clk == null ? rv : null); return; }
   if (t.closest('#naviTime')){ const b = $('#naviTimeBox'); b.hidden = !b.hidden; if (!b.hidden) $('#naviTimeIn').focus(); return; }
-  if (t.closest('#naviTimeOk')){ const v = parseRest($('#naviTimeIn').value); if (!v) { $('#naviTimeIn').value = ''; $('#naviTimeIn').focus(); return; }
+  if (t.closest('#naviTimeOk')){ const v = parseRest($('#naviTimeIn').value); if (!v) { snackShow(restFehlerText($('#naviTimeIn').value)); $('#naviTimeIn').value = ''; $('#naviTimeIn').focus(); return; }
     Object.assign(NAVI.run, { uhr:true, t0:Date.now(), rest0:v }); saveNavi(); renderCard(); naviTickOn(); return; }
-  if (t.closest('#naviStop')){ naviZuAuf = false; NAVI.run = null; saveNavi(); naviMarkDone(); renderCard(); return; }
+  if (t.closest('#naviStop')){ const alt = NAVI.run; naviZuAuf = false; NAVI.run = null; saveNavi(); naviMarkDone(); renderCard();
+    snackShow('Run abgebrochen.', () => { NAVI.run = alt; saveNavi(); naviMarkDone(); renderCard(); }); return; }
 });
 $('#naviBox').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'naviTimeIn'){ e.preventDefault(); $('#naviTimeOk').click(); }
   if (e.key === 'Enter' && (e.target.id === 'naviZuIn' || e.target.id === 'naviZuRest')){ e.preventDefault(); $('#naviZuOk').click(); } });
@@ -10290,7 +10845,9 @@ function naviExitWechsel(name, ez, restNeu){
 }
 
 function naviMiniLabel(){ if (!NAVI.run || NAVI.run.m !== ROUTE.view) return 'Raid starten'; const t = naviTarget(); return t >= 0 && ROUTE.stops[t].exit ? 'Draussen' : 'Erledigt'; }
+let naviMiniSperre = 0;
 function naviMini(){
+  if (Date.now() < naviMiniSperre) return; naviMiniSperre = Date.now() + 600;   // Etappe 4 (C3): zweiter Tipp startet nicht «Erledigt»
   if (!NAVI.run || NAVI.run.m !== ROUTE.view){ const b = $('#naviStart'); if (b) b.click(); return; }
   const t = naviTarget(); if (t >= 0) naviDone(ROUTE.stops[t].key, 'done');
 }
@@ -10390,6 +10947,9 @@ function snackShow(text, undo){
 }
 function snackHide(){ $('#snack').hidden = true; naviUndo = null; clearTimeout(snackTimer); }
 $('#snackB').addEventListener('click', () => { const u = naviUndo; snackHide(); if (u) u(); });
+// Prüfrunde B3: Solange Fokus oder Maus auf der Leiste ist, läuft die Zeit nicht ab
+['focusin', 'mouseenter'].forEach(t => $('#snack').addEventListener(t, () => clearTimeout(snackTimer)));
+['focusout', 'mouseleave'].forEach(t => $('#snack').addEventListener(t, () => { if ($('#snack').hidden || $('#snack').matches(':hover') || $('#snack').contains(document.activeElement)) return; clearTimeout(snackTimer); snackTimer = setTimeout(snackHide, naviUndo ? 6000 : 3000); }));
 function naviResetNew(){
   const n = naviOwnCount();
   const snap = { navi:JSON.stringify(NAVI), list:JSON.stringify(LIST), run:JSON.stringify(RUN),
@@ -10533,7 +11093,7 @@ function einrRender(){
   if (sub) sub.textContent = n === S.length ? 'Alles erledigt' : `${n} von ${S.length} erledigt · Queststand, Werkstatt, erster Raid`;
   el.hidden = n === S.length || einrLies(EINR_ZU_KEY);
   if (el.hidden){ el.innerHTML = ''; return; }
-  el.innerHTML = `<h3 class="gh" id="einrH">Erste Schritte <span class="einrn">${n} von ${S.length}</span></h3><ul class="group">`
+  el.innerHTML = `<h2 class="gh" id="einrH">Erste Schritte <span class="einrn">${n} von ${S.length}</span></h2><ul class="group">`
     + S.map(s => `<li><button type="button" class="row" data-einr="${s.k}"><span class="ck${s.ok ? ' ok' : ''}" aria-hidden="true">${s.ok ? '<svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-9"/></svg>' : ''}</span>`
       + `<span class="rt"><span class="t1">${esc(s.t)}</span><span class="t2">${s.ok ? 'Erledigt · ' : ''}${esc(s.x)}</span></span>${EINR_CH}</button></li>`).join('')
     + '</ul><div class="btncol"><button type="button" class="bs" id="einrZu">Ausblenden</button></div>'
@@ -10590,7 +11150,7 @@ function updInfo(now){
   const u = updInfo();
   $('#updLast').textContent = u.letzt ? updText(u.letzt) : 'unbekannt';
   $('#updData').textContent = u.daten ? updText(u.daten) : 'unbekannt';
-  if (u.next) $('#updNext').textContent = u.heute ? 'heute früh' : updText(u.next); else $('#updNextRow').hidden = true;
+  $('#updNextRow').hidden = true;   // Etappe 7 (R8, E-16): kein festes Update-Datum mehr versprechen
   $('#updFoot').textContent = 'Letztes Update: ' + (u.letzt ? updText(u.letzt) : 'unbekannt') + '.' + (u.next ? ' Nächstes geplant: ' + (u.heute ? 'heute früh' : updText(u.next)) + '.' : '');
 })();
 document.addEventListener('pointerdown', wake, true);
@@ -10702,6 +11262,222 @@ function uiRestore(hashId, lastId){
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
   requestAnimationFrame(() => { tryIt(() => { const sc = SCROLL[UI.tab]; if (sc && sc.k === skey()) $('#pages').scrollTop = sc.y; }); uiReady = true; });
 }
+/* @datei app/kern/sicherung.js */
+// Datensicherung (Etappe 2): Daten sichern (Datei), Daten laden (mit Vorschau), alle Daten löschen.
+// Format der Datei: { app:'raider-atlas', format:1, version, erstellt, daten:{ Schlüssel: Text }, karten:{ Ansicht: Bild als data-URL } }
+const SICH_FORMAT = 1, SICH_MAX = 30 * 1024 * 1024, SICH_VOR = 'raider-atlas:vor-import', SICH_ZULETZT = 'raider-atlas:zuletzt-gesichert';
+
+function sichSchluessel(nurDefekt){
+  const a = [];
+  for (let i = 0; i < localStorage.length; i++){ const k = localStorage.key(i);
+    if (!k || !k.startsWith(SP_PRAEFIX) || k === SICH_VOR) continue;
+    if (nurDefekt ? k.startsWith(SP_DEFEKT) : true) a.push(k); }
+  return a.sort();
+}
+// Prüfrunde: zweite Datenbank «raider-atlas-vorher» für die Kartenbilder des vorherigen Stands (nicht im localStorage, Fund N1)
+const SICH_VOR_DB = 'raider-atlas-vorher';
+function sichDb(name = 'raider-atlas'){ return new Promise(ok => { try { const r = indexedDB.open(name, 1);
+  r.onupgradeneeded = () => { try { r.result.createObjectStore('maps'); } catch(_){} };
+  r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); } catch(_){ ok(null); } }); }
+async function sichKartenLesen(name){
+  const db = await sichDb(name); if (!db) return {};
+  const paare = await new Promise(ok => { try { const tx = db.transaction('maps', 'readonly'), st = tx.objectStore('maps'), aus = [];
+    const c = st.openCursor(); c.onsuccess = () => { const z = c.result; if (z){ aus.push([z.key, z.value]); z.continue(); } else ok(aus); }; c.onerror = () => ok([]); } catch(_){ ok([]); } });
+  db.close();
+  const karten = {};
+  for (const [k, v] of paare) if (v instanceof Blob) karten[k] = await new Promise(ok => { const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = () => ok(null); f.readAsDataURL(v); });
+  for (const k in karten) if (!karten[k]) delete karten[k];
+  return karten;
+}
+/** Wandelt data-URLs in Bilder um; wirft einen Fehler, wenn eines nicht lesbar ist (Fund N2). */
+async function sichKartenBlobs(karten){
+  const aus = [];
+  for (const [k, url] of Object.entries(karten || {})){
+    if (typeof url !== 'string' || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(url)) throw new Error('Bild ' + k);
+    const b = await (await fetch(url)).blob(); if (!b.size) throw new Error('Bild ' + k);
+    if (typeof createImageBitmap === 'function') try { (await createImageBitmap(b)).close(); } catch(_){ throw new Error('Bild ' + k); }   // wirklich ein Bild (S2)
+    aus.push([k, b]); }
+  return aus;
+}
+async function sichKartenSchreiben(eintraege, name){
+  const db = await sichDb(name); if (!db) throw new Error('Bildspeicher nicht verfügbar');
+  await new Promise((ok, fail) => { try { const tx = db.transaction('maps', 'readwrite'), st = tx.objectStore('maps'); st.clear();
+    for (const [k, b] of eintraege) st.put(b, k); tx.oncomplete = ok; tx.onerror = () => fail(tx.error); tx.onabort = () => fail(tx.error); } catch(e){ fail(e); } });
+  db.close();
+}
+async function sichKartenRoh(name){   // Bilder direkt als Blobs (für die Kopie des vorherigen Stands)
+  const db = await sichDb(name); if (!db) return [];
+  const paare = await new Promise(ok => { try { const tx = db.transaction('maps', 'readonly'), st = tx.objectStore('maps'), aus = [];
+    const c = st.openCursor(); c.onsuccess = () => { const z = c.result; if (z){ aus.push([z.key, z.value]); z.continue(); } else ok(aus); }; c.onerror = () => ok([]); } catch(_){ ok([]); } });
+  db.close(); return paare.filter(([, v]) => v instanceof Blob);
+}
+
+async function sicherungErstellen(art){
+  const daten = {};
+  for (const k of sichSchluessel(art === 'defekt')) daten[k] = localStorage.getItem(k);
+  return Object.assign({ app:'raider-atlas', format:SICH_FORMAT, version:APP_VERSION, erstellt:new Date().toISOString(), daten }, art === 'defekt' ? { art:'defekt' } : { karten: await sichKartenLesen() });
+}
+async function sicherungHerunterladen(art){
+  try {
+    const s = await sicherungErstellen(art), tag = s.erstellt.slice(0, 10);
+    const blob = new Blob([JSON.stringify(s)], { type:'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = (art === 'defekt' ? 'raider-atlas-alter-inhalt-' : 'raider-atlas-sicherung-') + tag + '.json';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+    if (art !== 'defekt') try { localStorage.setItem(SICH_ZULETZT, s.erstellt); } catch(_){}
+    sichStatus(art === 'defekt' ? 'Alter Inhalt als Datei gespeichert. Bewahre ihn auf, falls du ihn später brauchst.' : 'Sicherung gespeichert. Du findest sie bei deinen Downloads.');
+  } catch(_){ sichStatus('Die Sicherung konnte nicht erstellt werden. Versuche es noch einmal oder starte die App neu.'); }
+  sichRender();
+}
+
+/** Prüft eine Sicherungsdatei. Ergebnis { ok, text } oder { ok:true, s, zusammenfassung:[…] } */
+function sicherungPruefen(text){
+  const nichts = ' Es wurde nichts verändert.';
+  if (typeof text !== 'string' || text.length > SICH_MAX) return { ok:false, text:'Diese Datei ist zu gross für eine Sicherung (höchstens 30 MB).' + nichts };
+  let s; try { s = JSON.parse(text); } catch(_){ return { ok:false, text:'Diese Datei lässt sich nicht lesen. Vielleicht ist sie beschädigt oder unvollständig.' + nichts }; }
+  if (!s || typeof s !== 'object' || s.app !== 'raider-atlas' || !s.daten || typeof s.daten !== 'object') return { ok:false, text:'Das ist keine Sicherung vom Raider Atlas. Wähle eine Datei, die mit «Daten sichern» erstellt wurde.' + nichts };
+  if (s.art === 'defekt') return { ok:false, text:'Diese Datei enthält nur aufbewahrte beschädigte Inhalte, keinen ganzen Stand. Sie lässt sich nicht als Sicherung laden.' + nichts };   // Prüfrunde K7
+  if (s.format !== SICH_FORMAT) return { ok:false, text:'Diese Sicherung stammt aus einer anderen Version der App. Lade die Seite neu und versuche es dann noch einmal.' + nichts };
+  const daten = {}; let weg = 0;
+  for (const [k, v] of Object.entries(s.daten)) if (speicherArt(k) && typeof v === 'string' && v.length < 2e6) daten[k] = v; else weg++;   // nur bekannte Schlüssel (Fund N3)
+  const karten = {};
+  for (const [k, v] of Object.entries(s.karten && typeof s.karten === 'object' ? s.karten : {})) if (SP_ANSICHTEN.includes(k) && typeof v === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(v)) karten[k] = v; else weg++;
+  if (!Object.keys(daten).length && !Object.keys(karten).length && weg) return { ok:false, text:'In dieser Datei ist nichts, das die App als Stand laden kann.' + nichts };   // N8
+  const j = k => { try { return JSON.parse(daten[k] || 'null'); } catch(_){ return null; } };
+  const q = j('raider-atlas:quests') || {}, l = j('raider-atlas:liste'), w = j('raider-atlas:werkstatt') || {}, sk = j('raider-atlas:skills') || {};
+  const zahl = (n, eins, viele) => n ? [n + ' ' + (n === 1 ? eins : viele)] : [];
+  const punkte = sk.p && typeof sk.p === 'object' ? Object.values(sk.p).reduce((a, b) => a + (+b || 0), 0) : 0;
+  const zusammenfassung = [
+    ...zahl(q.q && typeof q.q === 'object' ? Object.values(q.q).filter(Boolean).length : 0, 'erledigte Quest', 'erledigte Quests'),
+    ...zahl(Array.isArray(q.t) ? q.t.length : 0, 'verfolgte Quest', 'verfolgte Quests'),
+    ...zahl(Array.isArray(l) ? l.length : 0, 'Eintrag auf der Einkaufsliste', 'Einträge auf der Einkaufsliste'),
+    ...zahl(Array.isArray(w.sets) ? w.sets.length : 0, 'Set', 'Sets'),
+    ...(punkte ? ['Skill-Plan mit ' + punkte + ' Punkten'] : []),
+    ...zahl(Object.keys(karten).length, 'eigene Karte', 'eigene Karten'),
+    ...(Object.keys(daten).length ? ['Einstellungen'] : [])
+  ];
+  return { ok:true, s:Object.assign({}, s, { daten, karten: s.karten && typeof s.karten === 'object' ? karten : undefined }), weg, zusammenfassung };
+}
+/** Spielt eine geprüfte Sicherung ein: alles oder nichts (Funde N1, N2).
+ *  1. Bilder umwandeln – scheitert etwas, bleibt alles, wie es war.
+ *  2. Vorherigen Stand aufbewahren (Texte im localStorage, Bilder in eigener Datenbank) – scheitert das, Abbruch.
+ *  3. Ersetzen – scheitert das, wird der vorherige Stand zurückgeschrieben. */
+async function sicherungEinspielen(s, { vorherAufbewahren = true } = {}){
+  const neueBilder = await sichKartenBlobs(s.karten);
+  const altDaten = {}; for (const k of sichSchluessel()) if (!k.startsWith(SP_DEFEKT) && k !== SICH_ZULETZT) altDaten[k] = localStorage.getItem(k);
+  const altBilder = await sichKartenRoh(), altKopie = localStorage.getItem(SICH_VOR);   // N10: ältere Kopie im Fehlerfall zurück
+  if (vorherAufbewahren){
+    const kopie = JSON.stringify({ app:'raider-atlas', format:SICH_FORMAT, version:APP_VERSION, erstellt:new Date().toISOString(), daten:altDaten, karten:{}, bilderGetrennt:true });
+    try { localStorage.setItem(SICH_VOR, kopie); } catch(_){ throw new Error('vorher'); }
+    if (altBilder.length) try { await sichKartenSchreiben(altBilder, SICH_VOR_DB); } catch(_){ try { localStorage.removeItem(SICH_VOR); } catch(__){} throw new Error('bildspeicher'); }
+  }
+  uiReady = false;   // Ansicht beim Verlassen nicht mehr speichern, sonst überschreibt sie die geladene Sicherung
+  try {
+    for (const k of Object.keys(altDaten)) localStorage.removeItem(k);
+    for (const [k, v] of Object.entries(s.daten)) localStorage.setItem(k, v);
+    if (s.karten && typeof s.karten === 'object' && (neueBilder.length || altBilder.length)) await sichKartenSchreiben(neueBilder);   // ohne Kartenteil bleiben die Karten (K7)
+  } catch (e){
+    for (const k of sichSchluessel()) if (!k.startsWith(SP_DEFEKT) && k !== SICH_ZULETZT) localStorage.removeItem(k);
+    for (const [k, v] of Object.entries(altDaten)) try { localStorage.setItem(k, v); } catch(_){}
+    try { await sichKartenSchreiben(altBilder); } catch(_){}
+    if (vorherAufbewahren) try { if (altKopie) localStorage.setItem(SICH_VOR, altKopie); else localStorage.removeItem(SICH_VOR); } catch(_){}
+    uiReady = true; if (e && (e.name === 'QuotaExceededError' || e.code === 22)) throw new Error('voll'); throw e;
+  }
+}
+/** Holt den Stand von vor dem letzten Laden zurück (Texte und Bilder). */
+async function vorherWiederherstellen(){
+  let s = null; try { s = JSON.parse(localStorage.getItem(SICH_VOR)); } catch(_){}
+  if (!s || !s.daten) throw new Error('keine Kopie');
+  let karten;
+  if (!s.bilderGetrennt) karten = s.karten && typeof s.karten === 'object' ? s.karten : undefined;   // Kopie aus 2.7.0: Bilder in der Kopie (N7)
+  else { const db = await sichDb(SICH_VOR_DB);
+    if (db){ db.close(); const bilder = await sichKartenRoh(SICH_VOR_DB); karten = {};
+      for (const [k, b] of bilder) karten[k] = await new Promise(ok => { const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = () => ok(null); f.readAsDataURL(b); });
+      for (const k in karten) if (!karten[k]) delete karten[k]; } }   // Datenbank nicht lesbar: jetzige Karten bleiben (karten undefined)
+  await sicherungEinspielen({ daten:s.daten, karten }, { vorherAufbewahren:false });
+  localStorage.removeItem(SICH_VOR); try { await sichKartenSchreiben([], SICH_VOR_DB); } catch(_){}   // nur die Kopie entfernen, defekte Inhalte bleiben (N5)
+}
+/** Entfernt aufbewahrte Kopien (defekte Inhalte, vorheriger Stand). Datensparsamkeit (Fund P4). */
+async function aufbewahrteLoeschen(nurAelterAls){
+  const grenze = nurAelterAls ? Date.now() - nurAelterAls : Infinity;
+  const alt = t => { const d = Date.parse(t); return !nurAelterAls || (isFinite(d) && d < grenze); };
+  for (const k of sichSchluessel(true)){ let z = null; try { z = JSON.parse(localStorage.getItem(k)).zeit; } catch(_){} if (alt(z)) localStorage.removeItem(k); }
+  let v = null; try { v = JSON.parse(localStorage.getItem(SICH_VOR)); } catch(_){}
+  if (localStorage.getItem(SICH_VOR) ? alt(v && v.erstellt) : true){ localStorage.removeItem(SICH_VOR); try { if ((await sichKartenRoh(SICH_VOR_DB)).length) await sichKartenSchreiben([], SICH_VOR_DB); } catch(_){} }
+}
+async function datenLoeschen(){
+  uiReady = false;
+  for (const k of sichSchluessel()) localStorage.removeItem(k);
+  try { localStorage.removeItem(SICH_VOR); } catch(_){}
+  try { await sichKartenSchreiben([]); } catch(_){} try { await sichKartenSchreiben([], SICH_VOR_DB); } catch(_){}
+}
+
+// --- Oberfläche unter Wissen, Einstellungen ---
+const sichStatus = t => { const e = document.getElementById('sichStatus'); if (e) e.textContent = t; };
+function sichRender(){
+  const z = (() => { try { return localStorage.getItem(SICH_ZULETZT); } catch(_){ return null; } })();
+  const e = document.getElementById('sichZuletzt');
+  if (e) e.textContent = z ? 'Zuletzt gesichert: ' + new Date(z).toLocaleDateString('de-CH', { timeZone:'Europe/Zurich' }) : 'Noch keine Sicherung. Eine Sicherung lohnt sich, besonders am iPhone.';
+  const v = document.getElementById('sichVorher'); if (v) v.hidden = !(() => { try { return localStorage.getItem(SICH_VOR); } catch(_){ return null; } })();
+  const a = document.getElementById('sichAufbewahrt'); if (a) a.hidden = !(() => { try { return localStorage.getItem(SICH_VOR) || sichSchluessel(true).length; } catch(_){ return false; } })();
+}
+let sichGeladen = null;
+function sichDialog(titel, text, liste, ja, jaText, gefahr){
+  $('#sichTitel').textContent = titel; $('#sichText').textContent = text;
+  const ul = $('#sichListe'); ul.textContent = ''; for (const t of liste){ const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); }
+  ul.hidden = !liste.length;
+  const b = $('#sichJa'); b.textContent = jaText; b.classList.toggle('gefahr', !!gefahr); sichGeladen = ja;
+  openModal($('#sichDlg'), '#sichNein');
+}
+$('#sichSichern').addEventListener('click', () => sicherungHerunterladen());
+$('#sichLaden').addEventListener('click', () => $('#sichDatei').click());
+$('#sichDatei').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+  if (f.size > SICH_MAX){ sichStatus('Diese Datei ist zu gross für eine Sicherung (höchstens 30 MB). Es wurde nichts verändert.'); return; }
+  const r = sicherungPruefen(await f.text());
+  if (!r.ok){ sichStatus(r.text); return; }
+  const d = new Date(r.s.erstellt), wann = isNaN(d) ? 'unbekanntem Datum' : d.toLocaleString('de-CH', { timeZone:'Europe/Zurich', dateStyle:'medium', timeStyle:'short' });
+  sichDialog('Sicherung laden?', (isNaN(d) ? 'Diese Sicherung von unbekanntem Datum enthält:' : 'Diese Sicherung vom ' + wann + ' enthält:') + (r.weg ? (r.weg === 1 ? ' (1 Eintrag wird weggelassen, weil die App ihn nicht kennt oder er zu gross ist.)' : ' (' + r.weg + ' Einträge werden weggelassen, weil die App sie nicht kennt oder sie zu gross sind.)') : ''),
+    [...(r.zusammenfassung.length ? r.zusammenfassung : ['keine Daten']), 'Dein jetziger Stand wird ersetzt. Er bleibt unter «Vorherigen Stand wiederherstellen» erhalten.'],
+    async () => { await sicherungEinspielen(r.s); location.reload(); }, 'Sicherung laden');
+});
+$('#sichVorher').addEventListener('click', () => {
+  let s = null; try { s = JSON.parse(localStorage.getItem(SICH_VOR)); } catch(_){}
+  const r = sicherungPruefen(JSON.stringify(s)); if (!r.ok){ sichStatus(r.text); return; }
+  sichDialog('Vorherigen Stand wiederherstellen?', 'Das holt den Stand von vor dem letzten Laden einer Sicherung zurück:', r.zusammenfassung,
+    async () => { await vorherWiederherstellen(); location.reload(); }, 'Wiederherstellen');
+});
+$('#sichAufbewahrt').addEventListener('click', async () => { await aufbewahrteLoeschen(); sichStatus('Aufbewahrte Kopien gelöscht.'); sichRender(); $('#sichSichern').focus(); });
+$('#sichLoeschen').addEventListener('click', () => sichDialog('Alle Daten löschen?',
+  'Gelöscht werden Queststand, Einkaufsliste, Werkstatt, Sets, Skill-Plan, eigene Karten, laufender Raid und Einstellungen auf diesem Gerät. Sichere vorher, wenn du etwas behalten willst.', [],
+  async () => { await datenLoeschen(); location.reload(); }, 'Endgültig löschen', true));
+$('#sichNein').addEventListener('click', () => closeModal($('#sichDlg')));
+$('#sichErst').addEventListener('click', () => sicherungHerunterladen());
+$('#sichJa').addEventListener('click', async () => { const f = sichGeladen; sichGeladen = null; if (!f) return; $('#sichJa').disabled = true;
+  try { await f(); } catch(e){ sichStatus(e && e.message === 'vorher'
+    ? 'Dein jetziger Stand ist zu gross, um ihn als Kopie aufzubewahren. Sichere ihn zuerst mit «Daten sichern». Es wurde nichts verändert.'
+    : e && e.message === 'voll' ? 'Diese Sicherung ist zu gross für den Speicher dieses Geräts. Es wurde nichts verändert.'
+    : e && e.message === 'bildspeicher' ? 'Der Bildspeicher dieses Browsers ist nicht verfügbar. Es wurde nichts verändert.'
+    : String(e && e.message || '').startsWith('Bild') ? 'Ein Kartenbild in der Sicherung ist beschädigt. Es wurde nichts verändert.'
+    : 'Das hat nicht geklappt. Dein Stand ist unverändert. Lade die Seite neu und versuche es noch einmal.'); sichRender(); } $('#sichJa').disabled = false; closeModal($('#sichDlg')); });
+$('#sichDlg').addEventListener('keydown', e => { if (e.key === 'Escape'){ e.stopPropagation(); closeModal($('#sichDlg')); } });
+sichRender();
+// Aufbewahrte Kopien werden nach 30 Tagen von selbst entfernt (Fund P4)
+aufbewahrteLoeschen(30 * 864e5).then(sichRender, () => {});
+/* @datei app/kern/raid-ablauf.js */
+// Etappe 3 (Fund C8/T7): Ein laufender Raid, der seit Restzeit plus 10 Minuten vorbei ist,
+// läuft nicht ewig weiter. Beim Start fragt die App, ob man Gefundenes eintragen will.
+// Prüfrunde K4: gleiche Auffrischung wie «Run abbrechen»
+function raidAnzeigen(){ try { naviMarkDone(); } catch(_){} try { if (ROUTE) renderCard(); } catch(_){} hudRender(); naviMapsRender(); if (typeof renderRunMini === 'function') renderRunMini(); }
+if (NAVI.run && raidAbgelaufen(NAVI.run)){
+  const r = NAVI.run, karte = MAPS[r.m] ? MAPS[r.m].short || MAPS[r.m].name || r.m : r.m;
+  const vorbei = Date.now() - r.t0 - (r.rest0 || 1800) * 1000;
+  setTimeout(() => spHinweis('Dein Raid ist vorbei', 'Dein Raid auf ' + karte + ' hat vor ' + dauerText(vorbei) + ' geendet. Trag ein, was du gefunden und erledigt hast, dann stimmen Quests und Einkaufsliste.', [
+    ['Jetzt eintragen', () => openRunDlg(), true],
+    ['Ohne Eintrag beenden', () => { const alt = NAVI.run; NAVI.run = null; saveNavi(); raidAnzeigen();
+      snackShow('Raid beendet. Dein Stand bleibt, wie er war.', () => { NAVI.run = alt; saveNavi(); raidAnzeigen(); }); }]
+  ]), 50);
+}
 /* @datei app/kern/start.js */
 
 function measureTop(){
@@ -10738,9 +11514,6 @@ uiRestore(startId, lastId);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
 requestAnimationFrame(loop);
 setTimeout(maybeAsk, 1500);
-window.__atlas = { hd:() => ({ HD, HD_H, hdWo }), trials:() => ({ TR, stand:trStand }), teil:() => ({ teilLesen, teilPruefen, teilSet, teilSkill, teilListe }), ws:() => ({ WSD, WST, BED, BED_Z, WAFFEN, AMP, WS_VOR }), sets:() => ({ SET_WAHL, setMaterial, setTeilKosten, wkSetOpen }), skill:() => ({ SKILLS, SKP, skSperre, skWeg, skSumme, skGesamt, R:SK_R }), cond:() => ({ CONDS, NAVI_COND, HATCH_ZU, maps:Object.keys(MAPS), dauer:condDauer, hinweis:condNaviHinweis, exitMin, naviAgain, budgetFor:naviBudgetFor, avail:naviAvail, wechsel:naviExitWechsel, exits:naviExits, frueh:naviFrueh, keys:naviKeys, squad:naviSquad, hatchOk:naviHatchOk, keyHinweis:naviKeyHinweis, runH:() => naviRunH, questHier:naviQuestHier, questGrund:naviQuestGrund, regel:naviRegelText }), qf:() => ({ QUESTS, qAhnen, qGesperrt, qMachbar, qTiefe, stList, folge:qFolgeF, navi:m => naviQuests(m).map(c => c.q ? c.q.en : c.en) }), symArt, SYM, urteil, bedarfNeu, saveWst, wissenOpen, wissenShow, wkShow, wkStOpen, wkWafOpen, wk:() => ({ v:wkView, cur:wkCur }), von:() => VON, rezGeht, track:(i, on) => qTrack(QUESTS[i], on), qs:() => QS, ui:() => uiSnap(), uiSave, uiStop:() => { uiReady = false; }, hud:() => HUD, hudSet, filOpen, Q_FIL, S_FIL, qSetDone:(i, d) => qSetDone(QUESTS[i], d), goStep, setView, setMode, openView, openSearch, showDetail, jumpPlace, openRoute, setTab, setDetent, ITEMS, PLACES, placePos, bestPlaces, list:() => LIST, route:() => ROUTE, arcOpen, ARCS, ARC_OF, questOpen, projOpen, QUESTS, PROJS,
-  navi:() => NAVI, naviPlan, naviOpen, naviRoute, naviPick, naviSave:saveNavi, route2:() => ROUTE,
-  marker:() => markers, g3:() => G3, zeiger:() => ptrs.size, ruhig:() => !anim && !dirty, kam:() => cam, hAt, hills:() => HILLS, selectStop, pins:() => routePins, geo:() => ({ topH, botH, W, H }), scr:p => { camUpdate(); const q = toCam(p); return [sx(q), sy(q)]; } };
 /* @ende-dateien */
 })();
 </script>

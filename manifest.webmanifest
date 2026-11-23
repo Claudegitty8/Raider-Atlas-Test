@@ -1,6 +1,7 @@
 {
   "name": "Raider-Atlas",
   "short_name": "Raider-Atlas",
+  "description": "Inoffizielles Fan-Werkzeug zu ARC Raiders. Nicht mit Embark Studios AB verbunden und nicht von ihr unterstützt. ARC Raiders und Embark sind Marken von Embark Studios AB.",
   "lang": "de-CH",
   "start_url": "./",
   "scope": "./",
